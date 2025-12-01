@@ -1,25 +1,11 @@
-
-import type { NextConfig } from "next";
-const withPWAInit = require("@ducanh2912/next-pwa").default;
-
-const withPWA = withPWAInit({
-  dest: "public",
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
-  reloadOnOnline: true,
-  swcMinify: true,
-  disable: process.env.NODE_ENV === "development",
-  workboxOptions: {
-    disableDevLogs: true,
-  },
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
 });
 
-const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      rules: {},
-    },
-  } as any,
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
 
-export default withPWA(nextConfig);
+module.exports = withPWA(nextConfig);
