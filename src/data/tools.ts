@@ -1,19 +1,25 @@
-import { 
-  FileStack, 
-  Image as ImageIcon, 
-  Braces, 
-  KeyRound, 
-  QrCode, 
-  Minimize2, 
+import {
+  FileStack,
+  Image as ImageIcon,
+  Braces,
+  KeyRound,
+  QrCode,
+  Minimize2,
   Scaling,
   TextCursorInput,
   Scale,
   Binary,
   CalendarDays, // جدید
-  Pipette,      // جدید
-  LucideIcon
+  Pipette, // جدید
+  LucideIcon,
+  ShieldCheck,
+  FileCode,
+  MonitorSmartphone,
+  Globe,
+  FileType,
 } from "lucide-react";
 
+// data/tools.ts
 export interface Tool {
   id: string;
   title: string;
@@ -22,7 +28,7 @@ export interface Tool {
   href: string;
   status: "active" | "coming-soon";
   badge?: string;
-  category: "PDF" | "Image" | "Developer" | "Security" | "Tools";
+  category: "pdf" | "image" | "developer" | "security" | "utility" | "system";
 }
 
 export const TOOLS: Tool[] = [
@@ -30,12 +36,24 @@ export const TOOLS: Tool[] = [
   {
     id: "pdf-merge",
     title: "ادغام فایل‌های PDF",
-    description: "چندین فایل PDF را به سادگی بکشید و رها کنید تا به یک فایل واحد تبدیل شوند.",
+    description:
+      "چندین فایل PDF را به سادگی بکشید و رها کنید تا به یک فایل واحد تبدیل شوند.",
     Icon: FileStack,
     href: "/tools/pdf-merge",
     status: "active",
     badge: "رایگان",
-    category: "PDF",
+    category: "pdf",
+  },
+  {
+    id: "text-to-pdf",
+    title: "متن به PDF",
+    description:
+      "تبدیل متون فارسی و انگلیسی به فایل PDF استاندارد و قابل دانلود.",
+    Icon: FileType, 
+    href: "/tools/text-to-pdf",
+    status: "active",
+    badge: "جدید",
+    category: "pdf",
   },
 
   // --- Image ---
@@ -47,7 +65,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/image-compressor",
     status: "active",
     badge: "محبوب",
-    category: "Image",
+    category: "image",
   },
   {
     id: "image-resizer",
@@ -57,7 +75,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/image-resizer",
     status: "active",
     badge: "رایگان",
-    category: "Image",
+    category: "image",
   },
   {
     id: "image-converter",
@@ -67,29 +85,53 @@ export const TOOLS: Tool[] = [
     href: "/tools/image-converter",
     status: "active",
     badge: "رایگان",
-    category: "Image",
+    category: "image",
   },
   {
     id: "color-picker",
     title: "استخراج رنگ",
-    description: "آپلود تصویر و استخراج کد رنگ (Hex/RGB) هر پیکسل با کلیک کردن.",
+    description:
+      "آپلود تصویر و استخراج کد رنگ (Hex/RGB) هر پیکسل با کلیک کردن.",
     Icon: Pipette,
     href: "/tools/color-picker",
     status: "active",
     badge: "طراحی",
-    category: "Image",
+    category: "image",
+  },
+  // --- System ---
+  {
+    id: "user-agent",
+    title: "اطلاعات سیستم من",
+    description: "نمایش جزئیات مرورگر، سیستم عامل، مدل گوشی و IP شما.",
+    Icon: MonitorSmartphone,
+    href: "/tools/user-agent",
+    status: "active",
+    badge: "کاربردی",
+    category: "system",
+  },
+  {
+    id: "ip-checker",
+    title: "IP من چیه؟",
+    description:
+      "نمایش IP عمومی، نام کشور، شهر و سرویس‌دهنده اینترنت (ISP) شما.",
+    Icon: Globe, // ایمپورت از lucide-react
+    href: "/tools/ip-checker",
+    status: "active",
+    badge: "محبوب",
+    category: "system",
   },
 
   // --- Developer ---
   {
     id: "json-formatter",
     title: "فرمت‌کننده JSON",
-    description: "زیباسازی کدهای JSON به‌هم‌ریخته + نمایش گرافیکی (Visual Graph).",
+    description:
+      "زیباسازی کدهای JSON به‌هم‌ریخته + نمایش گرافیکی (Visual Graph).",
     Icon: Braces,
     href: "/tools/json-formatter",
     status: "active",
     badge: "Dev",
-    category: "Developer",
+    category: "developer",
   },
   {
     id: "base64",
@@ -99,19 +141,41 @@ export const TOOLS: Tool[] = [
     href: "/tools/base64",
     status: "active",
     badge: "Dev",
-    category: "Developer",
+    category: "developer",
+  },
+  {
+    id: "markdown-preview",
+    title: "پیش‌نمایش مارک‌داون",
+    description:
+      "تایپ و مشاهده زنده کدهای Markdown. مناسب برای نوشتن داکیومنت و README.",
+    Icon: FileCode, // ایمپورت از lucide-react
+    href: "/tools/markdown-preview",
+    status: "active",
+    badge: "Dev",
+    category: "developer",
   },
 
   // --- Security ---
   {
-    id: "password-gen",
-    title: "تولیدکننده رمز عبور",
-    description: "ساخت پسوردهای فوق‌امن و غیرقابل هک با یک کلیک.",
+    id: "password-generator",
+    title: "ساخت و تست پسورد", // یا "پسورد ساز حرفه‌ای"
+    description: "تولید رمزهای عبور غیرقابل هک + سنجش امنیت رمزهای شما.",
     Icon: KeyRound,
     href: "/tools/password-generator",
     status: "active",
-    badge: "Security",
-    category: "Security",
+    badge: "امنیتی",
+    category: "security",
+  },
+  {
+    id: "hash-generator",
+    title: "تولید هش",
+    description:
+      "ساخت کدهای هش امن SHA-1, SHA-256, SHA-512 از متن به صورت آنی.",
+    Icon: ShieldCheck, // ایمپورت از lucide-react
+    href: "/tools/hash-generator",
+    status: "active",
+    badge: "امنیت",
+    category: "security", // دسته‌بندی جدید
   },
 
   // --- General Tools ---
@@ -123,17 +187,18 @@ export const TOOLS: Tool[] = [
     href: "/tools/date-converter",
     status: "active",
     badge: "کاربردی",
-    category: "Tools",
+    category: "utility",
   },
   {
     id: "word-counter",
     title: "شمارشگر کلمات",
-    description: "آنالیز دقیق متن شامل تعداد کلمات، کاراکترها، جملات و زمان مطالعه.",
+    description:
+      "آنالیز دقیق متن شامل تعداد کلمات، کاراکترها، جملات و زمان مطالعه.",
     Icon: TextCursorInput,
     href: "/tools/word-counter",
     status: "active",
     badge: "نویسندگی",
-    category: "Tools",
+    category: "utility",
   },
   {
     id: "unit-converter",
@@ -143,7 +208,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/unit-converter",
     status: "active",
     badge: "رایگان",
-    category: "Tools",
+    category: "utility",
   },
   {
     id: "qr-gen",
@@ -153,6 +218,6 @@ export const TOOLS: Tool[] = [
     href: "/tools/qr-generator",
     status: "active",
     badge: "رایگان",
-    category: "Tools",
+    category: "utility",
   },
 ];
