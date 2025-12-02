@@ -1,29 +1,23 @@
+// app/docs/page.tsx
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { getDocsData } from '@/data/docs'; // 👈 تغییر ایمپورت
+import { getDocsData } from '@/data/docs';
 
 export default function DocsPage() {
   const theme = useThemeColors();
-  
-  // 1. اول دیتا رو بر اساس تم فعلی بساز
   const docsData = getDocsData(theme);
-
-  // 2. حالا از دیتای ساخته شده استفاده کن
   const [activeTab, setActiveTab] = useState(docsData[0].id);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // پیدا کردن محتوای تب فعال
   const activeContent = docsData.find(s => s.id === activeTab)?.content;
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
-      
-      {/* Mobile Header */}
-      <div className={`lg:hidden flex items-center justify-between p-4 border-b sticky top-0 z-20 backdrop-blur-md ${theme.bg}/80 ${theme.border}`}>
+      <div className={`lg:hidden flex items-center justify-between p-4 border-b sticky top-0 z-30 backdrop-blur-xl ${theme.bg}/90 ${theme.border}`}>
         <span className={`font-bold ${theme.text}`}>راهنما و مستندات</span>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`p-2 rounded-lg ${theme.secondary}`}>
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -31,13 +25,19 @@ export default function DocsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row">
-        
-        {/* Sidebar Navigation */}
-        <aside className={`
-          fixed inset-0 z-10 lg:static lg:w-80 lg:block lg:border-l p-6 overflow-y-auto transition-transform duration-300 h-screen sticky top-0
+                <aside className={`
+          /* Mobile Styles */
+          fixed inset-0 z-20 pt-20 px-6 transition-transform duration-300
+          ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+          
+          /* Desktop Styles (Override Mobile) */
+          lg:translate-x-0 lg:static lg:z-0 lg:pt-6 lg:w-80 lg:block lg:border-l 
+          lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto
+          
+          /* Shared Styles */
           ${theme.bg} ${theme.border}
-          ${mobileMenuOpen ? 'translate-x-0 pt-20' : 'translate-x-full lg:translate-x-0'}
         `}>
+          
           <Link href="/" className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}>
             <ArrowRight size={16} className="ml-1" /> بازگشت به خانه
           </Link>
@@ -51,8 +51,8 @@ export default function DocsPage() {
                 onClick={() => { setActiveTab(section.id); setMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all text-right
                 ${activeTab === section.id 
-                  ? `${theme.primary} shadow-lg` // استفاده از تم پرایمری برای حالت فعال
-                  : `${theme.text} hover:bg-zinc-100 dark:hover:bg-zinc-800`
+                  ? `${theme.primary} shadow-lg shadow-${theme.accent}/20` 
+                  : `${theme.text} hover:bg-zinc-100 dark:hover:bg-zinc-800/50`
                 }`}
               >
                 <section.icon size={18} />
@@ -65,7 +65,7 @@ export default function DocsPage() {
             <p className={`text-xs leading-relaxed opacity-60 ${theme.textMuted}`}>
               نسخه: 1.0.0 (Beta)
               <br />
-              آخرین بروزرسانی: آذر ۱۴۰۳
+              آخرین بروزرسانی: آذر ۱۴۰۴
             </p>
           </div>
         </aside>
@@ -77,7 +77,7 @@ export default function DocsPage() {
           </div>
 
           {/* Footer Links */}
-          <div className={`max-w-3xl mx-auto mt-20 pt-10 border-t flex justify-between items-center ${theme.border}`}>
+          <div className={`max-w-3xl mx-auto mt-20 pt-10 border-t flex flex-col sm:flex-row gap-4 justify-between items-center ${theme.border}`}>
             <p className={`text-sm ${theme.textMuted}`}>هنوز سوال دارید؟</p>
             <Link href="/contact" className={`px-6 py-2 rounded-lg text-sm font-bold transition-colors ${theme.secondary} hover:opacity-80`}>
               ارسال تیکت پشتیبانی
