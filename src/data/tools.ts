@@ -9,17 +9,17 @@ import {
   TextCursorInput,
   Scale,
   Binary,
-  CalendarDays, // جدید
-  Pipette, // جدید
+  CalendarDays,
+  Pipette,
   LucideIcon,
   ShieldCheck,
   FileCode,
   MonitorSmartphone,
   Globe,
   FileType,
+  GitGraph,
 } from "lucide-react";
 
-// data/tools.ts
 export interface Tool {
   id: string;
   title: string;
@@ -49,14 +49,38 @@ export const TOOLS: Tool[] = [
     title: "متن به PDF",
     description:
       "تبدیل متون فارسی و انگلیسی به فایل PDF استاندارد و قابل دانلود.",
-    Icon: FileType, 
+    Icon: FileType,
     href: "/tools/text-to-pdf",
     status: "active",
     badge: "جدید",
     category: "pdf",
   },
+  // START: ابزار جدید اضافه شده
+  {
+    id: "word-to-pdf",
+    title: "تبدیل Word به PDF",
+    description:
+      "فایل Word (.docx) خود را آپلود کرده و به فرمت PDF تبدیل کنید.",
+    Icon: FileType, // از آیکون موجود استفاده می‌کنیم
+    href: "/tools/word-to-pdf",
+    status: "active",
+    badge: "جدید",
+    category: "pdf",
+  },
+  // END: ابزار جدید اضافه شده
 
   // --- Image ---
+  {
+    id: "image-to-pdf",
+    title: "تبدیل تصویر به PDF",
+    description:
+      "چندین تصویر را به ترتیب صفحات در یک فایل PDF واحد ترکیب کنید.",
+    Icon: ImageIcon,
+    href: "/tools/image-to-pdf",
+    status: "active",
+    badge: "جدید",
+    category: "image",
+  },
   {
     id: "image-compressor",
     title: "کاهش حجم تصویر",
@@ -114,7 +138,7 @@ export const TOOLS: Tool[] = [
     title: "IP من چیه؟",
     description:
       "نمایش IP عمومی، نام کشور، شهر و سرویس‌دهنده اینترنت (ISP) شما.",
-    Icon: Globe, // ایمپورت از lucide-react
+    Icon: Globe,
     href: "/tools/ip-checker",
     status: "active",
     badge: "محبوب",
@@ -148,17 +172,28 @@ export const TOOLS: Tool[] = [
     title: "پیش‌نمایش مارک‌داون",
     description:
       "تایپ و مشاهده زنده کدهای Markdown. مناسب برای نوشتن داکیومنت و README.",
-    Icon: FileCode, // ایمپورت از lucide-react
+    Icon: FileCode,
     href: "/tools/markdown-preview",
     status: "active",
     badge: "Dev",
+    category: "developer",
+  },
+  {
+    id: "code-visualizer",
+    title: "تصویرسازی کد (Flowchart)",
+    description:
+      "تبدیل کدهای جاوا اسکریپت به فلوچارت و گراف تصویری برای درک بهتر منطق کد.",
+    Icon: GitGraph, // یادت نره GitGraph رو از lucide-react ایمپورت کنی
+    href: "/tools/code-visualizer",
+    status: "active",
+    badge: "BETA", // چون هنوز اولشه
     category: "developer",
   },
 
   // --- Security ---
   {
     id: "password-generator",
-    title: "ساخت و تست پسورد", // یا "پسورد ساز حرفه‌ای"
+    title: "ساخت و تست پسورد",
     description: "تولید رمزهای عبور غیرقابل هک + سنجش امنیت رمزهای شما.",
     Icon: KeyRound,
     href: "/tools/password-generator",
@@ -171,11 +206,11 @@ export const TOOLS: Tool[] = [
     title: "تولید هش",
     description:
       "ساخت کدهای هش امن SHA-1, SHA-256, SHA-512 از متن به صورت آنی.",
-    Icon: ShieldCheck, // ایمپورت از lucide-react
+    Icon: ShieldCheck,
     href: "/tools/hash-generator",
     status: "active",
     badge: "امنیت",
-    category: "security", // دسته‌بندی جدید
+    category: "security",
   },
 
   // --- General Tools ---

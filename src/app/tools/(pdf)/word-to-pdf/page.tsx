@@ -3,15 +3,18 @@
 import Link from 'next/link';
 import { ArrowRight, FileText } from 'lucide-react';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import TextToPdfTool from '@/components/tools/TextToPdfTool';
+import WordToPdfConverter from '@/components/tools/WordToPdfConverter';
 
-export default function TextToPdfPage() {
+export default function WordToPdfPage() {
   const theme = useThemeColors();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
       <div className="max-w-5xl mx-auto px-6 pt-10 w-full">
-        <Link href="/" className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}>
+        <Link 
+          href="/" 
+          className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+        >
           <ArrowRight size={16} className="ml-1" /> بازگشت به خانه
         </Link>
         
@@ -19,16 +22,16 @@ export default function TextToPdfPage() {
           <div className={`p-3 rounded-xl ${theme.primary}`}>
             <FileText size={24} className="text-white" />
           </div>
-          <h1 className={`text-3xl font-bold ${theme.text}`}>تبدیل متن به PDF</h1>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>تبدیل Word به PDF</h1>
         </div>
         
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          متن‌های طولانی خود را تایپ کنید یا جایگذاری کنید و فوراً یک فایل PDF مرتب و صفحه‌بندی شده دریافت کنید.
+          فایل‌های Word (.docx) خود را به PDF تبدیل کنید. تمام فرمت‌بندی و متن محفوظ می‌ماند.
         </p>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 pb-20 w-full flex-1">
-        <TextToPdfTool />
+        <WordToPdfConverter />
       </div>
     </div>
   );
