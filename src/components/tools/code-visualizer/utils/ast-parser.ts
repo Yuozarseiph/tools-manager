@@ -38,13 +38,13 @@ export const parseCodeToGraph = (
     depth: number
   ): string => {
     const id = generateId();
-    
+
     nodes.push({
       id,
-      data: { 
-        label, 
+      data: {
+        label,
         nodeType,
-        depth: Math.max(0, depth - 1) // Start from 0
+        depth: Math.max(0, depth - 1),
       },
       position: { x: 0, y: 0 },
       type: "custom",
@@ -62,32 +62,24 @@ export const parseCodeToGraph = (
 
     return id;
   };
-
-  // Simple parser for JavaScript
-  const lines = code.split('\n');
+  const lines = code.split("\n");
   let depth = 0;
   let currentScope: string | null = null;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    
-    if (!line || line.startsWith('//')) continue;
 
-    // Calculate depth based on indentation
+    if (!line || line.startsWith("//")) continue;
     const indentMatch = lines[i].match(/^(\s*)/);
     const indentSize = indentMatch ? indentMatch[1].length : 0;
     const newDepth = Math.floor(indentSize / 2);
-
-    // Check for scope changes
-    if (line.includes('{') && !line.includes('}')) {
+    if (line.includes("{") && !line.includes("}")) {
       depth = newDepth + 1;
-    } else if (line.includes('}')) {
+    } else if (line.includes("}")) {
       depth = Math.max(0, depth - 1);
     } else {
       depth = newDepth;
     }
-
-    // Detect node type
     let nodeType: BlockType = "code-block";
     let cleanLabel = line;
 
@@ -150,15 +142,24 @@ export const parseCodeToGraph = (
       const match = line.match(/(?:const|let|var)\s+(\w+)/);
       cleanLabel = match ? match[1] : "variable";
     }
-
-    // Create node with proper depth
     const nodeId = createNode(cleanLabel, nodeType, depth);
-
-    // Update parent stack
-    if (["class", "function", "method", "constructor", "if", "for", "while", "do", "try", "switch"].includes(nodeType)) {
+    if (
+      [
+        "class",
+        "function",
+        "method",
+        "constructor",
+        "if",
+        "for",
+        "while",
+        "do",
+        "try",
+        "switch",
+      ].includes(nodeType)
+    ) {
       parentStack.push(nodeId);
       currentParentId = nodeId;
-    } else if (line.includes('}') && parentStack.length > 0) {
+    } else if (line.includes("}") && parentStack.length > 0) {
       parentStack.pop();
       currentParentId = parentStack[parentStack.length - 1] || null;
     }
