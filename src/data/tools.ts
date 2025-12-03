@@ -20,6 +20,7 @@ import {
   GitGraph,
   FileSpreadsheet,
   Edit3,
+  PieChart,
 } from "lucide-react";
 
 export interface Tool {
@@ -215,12 +216,23 @@ export const TOOLS: Tool[] = [
     title: "ویرایشگر اکسل",
     description:
       "ویرایش آنلاین فایل‌های اکسل، تغییر داده‌ها و ذخیره فایل جدید (XLSX).",
-    Icon: Edit3, // ایمپورت کن از lucide-react
+    Icon: Edit3, 
     href: "/tools/excel-editor",
     status: "active",
     badge: "Pro",
     category: "excel",
   },
+    {
+    id: "excel-chart",
+    title: "رسم نمودار اکسل",
+    description: "تبدیل داده‌های اکسل به نمودارهای تصویری و زیبا.",
+    Icon: PieChart,
+    href: "/tools/excel-chart",
+    status: "active",
+    badge: "Pro",
+    category: "excel",
+  },
+
 
   // --- Security ---
   {
