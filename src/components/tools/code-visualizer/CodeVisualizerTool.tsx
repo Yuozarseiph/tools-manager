@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ReactFlow, Controls, Background, useNodesState, useEdgesState, Node, Edge } from '@xyflow/react';
+import { ReactFlow, Controls, Background, useNodesState, useEdgesState, Node, Edge, BackgroundVariant } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { parseCodeToGraph } from './utils/ast-parser';
@@ -134,8 +134,11 @@ export default function CodeVisualizerTool() {
         return;
       }
       
-      const maxDepth = rawNodes.reduce((max, node) => 
-        Math.max(max, node.data?.depth || 0), 0);
+      // محاسبه حداکثر عمق به صورت درست
+      const maxDepth = rawNodes.reduce((max: number, node) => {
+        const depth = node.data?.depth as number || 0;
+        return Math.max(max, depth);
+      }, 0);
       
       // Apply layout
       let layoutedNodes, layoutedEdges;
@@ -463,7 +466,7 @@ export default function CodeVisualizerTool() {
               color={theme.name.includes('تاریک') ? '#4a5568' : '#e5e7eb'} 
               gap={compactMode ? 16 : 24} 
               size={1} 
-              variant="dots"
+              variant={BackgroundVariant.Dots}
             />
             <Controls 
               className={`${theme.card} backdrop-blur-md border ${theme.border} shadow-lg`}

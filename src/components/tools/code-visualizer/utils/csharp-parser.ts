@@ -37,6 +37,8 @@ type BlockType =
   | "attribute"
   | "comment"
   | "region"
+  | "virtual"    // اضافه شد
+  | "abstract"   // اضافه شد
   | "unknown";
 
 export const parseCSharpToGraph = (
@@ -140,9 +142,9 @@ export const parseCSharpToGraph = (
   const getEdgeDashed = (type: BlockType): string | undefined => {
     switch (type) {
       case "interface":
-      case "abstract":
+      case "abstract":  // حالا در BlockType وجود دارد
         return "5,5";
-      case "virtual":
+      case "virtual":   // حالا در BlockType وجود دارد
         return "3,3";
       default:
         return undefined;
@@ -154,6 +156,7 @@ export const parseCSharpToGraph = (
     if (metadata?.isStatic) return "static";
     if (metadata?.isOverride) return "override";
     if (metadata?.isVirtual) return "virtual";
+    if (metadata?.isAbstract) return "abstract";
     return undefined;
   };
 

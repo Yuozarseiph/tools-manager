@@ -41,7 +41,7 @@ export const getLayoutedElements = (
   let maxDepth = 0;
 
   layoutedNodes.forEach((node) => {
-    const depth = node.data?.depth || 0;
+    const depth = typeof node.data?.depth === 'number' ? node.data.depth : 0;
     maxDepth = Math.max(maxDepth, depth);
     
     if (!nodesByDepth[depth]) {
@@ -162,19 +162,26 @@ export const getLayoutedElements = (
 
   // Center the graph with proper padding
   const padding = compactMode ? 60 : 100;
-  const nodesWithPositions = layoutedNodes.filter(n => n.position.x !== undefined && n.position.y !== undefined);
+  const nodesWithPositions = layoutedNodes.filter(n => 
+    n.position.x !== undefined && n.position.y !== undefined
+  );
   
   if (nodesWithPositions.length > 0) {
-    const allX = nodesWithPositions.map(node => node.position.x);
-    const allY = nodesWithPositions.map(node => node.position.y);
+    const allX = nodesWithPositions.map(node => node.position.x as number);
+    const allY = nodesWithPositions.map(node => node.position.y as number);
     
-    const centerX = (Math.min(...allX) + Math.max(...allX)) / 2;
-    const centerY = (Math.min(...allY) + Math.max(...allY)) / 2;
+    const minX = Math.min(...allX);
+    const maxX = Math.max(...allX);
+    const minY = Math.min(...allY);
+    const maxY = Math.max(...allY);
+    
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
     
     layoutedNodes.forEach(node => {
       if (node.position.x !== undefined && node.position.y !== undefined) {
-        node.position.x = node.position.x - centerX + padding;
-        node.position.y = node.position.y - centerY + padding;
+        node.position.x = (node.position.x as number) - centerX + padding;
+        node.position.y = (node.position.y as number) - centerY + padding;
       }
     });
   }
@@ -192,10 +199,15 @@ export const getTreeLayout = (
   const layoutedNodes = nodes.map((node) => ({ ...node }));
   const layoutedEdges = edges.map((edge) => ({ ...edge }));
 
-  // Find root node
-  let rootNode = layoutedNodes[0];
+  // Find root node (lowest depth or specified)
+  let rootNode = layoutedNodes.reduce((lowest, node) => {
+    const currentDepth = typeof node.data?.depth === 'number' ? node.data.depth : 0;
+    const lowestDepth = typeof lowest.data?.depth === 'number' ? lowest.data.depth : 0;
+    return currentDepth < lowestDepth ? node : lowest;
+  }, layoutedNodes[0]);
+
   if (rootNodeId) {
-    rootNode = layoutedNodes.find(node => node.id === rootNodeId) || layoutedNodes[0];
+    rootNode = layoutedNodes.find(node => node.id === rootNodeId) || rootNode;
   }
 
   // Build tree structure
@@ -209,7 +221,7 @@ export const getTreeLayout = (
     parents[edge.target] = edge.source;
   });
 
-  // Calculate levels (depth)
+  // Calculate levels (depth) starting from root
   const calculateLevels = (nodeId: string, level: number) => {
     nodeLevels[nodeId] = level;
     
