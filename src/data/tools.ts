@@ -18,6 +18,8 @@ import {
   Globe,
   FileType,
   GitGraph,
+  FileSpreadsheet,
+  Edit3,
 } from "lucide-react";
 
 export interface Tool {
@@ -28,7 +30,14 @@ export interface Tool {
   href: string;
   status: "active" | "coming-soon";
   badge?: string;
-  category: "pdf" | "image" | "developer" | "security" | "utility" | "system";
+  category:
+    | "pdf"
+    | "image"
+    | "developer"
+    | "security"
+    | "utility"
+    | "system"
+    | "excel";
 }
 
 export const TOOLS: Tool[] = [
@@ -55,19 +64,17 @@ export const TOOLS: Tool[] = [
     badge: "جدید",
     category: "pdf",
   },
-  // START: ابزار جدید اضافه شده
   {
     id: "word-to-pdf",
     title: "تبدیل Word به PDF",
     description:
       "فایل Word (.docx) خود را آپلود کرده و به فرمت PDF تبدیل کنید.",
-    Icon: FileType, // از آیکون موجود استفاده می‌کنیم
+    Icon: FileType,
     href: "/tools/word-to-pdf",
     status: "active",
     badge: "جدید",
     category: "pdf",
   },
-  // END: ابزار جدید اضافه شده
 
   // --- Image ---
   {
@@ -122,6 +129,7 @@ export const TOOLS: Tool[] = [
     badge: "طراحی",
     category: "image",
   },
+
   // --- System ---
   {
     id: "user-agent",
@@ -182,12 +190,36 @@ export const TOOLS: Tool[] = [
     id: "code-visualizer",
     title: "تصویرسازی کد (Flowchart)",
     description:
-      "تبدیل کدهای جاوا اسکریپت به فلوچارت و گراف تصویری برای درک بهتر منطق کد.",
-    Icon: GitGraph, // یادت نره GitGraph رو از lucide-react ایمپورت کنی
+      "تبدیل کدهای جاوا اسکریپت و C# به فلوچارت و گراف تصویری برای درک بهتر.",
+    Icon: GitGraph,
     href: "/tools/code-visualizer",
     status: "active",
-    badge: "BETA", // چون هنوز اولشه
+    badge: "BETA",
     category: "developer",
+  },
+
+  // --- Excel---
+  {
+    id: "excel-viewer",
+    title: "نمایشگر اکسل و CSV",
+    description:
+      "آپلود، نمایش و جستجو در فایل‌های اکسل و CSV بدون نیاز به آفیس + تبدیل به JSON.",
+    Icon: FileSpreadsheet,
+    href: "/tools/excel-viewer",
+    status: "active",
+    badge: "جدید",
+    category: "excel",
+  },
+  {
+    id: "excel-editor",
+    title: "ویرایشگر اکسل",
+    description:
+      "ویرایش آنلاین فایل‌های اکسل، تغییر داده‌ها و ذخیره فایل جدید (XLSX).",
+    Icon: Edit3, // ایمپورت کن از lucide-react
+    href: "/tools/excel-editor",
+    status: "active",
+    badge: "Pro",
+    category: "excel",
   },
 
   // --- Security ---

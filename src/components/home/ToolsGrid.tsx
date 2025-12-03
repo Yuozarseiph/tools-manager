@@ -16,7 +16,8 @@ const CATEGORIES = [
   { id: 'developer', label: 'برنامه‌نویسی', icon: Code2 },
   { id: 'security', label: 'امنیت', icon: ShieldCheck },
   { id: 'system', label: 'سیستم', icon: MonitorSmartphone },
-  { id: 'utility', label: 'کاربردی', icon: Wrench }, // برای بقیه ابزارها
+  { id: 'utility', label: 'کاربردی', icon: Wrench },
+  { id: 'excel', label: 'اکسل', icon: FileText },
 ];
 
 export default function ToolsGrid() {
