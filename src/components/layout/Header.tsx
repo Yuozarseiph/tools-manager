@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Wand2, Heart, Book, Mail } from 'lucide-react';
+import { Wand2, Heart, Book, Mail, FileQuestionMark } from 'lucide-react';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { useThemeColors } from '@/hooks/useThemeColors';
 
@@ -38,6 +38,11 @@ export default function Header() {
             <Link href="/contact" className={navLinkClass('/contact')}>
               <span className="flex items-center gap-1.5">
                 <Mail size={16} /> تماس با ما
+              </span>
+            </Link>
+            <Link href="/about" className={navLinkClass('/contact')}>
+              <span className="flex items-center gap-1.5">
+                <FileQuestionMark size={16} /> درباره ما
               </span>
             </Link>
           </nav>
