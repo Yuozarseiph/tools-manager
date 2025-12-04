@@ -68,7 +68,10 @@ export default function Header() {
             >
               <Mail size={20} />
             </Link>
-            <Link href="/about" className={navLinkClass("/contact")}>
+            <Link
+              href="/about"
+              className={`p-2 rounded-lg ${theme.textMuted} hover:bg-zinc-100 dark:hover:bg-zinc-800`}
+            >
               <FileQuestionMark size={20} />
             </Link>
           </div>
