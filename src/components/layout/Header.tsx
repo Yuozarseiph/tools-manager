@@ -19,7 +19,6 @@ export default function Header() {
     <header className={`border-b backdrop-blur-md sticky top-0 z-50 transition-colors duration-500 ${theme.border} ${theme.card}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* Logo Section */}
         <div className="flex items-center gap-2 sm:gap-8">
           <Link href="/" className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tighter select-none">
             <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 transition-transform hover:scale-105 ${theme.primary}`}>
@@ -30,7 +29,6 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/docs" className={navLinkClass('/docs')}>
               <span className="flex items-center gap-1.5">
@@ -45,11 +43,8 @@ export default function Header() {
           </nav>
         </div>
         
-        {/* Actions Section */}
         <div className="flex items-center gap-2 sm:gap-3">
-          
-          {/* Mobile Nav Icons (Icon Only) */}
-          <div className="flex md:hidden items-center">
+                    <div className="flex md:hidden items-center">
              <Link href="/docs" className={`p-2 rounded-lg ${theme.textMuted} hover:bg-zinc-100 dark:hover:bg-zinc-800`}>
                 <Book size={20} />
              </Link>

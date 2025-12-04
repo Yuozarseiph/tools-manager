@@ -63,7 +63,7 @@ export default function DocsPage() {
 
           <div className={`mt-10 pt-6 border-t border-dashed ${theme.border}`}>
             <p className={`text-xs leading-relaxed opacity-60 ${theme.textMuted}`}>
-              نسخه: 1.0.0 (Beta)
+              نسخه: 1.1.0 (Beta)
               <br />
               آخرین بروزرسانی: آذر ۱۴۰۴
             </p>
