@@ -1,4 +1,3 @@
-// components/layout/Header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -10,8 +9,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 export default function Header() {
   const theme = useThemeColors();
   const pathname = usePathname();
-
-  // تابع کمکی برای استایل لینک‌های فعال
+  
   const navLinkClass = (path: string) => 
     `text-sm font-bold transition-all hover:text-blue-500 ${
       pathname === path ? 'text-blue-600 dark:text-blue-400' : theme.textMuted
@@ -21,19 +19,18 @@ export default function Header() {
     <header className={`border-b backdrop-blur-md sticky top-0 z-50 transition-colors duration-500 ${theme.border} ${theme.card}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* بخش راست: لوگو و نویگیشن */}
-        <div className="flex items-center gap-8">
-          {/* لوگو */}
-          <Link href="/" className="flex items-center gap-2 font-black text-xl tracking-tighter select-none">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 transition-transform hover:scale-105 ${theme.primary}`}>
-              <Wand2 size={20} className="text-white" />
+        {/* Logo Section */}
+        <div className="flex items-center gap-2 sm:gap-8">
+          <Link href="/" className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tighter select-none">
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 transition-transform hover:scale-105 ${theme.primary}`}>
+              <Wand2 size={18} className="text-white" />
             </div>
-            <span className={theme.text}>
+            <span className={`hidden xs:inline ${theme.text}`}>
               Tools<span className={theme.accent}>Manager</span>
             </span>
           </Link>
 
-          {/* لینک‌های نویگیشن (فقط در دسکتاپ) */}
+          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/docs" className={navLinkClass('/docs')}>
               <span className="flex items-center gap-1.5">
@@ -48,11 +45,11 @@ export default function Header() {
           </nav>
         </div>
         
-        {/* بخش چپ: ابزارها و دکمه حمایت */}
-        <div className="flex items-center gap-3">
+        {/* Actions Section */}
+        <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* دکمه‌های موبایل (فقط آیکون) */}
-          <div className="flex md:hidden items-center gap-1 ml-2">
+          {/* Mobile Nav Icons (Icon Only) */}
+          <div className="flex md:hidden items-center">
              <Link href="/docs" className={`p-2 rounded-lg ${theme.textMuted} hover:bg-zinc-100 dark:hover:bg-zinc-800`}>
                 <Book size={20} />
              </Link>
@@ -61,18 +58,21 @@ export default function Header() {
              </Link>
           </div>
 
-          <ThemeSwitcher />
+          <div className={`w-px h-6 mx-1 ${theme.border}`} />
 
+          <ThemeSwitcher />
           <a 
             href="https://reymit.ir/yuozarseiph" 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`hidden sm:flex text-sm font-bold transition-all items-center gap-2 px-4 py-2 rounded-xl border 
-            ${theme.border} hover:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-900/10 group`} 
+            className={`flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl border transition-all
+              ${theme.border} hover:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-900/10 group`}
+            title="حمایت مالی"
           >
-            <Heart size={18} className="text-red-500 fill-red-500 group-hover:animate-pulse" />
-            <span className={theme.textMuted}>حمایت</span>
+            <Heart size={20} className="text-red-500 fill-red-500 group-hover:animate-pulse" />
+            <span className={`hidden sm:inline text-sm font-bold ${theme.textMuted}`}>حمایت</span>
           </a>
+
         </div>
 
       </div>

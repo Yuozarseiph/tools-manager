@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ThemeBody from "@/components/ThemeBody"; 
 import InstallPWA from "@/components/InstallPWA";
+import { Vazirmatn } from "next/font/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
+const vazir = Vazirmatn({
+  subsets: ["arabic", "latin"],
+  variable: "--font-vazir", // اسم متغیر
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 export const metadata: Metadata = {
   title: "Tools Manager - جعبه ابزار آنلاین رایگان",
   description: "ابزارهای ادغام PDF، فشرده‌سازی عکس و ابزارهای توسعه‌دهندگان به صورت کاملاً امن و سمت کلاینت.",
@@ -46,20 +51,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
-      
       <ThemeProvider>
-        
-        <ThemeBody 
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <ThemeBody className={`${vazir.variable} antialiased font-sans`}>
           {children}
-          
           <InstallPWA />
-          
         </ThemeBody>
-
       </ThemeProvider>
-      
     </html>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useMemo, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { 
@@ -8,22 +8,42 @@ import {
   Save, 
   Plus, 
   Trash2, 
-  Download, 
-  FileSpreadsheet,
-  Edit3,
-  Undo
+  FileSpreadsheet, 
+  Undo, 
+  Search, 
+  ChevronLeft, 
+  ChevronRight,
+  X
 } from 'lucide-react';
 
 type DataRow = { [key: string]: string | number | boolean | null };
+
+const ROWS_PER_PAGE = 10;
 
 export default function ExcelEditorTool() {
   const theme = useThemeColors();
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<DataRow[]>([]);
   const [fileName, setFileName] = useState<string>('edited-file.xlsx');
-  const [history, setHistory] = useState<DataRow[][]>([]); // برای Undo
-
-  // --- آپلود فایل ---
+  const [history, setHistory] = useState<DataRow[][]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const filteredRows = useMemo(() => {
+    if (!searchQuery) return rows;
+    return rows.filter(row => 
+      Object.values(row).some(val => 
+        String(val).toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [rows, searchQuery]);
+  const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * ROWS_PER_PAGE,
+    currentPage * ROWS_PER_PAGE
+  );
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -39,53 +59,44 @@ export default function ExcelEditorTool() {
       if (dataJson.length > 0) {
         setHeaders(Object.keys(dataJson[0]));
         setRows(dataJson);
-        setHistory([dataJson]); // ذخیره وضعیت اولیه
+        setHistory([]);
       }
     };
     reader.readAsBinaryString(file);
   };
-
-  // --- ویرایش سلول ---
-  const handleCellChange = (rowIndex: number, header: string, value: string) => {
-    const newRows = [...rows];
-    newRows[rowIndex] = { ...newRows[rowIndex], [header]: value };
-    setRows(newRows);
-  };
-
-  // --- ذخیره در تاریخچه (قبل از تغییرات بزرگ) ---
   const saveToHistory = () => {
-    if (history.length > 10) {
-      setHistory([...history.slice(1), rows]);
-    } else {
-      setHistory([...history, rows]);
-    }
+    setHistory(prev => {
+      const newHistory = [...prev, rows];
+      return newHistory.length > 10 ? newHistory.slice(1) : newHistory;
+    });
   };
 
-  // --- افزودن ردیف جدید ---
-  const addRow = () => {
-    saveToHistory();
-    const newRow: DataRow = {};
-    headers.forEach(h => newRow[h] = "");
-    setRows([...rows, newRow]);
-  };
-
-  // --- حذف ردیف ---
-  const deleteRow = (index: number) => {
-    saveToHistory();
-    const newRows = rows.filter((_, i) => i !== index);
-    setRows(newRows);
-  };
-
-  // --- بازگشت (Undo) ---
   const handleUndo = () => {
     if (history.length > 0) {
       const previousState = history[history.length - 1];
       setRows(previousState);
-      setHistory(history.slice(0, -1));
+      setHistory(prev => prev.slice(0, -1));
     }
   };
+  const handleCellChange = (globalIndex: number, header: string, value: string) => {
+    const newRows = [...rows];
+    newRows[globalIndex] = { ...newRows[globalIndex], [header]: value };
+    setRows(newRows);
+  };
+  const addRow = () => {
+    saveToHistory();
+    const newRow: DataRow = {};
+    headers.forEach(h => newRow[h] = "");
+    setRows([newRow, ...rows]);
+  };
 
-  // --- دانلود فایل ویرایش شده ---
+  const deleteRow = (globalIndex: number) => {
+    saveToHistory();
+    const newRows = rows.filter((_, i) => i !== globalIndex);
+    setRows(newRows);
+  };
+
+  // --- دانلود ---
   const handleDownload = () => {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
@@ -93,118 +104,162 @@ export default function ExcelEditorTool() {
     XLSX.writeFile(wb, `edited_${fileName}`);
   };
 
+  // پاک کردن همه داده‌ها
+  const handleReset = () => {
+    if (confirm('آیا مطمئن هستید؟ تمام تغییرات از دست خواهد رفت.')) {
+      setRows([]);
+      setHeaders([]);
+      setHistory([]);
+      setFileName('');
+    }
+  };
+
   return (
-    <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${theme.card} ${theme.border} shadow-sm`}>
+    <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${theme.card} ${theme.border} shadow-sm flex flex-col h-[600px]`}>
       
       {/* Toolbar */}
-      <div className={`p-4 sm:p-6 border-b flex flex-col sm:flex-row justify-between items-center gap-4 ${theme.border}`}>
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+      <div className={`p-4 border-b flex flex-col md:flex-row justify-between items-center gap-4 ${theme.border} bg-gray-50/50 dark:bg-white/5`}>
+        
+        {/* Right Side: Actions */}
+        <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
           {rows.length === 0 ? (
-            <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl cursor-pointer hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 w-full sm:w-auto">
-              <UploadCloud size={20} />
-              <span>آپلود فایل اکسل</span>
+            <label className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl cursor-pointer hover:bg-blue-700 transition-all active:scale-95 whitespace-nowrap">
+              <UploadCloud size={18} />
+              <span>آپلود اکسل</span>
               <input type="file" accept=".xlsx, .xls, .csv" className="hidden" onChange={handleFileUpload} />
             </label>
           ) : (
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={handleDownload}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md"
-              >
-                <Save size={18} />
-                <span>دانلود فایل جدید</span>
+            <>
+              <button onClick={handleDownload} className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-sm whitespace-nowrap">
+                <Save size={16} />
+                <span>خروجی اکسل</span>
               </button>
               
-              <button 
-                onClick={handleUndo}
-                disabled={history.length === 0}
-                className={`p-2 rounded-lg border transition-colors ${
-                  history.length === 0 ? 'opacity-50 cursor-not-allowed' : `hover:bg-black/5 dark:hover:bg-white/10 ${theme.text}`
-                } ${theme.border}`}
-                title="بازگشت (Undo)"
-              >
+              <div className={`h-6 w-px mx-1 ${theme.border} bg-gray-300 dark:bg-gray-700`} />
+              
+              <button onClick={addRow} className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border hover:bg-white dark:hover:bg-white/10 transition-colors ${theme.border} ${theme.text}`}>
+                <Plus size={16} />
+                <span>افزودن سطر</span>
+              </button>
+
+              <button onClick={handleUndo} disabled={history.length === 0} className={`p-2 rounded-lg border transition-colors ${history.length === 0 ? 'opacity-30 cursor-not-allowed' : `hover:bg-white dark:hover:bg-white/10 ${theme.text}`} ${theme.border}`} title="Undo">
                 <Undo size={18} />
               </button>
-            </div>
+
+              <button onClick={handleReset} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="بستن فایل">
+                <X size={18} />
+              </button>
+            </>
           )}
         </div>
 
+        {/* Left Side: Search */}
         {rows.length > 0 && (
-          <div className={`text-sm font-medium ${theme.textMuted} flex items-center gap-2`}>
-            <Edit3 size={16} />
-            <span>حالت ویرایش فعال است</span>
+          <div className="relative w-full md:w-64">
+            <Search size={16} className={`absolute right-3 top-1/2 -translate-y-1/2 opacity-50 ${theme.text}`} />
+            <input 
+              type="text" 
+              placeholder="جستجو در داده‌ها..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={`w-full pl-3 pr-9 py-2 text-sm rounded-xl border outline-none focus:ring-2 ring-blue-500/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
+            />
           </div>
         )}
       </div>
 
-      {/* Editor Area */}
-      <div className={`bg-gray-50/50 dark:bg-black/20 min-h-[400px] flex flex-col`}>
-        {headers.length > 0 ? (
-          <div className="overflow-auto flex-1 max-h-[600px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-            <table className="w-full min-w-max text-sm text-left border-collapse">
-              <thead className={`sticky top-0 z-10 shadow-sm ${theme.secondary} ${theme.text}`}>
-                <tr>
-                  <th className="p-3 font-bold border-b w-12 text-center opacity-50">#</th>
-                  {headers.map(header => (
-                    <th key={header} className="p-3 font-bold border-b border-r last:border-r-0 min-w-[120px]">
-                      {header}
-                    </th>
-                  ))}
-                  <th className="p-3 font-bold border-b w-12 text-center opacity-50">عملیات</th>
-                </tr>
-              </thead>
-              <tbody className={`${theme.text}`}>
-                {rows.map((row, rowIndex) => (
-                  <tr key={rowIndex} className={`group border-b last:border-b-0 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors`}>
-                    <td className={`p-3 border-r text-center text-xs font-mono opacity-40 bg-black/5 dark:bg-white/5`}>
-                      {rowIndex + 1}
-                    </td>
-                    {headers.map((header, colIndex) => (
-                      <td key={`${rowIndex}-${colIndex}`} className="p-0 border-r last:border-r-0">
-                        <input 
-                          type="text" 
-                          value={String(row[header] ?? "")}
-                          onChange={(e) => handleCellChange(rowIndex, header, e.target.value)}
-                          onFocus={saveToHistory} // ذخیره تاریخچه قبل از ادیت
-                          className={`w-full h-full px-3 py-3 bg-transparent outline-none focus:bg-blue-50 dark:focus:bg-blue-900/30 focus:shadow-inner transition-colors ${theme.text}`}
-                        />
-                      </td>
+      {/* Table Area */}
+      <div className="flex-1 overflow-hidden relative flex flex-col bg-white dark:bg-black/20">
+        {rows.length > 0 ? (
+          <>
+            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+              <table className="w-full min-w-max text-sm text-left border-collapse relative">
+                <thead className={`sticky top-0 z-10 shadow-sm ${theme.secondary} text-xs uppercase tracking-wider`}>
+                  <tr>
+                    <th className={`p-3 font-bold border-b w-12 text-center ${theme.textMuted}`}>#</th>
+                    {headers.map(header => (
+                      <th key={header} className={`p-3 font-bold border-b border-r last:border-r-0 min-w-[150px] text-right ${theme.text} ${theme.border}`}>
+                        {header}
+                      </th>
                     ))}
-                    <td className="p-2 text-center">
-                      <button 
-                        onClick={() => deleteRow(rowIndex)}
-                        className="p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-md transition-colors opacity-0 group-hover:opacity-100"
-                        title="حذف سطر"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
+                    <th className={`p-3 font-bold border-b w-12 text-center ${theme.textMuted}`}>حذف</th>
                   </tr>
-                ))}
-                {/* Add Row Button */}
-                <tr>
-                  <td colSpan={headers.length + 2} className="p-2 text-center border-t border-dashed border-gray-300 dark:border-gray-700">
-                    <button 
-                      onClick={addRow}
-                      className={`flex items-center justify-center gap-2 w-full py-2 rounded-lg border border-dashed hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${theme.textMuted} hover:text-blue-500`}
-                    >
-                      <Plus size={18} />
-                      <span>افزودن سطر جدید</span>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {paginatedRows.map((row, index) => {
+                    // محاسبه ایندکس واقعی در آرایه اصلی برای ویرایش
+                    const realIndex = (currentPage - 1) * ROWS_PER_PAGE + index;
+                    // اگر جستجو فعال باشه، ایندکس واقعی فرق داره، پس بهتره روی filteredRows مپ بزنیم ولی برای ادیت باید ایندکس اصلی rows رو پیدا کنیم
+                    const originalIndex = rows.indexOf(row);
+
+                    return (
+                      <tr key={originalIndex} className="group border-b last:border-b-0 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors">
+                        <td className="p-3 border-r text-center text-xs opacity-40 font-mono select-none bg-gray-50/50 dark:bg-white/5">
+                          {realIndex + 1}
+                        </td>
+                        {headers.map((header) => (
+                          <td key={`${originalIndex}-${header}`} className="p-0 border-r last:border-r-0 relative">
+                            <input 
+                              type="text" 
+                              value={String(row[header] ?? "")}
+                              // ذخیره در تاریخچه فقط وقتی فکوس میشه (نه هر حرف)
+                              onFocus={saveToHistory} 
+                              onChange={(e) => handleCellChange(originalIndex, header, e.target.value)}
+                              className={`w-full h-full px-3 py-2.5 bg-transparent outline-none text-right focus:bg-white dark:focus:bg-black focus:shadow-inner focus:text-blue-600 dark:focus:text-blue-400 transition-all ${theme.text} dir-rtl`}
+                              dir="auto"
+                            />
+                          </td>
+                        ))}
+                        <td className="p-1 text-center">
+                          <button 
+                            onClick={() => deleteRow(originalIndex)}
+                            className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Pagination Footer */}
+            <div className={`p-3 border-t flex items-center justify-between bg-gray-50/80 dark:bg-black/20 ${theme.border}`}>
+              <span className={`text-xs ${theme.textMuted}`}>
+                نمایش {((currentPage - 1) * ROWS_PER_PAGE) + 1} تا {Math.min(currentPage * ROWS_PER_PAGE, filteredRows.length)} از {filteredRows.length} ردیف
+              </span>
+              
+              <div className="flex items-center gap-1">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`p-1 rounded-lg disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${theme.text}`}
+                >
+                  <ChevronRight size={18} />
+                </button>
+                <span className={`text-sm font-mono px-2 ${theme.text}`}>{currentPage} / {Math.max(1, totalPages)}</span>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`p-1 rounded-lg disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${theme.text}`}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+              </div>
+            </div>
+          </>
         ) : (
           // Empty State
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-12 animate-in zoom-in-95 duration-500">
-            <div className={`w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 ${theme.border} border-4 border-white dark:border-gray-800 shadow-xl`}>
-              <FileSpreadsheet size={40} className="text-green-600 dark:text-green-400" />
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-8 animate-in zoom-in-95 duration-500">
+            <div className={`w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-6 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/20`}>
+              <FileSpreadsheet size={48} className="text-emerald-600 dark:text-emerald-400 drop-shadow-sm" />
             </div>
-            <h4 className={`font-bold text-xl mb-2 ${theme.text}`}>ویرایشگر فایل‌های اکسل</h4>
-            <p className={`text-sm max-w-md leading-relaxed ${theme.textMuted}`}>
-              فایل خود را آپلود کنید، داده‌ها را مستقیماً در جدول ویرایش کنید و نسخه جدید را با فرمت XLSX دانلود نمایید.
+            <h4 className={`font-black text-2xl mb-3 ${theme.text}`}>ویرایشگر اکسل آنلاین</h4>
+            <p className={`text-sm max-w-md leading-relaxed opacity-70 ${theme.textMuted}`}>
+              فایل‌های اکسل خود را بدون نیاز به نرم‌افزار آفیس باز کنید، ویرایش کنید و خروجی بگیرید. 
+              <br/> کاملاً امن و پردازش سمت کاربر.
             </p>
           </div>
         )}

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.28.5",
+    "@emailjs/browser": "^4.4.1",
     "@xyflow/react": "^12.9.3",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",

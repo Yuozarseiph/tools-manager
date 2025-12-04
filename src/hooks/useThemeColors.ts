@@ -1,11 +1,12 @@
-// hooks/useThemeColors.ts
 'use client';
 
 import { useTheme } from '@/context/ThemeContext';
-import { THEMES, ThemePalette } from '@/constants/themes';
+import { THEMES, ThemePalette, ThemeName } from '@/constants/themes';
 
 export function useThemeColors(): ThemePalette {
-  const { themeName, mode } = useTheme(); 
-  
-  return THEMES[themeName] || THEMES['royal-blue-light'];
+  const { themeName } = useTheme();
+
+  const theme = THEMES[themeName as ThemeName];
+
+  return theme || THEMES['royal-blue-light'];
 }

@@ -1,1 +1,8 @@
 @import "tailwindcss";
+:root {
+  --font-sans: var(--font-vazir), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-vazir), ui-sans-serif, system-ui, sans-serif;
+}
