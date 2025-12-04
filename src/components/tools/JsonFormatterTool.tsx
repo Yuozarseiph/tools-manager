@@ -1,15 +1,26 @@
-// components/tools/JsonFormatterTool.tsx
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, ChangeEvent, useRef } from 'react';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Copy, Trash2, Maximize2, Network, Code } from 'lucide-react';
+import { 
+  Copy, 
+  Trash2, 
+  Network, 
+  Code, 
+  UploadCloud, 
+  Download, 
+  FileJson, 
+  Minimize, 
+  AlignLeft,
+  Check,
+  AlertCircle
+} from 'lucide-react';
 import ReactFlow, { Background, Controls, useNodesState, useEdgesState } from 'reactflow';
-import 'reactflow/dist/style.css'; // استایل‌های React Flow
-import CustomJsonNode from './CustomJsonNode'; // نود سفارشی
-import { getLayoutedElements } from '@/utils/json-to-graph'; // الگوریتم
+import 'reactflow/dist/style.css';
+import CustomJsonNode from './CustomJsonNode';
+import { getLayoutedElements } from '@/utils/json-to-graph';
 
 const nodeTypes = { customJsonNode: CustomJsonNode };
 
@@ -17,92 +28,243 @@ export default function JsonFormatterTool() {
   const theme = useThemeColors();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-  const [viewMode, setViewMode] = useState<'code' | 'graph'>('code'); // تب فعال
+  const [error, setError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'code' | 'graph'>('code');
+  const [copied, setCopied] = useState(false);
 
   // استیت‌های گراف
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  // وقتی ورودی تغییر میکنه و معتبره، گراف رو آپدیت کن
-  const updateGraph = (json: any) => {
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(json);
-    setNodes(layoutedNodes);
-    setEdges(layoutedEdges);
-  };
+  // --- توابع کمکی ---
 
-  const formatJson = (jsonString: string) => {
-    if (!jsonString.trim()) return;
+  const processJson = (jsonString: string, mode: 'prettify' | 'minify' = 'prettify') => {
+    if (!jsonString.trim()) {
+      setOutput('');
+      setError(null);
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+
     try {
       const parsed = JSON.parse(jsonString);
-      setOutput(JSON.stringify(parsed, null, 2));
-      updateGraph(parsed); // <--- آپدیت گراف
-    } catch (err) {
-      // خطا رو نشون نده تو گراف
+      setError(null);
+      
+      // فرمت‌دهی خروجی
+      if (mode === 'prettify') {
+        setOutput(JSON.stringify(parsed, null, 2));
+      } else {
+        setOutput(JSON.stringify(parsed));
+      }
+
+      // آپدیت گراف
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(parsed);
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+
+    } catch (err: any) {
+      setError(err.message);
+      // خروجی رو پاک نکنیم تا کاربر بتونه اصلاح کنه، ولی گراف رو پاک میکنیم
     }
   };
 
-  return (
-    <div className="grid lg:grid-cols-2 gap-6 h-[650px]">
-      
-      {/* ستون چپ: ادیتور (همیشه هست) */}
-      <div className={`flex flex-col rounded-2xl border overflow-hidden shadow-sm ${theme.card} ${theme.border}`}>
-        <textarea
-          value={input}
-          onChange={(e) => { setInput(e.target.value); formatJson(e.target.value); }}
-          placeholder="JSON خود را اینجا وارد کنید..."
-          className={`flex-1 w-full p-4 resize-none focus:outline-none font-mono text-sm bg-transparent ${theme.text}`}
-          spellCheck={false}
-        />
-      </div>
+  const handleInputChange = (val: string) => {
+    setInput(val);
+    processJson(val);
+  };
 
-      {/* ستون راست: نمایشگر (تب‌دار) */}
-      <div className={`flex flex-col rounded-2xl border overflow-hidden shadow-sm relative ${theme.card} ${theme.border}`}>
+  // --- هندلرهای فایل ---
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setInput(content);
+      processJson(content);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDownload = () => {
+    if (!output) return;
+    const blob = new Blob([output], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'formatted.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopy = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleClear = () => {
+    setInput('');
+    setOutput('');
+    setError(null);
+    setNodes([]);
+    setEdges([]);
+  };
+
+  // محاسبه حجم (تقریبی)
+  const getSize = (str: string) => {
+    const bytes = new TextEncoder().encode(str).length;
+    if (bytes < 1024) return `${bytes} B`;
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  };
+
+  return (
+    <div className="grid lg:grid-cols-2 gap-6 h-[700px]">
+      
+      {/* --- ستون چپ: ورودی --- */}
+      <div className={`flex flex-col rounded-2xl border overflow-hidden shadow-sm ${theme.card} ${theme.border}`}>
         
-        {/* نوار ابزار تب */}
-        <div className={`flex items-center justify-between px-4 py-2 border-b ${theme.border} ${theme.bg}`}>
-          <div className="flex gap-2 bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg">
+        {/* Toolbar Input */}
+        <div className={`flex items-center justify-between px-4 py-3 border-b ${theme.border} bg-gray-50/50 dark:bg-white/5`}>
+          <div className="flex items-center gap-2">
+            <label className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors bg-blue-600 text-white hover:bg-blue-700`}>
+              <UploadCloud size={14} />
+              <span>آپلود JSON</span>
+              <input type="file" accept=".json" className="hidden" onChange={handleFileUpload} />
+            </label>
+            <span className={`text-[10px] font-mono opacity-60 px-2 ${theme.textMuted}`}>
+              {input ? getSize(input) : ''}
+            </span>
+          </div>
+
+          <div className="flex gap-1">
             <button 
-              onClick={() => setViewMode('code')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all
-              ${viewMode === 'code' ? 'bg-white dark:bg-black shadow-sm' : 'opacity-50 hover:opacity-100'}`}
+                onClick={() => processJson(input, 'minify')}
+                className={`p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-white/10 text-xs font-bold flex items-center gap-1 ${theme.textMuted}`} 
+                title="فشرده‌سازی (Minify)"
             >
-              <Code size={14} /> کد (Code)
+                <Minimize size={14} />
             </button>
             <button 
-              onClick={() => setViewMode('graph')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all
-              ${viewMode === 'graph' ? 'bg-white dark:bg-black shadow-sm text-blue-600' : 'opacity-50 hover:opacity-100'}`}
+                onClick={() => processJson(input, 'prettify')}
+                className={`p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-white/10 text-xs font-bold flex items-center gap-1 ${theme.textMuted}`} 
+                title="مرتب‌سازی (Prettify)"
             >
-              <Network size={14} /> گراف (Visual)
+                <AlignLeft size={14} />
+            </button>
+            <div className={`w-px h-4 mx-1 bg-gray-300 dark:bg-gray-700 self-center`} />
+            <button 
+                onClick={handleClear}
+                className="p-1.5 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500" 
+                title="پاک کردن"
+            >
+                <Trash2 size={14} />
             </button>
           </div>
         </div>
 
-        {/* محتوای تب */}
-        <div className="flex-1 overflow-hidden bg-[#1e1e1e] relative">
+        <textarea
+          value={input}
+          onChange={(e) => handleInputChange(e.target.value)}
+          placeholder="کد JSON خود را اینجا وارد کنید یا فایلی را آپلود نمایید..."
+          className={`flex-1 w-full p-4 resize-none focus:outline-none font-mono text-xs sm:text-sm bg-transparent ${theme.text}`}
+          spellCheck={false}
+        />
+        
+        {error && (
+          <div className="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-t border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+            <AlertCircle size={14} />
+            <span className="truncate">{error}</span>
+          </div>
+        )}
+      </div>
+
+      {/* --- ستون راست: خروجی --- */}
+      <div className={`flex flex-col rounded-2xl border overflow-hidden shadow-sm relative ${theme.card} ${theme.border}`}>
+        
+        {/* Toolbar Output */}
+        <div className={`flex items-center justify-between px-4 py-2 border-b ${theme.border} ${theme.bg}`}>
+          
+          {/* Tabs */}
+          <div className="flex gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-lg">
+            <button 
+              onClick={() => setViewMode('code')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all
+              ${viewMode === 'code' ? 'bg-white dark:bg-black shadow-sm text-blue-600' : 'opacity-50 hover:opacity-100'}`}
+            >
+              <Code size={14} /> کد
+            </button>
+            <button 
+              onClick={() => setViewMode('graph')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all
+              ${viewMode === 'graph' ? 'bg-white dark:bg-black shadow-sm text-purple-600' : 'opacity-50 hover:opacity-100'}`}
+            >
+              <Network size={14} /> گراف
+            </button>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <span className={`text-[10px] font-mono opacity-60 hidden sm:inline-block ${theme.textMuted}`}>
+              {output ? getSize(output) : ''}
+            </span>
+            <button 
+              onClick={handleCopy}
+              className={`p-2 rounded-lg border transition-colors ${copied ? 'bg-green-50 text-green-600 border-green-200' : `hover:bg-gray-100 dark:hover:bg-white/10 ${theme.border}`}`}
+              title="کپی در کلیپ‌بورد"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} className={theme.textMuted} />}
+            </button>
+            <button 
+              onClick={handleDownload}
+              className={`p-2 rounded-lg border hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors ${theme.border}`}
+              title="دانلود فایل JSON"
+            >
+              <Download size={16} className={theme.textMuted} />
+            </button>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-hidden bg-[#1e1e1e] relative" dir="ltr">
           {viewMode === 'code' ? (
             <SyntaxHighlighter
               language="json"
               style={vscDarkPlus}
-              customStyle={{ margin: 0, padding: '1.5rem', height: '100%', fontSize: '14px' }}
+              customStyle={{ margin: 0, padding: '1.5rem', height: '100%', fontSize: '13px', lineHeight: '1.5' }}
               wrapLines={true}
+              showLineNumbers={true} // اضافه شدن شماره خط
+              lineNumberStyle={{ minWidth: '2.5em', paddingRight: '1em', color: '#6e7681', textAlign: 'right' }}
             >
-              {output || '{}'}
+              {output || '// Waiting for input...'}
             </SyntaxHighlighter>
           ) : (
             <div className="h-full w-full bg-zinc-900">
-              <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                nodeTypes={nodeTypes}
-                fitView
-                attributionPosition="bottom-right"
-              >
-                <Background color="#333" gap={20} />
-                <Controls />
-              </ReactFlow>
+              {nodes.length > 0 ? (
+                  <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    nodeTypes={nodeTypes}
+                    fitView
+                    attributionPosition="bottom-right"
+                  >
+                    <Background color="#444" gap={20} />
+                    <Controls className="bg-white text-black border-none shadow-lg" />
+                  </ReactFlow>
+              ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-zinc-500 gap-3">
+                      <Network size={40} opacity={0.5}/>
+                      <p className="text-sm">داده‌ای برای نمایش گراف موجود نیست</p>
+                  </div>
+              )}
             </div>
           )}
         </div>

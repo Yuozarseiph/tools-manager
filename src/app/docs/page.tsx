@@ -1,17 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { DOCS_DATA } from "@/data/docs";
 import DocSection from "@/components/docs/DocSection";
-import { Menu, X, ChevronLeft } from "lucide-react";
+import { Menu, X, ChevronLeft, ArrowRight, Home } from "lucide-react";
 
 export default function DocsPage() {
   const theme = useThemeColors();
   const [activeId, setActiveId] = useState<string>("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // --- تشخیص اسکرول برای هایلایت کردن منوی کناری ---
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll("div[id]");
@@ -30,7 +29,6 @@ export default function DocsPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- گروه‌بندی ابزارها بر اساس دسته‌بندی ---
   const categories = Array.from(new Set(DOCS_DATA.map((doc) => doc.category)));
 
   return (
@@ -49,7 +47,6 @@ export default function DocsPage() {
       </button>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex gap-12 items-start">
-        {/* --- Sidebar (Desktop + Mobile Drawer) --- */}
         <aside
           className={`
           fixed inset-y-0 right-0 z-40 w-72 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:h-[calc(100vh-100px)] lg:sticky lg:top-24 lg:w-80
@@ -62,7 +59,7 @@ export default function DocsPage() {
         `}
         >
           <div className="p-6 lg:p-0 space-y-8">
-            <div className="mb-8 lg:hidden flex items-center justify-between">
+            <div className="mb-6 lg:hidden flex items-center justify-between">
               <h2 className={`text-xl font-black ${theme.text}`}>
                 فهرست مطالب
               </h2>
@@ -70,6 +67,27 @@ export default function DocsPage() {
                 <X size={24} className={theme.text} />
               </button>
             </div>
+
+            <Link
+              href="/"
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl border font-bold transition-all group
+                ${theme.card} ${theme.border} hover:border-blue-500 hover:shadow-md mb-6`}
+            >
+              <div
+                className={`p-1.5 rounded-lg ${theme.secondary} group-hover:bg-blue-500 group-hover:text-white transition-colors`}
+              >
+                <Home size={18} />
+              </div>
+              <span
+                className={`${theme.text} group-hover:text-blue-600 dark:group-hover:text-blue-400`}
+              >
+                بازگشت به خانه
+              </span>
+              <ArrowRight
+                size={16}
+                className={`mr-auto opacity-50 group-hover:-translate-x-1 transition-transform ${theme.text}`}
+              />
+            </Link>
 
             {categories.map((cat) => (
               <div key={cat}>
@@ -104,6 +122,7 @@ export default function DocsPage() {
             ))}
           </div>
         </aside>
+
         {isMobileMenuOpen && (
           <div
             onClick={() => setIsMobileMenuOpen(false)}
@@ -113,6 +132,13 @@ export default function DocsPage() {
 
         <main className="flex-1 min-w-0">
           <div className="mb-16 border-b pb-12 relative overflow-hidden rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-blue-500/5 to-purple-500/5 border border-blue-500/10">
+            <Link
+              href="/"
+              className="lg:hidden inline-flex items-center gap-1 text-sm font-bold mb-6 opacity-60 hover:opacity-100 transition-opacity"
+            >
+              <ArrowRight size={16} /> بازگشت به خانه
+            </Link>
+
             <div className="relative z-10">
               <h1
                 className={`text-4xl md:text-5xl font-black mb-6 ${theme.text}`}
