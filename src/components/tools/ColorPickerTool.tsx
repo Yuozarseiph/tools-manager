@@ -1,7 +1,7 @@
 // components/tools/ColorPickerTool.tsx
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { 
   FileUp, Pipette, Copy, Check, Palette, Download, 
@@ -14,6 +14,7 @@ const ColorThief = require('colorthief').default;
 export default function ColorPickerTool() {
   const theme = useThemeColors();
   const [image, setImage] = useState<string | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [hoverColor, setHoverColor] = useState<string>('#ffffff');
   const [pickedColors, setPickedColors] = useState<string[]>([]);
   const [palette, setPalette] = useState<string[]>([]);
@@ -24,17 +25,25 @@ export default function ColorPickerTool() {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': [] },
-    onDrop: (files) => {
-      if (files?.[0]) {
-        const url = URL.createObjectURL(files[0]);
+    multiple: false,
+    onDrop: useCallback((acceptedFiles: File[]) => {
+      if (acceptedFiles?.[0]) {
+        // پاک کردن URL قبلی برای جلوگیری از memory leak
+        if (image) {
+          URL.revokeObjectURL(image);
+        }
+        
+        const url = URL.createObjectURL(acceptedFiles[0]);
         setImage(url);
+        setImageLoaded(false);
         setPickedColors([]);
         setPalette([]);
       }
-    },
+    }, [image]),
   });
 
   // تبدیل رنگ‌ها
@@ -81,49 +90,77 @@ export default function ColorPickerTool() {
     }
   };
 
-  useEffect(() => {
-    if (!image || !canvasRef.current || !imageRef.current) return;
+  // بارگذاری تصویر و استخراج پالت
+  const handleImageLoad = useCallback(() => {
+    if (!imageRef.current || !canvasRef.current) return;
     
     const img = imageRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
+    if (!ctx) return;
 
-      try {
-        const colorThief = new ColorThief();
-        const paletteRGB = colorThief.getPalette(img, 8);
-        const paletteHex = paletteRGB.map((rgb: number[]) => rgbToHex(rgb[0], rgb[1], rgb[2]));
-        setPalette(paletteHex);
-      } catch (e) {
-        console.error('Error extracting palette', e);
-      }
-    };
-  }, [image]);
+    // تنظیم اندازه canvas
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    
+    try {
+      ctx.drawImage(img, 0, 0);
+      setImageLoaded(true);
+
+      // استخراج پالت رنگی
+      const colorThief = new ColorThief();
+      const paletteRGB = colorThief.getPalette(img, 8);
+      const paletteHex = paletteRGB.map((rgb: number[]) => rgbToHex(rgb[0], rgb[1], rgb[2]));
+      setPalette(paletteHex);
+    } catch (e) {
+      console.error('خطا در استخراج پالت رنگی:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    const img = imageRef.current;
+    if (!img || !image) return;
+
+    // اگر تصویر از قبل بارگذاری شده، بلافاصله اجرا شود
+    if (img.complete) {
+      handleImageLoad();
+    }
+  }, [image, handleImageLoad]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
     
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const rect = e.currentTarget.getBoundingClientRect();
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const img = imageRef.current;
+    const rect = img.getBoundingClientRect();
     
-    const x = Math.floor((e.clientX - rect.left) * (canvas.width / rect.width));
-    const y = Math.floor((e.clientY - rect.top) * (canvas.height / rect.height));
+    // محاسبه موقعیت دقیق
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = Math.floor((e.clientX - rect.left) * scaleX);
+    const y = Math.floor((e.clientY - rect.top) * scaleY);
+    
+    // جلوگیری از خطای out of bounds
+    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
     
     setMagnifierPos({ x: e.clientX, y: e.clientY });
     
-    const pixel = ctx?.getImageData(x, y, 1, 1).data;
-    if (pixel) {
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-      setHoverColor(hex);
+    try {
+      const pixel = ctx?.getImageData(x, y, 1, 1).data;
+      if (pixel && pixel.length >= 3) {
+        const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        setHoverColor(hex);
+      }
+    } catch (e) {
+      console.error('خطا در خواندن رنگ پیکسل:', e);
     }
   };
 
   const handleClick = () => {
+    if (!imageLoaded) return;
     if (!pickedColors.includes(hoverColor)) {
       setPickedColors(prev => [hoverColor, ...prev].slice(0, 20));
     }
@@ -149,8 +186,8 @@ export default function ColorPickerTool() {
     const b = parseInt(result[3], 16);
     
     const complementary = rgbToHex(255 - r, 255 - g, 255 - b);
-    const analogous1 = rgbToHex((r + 30) % 255, g, b);
-    const analogous2 = rgbToHex(r, (g + 30) % 255, b);
+    const analogous1 = rgbToHex(Math.min(255, r + 30), g, b);
+    const analogous2 = rgbToHex(r, Math.min(255, g + 30), b);
     const triadic1 = rgbToHex(g, b, r);
     const triadic2 = rgbToHex(b, r, g);
     
@@ -172,6 +209,26 @@ export default function ColorPickerTool() {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const resetImage = () => {
+    if (image) {
+      URL.revokeObjectURL(image);
+    }
+    setImage(null);
+    setImageLoaded(false);
+    setPickedColors([]);
+    setPalette([]);
+    setHoverColor('#ffffff');
+  };
+
+  // پاکسازی URL هنگام unmount
+  useEffect(() => {
+    return () => {
+      if (image) {
+        URL.revokeObjectURL(image);
+      }
+    };
+  }, [image]);
 
   return (
     <div className="space-y-6">
@@ -224,7 +281,10 @@ export default function ColorPickerTool() {
       <div className="grid lg:grid-cols-3 gap-6 items-start">
         
         {/* بخش تصویر */}
-        <div className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}>
+        <div 
+          ref={containerRef}
+          className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}
+        >
           {!image ? (
             <div 
               {...getRootProps()} 
@@ -247,24 +307,27 @@ export default function ColorPickerTool() {
             </div>
           ) : (
             <div 
-              className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4 cursor-crosshair"
-              onMouseEnter={() => setShowMagnifier(true)}
+              className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4"
+              onMouseEnter={() => imageLoaded && setShowMagnifier(true)}
               onMouseLeave={() => setShowMagnifier(false)}
             >
               <img 
                 ref={imageRef}
                 src={image} 
                 alt="Target" 
-                className="max-w-full max-h-[600px] w-auto h-auto object-contain rounded-xl select-none"
+                className={`max-w-full max-h-[600px] w-auto h-auto object-contain rounded-xl select-none transition-opacity duration-300
+                  ${imageLoaded ? 'opacity-100 cursor-crosshair' : 'opacity-50 cursor-wait'}
+                `}
+                onLoad={handleImageLoad}
                 onMouseMove={handleMouseMove}
                 onClick={handleClick}
                 crossOrigin="anonymous"
                 draggable={false}
               />
-              <canvas ref={canvasRef} className="hiddenn" />
+              <canvas ref={canvasRef} className="hidden" />
               
               {/* Magnifier */}
-              {showMagnifier && (
+              {showMagnifier && imageLoaded && (
                 <motion.div 
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -281,12 +344,21 @@ export default function ColorPickerTool() {
                   </span>
                 </motion.div>
               )}
+              
+              {/* Loading indicator */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className={`px-4 py-2 rounded-xl ${theme.card} border ${theme.border}`}>
+                    <p className={`text-sm ${theme.textMuted}`}>در حال بارگذاری...</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           
           {image && (
             <button 
-              onClick={() => { setImage(null); setPickedColors([]); setPalette([]); }}
+              onClick={resetImage}
               className={`absolute top-4 right-4 p-2 rounded-xl shadow-lg transition-all hover:scale-105 ${theme.card} border ${theme.border}`}
             >
               <Trash2 size={18} className="text-red-500" />
@@ -303,7 +375,7 @@ export default function ColorPickerTool() {
             className={`p-6 rounded-3xl border text-center ${theme.card} ${theme.border}`}
           >
             <div 
-              className="w-full h-24 rounded-2xl mb-4 shadow-inner border-4 border-white dark:border-gray-800" 
+              className="w-full h-24 rounded-2xl mb-4 shadow-inner border-4 border-white dark:border-gray-800 transition-colors duration-150" 
               style={{ backgroundColor: hoverColor }} 
             />
             <p className={`text-xs font-medium mb-2 ${theme.textMuted}`}>رنگ انتخاب شده</p>
@@ -312,8 +384,10 @@ export default function ColorPickerTool() {
             </p>
             <button
               onClick={() => copyToClipboard(hoverColor, -1)}
+              disabled={!imageLoaded}
               className={`mt-3 px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 mx-auto
                 ${copiedIndex === -1 ? 'bg-green-500 text-white' : `${theme.secondary} ${theme.accent}`}
+                ${!imageLoaded ? 'opacity-50 cursor-not-allowed' : ''}
               `}
             >
               {copiedIndex === -1 ? <Check size={16} /> : <Copy size={16} />}
