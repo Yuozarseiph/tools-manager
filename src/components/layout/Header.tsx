@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wand2, Heart, Book, Mail, FileQuestionMark } from "lucide-react";
+import {
+  Wand2,
+  Heart,
+  Book,
+  Mail,
+  FileQuestionMark,
+  LogsIcon,
+} from "lucide-react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
@@ -51,6 +58,11 @@ export default function Header() {
                 <FileQuestionMark size={16} /> درباره ما
               </span>
             </Link>
+            <Link href="/changelog" className={navLinkClass("/contact")}>
+              <span className="flex items-center gap-1.5">
+                <LogsIcon size={16} /> تاریخچه تغییرات
+              </span>
+            </Link>
           </nav>
         </div>
 
@@ -73,6 +85,12 @@ export default function Header() {
               className={`p-2 rounded-lg ${theme.textMuted} hover:bg-zinc-100 dark:hover:bg-zinc-800`}
             >
               <FileQuestionMark size={20} />
+            </Link>
+            <Link
+              href="/changelog"
+              className={`p-2 rounded-lg ${theme.textMuted} hover:bg-zinc-100 dark:hover:bg-zinc-800`}
+            >
+              <LogsIcon size={16} />
             </Link>
           </div>
 
