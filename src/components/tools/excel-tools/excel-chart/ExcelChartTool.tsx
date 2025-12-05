@@ -1,3 +1,4 @@
+// components/tools/excel-tools/excel-chart/ExcelChartTool.tsx
 "use client";
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
@@ -11,7 +12,8 @@ import {
   AreaChart as AreaChartIcon,
   Settings2,
   Maximize2,
-  Minimize2
+  Minimize2,
+  AlertCircle
 } from "lucide-react";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
@@ -19,6 +21,7 @@ import BarChartComponent from "./charts/BarChartComponent";
 import LineChartComponent from "./charts/LineChartComponent";
 import AreaChartComponent from "./charts/AreaChartComponent";
 import PieChartComponent from "./charts/PieChartComponent";
+import { normalizeDataRow } from "@/utils/persian-number-converter";
 
 type DataRow = { [key: string]: any };
 
@@ -28,13 +31,11 @@ export default function ExcelChartTool() {
   const [headers, setHeaders] = useState<string[]>([]);
   const [chartType, setChartType] = useState<"bar" | "line" | "area" | "pie">("bar");
   const [xAxisKey, setXAxisKey] = useState<string>("");
-  
-  // داده‌های عددی به صورت آرایه (برای پشتیبانی از چند ستون)
   const [dataKeys, setDataKeys] = useState<string[]>([]);
-
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(100);
   const [zoomLevel, setZoomLevel] = useState(100);
+  const [hasPersianNumbers, setHasPersianNumbers] = useState(false);
 
   // محدودیت خودکار برای Pie Chart
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function ExcelChartTool() {
   }, [chartType, startIndex, endIndex]);
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target?.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
@@ -55,13 +56,28 @@ export default function ExcelChartTool() {
       const jsonData: DataRow[] = XLSX.utils.sheet_to_json(ws);
 
       if (jsonData.length > 0) {
-        setData(jsonData);
-        setEndIndex(Math.min(jsonData.length, chartType === "pie" ? 20 : 50));
-        const keys = Object.keys(jsonData[0]);
+        // تشخیص و نرمال‌سازی اعداد فارسی
+        let foundPersian = false;
+        const normalizedData = jsonData.map((row) => {
+          const normalized = normalizeDataRow(row);
+          
+          // چک کردن آیا تبدیلی انجام شده
+          if (JSON.stringify(row) !== JSON.stringify(normalized)) {
+            foundPersian = true;
+          }
+          
+          return normalized;
+        });
+
+        setHasPersianNumbers(foundPersian);
+        setData(normalizedData);
+        setEndIndex(Math.min(normalizedData.length, chartType === "pie" ? 20 : 50));
+        
+        const keys = Object.keys(normalizedData[0]);
         setHeaders(keys);
         
-        const textCol = keys.find((k) => typeof jsonData[0][k] === "string") || keys[0];
-        const numCol = keys.find((k) => typeof jsonData[0][k] === "number") || keys[1] || keys[0];
+        const textCol = keys.find((k) => typeof normalizedData[0][k] === "string") || keys[0];
+        const numCol = keys.find((k) => typeof normalizedData[0][k] === "number") || keys[1] || keys[0];
 
         setXAxisKey(textCol);
         setDataKeys([numCol]);
@@ -111,20 +127,33 @@ export default function ExcelChartTool() {
           )}
         </div>
 
+        {/* هشدار اعداد فارسی */}
+        {hasPersianNumbers && (
+          <div className={`flex items-start gap-3 p-4 rounded-xl border ${theme.border} bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800`}>
+            <AlertCircle size={18} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-bold text-blue-700 dark:text-blue-300 mb-1">
+                اعداد فارسی تبدیل شد ✓
+              </p>
+              <p className="text-blue-600 dark:text-blue-400 text-xs">
+                اعداد فارسی در فایل شما به انگلیسی تبدیل شدند تا نمودار به درستی نمایش داده شود.
+              </p>
+            </div>
+          </div>
+        )}
+
         {data.length > 0 && (
           <div className={`flex flex-col sm:flex-row gap-4 sm:gap-6 p-5 rounded-2xl border border-dashed ${theme.border} bg-gray-50/50 dark:bg-white/5 overflow-visible z-20`}>
             <div className="flex-1 z-30">
               <CustomDropdown label="محور افقی" options={headers} value={xAxisKey} onChange={setXAxisKey} />
             </div>
             <div className="flex-1 z-20">
-              {/* انتخاب چندگانه برای Area و Bar */}
               {chartType === "area" || chartType === "bar" ? (
                 <CustomMultiSelect
                   label={chartType === "bar" ? "داده‌های عددی (حداکثر ۲ مورد)" : "داده‌های عددی (چندگانه)"}
                   options={headers}
                   selectedValues={dataKeys}
                   onChange={(vals) => {
-                    // محدودیت ۲ تایی برای نمودار میله‌ای (برای زیبایی)
                     if (chartType === 'bar' && vals.length > 2) return; 
                     setDataKeys(vals);
                   }}
@@ -204,18 +233,16 @@ export default function ExcelChartTool() {
           <div className="w-full h-[400px] overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 pb-4">
             <div className="h-full transition-all duration-300" style={{ minWidth: chartType === "pie" ? "100%" : `${zoomLevel}%` }}>
               
-              {/* BarChartComponent با پشتیبانی از چند ستون */}
               {chartType === "bar" && (
                 <BarChartComponent
                   data={filteredData}
                   xAxisKey={xAxisKey}
-                  dataKeys={dataKeys} // ارسال آرایه
+                  dataKeys={dataKeys}
                   theme={theme}
                   minWidth={zoomLevel}
                 />
               )}
               
-              {/* LineChart (فعلاً تک ستونه) */}
               {chartType === "line" && (
                 <LineChartComponent
                   data={filteredData}
@@ -226,18 +253,16 @@ export default function ExcelChartTool() {
                 />
               )}
               
-              {/* AreaChart (چند ستونه) */}
               {chartType === "area" && (
                 <AreaChartComponent
                   data={filteredData}
                   xAxisKey={xAxisKey}
-                  dataKeys={dataKeys} // ارسال آرایه
+                  dataKeys={dataKeys}
                   theme={theme}
                   minWidth={zoomLevel}
                 />
               )}
 
-              {/* PieChart (تک ستونه) */}
               {chartType === "pie" && (
                 <PieChartComponent
                   data={filteredData}

@@ -45,7 +45,4 @@ export const THEMES: Record<ThemeName, ThemePalette> = {
     ring: 'focus:ring-blue-500',
     gradient: 'from-blue-400 to-cyan-300',
   },
-  
-  // --- فضا برای تم‌های آینده ---
-  // اینجا می‌تونی بعداً تم‌های جدید اضافه کنی
 };

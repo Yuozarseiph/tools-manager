@@ -14,4 +14,5 @@ export interface DocSectionItem {
   features: string[];
   privacyNote?: string;
   howItWorks?: string[];
+  systemRequirements?: string[];
 }

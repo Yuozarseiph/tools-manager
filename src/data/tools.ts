@@ -1,3 +1,5 @@
+// data/tools.ts
+
 import {
   FileStack,
   Image as ImageIcon,
@@ -21,6 +23,7 @@ import {
   FileSpreadsheet,
   Edit3,
   PieChart,
+  Sparkles, // اضافه کن
 } from "lucide-react";
 
 export interface Tool {
@@ -130,6 +133,17 @@ export const TOOLS: Tool[] = [
     badge: "طراحی",
     category: "image",
   },
+  {
+    id: "background-remover",
+    title: "حذف پس‌زمینه تصویر",
+    description:
+      "حذف خودکار پس‌زمینه با هوش مصنوعی. کاملاً آفلاین و بدون آپلود به سرور.",
+    Icon: Sparkles,
+    href: "/tools/background-remover",
+    status: "active",
+    badge: "AI",
+    category: "image",
+  },
 
   // --- System ---
   {
@@ -216,13 +230,13 @@ export const TOOLS: Tool[] = [
     title: "ویرایشگر اکسل",
     description:
       "ویرایش آنلاین فایل‌های اکسل، تغییر داده‌ها و ذخیره فایل جدید (XLSX).",
-    Icon: Edit3, 
+    Icon: Edit3,
     href: "/tools/excel-editor",
     status: "active",
     badge: "Pro",
     category: "excel",
   },
-    {
+  {
     id: "excel-chart",
     title: "رسم نمودار اکسل",
     description: "تبدیل داده‌های اکسل به نمودارهای تصویری و زیبا.",
@@ -232,7 +246,6 @@ export const TOOLS: Tool[] = [
     badge: "Pro",
     category: "excel",
   },
-
 
   // --- Security ---
   {

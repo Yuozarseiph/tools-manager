@@ -1,168 +1,229 @@
+// app/docs/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { DOCS_DATA } from "@/data/docs";
 import DocSection from "@/components/docs/DocSection";
-import { Menu, X, ChevronLeft, ArrowRight, Home } from "lucide-react";
+import { Menu, X, ArrowRight, BookOpen } from "lucide-react";
 
 export default function DocsPage() {
   const theme = useThemeColors();
-  const [activeId, setActiveId] = useState<string>("");
+  const [selectedTool, setSelectedTool] = useState<string>(DOCS_DATA[0].id);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("div[id]");
-      let current = "";
-
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        if (window.scrollY >= sectionTop - 150) {
-          current = section.getAttribute("id") || "";
-        }
-      });
-      setActiveId(current);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const categories = Array.from(new Set(DOCS_DATA.map((doc) => doc.category)));
+  const currentDoc = DOCS_DATA.find((d) => d.id === selectedTool) || DOCS_DATA[0];
+
+  const handleToolClick = (id: string) => {
+    setSelectedTool(id);
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className={`min-h-screen ${theme.bg}`}>
+      {/* استایل سفارشی اسکرول */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: ${theme.text === 'text-slate-900' ? 'rgba(100, 116, 139, 0.3)' : 'rgba(148, 163, 184, 0.3)'};
+          border-radius: 10px;
+          transition: background 0.2s;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: ${theme.text === 'text-slate-900' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(96, 165, 250, 0.5)'};
+        }
+
+        /* برای Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: ${theme.text === 'text-slate-900' ? 'rgba(100, 116, 139, 0.3)' : 'rgba(148, 163, 184, 0.3)'} transparent;
+        }
+      `}</style>
+
+      {/* دکمه منو موبایل */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className={`lg:hidden fixed top-20 left-4 z-50 p-3 rounded-xl shadow-lg backdrop-blur-md border transition-all active:scale-95
           ${
             isMobileMenuOpen
-              ? "bg-red-500/80 border-red-500 text-white"
-              : `bg-white/70 dark:bg-black/70 border-gray-200 dark:border-gray-700 ${theme.text}`
+              ? `${theme.primary} border-transparent`
+              : `${theme.card} ${theme.border}`
           }
         `}
       >
-        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        {isMobileMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} className={theme.text} />}
       </button>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex gap-12 items-start">
-        <aside
-          className={`
-          fixed inset-y-0 right-0 z-40 w-72 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:h-[calc(100vh-100px)] lg:sticky lg:top-24 lg:w-80
-          ${
-            isMobileMenuOpen
-              ? "translate-x-0 bg-white dark:bg-gray-900 shadow-2xl"
-              : "translate-x-full"
-          }
-          lg:bg-transparent lg:shadow-none overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700
-        `}
-        >
-          <div className="p-6 lg:p-0 space-y-8">
-            <div className="mb-6 lg:hidden flex items-center justify-between">
-              <h2 className={`text-xl font-black ${theme.text}`}>
-                فهرست مطالب
-              </h2>
-              <button onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={24} className={theme.text} />
-              </button>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+        {/* هدر صفحه */}
+        <div className="mb-8 lg:mb-12">
+          <Link
+            href="/"
+            className={`inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+          >
+            <ArrowRight size={16} /> بازگشت به خانه
+          </Link>
 
-            <Link
-              href="/"
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl border font-bold transition-all group
-                ${theme.card} ${theme.border} hover:border-blue-500 hover:shadow-md mb-6`}
-            >
-              <div
-                className={`p-1.5 rounded-lg ${theme.secondary} group-hover:bg-blue-500 group-hover:text-white transition-colors`}
-              >
-                <Home size={18} />
-              </div>
-              <span
-                className={`${theme.text} group-hover:text-blue-600 dark:group-hover:text-blue-400`}
-              >
-                بازگشت به خانه
-              </span>
-              <ArrowRight
-                size={16}
-                className={`mr-auto opacity-50 group-hover:-translate-x-1 transition-transform ${theme.text}`}
-              />
-            </Link>
-
-            {categories.map((cat) => (
-              <div key={cat}>
-                <h3
-                  className={`font-bold text-sm mb-3 px-3 flex items-center gap-2 ${theme.accent}`}
-                >
-                  {cat}
-                </h3>
-                <ul className={`space-y-1 border-r-2 ${theme.border}`}>
-                  {DOCS_DATA.filter((d) => d.category === cat).map((doc) => (
-                    <li key={doc.id}>
-                      <a
-                        href={`#${doc.id}`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`group flex items-center justify-between px-3 py-2 text-sm transition-all border-r-2 -mr-[2px]
-                          ${
-                            activeId === doc.id
-                              ? "border-blue-500 text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/10"
-                              : `border-transparent ${theme.textMuted} hover:text-blue-500 hover:bg-black/5 dark:hover:bg-white/5`
-                          }
-                        `}
-                      >
-                        <span className="truncate">{doc.title}</span>
-                        {activeId === doc.id && (
-                          <ChevronLeft size={14} className="text-blue-500" />
-                        )}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        {isMobileMenuOpen && (
-          <div
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
-          />
-        )}
-
-        <main className="flex-1 min-w-0">
-          <div className="mb-16 border-b pb-12 relative overflow-hidden rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-blue-500/5 to-purple-500/5 border border-blue-500/10">
-            <Link
-              href="/"
-              className="lg:hidden inline-flex items-center gap-1 text-sm font-bold mb-6 opacity-60 hover:opacity-100 transition-opacity"
-            >
-              <ArrowRight size={16} /> بازگشت به خانه
-            </Link>
-
+          <div className={`rounded-3xl border p-8 md:p-12 relative overflow-hidden ${theme.card} ${theme.border}`}>
             <div className="relative z-10">
-              <h1
-                className={`text-4xl md:text-5xl font-black mb-6 ${theme.text}`}
-              >
-                مستندات فنی
-              </h1>
-              <p
-                className={`text-lg md:text-xl leading-loose max-w-2xl ${theme.textMuted}`}
-              >
-                راهنمای جامع ابزارها، معماری سیستم و جزئیات فنی.
-                <br />
-                ما به <strong>شفافیت</strong> و <strong>حریم خصوصی</strong>{" "}
-                متعهدیم.
+              <div className="flex items-center gap-4 mb-4">
+                <div className={`p-3 rounded-xl ${theme.secondary}`}>
+                  <BookOpen size={28} className={theme.accent} />
+                </div>
+                <h1 className={`text-3xl md:text-4xl font-bold ${theme.text}`}>
+                  مستندات فنی
+                </h1>
+              </div>
+              <p className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}>
+                راهنمای جامع ابزارها، معماری سیستم و جزئیات فنی پردازش.
+                <span className="block mt-2 text-sm opacity-70">
+                  🔒 همه پردازش‌ها در مرورگر شما انجام می‌شود
+                </span>
               </p>
             </div>
-            <div className="absolute top-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+            
+            {/* دکوریشن */}
+            <div className={`absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl opacity-20 ${theme.gradient} bg-gradient-to-br`} />
+            <div className={`absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 ${theme.gradient} bg-gradient-to-br`} />
           </div>
-          <div className="space-y-24 pb-20">
-            {DOCS_DATA.map((doc, index) => (
-              <DocSection key={doc.id} data={doc} theme={theme} index={index} />
-            ))}
-          </div>
-        </main>
+        </div>
+
+        <div className="flex gap-8 items-start">
+          {/* Sidebar با اسکرول سفارشی */}
+          <aside
+            className={`
+            custom-scrollbar
+            fixed inset-y-0 right-0 z-40 w-80 transform transition-transform duration-300 
+            lg:translate-x-0 lg:static lg:w-72 xl:w-80 lg:sticky lg:top-24 
+            ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}
+            ${theme.card} lg:bg-transparent shadow-2xl lg:shadow-none border-l lg:border-0 ${theme.border}
+            overflow-y-auto
+            max-h-screen lg:max-h-[calc(100vh-120px)]
+          `}
+          >
+            <div className="p-6 space-y-6">
+              {/* عنوان موبایل */}
+              <div className="lg:hidden flex items-center justify-between mb-4">
+                <h2 className={`text-lg font-bold ${theme.text}`}>انتخاب ابزار</h2>
+                <button onClick={() => setIsMobileMenuOpen(false)}>
+                  <X size={24} className={theme.text} />
+                </button>
+              </div>
+
+              {/* دسته‌بندی‌ها */}
+              {categories.map((cat) => (
+                <div key={cat}>
+                  <h3 className={`font-bold text-xs uppercase tracking-wider mb-3 px-2 ${theme.textMuted}`}>
+                    {cat}
+                  </h3>
+                  <ul className="space-y-1">
+                    {DOCS_DATA.filter((d) => d.category === cat).map((doc) => {
+                      const Icon = doc.icon;
+                      const isActive = selectedTool === doc.id;
+                      
+                      return (
+                        <li key={doc.id}>
+                          <button
+                            onClick={() => handleToolClick(doc.id)}
+                            className={`w-full text-right flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium
+                              ${
+                                isActive
+                                  ? `${theme.primary} shadow-md`
+                                  : `${theme.bg} ${theme.text} hover:${theme.secondary}`
+                              }
+                            `}
+                          >
+                            <Icon size={18} className={isActive ? "text-white" : theme.accent} />
+                            <span className={`truncate ${isActive ? "text-white" : ""}`}>
+                              {doc.title}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          {/* Overlay */}
+          {isMobileMenuOpen && (
+            <div
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+            />
+          )}
+
+          {/* محتوای اصلی */}
+          <main className="flex-1 min-w-0">
+            <DocSection data={currentDoc} theme={theme} index={0} />
+
+            {/* ناوبری بین ابزارها */}
+            <div className={`mt-12 flex gap-4 justify-between items-center p-6 rounded-2xl border ${theme.card} ${theme.border}`}>
+              {(() => {
+                const currentIndex = DOCS_DATA.findIndex((d) => d.id === selectedTool);
+                const prevDoc = currentIndex > 0 ? DOCS_DATA[currentIndex - 1] : null;
+                const nextDoc = currentIndex < DOCS_DATA.length - 1 ? DOCS_DATA[currentIndex + 1] : null;
+
+                return (
+                  <>
+                    {prevDoc ? (
+                      <button
+                        onClick={() => handleToolClick(prevDoc.id)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition hover:${theme.secondary} ${theme.text}`}
+                      >
+                        <ArrowRight size={16} />
+                        <div className="text-right">
+                          <div className={`text-xs ${theme.textMuted}`}>قبلی</div>
+                          <div className="text-sm font-bold">{prevDoc.title}</div>
+                        </div>
+                      </button>
+                    ) : (
+                      <div />
+                    )}
+
+                    {nextDoc ? (
+                      <button
+                        onClick={() => handleToolClick(nextDoc.id)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition hover:${theme.secondary} ${theme.text}`}
+                      >
+                        <div className="text-left">
+                          <div className={`text-xs ${theme.textMuted}`}>بعدی</div>
+                          <div className="text-sm font-bold">{nextDoc.title}</div>
+                        </div>
+                        <ArrowRight size={16} className="rotate-180" />
+                      </button>
+                    ) : (
+                      <div />
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Footer */}
+            <div className={`mt-8 text-center py-6 ${theme.textMuted}`}>
+              <p className="text-sm">
+                سوال یا پیشنهادی دارید؟{" "}
+                <Link href="/contact" className={`font-bold hover:underline ${theme.accent}`}>
+                  تماس با ما
+                </Link>
+              </p>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );
