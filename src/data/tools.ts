@@ -140,7 +140,7 @@ export const TOOLS: Tool[] = [
       "حذف خودکار پس‌زمینه با هوش مصنوعی. کاملاً آفلاین و بدون آپلود به سرور.",
     Icon: Sparkles,
     href: "/tools/background-remover",
-    status: "active",
+    status: "coming-soon",
     badge: "AI",
     category: "image",
   },
