@@ -18,6 +18,7 @@ const CATEGORIES = [
   { id: 'system', label: 'سیستم', icon: MonitorSmartphone },
   { id: 'utility', label: 'کاربردی', icon: Wrench },
   { id: 'excel', label: 'اکسل', icon: FileText },
+  { id: 'audio', label: 'صدا', icon: FileText },
 ];
 
 export default function ToolsGrid() {

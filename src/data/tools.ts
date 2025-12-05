@@ -23,7 +23,8 @@ import {
   FileSpreadsheet,
   Edit3,
   PieChart,
-  Sparkles, // اضافه کن
+  Sparkles,
+  AudioLines, 
 } from "lucide-react";
 
 export interface Tool {
@@ -41,7 +42,8 @@ export interface Tool {
     | "security"
     | "utility"
     | "system"
-    | "excel";
+    | "excel"
+    | "audio";
 }
 
 export const TOOLS: Tool[] = [
@@ -312,4 +314,17 @@ export const TOOLS: Tool[] = [
     badge: "رایگان",
     category: "utility",
   },
+  // ---Audio ---
+  {
+  id: "audio-editor",
+  title: "ویرایشگر صوت (بتا)",
+  description:
+    "برش، پخش و ویرایش ساده‌ی فایل‌های صوتی به‌صورت کاملاً محلی در مرورگر شما، بدون آپلود روی سرور.",
+  Icon: AudioLines,
+  href: "/tools/audio-editor",
+  status: "active",
+  badge: "صوت",
+  category: "audio",
+}
+
 ];
