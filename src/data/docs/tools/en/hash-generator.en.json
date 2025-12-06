@@ -1,0 +1,30 @@
+{
+  "id": "hash-generator",
+  "title": "Hash generator",
+  "category": "security",
+  "description": "Generate digital fingerprints (hashes) for text and files using standard algorithms.",
+  "features": [
+    "Supports SHA-1, SHA-256, SHA-384, SHA-512",
+    "Verify file integrity",
+    "Fast, in-browser hashing"
+  ],
+  "ui": {
+    "input": {
+      "label": "Input text",
+      "placeholder": "Type the text you want to hash here..."
+    },
+    "algorithms": {
+      "sha1": "SHA-1",
+      "sha256": "SHA-256",
+      "sha384": "SHA-384",
+      "sha512": "SHA-512"
+    },
+    "hashRow": {
+      "empty": "..."
+    },
+    "page": {
+      "title": "Hash generator",
+      "description": "Convert text into secure hash codes (SHA-1, SHA-256, SHA-384, SHA-512) instantly in the browser."
+    }
+  }
+}

@@ -3,9 +3,10 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
-import ThemeBody from "@/components/ThemeBody"; 
+import ThemeBody from "@/components/ThemeBody";
 import InstallPWA from "@/components/InstallPWA";
 import { Vazirmatn } from "next/font/google";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,15 +24,16 @@ const vazir = Vazirmatn({
 });
 export const metadata: Metadata = {
   title: "Tools Manager - جعبه ابزار آنلاین رایگان",
-  description: "ابزارهای ادغام PDF، فشرده‌سازی عکس و ابزارهای توسعه‌دهندگان به صورت کاملاً امن و سمت کلاینت.",
-  manifest: "/manifest.json", 
+  description:
+    "ابزارهای ادغام PDF، فشرده‌سازی عکس و ابزارهای توسعه‌دهندگان به صورت کاملاً امن و سمت کلاینت.",
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Tools Manager",
   },
   icons: {
-    icon: "/icons/icon-192.png", 
+    icon: "/icons/icon-192.png",
     apple: "/icons/icon-192.png",
   },
 };
@@ -52,10 +54,12 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <ThemeProvider>
-        <ThemeBody className={`${vazir.variable} antialiased font-sans`}>
-          {children}
-          <InstallPWA />
-        </ThemeBody>
+        <LanguageProvider>
+          <ThemeBody className={`${vazir.variable} antialiased font-sans`}>
+            {children}
+            <InstallPWA />
+          </ThemeBody>
+        </LanguageProvider>
       </ThemeProvider>
     </html>
   );

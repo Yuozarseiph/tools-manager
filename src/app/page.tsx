@@ -11,7 +11,6 @@ export default function Home() {
   const theme = useThemeColors();
 
   return (
-    // اینجا بک‌گراند کل بادی رو کنترل می‌کنیم
     <div className={`min-h-screen font-sans transition-colors duration-500 flex flex-col ${theme.bg}`}>
       
       <Header />

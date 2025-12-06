@@ -163,3 +163,58 @@ export function applyFadeOut(
     }
   }
 }
+export function applyGainDb(buffer: AudioBuffer, gainDb: number): void {
+  const gain = Math.pow(10, gainDb / 20);
+  const channels = buffer.numberOfChannels;
+
+  for (let ch = 0; ch < channels; ch++) {
+    const data = buffer.getChannelData(ch);
+    for (let i = 0; i < data.length; i++) {
+      data[i] *= gain;
+    }
+  }
+}
+
+export function normalizeAudioBuffer(
+  buffer: AudioBuffer,
+  targetPeak = 0.99
+): void {
+  const channels = buffer.numberOfChannels;
+  let maxAmp = 0;
+
+  for (let ch = 0; ch < channels; ch++) {
+    const data = buffer.getChannelData(ch);
+    for (let i = 0; i < data.length; i++) {
+      const v = Math.abs(data[i]);
+      if (v > maxAmp) maxAmp = v;
+    }
+  }
+
+  if (!maxAmp || maxAmp <= 0) return;
+
+  const gain = targetPeak / maxAmp;
+
+  for (let ch = 0; ch < channels; ch++) {
+    const data = buffer.getChannelData(ch);
+    for (let i = 0; i < data.length; i++) {
+      data[i] *= gain;
+    }
+  }
+}
+
+export function cloneAudioBuffer(
+  context: BaseAudioContext,
+  buffer: AudioBuffer
+): AudioBuffer {
+  const clone = context.createBuffer(
+    buffer.numberOfChannels,
+    buffer.length,
+    buffer.sampleRate
+  );
+
+  for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+    clone.getChannelData(ch).set(buffer.getChannelData(ch));
+  }
+
+  return clone;
+}

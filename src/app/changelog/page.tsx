@@ -1,12 +1,27 @@
+// app/changelog/page.tsx
 "use client";
 
 import Link from "next/link";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { ArrowRight, Calendar, Rocket, Wrench, Bug, Sparkles } from "lucide-react";
-import { CHANGELOG_DATA, ChangelogEntry } from "@/data/changelog";
+import {
+  ArrowRight,
+  Calendar,
+  Rocket,
+  Wrench,
+  Bug,
+  Sparkles,
+} from "lucide-react";
+import {
+  CHANGELOG_BY_LOCALE,
+  type ChangelogEntry,
+} from "@/data/changelog";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ChangelogPage() {
   const theme = useThemeColors();
+  const { t, locale } = useLanguage();
+
+  const data: ChangelogEntry[] = CHANGELOG_BY_LOCALE[locale];
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -21,20 +36,10 @@ export default function ChangelogPage() {
     }
   };
 
-  const getCategoryTitle = (category: string) => {
-    switch (category) {
-      case "added":
-        return "اضافه شده";
-      case "improved":
-        return "بهبود یافته";
-      case "fixed":
-        return "رفع شده";
-      default:
-        return "";
-    }
-  };
+  const getCategoryTitle = (category: string) =>
+    t(`changelog.categories.${category}`);
 
-  const isLatest = (entry: ChangelogEntry, index: number) => index === 0;
+  const isLatest = (_entry: ChangelogEntry, index: number) => index === 0;
 
   return (
     <div className={`min-h-screen ${theme.bg}`}>
@@ -44,7 +49,8 @@ export default function ChangelogPage() {
             href="/"
             className={`inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
           >
-            <ArrowRight size={16} /> بازگشت به خانه
+            <ArrowRight size={16} />
+            {t("changelog.back")}
           </Link>
 
           <div
@@ -55,14 +61,16 @@ export default function ChangelogPage() {
                 <div className={`p-3 rounded-xl ${theme.secondary}`}>
                   <Rocket size={28} className={theme.accent} />
                 </div>
-                <h1 className={`text-3xl md:text-4xl font-bold ${theme.text}`}>
-                  تاریخچه تغییرات
+                <h1
+                  className={`text-3xl md:text-4xl font-bold ${theme.text}`}
+                >
+                  {t("changelog.hero.title")}
                 </h1>
               </div>
               <p
                 className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}
               >
-                آخرین بروزرسانی‌ها، ویژگی‌های جدید و بهبودهای Tools Manager
+                {t("changelog.hero.subtitle")}
               </p>
             </div>
 
@@ -76,7 +84,7 @@ export default function ChangelogPage() {
         </div>
 
         <div className="space-y-6">
-          {CHANGELOG_DATA.map((entry, index) => (
+          {data.map((entry, index) => (
             <div
               key={entry.version}
               className={`rounded-2xl border p-8 ${theme.card} ${theme.border}`}
@@ -85,13 +93,13 @@ export default function ChangelogPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className={`text-2xl font-bold ${theme.text}`}>
-                      نسخه {entry.version}
+                      {t("changelog.versionLabel")} {entry.version}
                     </h2>
                     {isLatest(entry, index) && (
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${theme.primary}`}
                       >
-                        جاری
+                        {t("changelog.currentLabel")}
                       </span>
                     )}
                   </div>
@@ -107,7 +115,11 @@ export default function ChangelogPage() {
                   className={`px-4 py-2 rounded-xl border ${theme.secondary} ${theme.border}`}
                 >
                   <span className={`text-xs font-bold ${theme.accent}`}>
-                    {entry.type === "release" ? "RELEASE" : "BETA"}
+                    {entry.type === "release"
+                      ? t("changelog.type.release")
+                      : entry.type === "fix"
+                      ? t("changelog.type.fix")
+                      : t("changelog.type.update")}
                   </span>
                 </div>
               </div>
@@ -145,19 +157,18 @@ export default function ChangelogPage() {
             className={`rounded-2xl border p-6 text-center ${theme.card} ${theme.border}`}
           >
             <p className={`text-sm ${theme.textMuted}`}>
-              📅 تاریخچه کامل تغییرات نسخه‌های قدیمی‌تر در آینده به این صفحه
-              اضافه خواهد شد.
+              {t("changelog.note")}
             </p>
           </div>
 
           <div className={`text-center py-6 ${theme.textMuted}`}>
             <p className="text-sm">
-              سوال یا پیشنهادی دارید؟{" "}
+              {t("changelog.contact.question")}{" "}
               <Link
                 href="/contact"
                 className={`font-bold hover:underline ${theme.accent}`}
               >
-                تماس با ما
+                {t("nav.contact")}
               </Link>
             </p>
           </div>

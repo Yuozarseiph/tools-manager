@@ -1,0 +1,39 @@
+{
+  "id": "color-picker",
+  "title": "استخراج رنگ از تصویر",
+  "category": "image",
+  "description": "آپلود عکس و استخراج کد رنگ (HEX, RGB) هر نقطه‌ای از آن به همراه پالت رنگی تصویر.",
+  "features": [
+    "ذره‌بین برای دقت پیکسلی",
+    "کپی سریع کد رنگ",
+    "تولید پالت رنگی غالب"
+  ],
+  "technicalNote": {
+    "title": "Canvas API",
+    "content": "ما از متد getImageData برای دسترسی به آرایه پیکسلی تصویر استفاده می‌کنیم."
+  },
+  "ui": {
+    "format": {
+      "label": "فرمت خروجی:"
+    },
+    "upload": {
+      "dropTitle": "تصویر را اینجا رها کنید",
+      "dropSubtitle": "یا کلیک کنید برای انتخاب",
+      "loading": "در حال بارگذاری..."
+    },
+    "currentColor": {
+      "title": "رنگ انتخاب شده",
+      "copy": "کپی کردن",
+      "copied": "کپی شد!"
+    },
+    "palette": {
+      "title": "پالت رنگی",
+      "generateComplementaryTitle": "تولید رنگ‌های مکمل",
+      "downloadCssTitle": "دانلود CSS"
+    },
+    "history": {
+      "title": "انتخاب‌های من",
+      "clearAll": "پاک کردن همه"
+    }
+  }
+}

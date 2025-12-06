@@ -1,0 +1,107 @@
+{
+  "id": "audio-editor",
+  "title": "Audio editing (beta)",
+  "category": "audio",
+  "description": "Cut, fade and normalize audio files directly in your browser, with all processing done locally on your device.",
+  "features": [
+    "Trim any part of the audio and export as WAV",
+    "Apply fade-in and fade-out on the selected range",
+    "Adjust volume in decibels (dB)",
+    "Automatically normalize audio without clipping",
+    "100% client-side processing for privacy"
+  ],
+  "ui": {
+    "tabs": {
+      "trim": "Trim audio (beta)",
+      "volume": "Volume / normalization"
+    },
+    "header": {
+      "smallTitle": "Audio tools",
+      "subtitle": "All processing happens locally in your browser."
+    },
+    "trim": {
+      "upload": {
+        "title": "Select audio file",
+        "description": "Common formats like MP3, WAV and OGG are supported. The file is processed only on your device.",
+        "button": "Choose file"
+      },
+      "fileInfo": {
+        "totalDurationLabel": "Total duration:",
+        "currentPositionLabel": "Current position:",
+        "selectionLabel": "Selected range:",
+        "noFileTitle": "No file selected yet",
+        "noFileDescription": "Choose an audio file to play it, trim a range and export a WAV file with simple fade effects."
+      },
+      "transport": {
+        "playAll": "Play full file",
+        "stop": "Stop",
+        "playHelper": "Use this button to listen to the entire file."
+      },
+      "selection": {
+        "title": "Trim range",
+        "resetLabel": "Reset range",
+        "startLabel": "Start (seconds)",
+        "endLabel": "End (seconds)",
+        "playSelectionPrefix": "Play selected range",
+        "downloadIdle": "Download selected part",
+        "downloadWorking": "Generating file..."
+      },
+      "fade": {
+        "title": "Smooth fade effects",
+        "description": "Before downloading you can smooth the start and end of the audio with fade-in and fade-out.",
+        "fadeInLabel": "Enable Fade In",
+        "fadeOutLabel": "Enable Fade Out",
+        "fadeInDurationLabel": "Fade In duration (seconds)",
+        "fadeOutDurationLabel": "Fade Out duration (seconds)"
+      },
+      "errors": {
+        "decode": "Error while processing the audio file.",
+        "export": "Error while generating the output file."
+      },
+      "empty": {
+        "title": "No file selected yet",
+        "description": "Choose an audio file to play, trim it and export the selected part as a WAV file."
+      }
+    },
+    "volume": {
+      "upload": {
+        "title": "Select audio file",
+        "description": "Upload an audio file to adjust its loudness or normalize it. Processing is done entirely in your browser.",
+        "button": "Choose file"
+      },
+      "fileInfo": {
+        "durationLabel": "Duration:",
+        "currentPositionLabel": "Current position:",
+        "noFileTitle": "No file selected yet",
+        "noFileDescription": "Choose an audio file to change its volume or normalize it and then export a WAV file."
+      },
+      "transport": {
+        "play": "Play file",
+        "stop": "Stop",
+        "helper": "Playback uses the original file only; your adjustments apply to the exported version."
+      },
+      "controls": {
+        "title": "Volume control",
+        "description": "Change the volume in decibels or let the tool normalize the audio so peaks are close to maximum without clipping.",
+        "gainLabel": "Volume level (dB)",
+        "normalizeLabel": "Auto-normalize to maximum loudness without clipping"
+      },
+      "actions": {
+        "downloadIdle": "Download processed version",
+        "downloadWorking": "Generating file..."
+      },
+      "errors": {
+        "decode": "Error while processing the audio file.",
+        "export": "Error while generating the output file."
+      },
+      "empty": {
+        "title": "No file selected yet",
+        "description": "Choose an audio file to adjust its loudness or normalize it and export a WAV file."
+      }
+    },
+    "page": {
+      "title": "Audio editing (beta)",
+      "description": "Select an audio file and trim it, apply fades or adjust volume entirely on your device. Nothing is uploaded to a server."
+    }
+  }
+}

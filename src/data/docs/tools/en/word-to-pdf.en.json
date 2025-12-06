@@ -1,0 +1,53 @@
+{
+  "id": "word-to-pdf",
+  "title": "Word to PDF",
+  "category": "pdf",
+  "description": "Convert your Word (.docx) documents to PDF directly in the browser while preserving formatting, tables and images.",
+  "features": [
+    "Convert .docx files to PDF with one click",
+    "Keep document structure, tables, images and basic styles",
+    "100% client-side processing, no file upload"
+  ],
+  "ui": {
+    "upload": {
+      "title": "Select your Word file",
+      "subtitle": "Allowed format: .docx • No size limit"
+    },
+    "file": {
+      "sizeUnit": "MB",
+      "removeTitle": "Remove file"
+    },
+    "errors": {
+      "invalidType": "Only .docx files are supported",
+      "emptyContent": "The document content is empty.",
+      "iframeAccess": "Unable to access the iframe document.",
+      "genericPrefix": "Conversion error:",
+      "unknown": "An unknown error occurred"
+    },
+    "progress": {
+      "reading": "Reading file...",
+      "converting": "Converting Word to HTML...",
+      "rendering": "Rendering content...",
+      "generating": "Generating PDF...",
+      "success": "Conversion completed successfully!"
+    },
+    "buttons": {
+      "convertIdle": "Convert to PDF & download",
+      "convertLoading": "Processing..."
+    },
+    "guide": {
+      "title": "✨ Tool features",
+      "items": [
+        "✓ Preserve formatting, tables and images",
+        "✓ Full support for RTL languages like Persian",
+        "✓ No file size limit",
+        "✓ 100% secure: processed in your browser",
+        "✓ Automatic pagination for long documents"
+      ]
+    },
+    "page": {
+      "title": "Word to PDF",
+      "description": "Convert your Word (.docx) files to PDF while keeping text and formatting intact."
+    }
+  }
+}

@@ -4,10 +4,7 @@ import {
   FileJson,
   FileType,
   Image,
-  Lock,
-  ShieldCheck,
   MonitorSmartphone,
-  Calculator,
   Calendar,
   QrCode,
   FileSpreadsheet,
@@ -16,356 +13,199 @@ import {
   KeyRound,
   Ruler,
   Type,
-  Sparkles, // اضافه کن
+  Sparkles
 } from "lucide-react";
-import { DocSectionItem } from "@/types/docs";
+import type { LucideIcon } from "lucide-react";
+import type { DocSectionItem } from "@/types/docs";
+import type { Locale } from "@/context/LanguageContext";
 
-export const DOCS_DATA: DocSectionItem[] = [
-  // --- Developer Tools ---
-  {
-    id: "base64",
-    title: "مبدل Base64",
-    category: "ابزار توسعه‌دهندگان",
-    icon: Code2,
-    description:
-      "رمزنگاری و رمزگشایی داده‌ها به فرمت Base64 که برای انتقال داده‌های باینری در محیط‌های متنی (مثل ایمیل یا URL) استفاده می‌شود.",
-    features: [
-      "پشتیبانی از UTF-8 (متون فارسی)",
-      "تبدیل بلادرنگ (Real-time)",
-      "بدون محدودیت حجم متن",
-    ],
-    howItWorks: [
-      "متن ورودی به آرایه‌ای از بایت‌ها تبدیل می‌شود.",
-      "از توابع داخلی btoa و atob مرورگر با یک لایه اصلاح‌کننده برای کاراکترهای یونیکد استفاده می‌شود.",
-    ],
-    privacyNote:
-      "هیچ متنی ذخیره یا ارسال نمی‌شود. تبدیل‌ها کاملاً در حافظه مرورگر انجام می‌شوند.",
-  },
-  {
-    id: "json-formatter",
-    title: "فرمت‌کننده و اعتبارسنج JSON",
-    category: "ابزار توسعه‌دهندگان",
-    icon: FileJson,
-    description:
-      "ابزاری برای زیباسازی (Prettify)، فشرده‌سازی (Minify) و رفع خطاهای کدهای JSON نامرتب.",
-    features: [
-      "تشخیص خطای سینتکس با شماره خط",
-      "قابلیت تا کردن (Collapsible) آبجکت‌ها",
-      "تم رنگی برای خوانایی کد",
-    ],
-    howItWorks: [
-      "استفاده از JSON.parse برای اعتبارسنجی و JSON.stringify برای فرمت‌دهی مجدد.",
-    ],
-  },
-  {
-    id: "code-visualizer",
-    title: "مصورساز کد (Code Visualizer)",
-    category: "ابزار توسعه‌دهندگان",
-    icon: FileType,
-    description:
-      "تبدیل کدهای پیچیده به گراف‌های بصری و فلوچارت برای درک سریع‌تر منطق و ساختار برنامه.",
-    features: [
-      "پشتیبانی از زبان‌ JavaScript",
-      "پشتیبانی از زبان C#",
-      "رسم گراف روابط بین توابع و کلاس‌ها",
-      "تشخیص خودکار نودها و یال‌ها (Nodes & Edges)",
-    ],
-    technicalNote: {
-      title: "نحوه پردازش",
-      content:
-        "این ابزار کد شما را پارس کرده و ساختار آن را (بدون اجرا کردن) به یک گراف تبدیل می‌کند. برای JS از تحلیلگر AST و برای C# از Regex های پیشرفته برای استخراج متدها استفاده می‌شود.",
-    },
-    howItWorks: [
-      "کد ورودی توسط پارسر مربوطه (JS یا C#) تحلیل می‌شود.",
-      'توابع، کلاس‌ها و متغیرها به عنوان "گره" (Node) شناسایی می‌شوند.',
-      'فراخوانی‌ها و وابستگی‌ها به عنوان "یال" (Edge) ترسیم می‌شوند.',
-      "کتابخانه React Flow گراف نهایی را به صورت تعاملی رسم می‌کند.",
-    ],
-  },
+// ---------- Types ----------
 
-  {
-    id: "markdown-preview",
-    title: "پیش‌نمایش زنده مارک‌داون",
-    category: "ابزار توسعه‌دهندگان",
-    icon: FileType,
-    description:
-      "ویرایشگر Markdown با قابلیت نمایش همزمان خروجی HTML، مناسب برای نوشتن داکیومنت و Readme.",
-    features: [
-      "پشتیبانی از جداول و کد بلاک‌ها",
-      "خروجی مشابه GitHub",
-      "اکسپورت به HTML",
-    ],
-  },
+export type DocCategoryKey =
+  | "developer"
+  | "excel"
+  | "image"
+  | "pdf"
+  | "security"
+  | "system"
+  | "utility"
+  | "audio";
 
-  // --- Excel Tools ---
-  {
-    id: "excel-chart",
-    title: "رسم نمودار از اکسل",
-    category: "اکسل و داده",
-    icon: FileSpreadsheet,
-    description:
-      "تبدیل داده‌های فایل اکسل به نمودارهای تعاملی و زیبا (میله‌ای، دایره‌ای، خطی و منطقه‌ای).",
-    features: [
-      "پشتیبانی از فایل‌های حجیم",
-      "تشخیص خودکار ستون‌های عددی",
-      "شخصی‌سازی رنگ‌ها",
-    ],
-    howItWorks: [
-      "فایل توسط کتابخانه XLSX پارس شده و داده‌ها به فرمت JSON برای کتابخانه Recharts تبدیل می‌شوند.",
-    ],
-  },
-  {
-    id: "excel-editor",
-    title: "ویرایشگر آنلاین اکسل",
-    category: "اکسل و داده",
-    icon: FileSpreadsheet,
-    description:
-      "باز کردن و ویرایش فایل‌های XLSX و CSV بدون نیاز به نصب آفیس، با قابلیت جستجو و فیلتر.",
-    features: [
-      "صفحه‌بندی (Pagination) برای فایل‌های سنگین",
-      "جستجوی آنی",
-      "تاریخچه تغییرات (Undo)",
-    ],
-    privacyNote:
-      "فایل اکسل شما در مرورگر پردازش شده و نسخه ویرایش شده مستقیماً در سیستم شما ساخته می‌شود.",
-  },
+type DocFromJson = Omit<DocSectionItem, "icon" | "category"> & {
+  category: DocCategoryKey;
+};
 
-  // --- Image Tools ---
-  {
-    id: "image-compressor",
-    title: "فشرده‌سازی هوشمند تصاویر",
-    category: "پردازش تصویر",
-    icon: Image,
-    description:
-      "کاهش حجم تصاویر PNG و JPEG تا ۹۰٪ بدون افت محسوس کیفیت برای استفاده در وب.",
-    features: [
-      "تنظیم درصد فشرده‌سازی",
-      "حذف متادیتا (EXIF)",
-      "تغییر سایز خودکار",
-    ],
-    howItWorks: [
-      "تصویر روی یک Canvas مخفی رسم شده و با الگوریتم‌های فشرده‌سازی مرورگر مجدداً انکود می‌شود.",
-    ],
-  },
-  {
-    id: "color-picker",
-    title: "استخراج رنگ از تصویر",
-    category: "پردازش تصویر",
-    icon: Image,
-    description:
-      "آپلود عکس و استخراج کد رنگ (HEX, RGB) هر نقطه‌ای از آن به همراه پالت رنگی تصویر.",
-    features: [
-      "ذره‌بین برای دقت پیکسلی",
-      "کپی سریع کد رنگ",
-      "تولید پالت رنگی غالب",
-    ],
-    technicalNote: {
-      title: "Canvas API",
-      content:
-        "ما از متد getImageData برای دسترسی به آرایه پیکسلی تصویر استفاده می‌کنیم.",
-    },
-  },
-  // {
-  //   id: "background-remover",
-  //   title: "حذف پس‌زمینه تصویر با AI",
-  //   category: "پردازش تصویر",
-  //   icon: Sparkles,
-  //   description:
-  //     "حذف خودکار و هوشمند پس‌زمینه تصاویر با استفاده از مدل‌های یادگیری عمیق، کاملاً آفلاین و بدون آپلود به سرور.",
-  //   features: [
-  //     "پردازش کاملاً آفلاین با WebGPU",
-  //     "پشتیبانی از چندین تصویر همزمان (تا 10 فایل)",
-  //     "پیش‌نمایش Before/After با اسلایدر تعاملی",
-  //     "سه سطح کیفیت: سریع (~15MB)، متوسط (~35MB)، عالی (~70MB)",
-  //     "خروجی PNG یا WebP",
-  //     "دانلود ZIP خودکار برای چند فایل",
-  //   ],
-  //   howItWorks: [
-  //     "اولین بار مدل هوش مصنوعی ONNX از سرورهای rembg دانلود می‌شود (بسته به کیفیت انتخابی).",
-  //     "تصویر به Canvas بارگذاری شده و به مدل ONNX Runtime ارسال می‌شود.",
-  //     "مدل با استفاده از شبکه عصبی U2-Net یا ISNet، پیکسل‌های پیش‌زمینه را شناسایی می‌کند.",
-  //     "ماسک شفافیت تولید شده روی تصویر اصلی اعمال می‌شود.",
-  //     "خروجی نهایی به صورت PNG یا WebP با کانال آلفا ذخیره می‌شود.",
-  //   ],
-  //   technicalNote: {
-  //     title: "تکنولوژی WebGPU",
-  //     content:
-  //       "این ابزار از WebGPU برای شتاب‌دهی سخت‌افزاری استفاده می‌کند که تا 550 برابر سریع‌تر از CPU معمولی است. پس از دانلود اولیه مدل، تمام پردازش‌ها در GPU دستگاه شما و کاملاً آفلاین انجام می‌شود.",
-  //   },
-  //   privacyNote:
-  //     "هیچ تصویری به سرور آپلود نمی‌شود. تمام پردازش‌ها در مرورگر و روی GPU دستگاه شما انجام می‌شود. مدل AI فقط یکبار دانلود شده و در Cache مرورگر ذخیره می‌شود.",
-  //   systemRequirements: [
-  //     "مرورگر Chrome یا Edge نسخه 113 یا بالاتر",
-  //     "پشتیبانی از WebGPU (اکثر کارت‌های گرافیک مدرن)",
-  //     "حداقل 4GB RAM برای کیفیت متوسط",
-  //     "فضای کش مرورگر برای ذخیره مدل",
-  //   ],
-  // },
+// ---------- Icon map ----------
 
-  // --- PDF Tools ---
-  {
-    id: "pdf-merge",
-    title: "ادغام فایل‌های PDF",
-    category: "مدیریت PDF",
-    icon: FileText,
-    description:
-      "چسباندن چندین فایل PDF به یکدیگر و ساخت یک فایل واحد با ترتیب دلخواه.",
-    features: [
-      "بدون محدودیت تعداد فایل",
-      "حفظ کیفیت اصلی صفحات",
-      "Drag & Drop",
-    ],
-    technicalNote: {
-      title: "کتابخانه pdf-lib",
-      content:
-        "عملیات ادغام با دستکاری ساختار داخلی PDF انجام می‌شود و نیازی به رندر مجدد صفحات نیست.",
-    },
-  },
-  {
-    id: "word-to-pdf",
-    title: "تبدیل Word به PDF",
-    category: "مدیریت PDF",
-    icon: FileText,
-    description:
-      "تبدیل فایل‌های docx به PDF بدون به‌هم‌ریختگی فونت‌ها و استایل‌ها (تا حد امکان در مرورگر).",
-    features: [
-      "پشتیبانی از متن فارسی",
-      "حفظ جداول و تصاویر",
-      "بدون نیاز به سرور",
-    ],
-    privacyNote:
-      "برخلاف سایر سرویس‌ها، فایل ورد شما آپلود نمی‌شود و تبدیل در مرورگر انجام می‌گیرد.",
-  },
+const FALLBACK_ICON: LucideIcon = FileType;
 
-  // --- Security Tools ---
-  {
-    id: "password-generator",
-    title: "پسورد ساز امن",
-    category: "امنیت",
-    icon: KeyRound,
-    description:
-      "تولید رمزهای عبور غیرقابل حدس با استفاده از منابع آنتروپی سیستم.",
-    features: [
-      "بدون الگوی تکراری",
-      "استفاده از کاراکترهای خاص",
-      "طول قابل تنظیم تا ۱۲۸ کاراکتر",
-    ],
-    technicalNote: {
-      title: "CSPRNG",
-      content:
-        "از crypto.getRandomValues استفاده می‌شود که از نویز سخت‌افزاری سیستم برای تولید اعداد تصادفی استفاده می‌کند.",
-    },
-  },
-  {
-    id: "hash-generator",
-    title: "مولد هش (Hashing)",
-    category: "امنیت",
-    icon: Hash,
-    description:
-      "تولید اثر انگشت دیجیتال (Hash) برای متون و فایل‌ها با الگوریتم‌های استاندارد.",
-    features: [
-      "پشتیبانی از SHA-256, SHA-512, MD5",
-      "بررسی تغییر ناپذیری فایل",
-      "سرعت بالا",
-    ],
-  },
+const ICONS_BY_ID: Record<string, LucideIcon> = {
+  // Developer
+  base64: Code2,
+  "json-formatter": FileJson,
+  "code-visualizer": FileType,
+  // دقت کن id داخل json هم "markdown" باشد، نه چیز دیگر
+  markdown: FileType,
 
-  // --- System Tools ---
-  {
-    id: "ip-checker",
-    title: "بررسی IP و موقعیت",
-    category: "سیستم و شبکه",
-    icon: MonitorSmartphone,
-    description:
-      "نمایش آی‌پی عمومی، نام سرویس‌دهنده اینترنت (ISP) و موقعیت تقریبی سرور.",
-    features: ["پشتیبانی از IPv4 و IPv6", "تشخیص پروکسی/VPN", "نمایش روی نقشه"],
-    technicalNote: {
-      title: "API های خارجی",
-      content:
-        "برای دریافت اطلاعات IP از چندین API معتبر (مثل ipapi) به صورت همزمان استفاده می‌شود.",
-    },
-  },
-  {
-    id: "user-agent",
-    title: "تحلیل User Agent",
-    category: "سیستم و شبکه",
-    icon: MonitorSmartphone,
-    description:
-      "استخراج اطلاعات مرورگر، سیستم عامل و دستگاه از رشته User Agent.",
-    features: [
-      "تشخیص نسخه دقیق مرورگر",
-      "تشخیص نوع دستگاه (موبایل/دسکتاپ)",
-      "بررسی موتور رندرینگ",
-    ],
-  },
+  // Excel
+  "excel-chart": FileSpreadsheet,
+  "excel-editor": FileSpreadsheet,
 
-  // --- Utility Tools ---
-  {
-    id: "qr-generator",
-    title: "سازنده QR Code",
-    category: "ابزار کاربردی",
-    icon: QrCode,
-    description:
-      "ساخت کدهای کیوآر برای لینک، متن، ایمیل یا وای‌فای با قابلیت شخصی‌سازی.",
-    features: [
-      "تنظیم رنگ و پس‌زمینه",
-      "تنظیم سطح اصلاح خطا (Error Correction)",
-      "دانلود با فرمت PNG/SVG",
-    ],
-  },
-  {
-    id: "unit-converter",
-    title: "مبدل واحدها",
-    category: "ابزار کاربردی",
-    icon: Ruler,
-    description:
-      "تبدیل واحدهای مختلف (طول، وزن، دما، حجم، سرعت و...) به یکدیگر.",
-    features: [
-      "دقت اعشاری بالا",
-      "تبدیل آنی",
-      "پشتیبانی از واحدهای امپریال و متریک",
-    ],
-  },
-  {
-    id: "date-converter",
-    title: "مبدل تاریخ",
-    category: "ابزار کاربردی",
-    icon: Calendar,
-    description: "تبدیل تاریخ شمسی به میلادی و قمری و برعکس.",
-    features: ["تقویم جلالی دقیق", "محاسبه سال کبیسه", "نمایش مناسبت‌ها"],
-  },
-  {
-    id: "word-counter",
-    title: "شمارنده کلمات",
-    category: "ابزار کاربردی",
-    icon: Type,
-    description: "شمارش تعداد کلمات، کاراکترها، جملات و پاراگراف‌های متن.",
-    features: [
-      "بدون احتساب فاصله (اختیاری)",
-      "تخمین زمان مطالعه",
-      "تحلیل تراکم کلمات",
-    ],
-  },
-  // --- Audio Tools ---
-  {
-  id: "audio-editor",
-  title: "ویرایشگر صوت (بتا)",
-  category: "ابزار صوتی",
-  icon: Sparkles,
-  description:
-    "برش و آماده‌سازی سریع فایل‌های صوتی به صورت کامل روی مرورگر، بدون نیاز به نصب نرم‌افزار یا آپلود فایل.",
-  features: [
-    "برش بازه دلخواه از صدا (Trim)",
-    "پخش پیش‌نمایش بازه انتخاب‌شده",
-    "اعمال Fade In / Fade Out روی شروع و پایان کلیپ",
-    "خروجی‌گرفتن به صورت فایل WAV"
-  ],
-  howItWorks: [
-    "فایل صوتی با استفاده از Web Audio API به AudioBuffer تبدیل شده و بازه انتخابی بر اساس ثانیه‌های شروع و پایان از آن جدا می‌شود.",
-    "روی داده‌های خام صوت، افکت‌های نرم‌کننده (Fade In / Fade Out) به صورت مستقیم اعمال شده و در نهایت خروجی به فرمت WAV در مرورگر ساخته می‌شود."
-  ],
-  privacyNote:
-    "تمام پردازش‌های صوتی با استفاده از Web Audio API در همان مرورگر شما انجام می‌شود و هیچ فایلی به سرور آپلود یا ذخیره نمی‌شود."
+  // Image
+  "image-compressor": Image,
+  "color-picker": Image,
+
+  // PDF
+  "pdf-merge": FileText,
+  "word-to-pdf": FileText,
+
+  // Security
+  "password-generator": KeyRound,
+  "hash-generator": Hash,
+
+  // System
+  "ip-checker": MonitorSmartphone,
+  "user-agent": MonitorSmartphone,
+
+  // Utility
+  "qr-generator": QrCode,
+  "unit-converter": Ruler,
+  "date-converter": Calendar,
+  "word-counter": Type,
+
+  // Audio
+  "audio-editor": Sparkles
+};
+
+// ---------- Content imports (FA) ----------
+
+import base64Fa from "./docs/tools/fa/base64.fa.json";
+import jsonFormatterFa from "./docs/tools/fa/json-formatter.fa.json";
+import codeVisualizerFa from "./docs/tools/fa/code-visualizer.fa.json";
+import markdownFa from "./docs/tools/fa/markdown.fa.json";
+
+import excelChartFa from "./docs/tools/fa/excel-chart.fa.json";
+import excelEditorFa from "./docs/tools/fa/excel-editor.fa.json";
+
+import imageCompressorFa from "./docs/tools/fa/image-compressor.fa.json";
+import colorPickerFa from "./docs/tools/fa/color-picker.fa.json";
+
+import pdfMergeFa from "./docs/tools/fa/pdf-merge.fa.json";
+import wordToPdfFa from "./docs/tools/fa/word-to-pdf.fa.json";
+
+import passwordGeneratorFa from "./docs/tools/fa/password-generator.fa.json";
+import hashGeneratorFa from "./docs/tools/fa/hash-generator.fa.json";
+
+import ipCheckerFa from "./docs/tools/fa/ip-checker.fa.json";
+import userAgentFa from "./docs/tools/fa/user-agent.fa.json";
+
+import qrGeneratorFa from "./docs/tools/fa/qr-generator.fa.json";
+import unitConverterFa from "./docs/tools/fa/unit-converter.fa.json";
+import dateConverterFa from "./docs/tools/fa/date-converter.fa.json";
+import wordCounterFa from "./docs/tools/fa/word-counter.fa.json";
+
+import audioEditorFa from "./docs/tools/fa/audio-editor.fa.json";
+
+// ---------- Content imports (EN) ----------
+
+import base64En from "./docs/tools/en/base64.en.json";
+import jsonFormatterEn from "./docs/tools/en/json-formatter.en.json";
+import codeVisualizerEn from "./docs/tools/en/code-visualizer.en.json";
+import markdownEn from "./docs/tools/en/markdown.en.json";
+
+import excelChartEn from "./docs/tools/en/excel-chart.en.json";
+import excelEditorEn from "./docs/tools/en/excel-editor.en.json";
+
+import imageCompressorEn from "./docs/tools/en/image-compressor.en.json";
+import colorPickerEn from "./docs/tools/en/color-picker.en.json";
+
+import pdfMergeEn from "./docs/tools/en/pdf-merge.en.json";
+import wordToPdfEn from "./docs/tools/en/word-to-pdf.en.json";
+
+import passwordGeneratorEn from "./docs/tools/en/password-generator.en.json";
+import hashGeneratorEn from "./docs/tools/en/hash-generator.en.json";
+
+import ipCheckerEn from "./docs/tools/en/ip-checker.en.json";
+import userAgentEn from "./docs/tools/en/user-agent.en.json";
+
+import qrGeneratorEn from "./docs/tools/en/qr-generator.en.json";
+import unitConverterEn from "./docs/tools/en/unit-converter.en.json";
+import dateConverterEn from "./docs/tools/en/date-converter.en.json";
+import wordCounterEn from "./docs/tools/en/word-counter.en.json";
+
+import audioEditorEn from "./docs/tools/en/audio-editor.en.json";
+
+// ---------- Helpers ----------
+
+function withIcons(docs: DocFromJson[]): DocSectionItem[] {
+  return docs.map((doc) => {
+    const icon = ICONS_BY_ID[doc.id];
+
+    if (!icon) {
+      // کمک برای دیباگ اگر دوباره آیکن کم باشد
+      console.error(
+        "[docs] Missing icon mapping for tool id:",
+        doc.id
+      );
+    }
+
+    return {
+      ...doc,
+      icon: icon ?? FALLBACK_ICON
+    };
+  });
 }
 
-];
+const FA_DOCS_RAW: DocFromJson[] = [
+  base64Fa,
+  jsonFormatterFa,
+  codeVisualizerFa,
+  markdownFa,
+  excelChartFa,
+  excelEditorFa,
+  imageCompressorFa,
+  colorPickerFa,
+  pdfMergeFa,
+  wordToPdfFa,
+  passwordGeneratorFa,
+  hashGeneratorFa,
+  ipCheckerFa,
+  userAgentFa,
+  qrGeneratorFa,
+  unitConverterFa,
+  dateConverterFa,
+  wordCounterFa,
+  audioEditorFa
+] as DocFromJson[];
+
+const EN_DOCS_RAW: DocFromJson[] = [
+  base64En,
+  jsonFormatterEn,
+  codeVisualizerEn,
+  markdownEn,
+  excelChartEn,
+  excelEditorEn,
+  imageCompressorEn,
+  colorPickerEn,
+  pdfMergeEn,
+  wordToPdfEn,
+  passwordGeneratorEn,
+  hashGeneratorEn,
+  ipCheckerEn,
+  userAgentEn,
+  qrGeneratorEn,
+  unitConverterEn,
+  dateConverterEn,
+  wordCounterEn,
+  audioEditorEn
+] as DocFromJson[];
+
+// ---------- Public API ----------
+
+export const DOCS_BY_LOCALE: Record<Locale, DocSectionItem[]> = {
+  fa: withIcons(FA_DOCS_RAW),
+  en: withIcons(EN_DOCS_RAW)
+};
+
+export const DOCS_DATA: DocSectionItem[] = DOCS_BY_LOCALE.fa;
+export type { DocSectionItem };

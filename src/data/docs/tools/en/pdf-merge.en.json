@@ -1,0 +1,35 @@
+{
+  "id": "pdf-merge",
+  "title": "PDF merger",
+  "category": "pdf",
+  "description": "Combine multiple PDF files into a single document in your browser, keeping the order you choose.",
+  "features": [
+    "Merge multiple PDF files",
+    "Client-side processing only, no upload",
+    "Manage and remove files before merging"
+  ],
+  "ui": {
+    "dropzone": {
+      "title": "Drop your PDFs here",
+      "subtitle": "or click to select files"
+    },
+    "list": {
+      "title": "Selected files",
+      "countSuffix": "files",
+      "clearAll": "Clear all",
+      "sizeUnit": "MB"
+    },
+    "buttons": {
+      "mergeAndDownload": "Merge & download",
+      "processing": "Merging files..."
+    },
+    "alerts": {
+      "error": "Error while processing PDF files"
+    },
+    "page": {
+      "title": "PDF merger",
+      "description": "Arrange your PDF files in the desired order and merge them into a single document.",
+      "subtitle": "⚡ 100% in-browser processing (no upload)"
+    }
+  }
+}

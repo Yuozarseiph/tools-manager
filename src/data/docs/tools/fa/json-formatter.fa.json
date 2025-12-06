@@ -1,0 +1,46 @@
+{
+  "id": "json-formatter",
+  "title": "فرمت‌کننده JSON",
+  "category": "dev",
+  "description": "مرتب‌سازی، رنگی‌سازی و فشرده‌سازی JSON با نمایش هم‌زمان به صورت کد و گراف ساختاری.",
+  "features": [
+    "فرمت‌دهی (Prettify) و فشرده‌سازی (Minify)",
+    "نمایش JSON به صورت گراف درختی",
+    "آپلود و دانلود فایل JSON"
+  ],
+  "ui": {
+    "upload": {
+      "button": "آپلود JSON",
+      "sizeHintPrefix": ""
+    },
+    "toolbar": {
+      "minify": "فشرده‌سازی (Minify)",
+      "prettify": "مرتب‌سازی (Prettify)",
+      "clear": "پاک کردن"
+    },
+    "input": {
+      "placeholder": "کد JSON خود را اینجا وارد کنید یا فایلی را آپلود نمایید..."
+    },
+    "error": {
+      "prefix": ""
+    },
+    "tabs": {
+      "code": "کد",
+      "graph": "گراف"
+    },
+    "output": {
+      "copyTitle": "کپی در کلیپ‌بورد",
+      "downloadTitle": "دانلود فایل JSON"
+    },
+    "codeView": {
+      "placeholder": "// منتظر ورودی..."
+    },
+    "graphView": {
+      "emptyText": "داده‌ای برای نمایش گراف موجود نیست"
+    },
+    "page": {
+      "title": "فرمت‌کننده JSON",
+      "description": "کد JSON به‌هم‌ریخته خود را وارد کنید تا مرتب، رنگی و خوانا شود. همچنین می‌توانید آن را فشرده (Minify) کنید."
+    }
+  }
+}

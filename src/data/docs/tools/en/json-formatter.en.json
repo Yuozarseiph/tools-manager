@@ -1,0 +1,46 @@
+{
+  "id": "json-formatter",
+  "title": "JSON formatter & visualizer",
+  "category": "dev",
+  "description": "Format, minify and visualize JSON as both highlighted code and a structural graph.",
+  "features": [
+    "Prettify and minify JSON",
+    "Visualize JSON as a tree graph",
+    "Upload and download JSON files"
+  ],
+  "ui": {
+    "upload": {
+      "button": "Upload JSON",
+      "sizeHintPrefix": ""
+    },
+    "toolbar": {
+      "minify": "Minify JSON",
+      "prettify": "Prettify JSON",
+      "clear": "Clear"
+    },
+    "input": {
+      "placeholder": "Paste your JSON here or upload a file..."
+    },
+    "error": {
+      "prefix": ""
+    },
+    "tabs": {
+      "code": "Code",
+      "graph": "Graph"
+    },
+    "output": {
+      "copyTitle": "Copy to clipboard",
+      "downloadTitle": "Download JSON file"
+    },
+    "codeView": {
+      "placeholder": "// Waiting for input..."
+    },
+    "graphView": {
+      "emptyText": "No data to render as graph"
+    },
+    "page": {
+      "title": "JSON formatter",
+      "description": "Paste messy JSON and get it formatted, highlighted and optionally minified."
+    }
+  }
+}

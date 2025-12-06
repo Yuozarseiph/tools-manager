@@ -1,0 +1,32 @@
+{
+  "id": "image-resizer",
+  "title": "تغییر سایز تصویر",
+  "category": "image",
+  "description": "تغییر ابعاد تصاویر به صورت دقیق، با امکان قفل کردن نسبت تصویر و دانلود خروجی در همان فرمت اصلی.",
+  "features": [
+    "قفل نسبت تصویر (Aspect Ratio)",
+    "نمایش ابعاد اصلی تصویر",
+    "دانلود خروجی در همان فرمت"
+  ],
+  "ui": {
+    "upload": {
+      "dropTitle": "تصویر را اینجا رها کنید"
+    },
+    "fileInfo": {
+      "originalDims": "ابعاد اصلی:"
+    },
+    "inputs": {
+      "widthLabel": "عرض (Width)",
+      "heightLabel": "ارتفاع (Height)"
+    },
+    "buttons": {
+      "lockTitle": "قفل نسبت تصویر",
+      "resizeAndDownload": "تغییر سایز و دانلود",
+      "clear": "حذف تصویر"
+    },
+    "page": {
+      "title": "تغییر سایز تصویر",
+      "description": "تغییر سریع ابعاد تصاویر PNG و JPG با حفظ نسبت تصویر."
+    }
+  }
+}

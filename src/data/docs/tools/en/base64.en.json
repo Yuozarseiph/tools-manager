@@ -1,0 +1,39 @@
+{
+  "id": "base64",
+  "title": "Base64 converter",
+  "category": "developer",
+  "description": "Encode and decode data to Base64, used for transferring binary data in text-based environments like email or URLs.",
+  "features": [
+    "UTF-8 support (including Persian text)",
+    "Real-time conversion",
+    "No text length limits"
+  ],
+  "howItWorks": [
+    "The input text is converted to an array of bytes.",
+    "Browser built-in btoa/atob are used with an extra Unicode-safe layer for proper handling of non-ASCII characters."
+  ],
+  "privacyNote": "No text is stored or sent anywhere. All conversions happen entirely in your browser’s memory.",
+  "ui": {
+    "input": {
+      "labelPlain": "Plain text",
+      "labelBase64": "Base64 code",
+      "badge": "Input",
+      "placeholderPlain": "Type your text here...",
+      "placeholderBase64": "Paste your Base64 code here..."
+    },
+    "output": {
+      "labelPlain": "Plain text",
+      "labelBase64": "Base64 code",
+      "badge": "Output",
+      "placeholder": "The result will appear here..."
+    },
+    "buttons": {
+      "swapTitle": "Swap input and output",
+      "copy": "Copy result",
+      "copied": "Copied"
+    },
+    "errors": {
+      "invalid": "Invalid input (Invalid Base64)"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "text-to-pdf",
+  "title": "تبدیل متن به PDF",
+  "category": "pdf",
+  "description": "تبدیل متن‌های طولانی فارسی و انگلیسی به فایل PDF مرتب، با پشتیبانی از فونت فارسی، تراز متن و تشخیص خودکار RTL/LTR.",
+  "features": [
+    "پشتیبانی از متن فارسی و انگلیسی با تشخیص خودکار جهت",
+    "انتخاب اندازه فونت و نوع تراز (چپ، وسط، راست)",
+    "ساخت PDF در مرورگر بدون نیاز به سرور"
+  ],
+  "ui": {
+    "toolbar": {
+      "fontSizeLabel": "اندازه فونت",
+      "alignLeftTitle": "تراز چپ",
+      "alignCenterTitle": "تراز وسط",
+      "alignRightTitle": "تراز راست",
+      "generateButtonIdle": "دانلود PDF",
+      "generateButtonLoading": "در حال ساخت..."
+    },
+    "editor": {
+      "placeholder": "متن خود را اینجا بنویسید...",
+      "counterSuffixChars": "کاراکتر",
+      "counterSeparator": "•",
+      "counterSuffixLines": "خط"
+    },
+    "guide": {
+      "title": "راهنما",
+      "items": [
+        "فونت فارسی از پروژه شما لود می‌شود",
+        "تشخیص خودکار RTL/LTR",
+        "صفحه‌بندی خودکار"
+      ]
+    },
+    "alerts": {
+      "error": "خطا در ساخت PDF"
+    },
+    "page": {
+      "title": "تبدیل متن به PDF",
+      "description": "متن‌های طولانی خود را تایپ کنید یا جایگذاری کنید و فوراً یک فایل PDF مرتب و صفحه‌بندی شده دریافت کنید."
+    }
+  }
+}

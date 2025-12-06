@@ -1,0 +1,32 @@
+{
+  "id": "image-resizer",
+  "title": "Image resizer",
+  "category": "image",
+  "description": "Resize images to exact dimensions, with optional aspect ratio lock and download in the original format.",
+  "features": [
+    "Aspect ratio lock",
+    "Display original image dimensions",
+    "Download result in the same format"
+  ],
+  "ui": {
+    "upload": {
+      "dropTitle": "Drop an image here"
+    },
+    "fileInfo": {
+      "originalDims": "Original size:"
+    },
+    "inputs": {
+      "widthLabel": "Width",
+      "heightLabel": "Height"
+    },
+    "buttons": {
+      "lockTitle": "Toggle aspect ratio lock",
+      "resizeAndDownload": "Resize & download",
+      "clear": "Remove image"
+    },
+    "page": {
+      "title": "Image resizer",
+      "description": "Quickly resize PNG and JPG images while keeping the aspect ratio."
+    }
+  }
+}

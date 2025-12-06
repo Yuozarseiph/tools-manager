@@ -1,0 +1,50 @@
+{
+  "id": "image-converter",
+  "title": "Image format converter",
+  "category": "image",
+  "description": "Convert images to multiple formats (JPG, PNG, WebP, and more) entirely in your browser while preserving quality.",
+  "features": [
+    "Support for common formats (JPG, PNG, WebP, GIF, BMP, AVIF)",
+    "Upload up to 20 files at once",
+    "Adjustable quality for compressed formats"
+  ],
+  "ui": {
+    "upload": {
+      "dropTitle": "Drop images here",
+      "dropSubtitle": "Up to 20 files • PNG, JPG, WebP, GIF, BMP and more",
+      "addMore": "+ Add more images",
+      "counterSuffix": "files"
+    },
+    "gallery": {
+      "sizeUnit": "KB"
+    },
+    "formats": {
+      "title": "Convert to:",
+      "jpegDesc": "Standard photo",
+      "pngDesc": "With transparency",
+      "webpDesc": "Modern & lightweight",
+      "avifDesc": "Most compressed",
+      "gifDesc": "Animation",
+      "bmpDesc": "Uncompressed"
+    },
+    "quality": {
+      "label": "Output quality",
+      "low": "Smaller size",
+      "high": "Higher quality"
+    },
+    "buttons": {
+      "convertSingle": "Convert & download",
+      "convertMulti": "Convert & download ZIP",
+      "processing": "Processing...",
+      "clearAll": "Clear all"
+    },
+    "alerts": {
+      "error": "Error while converting images"
+    },
+    "page": {
+      "title": "Image format converter",
+      "description": "Convert images to JPG, PNG and WebP with maximum quality.",
+      "subtitle": "⚡ Runs entirely in your browser in a fraction of a second"
+    }
+  }
+}

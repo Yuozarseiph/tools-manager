@@ -1,5 +1,4 @@
 // data/tools.ts
-
 import {
   FileStack,
   Image as ImageIcon,
@@ -24,17 +23,14 @@ import {
   Edit3,
   PieChart,
   Sparkles,
-  AudioLines, 
+  AudioLines,
 } from "lucide-react";
 
 export interface Tool {
   id: string;
-  title: string;
-  description: string;
   Icon: LucideIcon;
   href: string;
   status: "active" | "coming-soon";
-  badge?: string;
   category:
     | "pdf"
     | "image"
@@ -44,287 +40,223 @@ export interface Tool {
     | "system"
     | "excel"
     | "audio";
+  badgeKey?: string; // مسیری که t ازش می‌خواند، مثلاً "tools.items.pdf-merge.badge"
 }
 
 export const TOOLS: Tool[] = [
   // --- PDF ---
   {
     id: "pdf-merge",
-    title: "ادغام فایل‌های PDF",
-    description:
-      "چندین فایل PDF را به سادگی بکشید و رها کنید تا به یک فایل واحد تبدیل شوند.",
     Icon: FileStack,
     href: "/tools/pdf-merge",
     status: "active",
-    badge: "رایگان",
     category: "pdf",
+    badgeKey: "tools.items.pdf-merge.badge",
   },
   {
     id: "text-to-pdf",
-    title: "متن به PDF",
-    description:
-      "تبدیل متون فارسی و انگلیسی به فایل PDF استاندارد و قابل دانلود.",
     Icon: FileType,
     href: "/tools/text-to-pdf",
     status: "active",
-    badge: "جدید",
     category: "pdf",
+    badgeKey: "tools.items.text-to-pdf.badge",
   },
   {
     id: "word-to-pdf",
-    title: "تبدیل Word به PDF",
-    description:
-      "فایل Word (.docx) خود را آپلود کرده و به فرمت PDF تبدیل کنید.",
     Icon: FileType,
     href: "/tools/word-to-pdf",
     status: "active",
-    badge: "جدید",
     category: "pdf",
+    badgeKey: "tools.items.word-to-pdf.badge",
   },
 
   // --- Image ---
   {
     id: "image-to-pdf",
-    title: "تبدیل تصویر به PDF",
-    description:
-      "چندین تصویر را به ترتیب صفحات در یک فایل PDF واحد ترکیب کنید.",
     Icon: ImageIcon,
     href: "/tools/image-to-pdf",
     status: "active",
-    badge: "جدید",
     category: "image",
+    badgeKey: "tools.items.image-to-pdf.badge",
   },
   {
     id: "image-compressor",
-    title: "کاهش حجم تصویر",
-    description: "کاهش هوشمند حجم تصاویر PNG, JPG, WebP بدون افت کیفیت محسوس.",
     Icon: Minimize2,
     href: "/tools/image-compressor",
     status: "active",
-    badge: "محبوب",
     category: "image",
+    badgeKey: "tools.items.image-compressor.badge",
   },
   {
     id: "image-resizer",
-    title: "تغییر سایز تصویر",
-    description: "تغییر ابعاد تصویر به پیکسل یا درصد دلخواه با حفظ نسبت تصویر.",
     Icon: Scaling,
     href: "/tools/image-resizer",
     status: "active",
-    badge: "رایگان",
     category: "image",
+    badgeKey: "tools.items.image-resizer.badge",
   },
   {
     id: "image-converter",
-    title: "مبدل فرمت تصویر",
-    description: "تبدیل JPG, PNG و WebP به یکدیگر با حفظ کیفیت بالا.",
     Icon: ImageIcon,
     href: "/tools/image-converter",
     status: "active",
-    badge: "رایگان",
     category: "image",
+    badgeKey: "tools.items.image-converter.badge",
   },
   {
     id: "color-picker",
-    title: "استخراج رنگ",
-    description:
-      "آپلود تصویر و استخراج کد رنگ (Hex/RGB) هر پیکسل با کلیک کردن.",
     Icon: Pipette,
     href: "/tools/color-picker",
     status: "active",
-    badge: "طراحی",
     category: "image",
+    badgeKey: "tools.items.color-picker.badge",
   },
   {
     id: "background-remover",
-    title: "حذف پس‌زمینه تصویر",
-    description:
-      "حذف خودکار پس‌زمینه با هوش مصنوعی. کاملاً آفلاین و بدون آپلود به سرور.",
     Icon: Sparkles,
     href: "/tools/background-remover",
     status: "coming-soon",
-    badge: "AI",
     category: "image",
+    badgeKey: "tools.items.background-remover.badge",
   },
 
   // --- System ---
   {
     id: "user-agent",
-    title: "اطلاعات سیستم من",
-    description: "نمایش جزئیات مرورگر، سیستم عامل، مدل گوشی و IP شما.",
     Icon: MonitorSmartphone,
     href: "/tools/user-agent",
     status: "active",
-    badge: "کاربردی",
     category: "system",
+    badgeKey: "tools.items.user-agent.badge",
   },
   {
     id: "ip-checker",
-    title: "IP من چیه؟",
-    description:
-      "نمایش IP عمومی، نام کشور، شهر و سرویس‌دهنده اینترنت (ISP) شما.",
     Icon: Globe,
     href: "/tools/ip-checker",
     status: "active",
-    badge: "محبوب",
     category: "system",
+    badgeKey: "tools.items.ip-checker.badge",
   },
 
   // --- Developer ---
   {
     id: "json-formatter",
-    title: "فرمت‌کننده JSON",
-    description:
-      "زیباسازی کدهای JSON به‌هم‌ریخته + نمایش گرافیکی (Visual Graph).",
     Icon: Braces,
     href: "/tools/json-formatter",
     status: "active",
-    badge: "Dev",
     category: "developer",
+    badgeKey: "tools.items.json-formatter.badge",
   },
   {
     id: "base64",
-    title: "مبدل Base64",
-    description: "تبدیل متن به کد Base64 و برعکس. پشتیبانی کامل از زبان فارسی.",
     Icon: Binary,
     href: "/tools/base64",
     status: "active",
-    badge: "Dev",
     category: "developer",
+    badgeKey: "tools.items.base64.badge",
   },
   {
     id: "markdown-preview",
-    title: "پیش‌نمایش مارک‌داون",
-    description:
-      "تایپ و مشاهده زنده کدهای Markdown. مناسب برای نوشتن داکیومنت و README.",
     Icon: FileCode,
     href: "/tools/markdown-preview",
     status: "active",
-    badge: "Dev",
     category: "developer",
+    badgeKey: "tools.items.markdown-preview.badge",
   },
   {
     id: "code-visualizer",
-    title: "تصویرسازی کد (Flowchart)",
-    description:
-      "تبدیل کدهای جاوا اسکریپت و C# به فلوچارت و گراف تصویری برای درک بهتر.",
     Icon: GitGraph,
     href: "/tools/code-visualizer",
     status: "active",
-    badge: "BETA",
     category: "developer",
+    badgeKey: "tools.items.code-visualizer.badge",
   },
 
-  // --- Excel---
+  // --- Excel ---
   {
     id: "excel-viewer",
-    title: "نمایشگر اکسل و CSV",
-    description:
-      "آپلود، نمایش و جستجو در فایل‌های اکسل و CSV بدون نیاز به آفیس + تبدیل به JSON.",
     Icon: FileSpreadsheet,
     href: "/tools/excel-viewer",
     status: "active",
-    badge: "جدید",
     category: "excel",
+    badgeKey: "tools.items.excel-viewer.badge",
   },
   {
     id: "excel-editor",
-    title: "ویرایشگر اکسل",
-    description:
-      "ویرایش آنلاین فایل‌های اکسل، تغییر داده‌ها و ذخیره فایل جدید (XLSX).",
     Icon: Edit3,
     href: "/tools/excel-editor",
     status: "active",
-    badge: "Pro",
     category: "excel",
+    badgeKey: "tools.items.excel-editor.badge",
   },
   {
     id: "excel-chart",
-    title: "رسم نمودار اکسل",
-    description: "تبدیل داده‌های اکسل به نمودارهای تصویری و زیبا.",
     Icon: PieChart,
     href: "/tools/excel-chart",
     status: "active",
-    badge: "Pro",
     category: "excel",
+    badgeKey: "tools.items.excel-chart.badge",
   },
 
   // --- Security ---
   {
     id: "password-generator",
-    title: "ساخت و تست پسورد",
-    description: "تولید رمزهای عبور غیرقابل هک + سنجش امنیت رمزهای شما.",
     Icon: KeyRound,
     href: "/tools/password-generator",
     status: "active",
-    badge: "امنیتی",
     category: "security",
+    badgeKey: "tools.items.password-generator.badge",
   },
   {
     id: "hash-generator",
-    title: "تولید هش",
-    description:
-      "ساخت کدهای هش امن SHA-1, SHA-256, SHA-512 از متن به صورت آنی.",
     Icon: ShieldCheck,
     href: "/tools/hash-generator",
     status: "active",
-    badge: "امنیت",
     category: "security",
+    badgeKey: "tools.items.hash-generator.badge",
   },
 
   // --- General Tools ---
   {
     id: "date-converter",
-    title: "مبدل تاریخ",
-    description: "تبدیل دقیق تاریخ شمسی به میلادی و برعکس (مناسب تقویم ایران).",
     Icon: CalendarDays,
     href: "/tools/date-converter",
     status: "active",
-    badge: "کاربردی",
     category: "utility",
+    badgeKey: "tools.items.date-converter.badge",
   },
   {
     id: "word-counter",
-    title: "شمارشگر کلمات",
-    description:
-      "آنالیز دقیق متن شامل تعداد کلمات، کاراکترها، جملات و زمان مطالعه.",
     Icon: TextCursorInput,
     href: "/tools/word-counter",
     status: "active",
-    badge: "نویسندگی",
     category: "utility",
+    badgeKey: "tools.items.word-counter.badge",
   },
   {
     id: "unit-converter",
-    title: "مبدل واحد",
-    description: "تبدیل سریع واحدهای طول، جرم، دما و... به یکدیگر.",
     Icon: Scale,
     href: "/tools/unit-converter",
     status: "active",
-    badge: "رایگان",
     category: "utility",
+    badgeKey: "tools.items.unit-converter.badge",
   },
   {
     id: "qr-gen",
-    title: "سازنده QR Code",
-    description: "لینک و متن خود را به کدهای QR رنگی و قابل دانلود تبدیل کنید.",
     Icon: QrCode,
     href: "/tools/qr-generator",
     status: "active",
-    badge: "رایگان",
     category: "utility",
+    badgeKey: "tools.items.qr-gen.badge",
   },
-  // ---Audio ---
-  {
-  id: "audio-editor",
-  title: "ویرایشگر صوت (بتا)",
-  description:
-    "برش، پخش و ویرایش ساده‌ی فایل‌های صوتی به‌صورت کاملاً محلی در مرورگر شما، بدون آپلود روی سرور.",
-  Icon: AudioLines,
-  href: "/tools/audio-editor",
-  status: "active",
-  badge: "صوت",
-  category: "audio",
-}
 
+  // --- Audio ---
+  {
+    id: "audio-editor",
+    Icon: AudioLines,
+    href: "/tools/audio-editor",
+    status: "active",
+    category: "audio",
+    badgeKey: "tools.items.audio-editor.badge",
+  },
 ];

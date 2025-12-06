@@ -1,0 +1,28 @@
+{
+  "id": "date-converter",
+  "title": "Date converter",
+  "category": "utility",
+  "description": "Convert Jalali (Shamsi) dates to Gregorian and vice versa.",
+  "features": [
+    "Accurate Jalali calendar",
+    "Leap year calculation",
+    "Holiday and occasion support"
+  ],
+  "ui": {
+    "modes": {
+      "shamsiToGregorian": "Shamsi to Gregorian",
+      "gregorianToShamsi": "Gregorian to Shamsi"
+    },
+    "inputs": {
+      "dayLabel": "Day",
+      "monthLabel": "Month",
+      "yearLabel": "Year",
+      "placeholderShamsiYear": "1403",
+      "placeholderGregorianYear": "2024"
+    },
+    "result": {
+      "title": "Conversion result",
+      "invalid": "Invalid date"
+    }
+  }
+}

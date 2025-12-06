@@ -16,52 +16,75 @@ import {
   Wrench,
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { TOOLS } from "@/data/tools";
+import { TOOLS, type Tool } from "@/data/tools";
+import { useLanguage } from "@/context/LanguageContext";
 
 const CATEGORIES = [
-  { id: "all", label: "همه ابزارها", icon: Grid },
-  { id: "pdf", label: "PDF", icon: FileText },
-  { id: "image", label: "تصویر", icon: ImageIcon },
-  { id: "developer", label: "برنامه‌نویسی", icon: Code2 },
-  { id: "security", label: "امنیت", icon: ShieldCheck },
-  { id: "system", label: "سیستم", icon: MonitorSmartphone },
-  { id: "utility", label: "کاربردی", icon: Wrench },
-  { id: "excel", label: "اکسل", icon: FileText },
-  { id: "audio", label: "صدا", icon: FileText },
-];
+  { id: "all", icon: Grid },
+  { id: "pdf", icon: FileText },
+  { id: "image", icon: ImageIcon },
+  { id: "developer", icon: Code2 },
+  { id: "security", icon: ShieldCheck },
+  { id: "system", icon: MonitorSmartphone },
+  { id: "utility", icon: Wrench },
+  { id: "excel", icon: FileText },
+  { id: "audio", icon: FileText },
+] as const;
+
+type ToolWithText = Tool & {
+  title: string;
+  description: string;
+  badge?: string;
+};
 
 export default function ToolsGrid() {
   const theme = useThemeColors();
+  const { t, locale } = useLanguage();
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(6);
 
-  const filteredTools = useMemo(() => {
-    let tools = TOOLS;
+  // تزریق ترجمه به TOOLS
+  const toolsWithText = useMemo<ToolWithText[]>(() => {
+    return TOOLS.map((tool) => {
+      const baseKey = `tools.items.${tool.id}`;
+      const title = t(`${baseKey}.title`);
+      const description = t(`${baseKey}.description`);
+      const badge = t(`${baseKey}.badge`);
+      const safeBadge =
+        badge === `${baseKey}.badge` ? undefined : (badge as string);
 
+      return {
+        ...tool,
+        title,
+        description,
+        badge: safeBadge,
+      };
+    });
+  }, [t, locale]);
+
+  // فیلتر بر اساس دسته و جستجو
+  const filteredTools = useMemo(() => {
+    let tool = toolsWithText;
+
+    // ۱. فیلتر دسته‌بندی
     if (activeCategory !== "all") {
-      if (activeCategory === "utility") {
-        tools = tools.filter((t) =>
-          ["Tools", "utility"].includes((t.category as any) || "")
-        );
-      } else {
-        tools = tools.filter(
-          (t) => t.category?.toLowerCase() === activeCategory
-        );
-      }
+      tool = tool.filter((t) => t.category === activeCategory);
     }
 
+    // ۲. فیلتر جستجو (روی متن ترجمه‌شده)
     const query = searchQuery.toLowerCase().trim();
     if (query) {
-      tools = tools.filter(
+      tool = tool.filter(
         (tool) =>
           tool.title.toLowerCase().includes(query) ||
           tool.description.toLowerCase().includes(query)
       );
     }
 
-    return tools;
-  }, [searchQuery, activeCategory]);
+    return tool;
+  }, [searchQuery, activeCategory, toolsWithText]);
 
   const visibleTools = useMemo(
     () => filteredTools.slice(0, visibleCount),
@@ -88,7 +111,7 @@ export default function ToolsGrid() {
         </div>
         <input
           type="text"
-          placeholder="جستجو در ابزارها..."
+          placeholder={t("tool.search.placeholder")}
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
           className={`w-full py-4 pr-12 pl-12 rounded-2xl border-2 transition-all outline-none shadow-sm text-lg
@@ -116,8 +139,8 @@ export default function ToolsGrid() {
                 : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
             }`}
           >
-            <cat.icon size={16}/>
-            {cat.label}
+            <cat.icon size={16} />
+            {t(`tool.categories.${cat.id}`)}
           </button>
         ))}
       </div>
@@ -177,7 +200,8 @@ export default function ToolsGrid() {
                   <div
                     className={`mt-4 md:mt-6 pt-4 md:pt-6 border-t flex items-center text-xs md:text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 duration-300 ${theme.border} ${theme.accent}`}
                   >
-                    استفاده از ابزار <ArrowLeft size={16} className="mr-2" />
+                    {t("tools.item.cta")}
+                    <ArrowLeft size={16} className="mr-2" />
                   </div>
                 </Link>
               </motion.div>
@@ -192,7 +216,7 @@ export default function ToolsGrid() {
                 <Search size={32} className={theme.textMuted} />
               </div>
               <p className={`text-lg font-medium ${theme.text}`}>
-                هیچ ابزاری در این دسته پیدا نشد :(
+                {t("tools.empty.title")}
               </p>
               <button
                 onClick={() => {
@@ -201,7 +225,7 @@ export default function ToolsGrid() {
                 }}
                 className="text-blue-500 hover:underline text-sm"
               >
-                نمایش همه ابزارها
+                {t("tools.empty.showAll")}
               </button>
             </motion.div>
           )}
@@ -214,7 +238,7 @@ export default function ToolsGrid() {
             onClick={() => setVisibleCount((c) => c + 9)}
             className={`px-4 py-2 text-sm rounded-xl font-medium shadow-sm ${theme.primary}`}
           >
-            نمایش ابزارهای بیشتر
+            {t("tool.loadMore")}
           </button>
         </div>
       )}

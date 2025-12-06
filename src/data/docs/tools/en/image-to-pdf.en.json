@@ -1,0 +1,38 @@
+{
+  "id": "image-to-pdf",
+  "title": "Image to PDF converter",
+  "category": "pdf",
+  "description": "Quickly convert multiple images into a single PDF file with automatic page sizing, directly in your browser.",
+  "features": [
+    "Upload multiple images at once",
+    "Create multi-page PDF documents",
+    "Automatically fit images to page size"
+  ],
+  "ui": {
+    "upload": {
+      "selectText": "Select your images",
+      "dropHint": "or drag and drop them here"
+    },
+    "list": {
+      "title": "Selected images",
+      "countSuffix": "images",
+      "clearAll": "Clear all",
+      "sizeUnit": "KB"
+    },
+    "buttons": {
+      "convert": "Convert to PDF",
+      "converting": "Converting...",
+      "download": "Download PDF"
+    },
+    "result": {
+      "ready": "Your PDF is ready!"
+    },
+    "alerts": {
+      "error": "Error while converting images to PDF"
+    },
+    "page": {
+      "title": "Image to PDF converter",
+      "description": "Free and fast bulk image to PDF conversion with automatic sizing."
+    }
+  }
+}

@@ -1,0 +1,138 @@
+[
+  
+  {
+    "version": "2.0.0 BETA",
+    "date": "—",
+    "type": "major",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Experimental bilingual interface (Persian / English) for tools",
+          "New JSON-based content structure for per-tool UI texts",
+          "Improved organization and categorization of tools across the site"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Refactored core parts of the project to support future big updates",
+          "Better light and dark theme consistency between tools",
+          "Improved performance and responsiveness on tools pages"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Resolved several known issues from previous versions",
+          "More stable behavior when using multiple tools in one session"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.4.1",
+    "date": "—",
+    "type": "release",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "First stable release after the beta phase",
+          "Final polish for a smoother user experience",
+          "Minor UI refinements in selected tools"
+        ]
+      },
+      {
+        "category": "note",
+        "items": ["English UI language is not available yet in this version"]
+      }
+    ]
+  },
+  {
+    "version": "1.4.0 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "General performance improvements and better app stability",
+          "Optimized some internal processing across tools",
+          "Prepared the codebase for the upcoming stable release"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed several reported bugs in different tools",
+          "Reduced random errors when working with very large files"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.3.1 BETA",
+    "date": "Dec 4, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added Audio Editor with trimming and WAV export",
+          "Fade in and fade out options for smoother audio transitions",
+          "New changelog page to track all updates"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved Docs layout and descriptions",
+          "Better tool cards layout on mobile and tablet",
+          "Updated audio tool colors for light and dark themes"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed minor issues in Word to PDF with Persian fonts",
+          "Fixed some icons not rendering in older browsers",
+          "Improved error handling for very large PDF and image files"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.3.0 BETA",
+    "date": "Dec 4, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Color Picker with palette extraction",
+          "Code Visualizer for JavaScript and C#",
+          "Text to PDF with full Persian font support",
+          "Image Compressor with optimized compression",
+          "25+ useful tools across different categories"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Overall site performance improvements",
+          "More modern UI design",
+          "Full dark mode support",
+          "Better mobile experience"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed browser compatibility issues",
+          "Improved processing of large files"
+        ]
+      }
+    ]
+  }
+]

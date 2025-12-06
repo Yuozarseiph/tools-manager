@@ -1,0 +1,50 @@
+{
+  "id": "image-converter",
+  "title": "مبدل فرمت تصویر",
+  "category": "image",
+  "description": "تبدیل تصاویر به فرمت‌های مختلف (JPG, PNG, WebP و...) با حفظ حداکثر کیفیت، به صورت کامل در مرورگر.",
+  "features": [
+    "پشتیبانی از چندین فرمت رایج (JPG, PNG, WebP, GIF, BMP, AVIF)",
+    "آپلود همزمان تا ۲۰ فایل",
+    "امکان تنظیم کیفیت برای فرمت‌های فشرده"
+  ],
+  "ui": {
+    "upload": {
+      "dropTitle": "تصاویر را اینجا رها کنید",
+      "dropSubtitle": "تا 20 فایل همزمان • PNG, JPG, WebP, GIF, BMP و...",
+      "addMore": "+ افزودن تصاویر بیشتر",
+      "counterSuffix": "فایل"
+    },
+    "gallery": {
+      "sizeUnit": "KB"
+    },
+    "formats": {
+      "title": "تبدیل به:",
+      "jpegDesc": "عکس استاندارد",
+      "pngDesc": "با شفافیت",
+      "webpDesc": "مدرن و سبک",
+      "avifDesc": "فشرده‌ترین",
+      "gifDesc": "انیمیشن",
+      "bmpDesc": "بدون فشرده‌سازی"
+    },
+    "quality": {
+      "label": "کیفیت خروجی",
+      "low": "کم‌حجم",
+      "high": "با کیفیت"
+    },
+    "buttons": {
+      "convertSingle": "تبدیل و دانلود",
+      "convertMulti": "تبدیل و دانلود ZIP",
+      "processing": "در حال پردازش...",
+      "clearAll": "پاک کردن همه"
+    },
+    "alerts": {
+      "error": "خطا در تبدیل تصاویر"
+    },
+    "page": {
+      "title": "مبدل فرمت تصویر",
+      "description": "تبدیل تصاویر به JPG, PNG و WebP با نهایت کیفیت.",
+      "subtitle": "⚡ پردازش در کسری از ثانیه در مرورگر شما"
+    }
+  }
+}

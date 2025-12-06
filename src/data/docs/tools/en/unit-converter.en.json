@@ -1,0 +1,54 @@
+{
+  "id": "unit-converter",
+  "title": "Unit converter",
+  "category": "math",
+  "description": "Quickly and accurately convert between common units of length, mass and temperature.",
+  "features": [
+    "Length units like meters, kilometers, inches, feet and more",
+    "Mass and weight units such as kilograms, grams, pounds and ounces",
+    "Temperature conversion between Celsius, Fahrenheit and Kelvin"
+  ],
+  "ui": {
+    "categories": {
+      "length": {
+        "label": "Length",
+        "units": {
+          "m": "Meter (m)",
+          "km": "Kilometer (km)",
+          "cm": "Centimeter (cm)",
+          "mm": "Millimeter (mm)",
+          "in": "Inch (in)",
+          "ft": "Foot (ft)",
+          "yd": "Yard (yd)",
+          "mi": "Mile (mi)"
+        }
+      },
+      "mass": {
+        "label": "Mass / weight",
+        "units": {
+          "kg": "Kilogram (kg)",
+          "g": "Gram (g)",
+          "mg": "Milligram (mg)",
+          "lb": "Pound (lb)",
+          "oz": "Ounce (oz)"
+        }
+      },
+      "temperature": {
+        "label": "Temperature",
+        "units": {
+          "c": "Celsius (°C)",
+          "f": "Fahrenheit (°F)",
+          "k": "Kelvin (K)"
+        }
+      }
+    },
+    "input": {
+      "amountLabel": "Input value",
+      "resultLabel": "Result"
+    },
+    "page": {
+      "title": "Unit converter",
+      "description": "Convert units of length, mass and temperature in a clean, easy-to-use interface."
+    }
+  }
+}

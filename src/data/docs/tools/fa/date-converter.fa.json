@@ -1,0 +1,28 @@
+{
+  "id": "date-converter",
+  "title": "مبدل تاریخ",
+  "category": "utility",
+  "description": "تبدیل تاریخ شمسی به میلادی و قمری و برعکس.",
+  "features": [
+    "تقویم جلالی دقیق",
+    "محاسبه سال کبیسه",
+    "نمایش مناسبت‌ها"
+  ],
+  "ui": {
+    "modes": {
+      "shamsiToGregorian": "شمسی به میلادی",
+      "gregorianToShamsi": "میلادی به شمسی"
+    },
+    "inputs": {
+      "dayLabel": "روز",
+      "monthLabel": "ماه",
+      "yearLabel": "سال",
+      "placeholderShamsiYear": "1403",
+      "placeholderGregorianYear": "2024"
+    },
+    "result": {
+      "title": "نتیجه تبدیل",
+      "invalid": "תاریخ نامعتبر"
+    }
+  }
+}

@@ -1,17 +1,27 @@
-// components/tools/ImageConverter.tsx
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { convertImages, ImageFormat } from '@/utils/image-actions';
-import download from 'downloadjs';
-import JSZip from 'jszip';
-import { 
-  FileUp, Trash2, Image as ImageIcon, Loader2, 
-  Download, ArrowLeftRight, X, FolderArchive 
-} from 'lucide-react';
-import { useThemeColors } from '@/hooks/useThemeColors';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { useDropzone } from "react-dropzone";
+import { convertImages, ImageFormat } from "@/utils/image-actions";
+import download from "downloadjs";
+import JSZip from "jszip";
+import {
+  FileUp,
+  Trash2,
+  Image as ImageIcon,
+  Loader2,
+  Download,
+  ArrowLeftRight,
+  X,
+  FolderArchive,
+} from "lucide-react";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import { motion, AnimatePresence } from "framer-motion";
+
+import {
+  useToolContent,
+  type ImageConverterToolContent,
+} from "@/hooks/useToolContent";
 
 interface FileWithPreview extends File {
   preview: string;
@@ -19,30 +29,43 @@ interface FileWithPreview extends File {
 
 export default function ImageConverter() {
   const theme = useThemeColors();
+  const content =
+    useToolContent<ImageConverterToolContent>("image-converter");
+
   const [files, setFiles] = useState<FileWithPreview[]>([]);
-  const [targetFormat, setTargetFormat] = useState<ImageFormat>('image/jpeg');
+  const [targetFormat, setTargetFormat] =
+    useState<ImageFormat>("image/jpeg");
   const [quality, setQuality] = useState(90);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { 
-      'image/*': ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.tiff', '.svg', '.avif'] 
+    accept: {
+      "image/*": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".gif",
+        ".bmp",
+        ".tiff",
+        ".svg",
+        ".avif",
+      ],
     },
     maxFiles: 20,
     onDrop: (acceptedFiles) => {
-      const filesWithPreview = acceptedFiles.map(file => 
+      const filesWithPreview = acceptedFiles.map((file) =>
         Object.assign(file, {
-          preview: URL.createObjectURL(file)
+          preview: URL.createObjectURL(file),
         })
       );
       setFiles((prev) => [...prev, ...filesWithPreview]);
     },
   });
 
-  // پاک‌سازی URL‌های موقت
   useEffect(() => {
     return () => {
-      files.forEach(file => URL.revokeObjectURL(file.preview));
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
     };
   }, [files]);
 
@@ -51,8 +74,8 @@ export default function ImageConverter() {
     setIsProcessing(true);
 
     try {
-      const results = await convertImages(files, targetFormat, { 
-        quality: quality / 100 
+      const results = await convertImages(files, targetFormat, {
+        quality: quality / 100,
       });
 
       if (results.length === 1) {
@@ -63,11 +86,11 @@ export default function ImageConverter() {
           zip.file(result.filename, result.converted);
         });
 
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
-        download(zipBlob, 'converted-images.zip', 'application/zip');
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        download(zipBlob, "converted-images.zip", "application/zip");
       }
     } catch (err) {
-      alert('خطا در تبدیل تصاویر');
+      alert(content.ui.alerts.error);
       console.error(err);
     } finally {
       setIsProcessing(false);
@@ -80,23 +103,52 @@ export default function ImageConverter() {
   };
 
   const formats = [
-    { value: 'image/jpeg', label: 'JPG', desc: 'عکس استاندارد' },
-    { value: 'image/png', label: 'PNG', desc: 'با شفافیت' },
-    { value: 'image/webp', label: 'WebP', desc: 'مدرن و سبک' },
-    { value: 'image/avif', label: 'AVIF', desc: 'فشرده‌ترین' },
-    { value: 'image/gif', label: 'GIF', desc: 'انیمیشن' },
-    { value: 'image/bmp', label: 'BMP', desc: 'بدون فشرده‌سازی' },
-  ];
+    {
+      value: "image/jpeg",
+      label: "JPG",
+      desc: content.ui.formats.jpegDesc,
+    },
+    {
+      value: "image/png",
+      label: "PNG",
+      desc: content.ui.formats.pngDesc,
+    },
+    {
+      value: "image/webp",
+      label: "WebP",
+      desc: content.ui.formats.webpDesc,
+    },
+    {
+      value: "image/avif",
+      label: "AVIF",
+      desc: content.ui.formats.avifDesc,
+    },
+    {
+      value: "image/gif",
+      label: "GIF",
+      desc: content.ui.formats.gifDesc,
+    },
+    {
+      value: "image/bmp",
+      label: "BMP",
+      desc: content.ui.formats.bmpDesc,
+    },
+  ] as const;
 
   return (
-    <div className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}>
-      
+    <div
+      className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
+    >
       {/* آپلودر */}
       {files.length === 0 ? (
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
-          ${isDragActive ? 'border-blue-500 scale-[0.99]' : `${theme.border} hover:border-blue-400`}
+          ${
+            isDragActive
+              ? "border-blue-500 scale-[0.99]"
+              : `${theme.border} hover:border-blue-400`
+          }
           ${theme.bg}`}
         >
           <input {...getInputProps()} />
@@ -105,16 +157,16 @@ export default function ImageConverter() {
               <FileUp size={32} className={theme.accent} />
             </div>
             <p className={`text-lg font-bold ${theme.text}`}>
-              تصاویر را اینجا رها کنید
+              {content.ui.upload.dropTitle}
             </p>
             <p className={`text-sm ${theme.textMuted}`}>
-              تا 20 فایل همزمان • PNG, JPG, WebP, GIF, BMP و...
+              {content.ui.upload.dropSubtitle}
             </p>
           </div>
         </div>
       ) : (
-        <motion.div 
-          initial={{ opacity: 0 }} 
+        <motion.div
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="space-y-6"
         >
@@ -129,15 +181,13 @@ export default function ImageConverter() {
                   exit={{ opacity: 0, scale: 0.8 }}
                   className={`relative group rounded-xl overflow-hidden border-2 ${theme.border} ${theme.bg} shadow-md hover:shadow-lg transition-all`}
                 >
-                  {/* تصویر */}
                   <div className="aspect-square relative bg-gray-100">
                     <img
                       src={file.preview}
                       alt={file.name}
                       className="w-full h-full object-cover"
                     />
-                    
-                    {/* اورلی hover */}
+
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <button
                         onClick={() => removeFile(idx)}
@@ -148,17 +198,18 @@ export default function ImageConverter() {
                     </div>
                   </div>
 
-                  {/* اطلاعات فایل */}
                   <div className="p-2">
-                    <p className={`text-xs font-medium truncate ${theme.text}`}>
+                    <p
+                      className={`text-xs font-medium truncate ${theme.text}`}
+                    >
                       {file.name}
                     </p>
                     <p className={`text-xs ${theme.textMuted}`}>
-                      {(file.size / 1024).toFixed(0)} KB
+                      {(file.size / 1024).toFixed(0)}{" "}
+                      {content.ui.gallery.sizeUnit}
                     </p>
                   </div>
 
-                  {/* دکمه حذف (موبایل) */}
                   <button
                     onClick={() => removeFile(idx)}
                     className="absolute top-2 left-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg md:hidden"
@@ -176,42 +227,54 @@ export default function ImageConverter() {
             className={`w-full py-3 rounded-xl border-2 border-dashed font-medium transition ${theme.border} ${theme.text} hover:border-blue-400`}
           >
             <input {...getInputProps()} />
-            + افزودن تصاویر بیشتر ({files.length}/20)
+            {content.ui.upload.addMore} ({files.length}/20{" "}
+            {content.ui.upload.counterSuffix})
           </button>
 
           {/* تنظیمات فرمت */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 justify-center">
-              <span className={`text-sm ${theme.textMuted}`}>تبدیل به:</span>
+              <span className={`text-sm ${theme.textMuted}`}>
+                {content.ui.formats.title}
+              </span>
               <ArrowLeftRight size={16} className={theme.textMuted} />
             </div>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {formats.map((fmt) => (
                 <button
                   key={fmt.value}
-                  onClick={() => setTargetFormat(fmt.value as ImageFormat)}
+                  onClick={() =>
+                    setTargetFormat(fmt.value as ImageFormat)
+                  }
                   className={`p-3 rounded-xl text-sm font-medium transition-all border text-center
-                    ${targetFormat === fmt.value 
-                      ? `${theme.primary} border-transparent shadow-lg` 
-                      : `${theme.bg} ${theme.border} ${theme.text} hover:brightness-95`
+                    ${
+                      targetFormat === fmt.value
+                        ? `${theme.primary} border-transparent shadow-lg`
+                        : `${theme.bg} ${theme.border} ${theme.text} hover:brightness-95`
                     }`}
                 >
                   <div className="font-bold">{fmt.label}</div>
-                  <div className={`text-xs opacity-70 mt-1`}>{fmt.desc}</div>
+                  <div className="text-xs opacity-70 mt-1">{fmt.desc}</div>
                 </button>
               ))}
             </div>
           </div>
 
           {/* کیفیت */}
-          {['image/jpeg', 'image/webp', 'image/avif'].includes(targetFormat) && (
+          {["image/jpeg", "image/webp", "image/avif"].includes(
+            targetFormat
+          ) && (
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <label className={`text-sm font-medium ${theme.text}`}>
-                  کیفیت خروجی
+              <div className="flex justify بین items-center">
+                <label
+                  className={`text-sm font-medium ${theme.text}`}
+                >
+                  {content.ui.quality.label}
                 </label>
-                <span className={`text-sm font-bold ${theme.accent}`}>
+                <span
+                  className={`text-sm font-bold ${theme.accent}`}
+                >
                   {quality}%
                 </span>
               </div>
@@ -224,8 +287,8 @@ export default function ImageConverter() {
                 className="w-full accent-blue-500"
               />
               <div className="flex justify-between text-xs text-gray-400">
-                <span>کم‌حجم</span>
-                <span>با کیفیت</span>
+                <span>{content.ui.quality.low}</span>
+                <span>{content.ui.quality.high}</span>
               </div>
             </div>
           )}
@@ -239,15 +302,17 @@ export default function ImageConverter() {
             >
               {isProcessing ? (
                 <>
-                  <Loader2 className="animate-spin" /> در حال پردازش...
+                  <Loader2 className="animate-spin" />{" "}
+                  {content.ui.buttons.processing}
                 </>
               ) : files.length > 1 ? (
                 <>
-                  <FolderArchive /> تبدیل و دانلود ZIP ({files.length} فایل)
+                  <FolderArchive />{" "}
+                  {content.ui.buttons.convertMulti} ({files.length})
                 </>
               ) : (
                 <>
-                  <Download /> تبدیل و دانلود
+                  <Download /> {content.ui.buttons.convertSingle}
                 </>
               )}
             </button>
@@ -257,7 +322,7 @@ export default function ImageConverter() {
               className={`w-full py-2 rounded-xl text-sm font-medium transition ${theme.textMuted} hover:text-red-500`}
             >
               <Trash2 size={16} className="inline ml-2" />
-              پاک کردن همه
+              {content.ui.buttons.clearAll}
             </button>
           </div>
         </motion.div>

@@ -1,0 +1,32 @@
+{
+  "id": "qr-generator",
+  "title": "QR code generator",
+  "category": "image",
+  "description": "Turn any link, text or contact details into a downloadable QR code with customizable colors and size.",
+  "features": [
+    "Supports plain text and URLs",
+    "Customize foreground and background colors",
+    "Control output size and download as PNG"
+  ],
+  "ui": {
+    "input": {
+      "label": "Text or link",
+      "placeholder": "https://..."
+    },
+    "colors": {
+      "fgLabel": "Code color",
+      "bgLabel": "Background color"
+    },
+    "size": {
+      "label": "Image size",
+      "unit": "px"
+    },
+    "buttons": {
+      "downloadPng": "Download PNG image"
+    },
+    "page": {
+      "title": "QR code generator",
+      "description": "Convert links, text or contact details into a clean QR code, with full control over color and size."
+    }
+  }
+}

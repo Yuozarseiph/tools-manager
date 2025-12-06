@@ -19,9 +19,15 @@ import {
   applyFadeIn,
   applyFadeOut,
 } from "@/utils/audio-actions";
+import {
+  useToolContent,
+  type AudioEditorToolContent,
+} from "@/hooks/useToolContent";
 
 export default function AudioTrimTool() {
   const theme = useThemeColors();
+  const content = useToolContent<AudioEditorToolContent>("audio-editor");
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -50,9 +56,7 @@ export default function AudioTrimTool() {
     };
   }, [audioUrl]);
 
-  const handleFileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -78,7 +82,7 @@ export default function AudioTrimTool() {
       setEndTime(buffer.duration);
     } catch (err) {
       console.error("Error decoding audio file", err);
-      alert("خطا در پردازش فایل صوتی.");
+      alert(content.ui.trim.errors.decode);
     }
   };
 
@@ -135,8 +139,7 @@ export default function AudioTrimTool() {
     return `${minutes}:${seconds}`;
   };
 
-  const selectionDuration =
-    endTime > startTime ? endTime - startTime : 0;
+  const selectionDuration = endTime > startTime ? endTime - startTime : 0;
 
   const disableControls = !audioUrl;
 
@@ -146,11 +149,7 @@ export default function AudioTrimTool() {
     try {
       setIsExporting(true);
 
-      const trimmed = trimAudioBuffer(
-        originalBuffer,
-        startTime,
-        endTime
-      );
+      const trimmed = trimAudioBuffer(originalBuffer, startTime, endTime);
 
       const maxFade = trimmed.duration / 2 || 0.001;
 
@@ -166,8 +165,7 @@ export default function AudioTrimTool() {
 
       const a = document.createElement("a");
       a.href = url;
-      const baseName =
-        fileName.replace(/\.[^/.]+$/, "") || "audio";
+      const baseName = fileName.replace(/\.[^/.]+$/, "") || "audio";
       a.download = `${baseName}-trimmed.wav`;
       document.body.appendChild(a);
       a.click();
@@ -175,7 +173,7 @@ export default function AudioTrimTool() {
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Error exporting trimmed audio", err);
-      alert("خطا در ساخت فایل خروجی.");
+      alert(content.ui.trim.errors.export);
     } finally {
       setIsExporting(false);
     }
@@ -214,6 +212,7 @@ export default function AudioTrimTool() {
 
   return (
     <div className="space-y-4">
+      {/* آپلود */}
       <div
         className={`rounded-xl border p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${theme.bg} ${theme.border}`}
       >
@@ -223,11 +222,10 @@ export default function AudioTrimTool() {
           </div>
           <div>
             <p className={`text-sm font-medium ${theme.text}`}>
-              انتخاب فایل صوتی
+              {content.ui.trim.upload.title}
             </p>
             <p className={`text-xs ${theme.textMuted}`}>
-              فرمت‌های رایج مانند MP3, WAV, OGG پشتیبانی می‌شوند. فایل فقط روی
-              دستگاه شما پردازش می‌شود.
+              {content.ui.trim.upload.description}
             </p>
           </div>
         </div>
@@ -237,7 +235,7 @@ export default function AudioTrimTool() {
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${theme.primary}`}
         >
           <Upload size={16} />
-          انتخاب فایل
+          {content.ui.trim.upload.button}
         </button>
 
         <input
@@ -251,6 +249,7 @@ export default function AudioTrimTool() {
 
       {audioUrl ? (
         <div className="space-y-4">
+          {/* اطلاعات فایل */}
           <div
             className={`rounded-xl border p-3 flex flex-wrap items-center justify-between gap-3 ${theme.bg} ${theme.border}`}
           >
@@ -259,7 +258,8 @@ export default function AudioTrimTool() {
                 {fileName}
               </p>
               <p className={`text-xs ${theme.textMuted}`}>
-                مدت کل: {formatTime(duration)}
+                {content.ui.trim.fileInfo.totalDurationLabel}{" "}
+                {formatTime(duration)}
               </p>
             </div>
 
@@ -269,15 +269,18 @@ export default function AudioTrimTool() {
               >
                 <Clock size={12} className={theme.accent} />
                 <span className={theme.text}>
-                  موقعیت فعلی: {formatTime(currentTime)}
+                  {content.ui.trim.fileInfo.currentPositionLabel}{" "}
+                  {formatTime(currentTime)}
                 </span>
               </div>
               <span className={theme.textMuted}>
-                بازه انتخابی: {formatTime(selectionDuration)}
+                {content.ui.trim.fileInfo.selectionLabel}{" "}
+                {formatTime(selectionDuration)}
               </span>
             </div>
           </div>
 
+          {/* اسلایدر زمان + پخش کل */}
           <div className="space-y-3">
             <input
               type="range"
@@ -298,23 +301,25 @@ export default function AudioTrimTool() {
               <button
                 onClick={togglePlay}
                 disabled={disableControls}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
-                  ${
-                    disableControls
-                      ? "opacity-50 cursor-not-allowed"
-                      : `${theme.primary}`
-                  }`}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  disableControls
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
+                }`}
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {isPlaying ? "توقف" : "پخش کل فایل"}
+                {isPlaying
+                  ? content.ui.trim.transport.stop
+                  : content.ui.trim.transport.playAll}
               </button>
 
               <p className={`text-xs ${theme.textMuted}`}>
-                برای گوش‌دادن به کل فایل از این دکمه استفاده کنید.
+                {content.ui.trim.transport.playHelper}
               </p>
             </div>
           </div>
 
+          {/* محدوده برش */}
           <div
             className={`mt-4 rounded-xl border p-4 space-y-4 ${theme.bg} ${theme.border}`}
           >
@@ -322,33 +327,33 @@ export default function AudioTrimTool() {
               <div className="flex items-center gap-2">
                 <Scissors size={16} className={theme.accent} />
                 <p className={`text-sm font-semibold ${theme.text}`}>
-                  محدوده برش
+                  {content.ui.trim.selection.title}
                 </p>
               </div>
 
               <button
                 onClick={resetSelection}
                 disabled={disableControls || !duration}
-                className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-all
-                  ${
-                    disableControls
-                      ? "opacity-40 cursor-not-allowed"
-                      : `${theme.secondary} ${theme.text}`
-                  }`}
+                className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-all ${
+                  disableControls || !duration
+                    ? "opacity-40 cursor-not-allowed"
+                    : `${theme.secondary} ${theme.text}`
+                }`}
               >
                 <RotateCcw size={12} />
-                ریست بازه
+                {content.ui.trim.selection.resetLabel}
               </button>
             </div>
 
             <div className="space-y-3">
+              {/* شروع */}
               <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className={theme.textMuted}>شروع (ثانیه)</span>
-                    <span className={theme.text}>
-                      {formatTime(startTime)}
+                    <span className={theme.textMuted}>
+                      {content.ui.trim.selection.startLabel}
                     </span>
+                    <span className={theme.text}>{formatTime(startTime)}</span>
                   </div>
                   <input
                     type="range"
@@ -357,9 +362,7 @@ export default function AudioTrimTool() {
                     step={0.1}
                     value={startTime}
                     onChange={(e) =>
-                      setStartTime(
-                        Math.min(Number(e.target.value), endTime)
-                      )
+                      setStartTime(Math.min(Number(e.target.value), endTime))
                     }
                     disabled={disableControls}
                     className="w-full"
@@ -377,10 +380,13 @@ export default function AudioTrimTool() {
                 />
               </div>
 
+              {/* پایان */}
               <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className={theme.textMuted}>پایان (ثانیه)</span>
+                    <span className={theme.textMuted}>
+                      {content.ui.trim.selection.endLabel}
+                    </span>
                     <span className={theme.text}>{formatTime(endTime)}</span>
                   </div>
                   <input
@@ -390,9 +396,7 @@ export default function AudioTrimTool() {
                     step={0.1}
                     value={endTime}
                     onChange={(e) =>
-                      setEndTime(
-                        Math.max(Number(e.target.value), startTime)
-                      )
+                      setEndTime(Math.max(Number(e.target.value), startTime))
                     }
                     disabled={disableControls}
                     className="w-full"
@@ -415,15 +419,16 @@ export default function AudioTrimTool() {
               <button
                 onClick={playSelectedRange}
                 disabled={disableControls || !selectionDuration}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
-                  ${
-                    disableControls || !selectionDuration
-                      ? "opacity-50 cursor-not-allowed"
-                      : `${theme.secondary} ${theme.accent}`
-                  }`}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  disableControls || !selectionDuration
+                    ? "opacity-50 cursor-not-allowed"
+                    : `${theme.secondary} ${theme.accent}`
+                }`}
               >
                 <Play size={16} />
-                پخش بازه انتخاب‌شده ({formatTime(selectionDuration)})
+                {`${
+                  content.ui.trim.selection.playSelectionPrefix
+                } (${formatTime(selectionDuration)})`}
               </button>
 
               <button
@@ -434,57 +439,55 @@ export default function AudioTrimTool() {
                   !originalBuffer ||
                   isExporting
                 }
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
-                  ${
-                    disableControls ||
-                    !selectionDuration ||
-                    !originalBuffer
-                      ? "opacity-50 cursor-not-allowed"
-                      : `${theme.primary}`
-                  }`}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  disableControls || !selectionDuration || !originalBuffer
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
+                }`}
               >
                 <Download size={16} />
                 {isExporting
-                  ? "در حال ساخت فایل..."
-                  : "دانلود بخش انتخاب‌شده"}
+                  ? content.ui.trim.selection.downloadWorking
+                  : content.ui.trim.selection.downloadIdle}
               </button>
             </div>
           </div>
 
+          {/* Fade */}
           <div
             className={`rounded-xl border p-4 space-y-3 ${theme.bg} ${theme.border}`}
           >
             <div className="flex items-center gap-2 mb-1">
               <Waves size={16} className={theme.accent} />
               <p className={`text-sm font-semibold ${theme.text}`}>
-                افکت‌های نرم‌کننده صدا
+                {content.ui.trim.fade.title}
               </p>
             </div>
 
             <p className={`text-xs ${theme.textMuted}`}>
-              قبل از دانلود، می‌توانید شروع و پایان صدا را نرم‌تر کنید
-              (Fade In / Fade Out).
+              {content.ui.trim.fade.description}
             </p>
 
             <div className="grid gap-3 md:grid-cols-2">
+              {/* Fade In */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs">
                   <input
                     type="checkbox"
                     checked={fadeInEnabled}
-                    onChange={(e) =>
-                      setFadeInEnabled(e.target.checked)
-                    }
+                    onChange={(e) => setFadeInEnabled(e.target.checked)}
                     disabled={disableControls || !selectionDuration}
                   />
-                  <span className={theme.text}>فعال‌سازی Fade In</span>
+                  <span className={theme.text}>
+                    {content.ui.trim.fade.fadeInLabel}
+                  </span>
                 </label>
 
                 <div className="grid gap-2 grid-cols-[1fr_auto] items-center">
                   <div className="space-y-1">
                     <div className="flex justify-between text-[11px]">
                       <span className={theme.textMuted}>
-                        مدت Fade In (ثانیه)
+                        {content.ui.trim.fade.fadeInDurationLabel}
                       </span>
                       <span className={theme.text}>
                         {fadeInDuration.toFixed(2)}s
@@ -497,14 +500,10 @@ export default function AudioTrimTool() {
                       step={0.1}
                       value={fadeInDuration}
                       onChange={(e) =>
-                        setFadeInDuration(
-                          clampFade(Number(e.target.value))
-                        )
+                        setFadeInDuration(clampFade(Number(e.target.value)))
                       }
                       disabled={
-                        !fadeInEnabled ||
-                        !selectionDuration ||
-                        disableControls
+                        !fadeInEnabled || !selectionDuration || disableControls
                       }
                       className="w-full"
                     />
@@ -517,41 +516,36 @@ export default function AudioTrimTool() {
                     value={fadeInDuration.toFixed(2)}
                     onChange={(e) =>
                       setFadeInDuration(
-                        clampFade(
-                          Number(
-                            e.target.value.replace(",", ".")
-                          )
-                        )
+                        clampFade(Number(e.target.value.replace(",", ".")))
                       )
                     }
                     disabled={
-                      !fadeInEnabled ||
-                      !selectionDuration ||
-                      disableControls
+                      !fadeInEnabled || !selectionDuration || disableControls
                     }
                     className={`w-20 rounded-lg border px-2 py-1 text-xs text-left ${theme.bg} ${theme.border} ${theme.text}`}
                   />
                 </div>
               </div>
 
+              {/* Fade Out */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs">
                   <input
                     type="checkbox"
                     checked={fadeOutEnabled}
-                    onChange={(e) =>
-                      setFadeOutEnabled(e.target.checked)
-                    }
+                    onChange={(e) => setFadeOutEnabled(e.target.checked)}
                     disabled={disableControls || !selectionDuration}
                   />
-                <span className={theme.text}>فعال‌سازی Fade Out</span>
+                  <span className={theme.text}>
+                    {content.ui.trim.fade.fadeOutLabel}
+                  </span>
                 </label>
 
                 <div className="grid gap-2 grid-cols-[1fr_auto] items-center">
                   <div className="space-y-1">
                     <div className="flex justify-between text-[11px]">
                       <span className={theme.textMuted}>
-                        مدت Fade Out (ثانیه)
+                        {content.ui.trim.fade.fadeOutDurationLabel}
                       </span>
                       <span className={theme.text}>
                         {fadeOutDuration.toFixed(2)}s
@@ -564,14 +558,10 @@ export default function AudioTrimTool() {
                       step={0.1}
                       value={fadeOutDuration}
                       onChange={(e) =>
-                        setFadeOutDuration(
-                          clampFade(Number(e.target.value))
-                        )
+                        setFadeOutDuration(clampFade(Number(e.target.value)))
                       }
                       disabled={
-                        !fadeOutEnabled ||
-                        !selectionDuration ||
-                        disableControls
+                        !fadeOutEnabled || !selectionDuration || disableControls
                       }
                       className="w-full"
                     />
@@ -584,17 +574,11 @@ export default function AudioTrimTool() {
                     value={fadeOutDuration.toFixed(2)}
                     onChange={(e) =>
                       setFadeOutDuration(
-                        clampFade(
-                          Number(
-                            e.target.value.replace(",", ".")
-                          )
-                        )
+                        clampFade(Number(e.target.value.replace(",", ".")))
                       )
                     }
                     disabled={
-                      !fadeOutEnabled ||
-                      !selectionDuration ||
-                      disableControls
+                      !fadeOutEnabled || !selectionDuration || disableControls
                     }
                     className={`w-20 rounded-lg border px-2 py-1 text-xs text-left ${theme.bg} ${theme.border} ${theme.text}`}
                   />
@@ -608,11 +592,10 @@ export default function AudioTrimTool() {
           className={`mt-4 rounded-xl border border-dashed p-8 text-center ${theme.bg} ${theme.border}`}
         >
           <p className={`text-sm mb-2 ${theme.text}`}>
-            هنوز فایلی انتخاب نشده است
+            {content.ui.trim.empty.title}
           </p>
           <p className={`text-xs ${theme.textMuted}`}>
-            یک فایل صوتی انتخاب کنید تا بتوانید آن را پخش، برش و با افکت‌های
-            ساده خروجی WAV دریافت کنید.
+            {content.ui.trim.empty.description}
           </p>
         </div>
       )}

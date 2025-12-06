@@ -1,7 +1,6 @@
-// components/tools/ImageResizerTool.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import download from "downloadjs";
 import {
@@ -15,8 +14,16 @@ import {
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { motion } from "framer-motion";
 
+import {
+  useToolContent,
+  type ImageResizerToolContent,
+} from "@/hooks/useToolContent";
+
 export default function ImageResizerTool() {
   const theme = useThemeColors();
+  const content =
+    useToolContent<ImageResizerToolContent>("image-resizer");
+
   const [file, setFile] = useState<File | null>(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -45,16 +52,20 @@ export default function ImageResizerTool() {
 
   const handleWidthChange = (val: number) => {
     setWidth(val);
-    if (lockAspect && aspectRatio) setHeight(Math.round(val / aspectRatio));
+    if (lockAspect && aspectRatio) {
+      setHeight(Math.round(val / aspectRatio));
+    }
   };
 
   const handleHeightChange = (val: number) => {
     setHeight(val);
-    if (lockAspect && aspectRatio) setWidth(Math.round(val * aspectRatio));
+    if (lockAspect && aspectRatio) {
+      setWidth(Math.round(val * aspectRatio));
+    }
   };
 
   const handleResize = () => {
-    if (!file) return;
+    if (!file || !width || !height) return;
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -62,11 +73,24 @@ export default function ImageResizerTool() {
     const img = new Image();
     img.onload = () => {
       ctx?.drawImage(img, 0, 0, width, height);
-      canvas.toBlob((blob) => {
-        if (blob) download(blob, `resized-${file.name}`, file.type);
-      }, file.type);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            download(blob, `resized-${file.name}`, file.type);
+          }
+        },
+        file.type
+      );
     };
     img.src = URL.createObjectURL(file);
+  };
+
+  const handleClear = () => {
+    setFile(null);
+    setWidth(0);
+    setHeight(0);
+    setAspectRatio(0);
+    setOriginalDims({ w: 0, h: 0 });
   };
 
   return (
@@ -91,7 +115,7 @@ export default function ImageResizerTool() {
               <FileUp size={32} className={theme.accent} />
             </div>
             <p className={`text-lg font-bold ${theme.text}`}>
-              تصویر را اینجا رها کنید
+              {content.ui.upload.dropTitle}
             </p>
           </div>
         </div>
@@ -111,13 +135,15 @@ export default function ImageResizerTool() {
               <div>
                 <p className={`font-bold ${theme.text}`}>{file.name}</p>
                 <p className={`text-xs ${theme.textMuted}`}>
-                  ابعاد اصلی: {originalDims.w} x {originalDims.h}
+                  {content.ui.fileInfo.originalDims} {originalDims.w} x{" "}
+                  {originalDims.h}
                 </p>
               </div>
             </div>
             <button
-              onClick={() => setFile(null)}
+              onClick={handleClear}
               className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+              title={content.ui.buttons.clear}
             >
               <Trash2 size={20} />
             </button>
@@ -125,20 +151,28 @@ export default function ImageResizerTool() {
 
           <div className="grid grid-cols-2 gap-6 items-end">
             <div className="space-y-2">
-              <label className="text-sm font-bold">عرض (Width)</label>
+              <label className="text-sm font-bold">
+                {content.ui.inputs.widthLabel}
+              </label>
               <input
                 type="number"
                 value={width}
-                onChange={(e) => handleWidthChange(Number(e.target.value))}
+                onChange={(e) =>
+                  handleWidthChange(Number(e.target.value))
+                }
                 className={`w-full p-3 rounded-xl border focus:ring-2 ring-blue-500/50 outline-none ${theme.bg} ${theme.border}`}
               />
             </div>
             <div className="space-y-2 relative">
-              <label className="text-sm font-bold">ارتفاع (Height)</label>
+              <label className="text-sm font-bold">
+                {content.ui.inputs.heightLabel}
+              </label>
               <input
                 type="number"
                 value={height}
-                onChange={(e) => handleHeightChange(Number(e.target.value))}
+                onChange={(e) =>
+                  handleHeightChange(Number(e.target.value))
+                }
                 className={`w-full p-3 rounded-xl border focus:ring-2 ring-blue-500/50 outline-none ${theme.bg} ${theme.border}`}
               />
               <button
@@ -146,7 +180,7 @@ export default function ImageResizerTool() {
                 className={`absolute -left-3 top-9 p-1.5 rounded-full bg-white shadow border ${
                   lockAspect ? "text-blue-500" : "text-gray-400"
                 }`}
-                title="قفل نسبت تصویر"
+                title={content.ui.buttons.lockTitle}
               >
                 {lockAspect ? <Lock size={14} /> : <Unlock size={14} />}
               </button>
@@ -157,7 +191,7 @@ export default function ImageResizerTool() {
             onClick={handleResize}
             className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] ${theme.primary}`}
           >
-            <Download /> تغییر سایز و دانلود
+            <Download /> {content.ui.buttons.resizeAndDownload}
           </button>
         </motion.div>
       )}

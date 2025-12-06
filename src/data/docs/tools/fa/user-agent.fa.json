@@ -1,0 +1,56 @@
+{
+  "id": "user-agent",
+  "title": "اطلاعات سیستم و مرورگر",
+  "category": "system",
+  "description": "مشاهده رشته کامل User Agent، مرورگر، سیستم‌عامل، نوع دستگاه و اطلاعات تکمیلی مرورگر شما.",
+  "features": [
+    "نمایش رشته کامل User Agent",
+    "تشخیص مرورگر، سیستم‌عامل و نوع دستگاه",
+    "نمایش زبان، وضعیت آنلاین، کوکی‌ها و مشخصات صفحه‌نمایش"
+  ],
+  "ui": {
+    "raw": {
+      "title": "رشته User Agent خام",
+      "copy": "کپی",
+      "copied": "کپی شد"
+    },
+    "cards": {
+      "browser": {
+        "title": "مرورگر",
+        "enginePrefix": "موتور:"
+      },
+      "os": {
+        "title": "سیستم عامل",
+        "archPrefix": "معماری:"
+      },
+      "device": {
+        "title": "دستگاه",
+        "fallback": "PC / Laptop",
+        "desktopLabel": "Desktop"
+      },
+      "cpu": {
+        "title": "پردازنده (CPU)",
+        "fallback": "Default",
+        "coresSuffix": "هسته‌ای"
+      }
+    },
+    "details": {
+      "title": "اطلاعات تکمیلی",
+      "language": "زبان مرورگر",
+      "online": "وضعیت آنلاین",
+      "onlineYes": "✅ آنلاین",
+      "onlineNo": "❌ آفلاین",
+      "cookies": "کوکی فعال؟",
+      "cookiesYes": "بله",
+      "cookiesNo": "خیر",
+      "screenSize": "سایز صفحه",
+      "colorDepth": "عمق رنگ",
+      "colorDepthSuffix": "-bit",
+      "platform": "پلتفرم"
+    },
+    "page": {
+      "title": "اطلاعات سیستم و مرورگر",
+      "description": "شناسایی دقیق سیستم عامل، نسخه مرورگر، نوع دستگاه (موبایل/دسکتاپ) و موتور پردازشی شما."
+    }
+  }
+}

@@ -1,29 +1,41 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { ArrowRight, CalendarDays } from 'lucide-react';
-import { useThemeColors } from '@/hooks/useThemeColors';
-import DateConverterTool from '@/components/tools/DateConverterTool';
+import Link from "next/link";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import DateConverterTool from "@/components/tools/DateConverterTool";
+import {
+  useToolContent,
+  type DateConverterToolContent,
+} from "@/hooks/useToolContent";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DateConverterPage() {
   const theme = useThemeColors();
+  const { t } = useLanguage();
+  const content = useToolContent<DateConverterToolContent>("date-converter");
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
       <div className="max-w-5xl mx-auto px-6 pt-10 w-full">
-        <Link href="/" className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}>
-          <ArrowRight size={16} className="ml-1" /> بازگشت به خانه
+        <Link
+          href="/"
+          className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+        >
+          <ArrowRight size={16} className="ml-1" /> {t("docs.back")}
         </Link>
-        
+
         <div className="flex items-center gap-4 mb-2">
           <div className={`p-3 rounded-xl ${theme.primary}`}>
             <CalendarDays size={24} className="text-white" />
           </div>
-          <h1 className={`text-3xl font-bold ${theme.text}`}>مبدل تاریخ</h1>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>
+            {content.title}
+          </h1>
         </div>
-        
+
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          تبدیل دقیق تاریخ شمسی به میلادی و برعکس، با پشتیبانی از تقویم جلالی.
+          {content.description}
         </p>
       </div>
 
