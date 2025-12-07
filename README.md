@@ -1,6 +1,4 @@
 ```markdown
-<div align="center">
-
 # 🛠️ ToolsManager
 
 **[translate:جعبه‌ابزار مدرن و همه‌کاره برای توسعه‌دهندگان و کاربران عادی]**  
@@ -11,10 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-[translate:مشاهده دمو] | [translate:Live Demo]
-[https://tools-manager.vercel.app](https://tools-manager.vercel.app)
-
-</div>
+[translate:مشاهده دمو] / [translate:Live Demo](https://tools-manager.vercel.app)
 
 ---
 
@@ -28,8 +23,7 @@
 
 ## ✨ [translate:ویژگی‌های کلیدی] (Key Features)
 
-<details open>
-<summary>🇮🇷 <b>[translate:فارسی]</b></summary>
+### 🇮🇷 [translate:فارسی]
 
 - **[translate:رابط کاربری مدرن و واکنش‌گرا]**: [translate:طراحی شده با Tailwind CSS برای نمایش عالی در موبایل و دسکتاپ.]
 - **[translate:پشتیبانی کامل از تم تاریک و روشن]**: [translate:سوییچ خودکار و دستی بین حالت‌های Dark/Light.]
@@ -38,10 +32,7 @@
 - **[translate:معماری ماژولار]**: [translate:افزودن ابزار جدید بسیار ساده است و هر ابزار استیت و لاجیک مستقل دارد.]
 - **[translate:بهینه‌سازی شده برای SEO]**: [translate:استفاده از متاتگ‌های داینامیک و ساختار استاندارد Next.js.]
 
-</details>
-
-<details>
-<summary>🇺🇸 <b>English</b></summary>
+### 🇺🇸 English
 
 - **Modern & Responsive UI**: Built with Tailwind CSS for a seamless experience on mobile and desktop.
 - **Full Dark/Light Mode Support**: Automatic and manual switching between themes.
@@ -49,8 +40,6 @@
 - **Client-Side Processing**: Many tools (like Image & PDF converters) process files directly in the browser for privacy.
 - **Modular Architecture**: Adding new tools is straightforward, with independent state and logic for each utility.
 - **SEO Optimized**: Utilizes dynamic meta tags and Next.js standard practices.
-
-</details>
 
 ---
 
@@ -141,11 +130,7 @@ This project is licensed under the MIT License.
 
 ---
 
-<div align="center">
-
 **Made with ❤️ by [Your Name / Team Name]**
 
-[translate:حمایت مالی] | [Donate](https://reymit.ir/yuozarseiph)
-
-</div>
+[translate:حمایت مالی] / [Donate](https://reymit.ir/yuozarseiph)
 ```
