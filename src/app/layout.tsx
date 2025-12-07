@@ -7,6 +7,8 @@ import ThemeBody from "@/components/ThemeBody";
 import InstallPWA from "@/components/InstallPWA";
 import { Vazirmatn } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 const vazir = Vazirmatn({
   subsets: ["arabic", "latin"],
-  variable: "--font-vazir", // اسم متغیر
+  variable: "--font-vazir",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 export const metadata: Metadata = {
@@ -56,8 +58,10 @@ export default function RootLayout({
       <ThemeProvider>
         <LanguageProvider>
           <ThemeBody className={`${vazir.variable} antialiased font-sans`}>
+            <Header />
             {children}
             <InstallPWA />
+             <Footer/>
           </ThemeBody>
         </LanguageProvider>
       </ThemeProvider>

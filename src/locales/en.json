@@ -10,6 +10,11 @@
     "nameMain": "Tools",
     "nameAccent": "Manager"
   },
+  "theme": {
+    "switchTitle": "Toggle light and dark theme",
+    "light": "Light mode",
+    "dark": "Dark mode"
+  },
   "home": {
     "hero": {
       "titleLine1": "Powerful tools,",

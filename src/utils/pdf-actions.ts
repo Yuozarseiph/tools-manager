@@ -8,25 +8,16 @@ import { PDFDocument } from 'pdf-lib';
  */
 export async function mergePDFs(files: File[]): Promise<Uint8Array> {
   try {
-    // 1. ایجاد یک داکیومنت PDF خالی جدید که قرار است فایل نهایی ما باشد
     const mergedPdf = await PDFDocument.create();
 
     for (const file of files) {
-      // 2. خواندن فایل ورودی به صورت بافر (ArrayBuffer)
       const fileBuffer = await file.arrayBuffer();
       
-      // 3. بارگذاری فایل در حافظه کتابخانه pdf-lib
       const pdf = await PDFDocument.load(fileBuffer);
-      
-      // 4. کپی کردن تمام صفحات فایل فعلی
-      // getPageIndices() لیستی از شماره صفحات (0, 1, 2, ...) را برمی‌گرداند
       const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
       
-      // 5. چسباندن تک‌تک صفحات کپی شده به فایل اصلی (mergedPdf)
       copiedPages.forEach((page) => mergedPdf.addPage(page));
     }
-
-    // 6. ذخیره و خروجی گرفتن فایل نهایی
     return await mergedPdf.save();
     
   } catch (error) {

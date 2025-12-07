@@ -4,50 +4,51 @@
   "category": "pdf",
   "description": "Convert your Word (.docx) documents to PDF directly in the browser while preserving formatting, tables and images.",
   "features": [
-    "Convert .docx files to PDF with one click",
-    "Keep document structure, tables, images and basic styles",
-    "100% client-side processing, no file upload"
+    "Convert .docx and .doc files to PDF with one click",
+    "Keep document structure, tables, images and basic styles as much as possible",
+    "100% client-side processing, no file upload to any server"
   ],
   "ui": {
     "upload": {
       "title": "Select your Word file",
-      "subtitle": "Allowed format: .docx • No size limit"
+      "subtitle": "Allowed formats: .docx • No strict size limit, but very large files may take longer"
     },
     "file": {
       "sizeUnit": "MB",
       "removeTitle": "Remove file"
     },
     "errors": {
-      "invalidType": "Only .docx files are supported",
-      "emptyContent": "The document content is empty.",
+      "invalidType": "Only .docx and .doc files are supported",
+      "emptyContent": "The document content is empty or could not be read.",
       "iframeAccess": "Unable to access the iframe document.",
       "genericPrefix": "Conversion error:",
-      "unknown": "An unknown error occurred"
+      "unknown": "An unknown error occurred during conversion."
     },
     "progress": {
       "reading": "Reading file...",
       "converting": "Converting Word to HTML...",
       "rendering": "Rendering content...",
       "generating": "Generating PDF...",
-      "success": "Conversion completed successfully!"
+      "success": "Conversion completed successfully. You can now download the PDF."
     },
     "buttons": {
-      "convertIdle": "Convert to PDF & download",
-      "convertLoading": "Processing..."
+      "convertIdle": "Convert to PDF",
+      "convertLoading": "Processing...",
+      "manualDownload": "Download PDF file"
     },
     "guide": {
       "title": "✨ Tool features",
       "items": [
-        "✓ Preserve formatting, tables and images",
-        "✓ Full support for RTL languages like Persian",
-        "✓ No file size limit",
-        "✓ 100% secure: processed in your browser",
+        "✓ Preserve formatting, tables and images as much as possible",
+        "✓ Full support for RTL languages such as Persian",
+        "✓ Works with both .docx files",
+        "✓ 100% secure: everything is processed in your browser",
         "✓ Automatic pagination for long documents"
       ]
     },
     "page": {
       "title": "Word to PDF",
-      "description": "Convert your Word (.docx) files to PDF while keeping text and formatting intact."
+      "description": "Convert your Word (.docx) files to PDF while keeping text and formatting intact, directly in your browser."
     }
   }
 }

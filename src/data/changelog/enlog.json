@@ -1,5 +1,27 @@
 [
-  
+  {
+    "version": "2.1.0 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Redesigned the site header with a glassmorphic style and floating controls for a more modern look",
+          "Better light and dark theme consistency between the desktop header and the mobile menu",
+          "Minor visual refinements on tools pages for improved readability and overall UI cohesion",
+          "Smoother user experience when navigating between pages and working with tools"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed several reported issues in the mobile navigation and language switcher",
+          "More stable behavior during long sessions when using multiple tools in parallel"
+        ]
+      }
+    ]
+  },
   {
     "version": "2.0.0 BETA",
     "date": "—",

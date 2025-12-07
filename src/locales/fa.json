@@ -10,6 +10,11 @@
     "nameMain": "Tools",
     "nameAccent": "Manager"
   },
+  "theme": {
+    "switchTitle": "تغییر حالت روشن / تاریک",
+    "light": "حالت روشن",
+    "dark": "حالت تاریک"
+  },
   "home": {
     "hero": {
       "titleLine1": "ابزارهای کاربردی،",

@@ -596,6 +596,7 @@ export interface WordToPdfToolContent extends BaseDocsFields {
     buttons: {
       convertIdle: string;
       convertLoading: string;
+      manualDownload: string; 
     };
     guide: {
       title: string;
@@ -607,6 +608,7 @@ export interface WordToPdfToolContent extends BaseDocsFields {
     };
   };
 }
+
 export interface CodeVisualizerToolContent extends BaseDocsFields {
   id: "code-visualizer";
   ui: {
