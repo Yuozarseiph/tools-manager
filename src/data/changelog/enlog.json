@@ -1,5 +1,35 @@
 [
   {
+    "version": "2.2.0 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added centralized, bilingual metadata for all tool pages using a JSON-based structure",
+          "Introduced JSON-LD (Structured Data) support to improve SEO for tools",
+          "Exposed version and changelog information more clearly in the UI for better transparency"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Unified the architecture of tool pages by fully separating server and client layers",
+          "Improved page load performance by handling metadata generation on the server",
+          "Better synchronization between Persian and English content in tool descriptions and changelog entries"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed several issues when reading metadata for some tools during the build step",
+          "Resolved minor inconsistencies in text rendering between light and dark themes"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.1.0 BETA",
     "date": "—",
     "type": "update",

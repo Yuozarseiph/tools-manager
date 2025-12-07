@@ -1,0 +1,218 @@
+{
+  "tools/audio-editor": {
+    "title": "Free Online Audio Editor | Tools Manager",
+    "description": "Trim and adjust the volume of your audio files, fully on-device with no server upload.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/audio-editor",
+    "ogTitle": "Free Online Audio Editor",
+    "ogDescription": "Trim, change volume, and prepare audio without leaving your browser.",
+    "applicationCategory": "MultimediaApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/base64": {
+    "title": "Online Base64 Encoder & Decoder | Tools Manager",
+    "description": "Convert text and files to and from Base64 directly in your browser with no server upload.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/base64",
+    "ogTitle": "Free Online Base64 Converter",
+    "ogDescription": "Encode and decode Base64 for text and files in your browser, fast and secure.",
+    "applicationCategory": "DeveloperApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/code-visualizer": {
+    "title": "Online Code Structure & Dependency Visualizer | Tools Manager",
+    "description": "Turn your source code into interactive graphs to explore functions, classes, and dependencies directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/code-visualizer",
+    "ogTitle": "Visualize Your Code as Graphs",
+    "ogDescription": "See the structure and relationships in your codebase with interactive call graphs and dependency trees, no install required.",
+    "applicationCategory": "DeveloperApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/json-formatter": {
+    "title": "Online JSON Formatter & Validator | Tools Manager",
+    "description": "Format, prettify, and validate messy JSON with syntax highlighting and clear error messages, directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/json-formatter",
+    "ogTitle": "Beautify and Validate JSON Online",
+    "ogDescription": "Auto-format JSON, sort keys, and catch errors instantly with a developer-friendly online JSON tool.",
+    "applicationCategory": "DeveloperApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/markdown": {
+    "title": "Online Markdown Editor & Live Preview | Tools Manager",
+    "description": "Write and edit Markdown with a real-time HTML preview, perfect for docs, README files, and technical writing.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/markdown",
+    "ogTitle": "Live Markdown Editor in Your Browser",
+    "ogDescription": "Draft and preview Markdown instantly with syntax highlighting and no installation required.",
+    "applicationCategory": "ProductivityApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/excel-chart": {
+    "title": "Create Charts from Excel Online | Tools Manager",
+    "description": "Upload your Excel files and instantly generate bar, line, pie, and area charts directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/excel-chart",
+    "ogTitle": "Turn Excel Data into Charts in Seconds",
+    "ogDescription": "Build clean, presentation-ready charts from Excel data without installing any reporting tools.",
+    "applicationCategory": "BusinessApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/excel-editor": {
+    "title": "Online Excel Editor in Your Browser | Tools Manager",
+    "description": "Open and edit your Excel files directly in the browser, update cells, and save changes without installing any desktop software.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/excel-editor",
+    "ogTitle": "Edit Excel Files Online",
+    "ogDescription": "View and edit spreadsheets, update data, and manage Excel sheets from any device, no office suite required.",
+    "applicationCategory": "BusinessApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/excel-viewer": {
+    "title": "Online Excel Viewer in Your Browser | Tools Manager",
+    "description": "Open your Excel files directly in the browser to quickly inspect sheets, cells, and data without installing any desktop software.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/excel-viewer",
+    "ogTitle": "View Excel Files Online from Any Device",
+    "ogDescription": "Quickly open and review spreadsheets in your browser without relying on Microsoft Excel or office suites.",
+    "applicationCategory": "BusinessApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/color-picker": {
+    "title": "Online Color Picker & HEX/RGB Converter | Tools Manager",
+    "description": "Pick any color and instantly see its HEX, RGB, and HSL codes for your UI and web design work.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/color-picker",
+    "ogTitle": "Pick Colors and Get HEX/RGB Codes",
+    "ogDescription": "A precise color picker for designers and developers with live HEX, RGB, and HSL values in your browser.",
+    "applicationCategory": "DesignApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/image-compressor": {
+    "title": "Online Image Compressor Without Noticeable Quality Loss | Tools Manager",
+    "description": "Compress JPG and PNG images to reduce file size while keeping them visually sharp for web, social media, and fast sharing.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/image-compressor",
+    "ogTitle": "Compress Images Online for the Web",
+    "ogDescription": "Optimize your images for faster loading on websites and mobile devices without installing any desktop tools.",
+    "applicationCategory": "MultimediaApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/image-converter": {
+    "title": "Online Image Format Converter (JPG, PNG, WebP & more) | Tools Manager",
+    "description": "Convert your images between JPG, PNG, WebP, and other common formats directly in the browser with minimal quality loss.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/image-converter",
+    "ogTitle": "Convert Image Formats Online for the Web",
+    "ogDescription": "Quickly convert images to web‑friendly formats so they stay sharp while loading faster on websites and mobile.",
+    "applicationCategory": "MultimediaApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/image-resizer": {
+    "title": "Online Image Resizer (Resize by Pixel or Percentage) | Tools Manager",
+    "description": "Resize your images by exact pixels or percentage directly in the browser while keeping them visually sharp.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/image-resizer",
+    "ogTitle": "Resize Images Online for Web & Social Media",
+    "ogDescription": "Quickly adjust image dimensions for websites, Instagram, and other social platforms so they load fast and stay crisp.",
+    "applicationCategory": "MultimediaApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/image-to-pdf": {
+    "title": "Convert Images to a Single PDF Online | Tools Manager",
+    "description": "Select multiple JPG or PNG images and merge them into a clean, print-ready PDF file directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/image-to-pdf",
+    "ogTitle": "Turn Multiple Images into One PDF",
+    "ogDescription": "Arrange your photos in order and create a single PDF for easy sharing or printing, with all processing done on-device.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/pdf-merge": {
+    "title": "Merge Multiple PDF Files into One Online | Tools Manager",
+    "description": "Select multiple PDF files, reorder them, and merge everything into a single, clean PDF document directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/pdf-merge",
+    "ogTitle": "Combine Multiple PDFs into a Single File",
+    "ogDescription": "Quickly merge contracts, invoices, scans, and separate PDF pages into one final document for easy sharing or archiving.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/text-to-pdf": {
+    "title": "Convert Text to PDF Online | Tools Manager",
+    "description": "Paste or type your text and turn it into a clean, print-ready PDF document in seconds, directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/text-to-pdf",
+    "ogTitle": "Create PDF from Text in Your Browser",
+    "ogDescription": "Generate PDF files from plain text without using Word or any desktop software, perfect for quick documents and notes.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/word-to-pdf": {
+    "title": "Convert Word (DOC/DOCX) to PDF Online | Tools Manager",
+    "description": "Securely convert your Word documents to PDF with proper layout and formatting, directly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/word-to-pdf",
+    "ogTitle": "Turn Word Documents into PDF in Your Browser",
+    "ogDescription": "Upload DOC or DOCX files and generate clean, print-ready PDF documents without installing any desktop apps.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/hash-generator": {
+    "title": "Online Hash Generator (MD5, SHA-1, SHA-256, more) | Tools Manager",
+    "description": "Generate secure hashes for your text and files using algorithms like MD5, SHA-1, SHA-256, and more, fully in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/hash-generator",
+    "ogTitle": "Generate Secure Hashes for Text and Files",
+    "ogDescription": "Quickly create hashes to verify file integrity, compare content, or build digital signatures without uploading data.",
+    "applicationCategory": "SecurityApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/password-generator": {
+    "title": "Online Strong Password Generator | Tools Manager",
+    "description": "Create strong, random passwords with custom length and character sets for your bank, email, social media, and other critical accounts.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/password-generator",
+    "ogTitle": "Generate Secure and Hard-to-Guess Passwords",
+    "ogDescription": "Mix uppercase, lowercase, numbers, and symbols to build passwords that are difficult to crack, without storing anything on the server.",
+    "applicationCategory": "SecurityApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/ip-checker": {
+    "title": "Check Your Public IP and Network Details Online | Tools Manager",
+    "description": "See your public IP address, approximate location, ISP, and basic browser info without storing any data on the server.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/ip-checker",
+    "ogTitle": "View Your IP and Connection Details",
+    "ogDescription": "Quickly inspect your current IP, country, and basic network information for troubleshooting and connectivity checks.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/user-agent": {
+    "title": "View Your Browser User-Agent and Device Info | Tools Manager",
+    "description": "See your exact User-Agent string, operating system, browser type, and basic device details for debugging and support.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/user-agent",
+    "ogTitle": "Check Browser User-Agent and Client Details",
+    "ogDescription": "Quickly inspect your User-Agent and environment information to report bugs, test compatibility, or verify client setups.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/date-converter": {
+    "title": "Online Date Converter (Gregorian, Jalali, Hijri) | Tools Manager",
+    "description": "Convert dates between Gregorian, Jalali (Persian), and Hijri calendars instantly in your browser.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/date-converter",
+    "ogTitle": "Quickly Convert Dates Across Calendars",
+    "ogDescription": "Enter any date and see its equivalent in multiple calendar systems without manually looking up tables.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/qr-generator": {
+    "title": "Online QR Code Generator for Links, Text, and Contacts | Tools Manager",
+    "description": "Create QR codes for URLs, text, phone numbers, and Wi‑Fi networks, then download them for printing or sharing.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/qr-generator",
+    "ogTitle": "Generate QR Codes Online in Seconds",
+    "ogDescription": "Quickly build QR codes for websites, social profiles, business cards, and events directly in your browser.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/unit-converter": {
+    "title": "Online Unit Converter (Length, Weight, Volume & more) | Tools Manager",
+    "description": "Quickly convert between meters, kilometers, miles, kilograms, pounds, liters, and many other common units.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/unit-converter",
+    "ogTitle": "Fast Unit Conversion for Everyday and Technical Use",
+    "ogDescription": "Convert measurement units without formulas or calculators, from simple daily tasks to more technical scenarios.",
+    "applicationCategory": "UtilitiesApplication",
+    "inLanguage": "en-US"
+  },
+  "tools/word-counter": {
+    "title": "Online Word and Character Counter | Tools Manager",
+    "description": "Instantly see the number of words, characters, and lines in your text; perfect for writers, students, and content creators.",
+    "canonical": "https://toolsmanager.yuozarseip.top/tools/word-counter",
+    "ogTitle": "Count Words and Characters in Your Text Online",
+    "ogDescription": "Paste or type your text and immediately get word, character, and paragraph counts without opening a desktop editor.",
+    "applicationCategory": "ProductivityApplication",
+    "inLanguage": "en-US"
+  }
+}

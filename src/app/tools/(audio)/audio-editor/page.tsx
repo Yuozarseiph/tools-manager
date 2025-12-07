@@ -1,56 +1,64 @@
-"use client";
+// app/tools/audio-editor/page.tsx
+import type { Metadata } from "next";
+import AudioEditor from "./AudioEditor";
 
-import Link from "next/link";
-import { ArrowRight, AudioLines } from "lucide-react";
-import { useThemeColors } from "@/hooks/useThemeColors";
-import AudioTool from "@/components/tools/audio/AudioTool";
-import {
-  useToolContent,
-  type AudioEditorToolContent
-} from "@/hooks/useToolContent";
-import { useLanguage } from "@/context/LanguageContext";
+// متادیتای فارسی و انگلیسی
+import faMeta from "@/data/meta/fameta.json" assert { type: "json" };
+import enMeta from "@/data/meta/enmeta.json" assert { type: "json" };
 
-export default function AudioEditorPage() {
-  const theme = useThemeColors();
-  const { t } = useLanguage();
-  const content =
-    useToolContent<AudioEditorToolContent>("audio-editor");
+// کلید متادیتا برای این ابزار
+const KEY = "tools/audio-editor" as const;
+
+// فعلاً فارسی را به‌عنوان زبان اصلی سئو استفاده می‌کنیم
+const fa = (faMeta as any)[KEY];
+const en = (enMeta as any)[KEY];
+
+// متادیتای Next.js
+export const metadata: Metadata = {
+  title: fa.title,
+  description: fa.description,
+  alternates: {
+    canonical: fa.canonical,
+  },
+  openGraph: {
+    title: fa.ogTitle ?? fa.title,
+    description: fa.ogDescription ?? fa.description,
+    url: fa.canonical,
+    type: "website",
+  },
+};
+
+// تابع کمکى برای JSON‑LD این ابزار
+function buildJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+    description: fa.description,
+    url: fa.canonical,
+    applicationCategory: fa.applicationCategory ?? "UtilitiesApplication",
+    inLanguage: fa.inLanguage ?? "fa-IR",
+    provider: {
+      "@type": "Organization",
+      name: "Tools Manager",
+      url: "https://toolsmanager.yuozarseip.top",
+    },
+  };
+}
+
+export default function Page() {
+  const jsonLd = buildJsonLd();
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme.bg}`}>
-      <div className="max-w-6xl mx-auto px-6 pt-10 w-full">
-        <Link
-          href="/"
-          className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
-        >
-          <ArrowRight size={16} className="ml-1" />
-          {t("docs.back")}
-        </Link>
+    <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
 
-        <div className="flex items-center gap-4 mb-2">
-          <div className={`p-3 rounded-xl ${theme.primary}`}>
-            <AudioLines
-              size={24}
-              className="text-white"
-            />
-          </div>
-          <h1
-            className={`text-3xl font-bold ${theme.text}`}
-          >
-            {content.ui.page.title}
-          </h1>
-        </div>
-
-        <p
-          className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
-        >
-          {content.ui.page.description}
-        </p>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 pb-20 w-full flex-1">
-        <AudioTool />
-      </div>
+      <AudioEditor />
     </div>
   );
 }
