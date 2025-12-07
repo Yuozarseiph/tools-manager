@@ -200,7 +200,7 @@ export default function ToolsGrid() {
                   <div
                     className={`mt-4 md:mt-6 pt-4 md:pt-6 border-t flex items-center text-xs md:text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 duration-300 ${theme.border} ${theme.accent}`}
                   >
-                    {t("tools.item.cta")}
+                    {t("tool.item.cta")}
                     <ArrowLeft size={16} className="mr-2" />
                   </div>
                 </Link>

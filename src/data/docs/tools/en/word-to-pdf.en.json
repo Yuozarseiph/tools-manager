@@ -34,7 +34,8 @@
     "buttons": {
       "convertIdle": "Convert to PDF",
       "convertLoading": "Processing...",
-      "manualDownload": "Download PDF file"
+      "manualDownload": "Download PDF file",
+      "convertAgain": "Convert again with current settings"
     },
     "guide": {
       "title": "✨ Tool features",
@@ -45,6 +46,11 @@
         "✓ 100% secure: everything is processed in your browser",
         "✓ Automatic pagination for long documents"
       ]
+    },
+    "preview": {
+      "title": "Word document preview",
+      "liveLabel": "Live preview",
+      "empty": "After selecting a Word file, its preview will appear here."
     },
     "page": {
       "title": "Word to PDF",

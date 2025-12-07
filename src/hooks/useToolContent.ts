@@ -596,7 +596,13 @@ export interface WordToPdfToolContent extends BaseDocsFields {
     buttons: {
       convertIdle: string;
       convertLoading: string;
-      manualDownload: string; 
+      manualDownload: string;
+      convertAgain?: string;
+    };
+    preview?: {
+      title?: string;
+      liveLabel?: string;
+      empty?: string;
     };
     guide: {
       title: string;

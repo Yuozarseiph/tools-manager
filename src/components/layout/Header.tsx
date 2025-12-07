@@ -54,7 +54,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40">
+      <header className="sticky top-0 z-100">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6">
             <Link

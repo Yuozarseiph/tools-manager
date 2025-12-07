@@ -18,11 +18,7 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col gap-4 sm:gap-3">
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
           <div className="text-center sm:text-right space-y-1">
-            <p
-              className={`text-sm ${theme.textMuted}`}
-            >
-              {t("footer.text")}
-            </p>
+            <p className={`text-sm ${theme.textMuted}`}>{t("footer.text")}</p>
             <p className="text-xs text-zinc-400">
               © {currentYear} ToolsManager.{" "}
               {locale === "fa"
@@ -59,14 +55,10 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="hover:text-blue-500 transition-colors"
             >
-              {locale === "fa"
-                ? "تیم YUOZARSEIPH"
-                : "YUOZARSEIPH Team"}
+              {locale === "fa" ? "تیم YUOZARSEIPH" : "YUOZARSEIPH Team"}
             </a>
           </nav>
         </div>
-
-        {/* ردیف پایین: متن ریز سئویی (اختیاری) */}
         <div className="text-center sm:text-right">
           <p className="text-[11px] text-zinc-400 leading-relaxed">
             {locale === "fa"
