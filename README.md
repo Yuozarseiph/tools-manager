@@ -1,6 +1,12 @@
 Below is an English-only section you can drop into your README to document the new structure and how to add a tool from scratch.
 
 ***
+## License
+
+ToolsManager is proprietary software.  
+Personal, non-commercial use only.  
+Copying, commercial use, redistribution, and reuse of the code or UI design are strictly prohibited.  
+See the [LICENSE](./LICENSE) file for full terms.
 
 ## 🧱 Architecture Overview
 
@@ -282,3 +288,27 @@ You can adapt the CSV example above to any new tool you add; just keep to this p
 [19](https://www.reddit.com/r/nextjs/comments/1brg5z7/world_class_next_14_app_router_open_source_full/)
 [20](https://www.reddit.com/r/nextjs/comments/1ezamqy/using_react_hooks_with_nextjs_is_really_confusing/)
 [21](https://dev.to/muhammad_usman_35b52e4f04/nextjs-14-app-router-building-modern-full-stack-applications-52ej)
+
+## ✅ Conventions & Guarantees
+
+Every tool in ToolsManager guarantees:
+
+- A single route entry under `app/[locale]/tools`.
+- A dedicated UI module in `src/components/tools`.
+- Localized content stored outside the React component.
+- No hardcoded UI strings inside tool logic.
+- Consistent theming via `useThemeColors()`.
+- Locale resolution exclusively through `LanguageContext`.
+
+## 🚀 Future Expansion
+
+The current architecture is designed to support:
+
+- Tool versioning
+- Tool marketplace
+- Permission-based access
+- Analytics per tool
+- Auto-generated documentation
+- Admin dashboard for managing tools & content
+
+ToolsManager is not just a collection of utilities — it is a scalable, modular platform for building and shipping browser-first tools with long-term maintainability in mind.
