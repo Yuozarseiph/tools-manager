@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   MonitorSmartphone,
   Wrench,
+  Presentation,
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { TOOLS, type Tool } from "@/data/tools";
@@ -29,6 +30,7 @@ const CATEGORIES = [
   { id: "utility", icon: Wrench },
   { id: "excel", icon: FileText },
   { id: "audio", icon: FileText },
+  { id: "powerpoint", icon: Presentation },
 ] as const;
 
 type ToolWithText = Tool & {

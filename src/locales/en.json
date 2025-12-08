@@ -32,7 +32,8 @@
       "system": "System",
       "utility": "Utilities",
       "excel": "Excel",
-      "audio": "Audio"
+      "audio": "Audio",
+      "powerpoint": "PowerPoint"
     },
     "search": {
       "placeholder": "Search tools..."
@@ -61,6 +62,11 @@
       "word-to-pdf": {
         "title": "Word to PDF",
         "description": "Upload a Word (.docx) file and convert it to PDF format.",
+        "badge": "New"
+      },
+      "html-to-pptx": {
+        "title": "HTML to PowerPoint",
+        "description": "Convert your HTML code or .html file into fully editable PPTX slides.",
         "badge": "New"
       },
 
@@ -350,7 +356,8 @@
       "security": "Security",
       "system": "System & network",
       "utility": "Utility tools",
-      "audio": "Audio tools"
+      "audio": "Audio tools",
+      "presentation" : "Presentation"
     },
     "section": {
       "featuresTitle": "Key features",

@@ -2,18 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, CalendarDays } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import DateConverterTool from "@/components/tools/DateConverterTool";
-import {
-  useToolContent,
-  type DateConverterToolContent,
-} from "@/hooks/useToolContent";
+import DateConverterTool from "@/components/tools/utility/date-converter/DateConverterTool";
+import { useDateConverterPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function DateConverterPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content = useToolContent<DateConverterToolContent>("date-converter");
+  const page = useDateConverterPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -30,12 +28,12 @@ export default function DateConverterPage() {
             <CalendarDays size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.title}
+            {page.title}
           </h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          {content.description}
+          {page.description}
         </p>
       </div>
 

@@ -1,0 +1,581 @@
+{
+  "fa": [
+    {
+      "id": "base64",
+      "title": "مبدل Base64",
+      "category": "developer",
+      "description": "رمزنگاری و رمزگشایی داده‌ها به فرمت Base64 که برای انتقال داده‌های باینری در محیط‌های متنی (مثل ایمیل یا URL) استفاده می‌شود.",
+      "features": [
+        "پشتیبانی از UTF-8 (متون فارسی)",
+        "تبدیل بلادرنگ (Real-time)",
+        "بدون محدودیت حجم متن"
+      ],
+      "howItWorks": [
+        "متن ورودی به آرایه‌ای از بایت‌ها تبدیل می‌شود.",
+        "از توابع داخلی btoa و atob مرورگر با یک لایه اصلاح‌کننده برای کاراکترهای یونیکد استفاده می‌شود."
+      ],
+      "privacyNote": "هیچ متنی ذخیره یا ارسال نمی‌شود. تبدیل‌ها کاملاً در حافظه مرورگر انجام می‌شوند."
+    },
+    {
+      "id": "json-formatter",
+      "title": "فرمت‌کننده و اعتبارسنج JSON",
+      "category": "developer",
+      "description": "ابزاری برای زیباسازی (Prettify)، فشرده‌سازی (Minify) و رفع خطاهای کدهای JSON نامرتب.",
+      "features": [
+        "تشخیص خطای سینتکس با شماره خط",
+        "قابلیت تا کردن (Collapsible) آبجکت‌ها",
+        "تم رنگی برای خوانایی کد"
+      ],
+      "howItWorks": [
+        "استفاده از JSON.parse برای اعتبارسنجی و JSON.stringify برای فرمت‌دهی مجدد."
+      ]
+    },
+    {
+      "id": "code-visualizer",
+      "title": "مصورساز کد (Code Visualizer)",
+      "category": "developer",
+      "description": "تبدیل کدهای پیچیده به گراف‌های بصری و فلوچارت برای درک سریع‌تر منطق و ساختار برنامه.",
+      "features": [
+        "پشتیبانی از زبان‌ JavaScript",
+        "پشتیبانی از زبان C#",
+        "رسم گراف روابط بین توابع و کلاس‌ها",
+        "تشخیص خودکار نودها و یال‌ها (Nodes & Edges)"
+      ],
+      "technicalNote": {
+        "title": "نحوه پردازش",
+        "content": "این ابزار کد شما را پارس کرده و ساختار آن را (بدون اجرا کردن) به یک گراف تبدیل می‌کند. برای JS از تحلیلگر AST و برای C# از Regex های پیشرفته برای استخراج متدها استفاده می‌شود."
+      },
+      "howItWorks": [
+        "کد ورودی توسط پارسر مربوطه (JS یا C#) تحلیل می‌شود.",
+        "توابع، کلاس‌ها و متغیرها به عنوان \"گره\" (Node) شناسایی می‌شوند.",
+        "فراخوانی‌ها و وابستگی‌ها به عنوان \"یال\" (Edge) ترسیم می‌شوند.",
+        "کتابخانه React Flow گراف نهایی را به صورت تعاملی رسم می‌کند."
+      ]
+    },
+    {
+      "id": "markdown-preview",
+      "title": "پیش‌نمایش زنده مارک‌داون",
+      "category": "developer",
+      "description": "ویرایشگر Markdown با قابلیت نمایش همزمان خروجی HTML، مناسب برای نوشتن داکیومنت و Readme.",
+      "features": [
+        "پشتیبانی از جداول و کد بلاک‌ها",
+        "خروجی مشابه GitHub",
+        "اکسپورت به HTML"
+      ]
+    },
+
+    {
+      "id": "excel-chart",
+      "title": "رسم نمودار از اکسل",
+      "category": "excel",
+      "description": "تبدیل داده‌های فایل اکسل به نمودارهای تعاملی و زیبا (میله‌ای، دایره‌ای، خطی و منطقه‌ای).",
+      "features": [
+        "پشتیبانی از فایل‌های حجیم",
+        "تشخیص خودکار ستون‌های عددی",
+        "شخصی‌سازی رنگ‌ها"
+      ],
+      "howItWorks": [
+        "فایل توسط کتابخانه XLSX پارس شده و داده‌ها به فرمت JSON برای کتابخانه Recharts تبدیل می‌شوند."
+      ]
+    },
+    {
+      "id": "excel-editor",
+      "title": "ویرایشگر آنلاین اکسل",
+      "category": "excel",
+      "description": "باز کردن و ویرایش فایل‌های XLSX و CSV بدون نیاز به نصب آفیس، با قابلیت جستجو و فیلتر.",
+      "features": [
+        "صفحه‌بندی (Pagination) برای فایل‌های سنگین",
+        "جستجوی آنی",
+        "تاریخچه تغییرات (Undo)"
+      ],
+      "privacyNote": "فایل اکسل شما در مرورگر پردازش شده و نسخه ویرایش شده مستقیماً در سیستم شما ساخته می‌شود."
+    },
+
+    {
+      "id": "image-compressor",
+      "title": "فشرده‌سازی هوشمند تصاویر",
+      "category": "image",
+      "description": "کاهش حجم تصاویر PNG و JPEG تا ۹۰٪ بدون افت محسوس کیفیت برای استفاده در وب.",
+      "features": [
+        "تنظیم درصد فشرده‌سازی",
+        "حذف متادیتا (EXIF)",
+        "تغییر سایز خودکار"
+      ],
+      "howItWorks": [
+        "تصویر روی یک Canvas مخفی رسم شده و با الگوریتم‌های فشرده‌سازی مرورگر مجدداً انکود می‌شود."
+      ]
+    },
+    {
+      "id": "color-picker",
+      "title": "استخراج رنگ از تصویر",
+      "category": "image",
+      "description": "آپلود عکس و استخراج کد رنگ (HEX, RGB) هر نقطه‌ای از آن به همراه پالت رنگی تصویر.",
+      "features": [
+        "ذره‌بین برای دقت پیکسلی",
+        "کپی سریع کد رنگ",
+        "تولید پالت رنگی غالب"
+      ],
+      "technicalNote": {
+        "title": "Canvas API",
+        "content": "ما از متد getImageData برای دسترسی به آرایه پیکسلی تصویر استفاده می‌کنیم."
+      }
+    },
+
+    {
+      "id": "pdf-merge",
+      "title": "ادغام فایل‌های PDF",
+      "category": "pdf",
+      "description": "چسباندن چندین فایل PDF به یکدیگر و ساخت یک فایل واحد با ترتیب دلخواه.",
+      "features": [
+        "بدون محدودیت تعداد فایل",
+        "حفظ کیفیت اصلی صفحات",
+        "Drag & Drop"
+      ],
+      "technicalNote": {
+        "title": "کتابخانه pdf-lib",
+        "content": "عملیات ادغام با دستکاری ساختار داخلی PDF انجام می‌شود و نیازی به رندر مجدد صفحات نیست."
+      }
+    },
+    {
+      "id": "word-to-pdf",
+      "title": "تبدیل Word به PDF",
+      "category": "pdf",
+      "description": "تبدیل فایل‌های docx به PDF بدون به‌هم‌ریختگی فونت‌ها و استایل‌ها (تا حد امکان در مرورگر).",
+      "features": [
+        "پشتیبانی از متن فارسی",
+        "حفظ جداول و تصاویر",
+        "بدون نیاز به سرور"
+      ],
+      "privacyNote": "برخلاف سایر سرویس‌ها، فایل ورد شما آپلود نمی‌شود و تبدیل در مرورگر انجام می‌گیرد."
+    },
+
+    {
+      "id": "password-generator",
+      "title": "پسورد ساز امن",
+      "category": "security",
+      "description": "تولید رمزهای عبور غیرقابل حدس با استفاده از منابع آنتروپی سیستم.",
+      "features": [
+        "بدون الگوی تکراری",
+        "استفاده از کاراکترهای خاص",
+        "طول قابل تنظیم تا ۱۲۸ کاراکتر"
+      ],
+      "technicalNote": {
+        "title": "CSPRNG",
+        "content": "از crypto.getRandomValues استفاده می‌شود که از نویز سخت‌افزاری سیستم برای تولید اعداد تصادفی استفاده می‌کند."
+      }
+    },
+    {
+      "id": "hash-generator",
+      "title": "مولد هش (Hashing)",
+      "category": "security",
+      "description": "تولید اثر انگشت دیجیتال (Hash) برای متون و فایل‌ها با الگوریتم‌های استاندارد.",
+      "features": [
+        "پشتیبانی از SHA-256, SHA-512, MD5",
+        "بررسی تغییر ناپذیری فایل",
+        "سرعت بالا"
+      ]
+    },
+
+    {
+      "id": "ip-checker",
+      "title": "بررسی IP و موقعیت",
+      "category": "system",
+      "description": "نمایش آی‌پی عمومی، نام سرویس‌دهنده اینترنت (ISP) و موقعیت تقریبی سرور.",
+      "features": [
+        "پشتیبانی از IPv4 و IPv6",
+        "تشخیص پروکسی/VPN",
+        "نمایش روی نقشه"
+      ],
+      "technicalNote": {
+        "title": "API های خارجی",
+        "content": "برای دریافت اطلاعات IP از چندین API معتبر (مثل ipapi) به صورت همزمان استفاده می‌شود."
+      }
+    },
+    {
+      "id": "user-agent",
+      "title": "تحلیل User Agent",
+      "category": "system",
+      "description": "استخراج اطلاعات مرورگر، سیستم عامل و دستگاه از رشته User Agent.",
+      "features": [
+        "تشخیص نسخه دقیق مرورگر",
+        "تشخیص نوع دستگاه (موبایل/دسکتاپ)",
+        "بررسی موتور رندرینگ"
+      ]
+    },
+
+    {
+      "id": "qr-generator",
+      "title": "سازنده QR Code",
+      "category": "utility",
+      "description": "ساخت کدهای کیوآر برای لینک، متن، ایمیل یا وای‌فای با قابلیت شخصی‌سازی.",
+      "features": [
+        "تنظیم رنگ و پس‌زمینه",
+        "تنظیم سطح اصلاح خطا (Error Correction)",
+        "دانلود با فرمت PNG/SVG"
+      ]
+    },
+    {
+      "id": "unit-converter",
+      "title": "مبدل واحدها",
+      "category": "utility",
+      "description": "تبدیل واحدهای مختلف (طول، وزن، دما، حجم، سرعت و...) به یکدیگر.",
+      "features": [
+        "دقت اعشاری بالا",
+        "تبدیل آنی",
+        "پشتیبانی از واحدهای امپریال و متریک"
+      ]
+    },
+    {
+      "id": "date-converter",
+      "title": "مبدل تاریخ",
+      "category": "utility",
+      "description": "تبدیل تاریخ شمسی به میلادی و قمری و برعکس.",
+      "features": ["تقویم جلالی دقیق", "محاسبه سال کبیسه", "نمایش مناسبت‌ها"]
+    },
+    {
+      "id": "word-counter",
+      "title": "شمارنده کلمات",
+      "category": "utility",
+      "description": "شمارش تعداد کلمات، کاراکترها، جملات و پاراگراف‌های متن.",
+      "features": [
+        "بدون احتساب فاصله (اختیاری)",
+        "تخمین زمان مطالعه",
+        "تحلیل تراکم کلمات"
+      ]
+    },
+
+    {
+      "id": "audio-editor",
+      "title": "ویرایشگر صوت (بتا)",
+      "category": "audio",
+      "description": "برش و آماده‌سازی سریع فایل‌های صوتی به صورت کامل روی مرورگر، بدون نیاز به نصب نرم‌افزار یا آپلود فایل.",
+      "features": [
+        "برش بازه دلخواه از صدا (Trim)",
+        "پخش پیش‌نمایش بازه انتخاب‌شده",
+        "اعمال Fade In / Fade Out روی شروع و پایان کلیپ",
+        "خروجی‌گرفتن به صورت فایل WAV"
+      ],
+      "howItWorks": [
+        "فایل صوتی با استفاده از Web Audio API به AudioBuffer تبدیل شده و بازه انتخابی بر اساس ثانیه‌های شروع و پایان از آن جدا می‌شود.",
+        "روی داده‌های خام صوت، افکت‌های نرم‌کننده (Fade In / Fade Out) به صورت مستقیم اعمال شده و در نهایت خروجی به فرمت WAV در مرورگر ساخته می‌شود."
+      ],
+      "privacyNote": "تمام پردازش‌های صوتی با استفاده از Web Audio API در همان مرورگر شما انجام می‌شود و هیچ فایلی به سرور آپلود یا ذخیره نمی‌شود."
+    },
+    {
+      "id": "html-to-pptx",
+      "title": "تبدیل HTML به پاورپوینت (PPTX)",
+      "category": "presentation",
+      "description": "تبدیل ساختار اسلایدهای HTML به فایل پاورپوینت قابل ویرایش (PPTX) در مرورگر، با استفاده از پارسر HTML و کتابخانه PptxGenJS.",
+      "features": [
+        "پیش‌نمایش زنده HTML در کنار دکمه تبدیل",
+        "پشتیبانی از چند اسلاید با استفاده از کلاس .slide",
+        "تشخیص خودکار تیترها، پاراگراف‌ها، لیست‌ها و جداول ساده",
+        "حفظ استایل‌های اصلی در حد فونت، رنگ، پس‌زمینه و چینش ساده متن",
+        "خروجی PPTX قابل ویرایش در PowerPoint و Google Slides",
+        "تبدیل کاملاً سمت کلاینت (بدون آپلود روی سرور)"
+      ],
+      "howItWorks": [
+        "کاربر HTML مربوط به اسلایدها را در ادیتور وارد می‌کند یا از فایل .html بارگذاری می‌کند.",
+        "یک پارسر HTML، هر section با کلاس .slide را به عنوان یک اسلاید شناسایی کرده و تیترها (h1..h3)، پاراگراف‌ها، آیتم‌های لیست و جداول را استخراج می‌کند.",
+        "استایل‌های پایه هر المان (رنگ متن، سایز فونت، تراز، رنگ پس‌زمینه و نوع اسلاید مانند title-slide یا content-slide) به تنظیمات معادل در PptxGenJS مپ می‌شوند.",
+        "با استفاده از PptxGenJS، برای هر اسلاید متن‌ها، بولت‌پوینت‌ها و جداول در موقعیت مناسب روی اسلاید ساخته می‌شوند و در صورت کمبود فضا، متن به‌طور هوشمند بین اسلایدها تقسیم می‌شود.",
+        "در پایان، یک فایل .pptx استاندارد برای دانلود کاربر تولید می‌شود."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی و محدودیت‌ها",
+        "content": "موتور تبدیل بر پایه کتابخانه PptxGenJS ساخته شده است و HTML را ابتدا به یک مدل میانی اسلاید (تیتر، متن، لیست، جدول) تبدیل می‌کند، سپس این مدل را به اسلایدهای پاورپوینت مپ می‌کند. استایل‌های پیچیده CSS (layoutهای چندستونه سنگین، positionهای تو در تو، انیمیشن و افکت‌های خاص) به‌طور کامل بازتولید نمی‌شوند و فقط رنگ، اندازه فونت، چینش و بک‌گراند ساده منتقل می‌شود. برای بهترین نتیجه، هر اسلاید باید یک کانتینر مستقل (مثلاً section.slide) با چیدمان ساده و جداول استاندارد باشد."
+      },
+      "privacyNote": "تمام عملیات تبدیل روی مرورگر شما انجام می‌شود و HTML یا فایل‌های شما روی سرور ذخیره یا پردازش نمی‌شوند."
+    }
+  ],
+
+  "en": [
+    {
+      "id": "base64",
+      "title": "Base64 converter",
+      "category": "developer",
+      "description": "Encode and decode data to Base64, used for transferring binary data in text-based environments like email or URLs.",
+      "features": [
+        "UTF-8 support (including Persian text)",
+        "Real-time conversion",
+        "No text length limits"
+      ],
+      "howItWorks": [
+        "The input text is converted to an array of bytes.",
+        "Browser built-in btoa/atob are used with an extra Unicode-safe layer for proper handling of non-ASCII characters."
+      ],
+      "privacyNote": "No text is stored or sent anywhere. All conversions happen entirely in your browser’s memory."
+    },
+    {
+      "id": "json-formatter",
+      "title": "JSON formatter & validator",
+      "category": "developer",
+      "description": "A tool to prettify, minify and fix messy JSON snippets.",
+      "features": [
+        "Syntax error detection with line number",
+        "Collapsible objects and arrays",
+        "Colorful theme for better code readability"
+      ],
+      "howItWorks": [
+        "Uses JSON.parse for validation and JSON.stringify for reformatting."
+      ]
+    },
+    {
+      "id": "code-visualizer",
+      "title": "Code visualizer",
+      "category": "developer",
+      "description": "Turn complex code into visual graphs and flowcharts to understand logic and structure faster.",
+      "features": [
+        "Support for JavaScript",
+        "Support for C#",
+        "Graph of relations between functions and classes",
+        "Automatic detection of nodes and edges"
+      ],
+      "technicalNote": {
+        "title": "Processing pipeline",
+        "content": "The tool parses your code (without executing it) and converts its structure into a graph. For JS it uses an AST parser, and for C# it uses advanced regular expressions to extract methods."
+      },
+      "howItWorks": [
+        "The input code is analyzed by the appropriate parser (JS or C#).",
+        "Functions, classes and variables are identified as nodes.",
+        "Calls and dependencies are drawn as edges.",
+        "React Flow renders the final graph interactively."
+      ]
+    },
+    {
+      "id": "markdown-preview",
+      "title": "Live Markdown preview",
+      "category": "developer",
+      "description": "A Markdown editor with live HTML preview, perfect for writing docs and READMEs.",
+      "features": [
+        "Support for tables and code blocks",
+        "Output similar to GitHub rendering",
+        "Export to HTML"
+      ]
+    },
+
+    {
+      "id": "excel-chart",
+      "title": "Charts from Excel",
+      "category": "excel",
+      "description": "Convert data from Excel files into interactive, beautiful charts (bar, pie, line and area).",
+      "features": [
+        "Support for large files",
+        "Automatic numeric-column detection",
+        "Color customization"
+      ],
+      "howItWorks": [
+        "The file is parsed with the XLSX library and the data is converted to JSON for use with chart libraries like Recharts."
+      ]
+    },
+    {
+      "id": "excel-editor",
+      "title": "Online Excel editor",
+      "category": "excel",
+      "description": "Open and edit XLSX and CSV files without Office, with search and filtering.",
+      "features": [
+        "Pagination for heavy files",
+        "Instant search",
+        "Undo history"
+      ],
+      "privacyNote": "Your Excel file is processed in the browser and the edited version is generated directly on your device."
+    },
+
+    {
+      "id": "image-compressor",
+      "title": "Smart image compressor",
+      "category": "image",
+      "description": "Reduce PNG and JPEG file size by up to 90% with minimal visible quality loss for web use.",
+      "features": [
+        "Adjustable compression level",
+        "EXIF metadata removal",
+        "Automatic resize"
+      ],
+      "howItWorks": [
+        "The image is drawn onto a hidden canvas and re-encoded using the browser’s image compression algorithms."
+      ]
+    },
+    {
+      "id": "color-picker",
+      "title": "Color picker from image",
+      "category": "image",
+      "description": "Upload an image and pick HEX/RGB codes for any pixel, plus generate a color palette.",
+      "features": [
+        "Magnifier for pixel-level precision",
+        "One-click color copy",
+        "Generation of the dominant color palette"
+      ],
+      "technicalNote": {
+        "title": "Canvas API",
+        "content": "The tool uses getImageData to access the raw pixel array of the image."
+      }
+    },
+
+    {
+      "id": "pdf-merge",
+      "title": "Merge PDF files",
+      "category": "pdf",
+      "description": "Join multiple PDF files into a single document in your preferred order.",
+      "features": [
+        "No limit on number of files",
+        "Preserves original page quality",
+        "Drag & drop support"
+      ],
+      "technicalNote": {
+        "title": "pdf-lib library",
+        "content": "Merging works by manipulating the internal PDF structure, without re‑rendering pages."
+      }
+    },
+    {
+      "id": "word-to-pdf",
+      "title": "Word to PDF",
+      "category": "pdf",
+      "description": "Convert .docx files to PDF while keeping fonts and styles as intact as possible in the browser.",
+      "features": [
+        "Full support for Persian text",
+        "Preserves tables and images",
+        "No server required"
+      ],
+      "privacyNote": "Unlike many services, your Word file is never uploaded; the conversion runs entirely in the browser."
+    },
+
+    {
+      "id": "password-generator",
+      "title": "Secure password generator",
+      "category": "security",
+      "description": "Generate strong, hard‑to‑guess passwords using system entropy sources.",
+      "features": [
+        "No repeating, predictable patterns",
+        "Support for special characters",
+        "Configurable length up to 128 characters"
+      ],
+      "technicalNote": {
+        "title": "CSPRNG",
+        "content": "Uses crypto.getRandomValues, which relies on hardware noise sources to generate cryptographically secure random numbers."
+      }
+    },
+    {
+      "id": "hash-generator",
+      "title": "Hash generator",
+      "category": "security",
+      "description": "Create digital fingerprints (hashes) for text and files using standard algorithms.",
+      "features": [
+        "Support for SHA‑256, SHA‑512 and MD5",
+        "File integrity verification",
+        "High performance"
+      ]
+    },
+
+    {
+      "id": "ip-checker",
+      "title": "IP & location checker",
+      "category": "system",
+      "description": "Show your public IP, ISP name and approximate server location.",
+      "features": ["IPv4 and IPv6 support", "Proxy/VPN detection", "Map view"],
+      "technicalNote": {
+        "title": "External APIs",
+        "content": "Uses multiple trusted IP information APIs (such as ipapi) in parallel."
+      }
+    },
+    {
+      "id": "user-agent",
+      "title": "User‑Agent analyzer",
+      "category": "system",
+      "description": "Extract browser, OS and device information from the User‑Agent string.",
+      "features": [
+        "Detect exact browser version",
+        "Detect device type (mobile/desktop)",
+        "Inspect rendering engine"
+      ]
+    },
+
+    {
+      "id": "qr-generator",
+      "title": "QR code generator",
+      "category": "utility",
+      "description": "Create QR codes for links, text, email or Wi‑Fi with customization options.",
+      "features": [
+        "Custom foreground and background colors",
+        "Configurable error‑correction level",
+        "Download as PNG or SVG"
+      ]
+    },
+    {
+      "id": "unit-converter",
+      "title": "Unit converter",
+      "category": "utility",
+      "description": "Convert a wide range of units (length, weight, temperature, volume, speed and more).",
+      "features": [
+        "High decimal precision",
+        "Instant conversion",
+        "Support for metric and imperial units"
+      ]
+    },
+    {
+      "id": "date-converter",
+      "title": "Date converter",
+      "category": "utility",
+      "description": "Convert between Jalali (Shamsi), Gregorian and Hijri dates.",
+      "features": [
+        "Accurate Jalali calendar",
+        "Leap‑year calculation",
+        "Display of local holidays/events (where available)"
+      ]
+    },
+    {
+      "id": "word-counter",
+      "title": "Word counter",
+      "category": "utility",
+      "description": "Count words, characters, sentences and paragraphs in your text.",
+      "features": [
+        "Optional exclusion of spaces",
+        "Estimated reading time",
+        "Keyword density analysis"
+      ]
+    },
+
+    {
+      "id": "audio-editor",
+      "title": "Audio editor (beta)",
+      "category": "audio",
+      "description": "Quickly trim and prepare audio files entirely in the browser, with no software installation or file upload.",
+      "features": [
+        "Trim any custom range of audio",
+        "Preview playback of the selected range",
+        "Apply fade‑in / fade‑out at the start and end of the clip",
+        "Export as a WAV file"
+      ],
+      "howItWorks": [
+        "The audio file is decoded into an AudioBuffer using the Web Audio API, and the selected range is cut out based on start and end times.",
+        "Fade‑in and fade‑out effects are applied directly to the raw audio data, and the final output is encoded as WAV in the browser."
+      ],
+      "privacyNote": "All audio processing is done locally with the Web Audio API, and no files are uploaded or stored on any server."
+    },
+    {
+      "id": "html-to-pptx",
+      "title": "HTML to PowerPoint (PPTX)",
+      "category": "presentation",
+      "description": "Convert structured HTML slides into fully editable PowerPoint (PPTX) files in the browser using an HTML parser and PptxGenJS.",
+      "features": [
+        "Live HTML preview next to the export button",
+        "Multi‑slide support using the .slide CSS class",
+        "Automatic detection of headings, paragraphs, lists and simple tables",
+        "Preserves core styles such as fonts, colors, backgrounds and basic text layout",
+        "Editable PPTX output compatible with PowerPoint and Google Slides",
+        "Client‑side only conversion (no file is sent to any server)"
+      ],
+      "howItWorks": [
+        "The user pastes slide HTML into the editor or uploads a .html file.",
+        "An HTML parser scans each section with the .slide class, building an internal slide model with headings (h1..h3), paragraphs, list items and simple tables.",
+        "Basic styles for each element (text color, font size, alignment, background color and logical slide type such as title-slide or content-slide) are mapped to the corresponding PptxGenJS text and table options.",
+        "Using PptxGenJS, the tool creates slides with text boxes, bullet lists and tables positioned within a fixed template; if there is not enough space, long text is automatically split across multiple slides.",
+        "Finally, a standards‑compliant .pptx file is generated in the browser for the user to download."
+      ],
+      "technicalNote": {
+        "title": "Technical details & limitations",
+        "content": "The converter is built on top of PptxGenJS: HTML is first transformed into an intermediate slide model (title, body text, lists, tables) and then rendered programmatically as PowerPoint slides. Complex CSS layouts (heavy multi‑column flex/grid, deeply nested positioning, animations and advanced visual effects) are not faithfully reproduced; only essential style information such as font size, colors, alignment and simple backgrounds is carried over. For best results, design each slide as a simple container (e.g. section.slide) with straightforward layout and regular HTML tables."
+      },
+      "privacyNote": "All processing happens locally in your browser. Your HTML and files are never uploaded, logged or stored on any server."
+    }
+  ]
+}

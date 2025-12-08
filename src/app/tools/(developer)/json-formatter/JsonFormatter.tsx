@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, Braces } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import JsonFormatterTool from "@/components/tools/JsonFormatterTool";
-import {
-  useToolContent,
-  type JsonFormatterToolContent,
-} from "@/hooks/useToolContent";
+import JsonFormatterTool from "@/components/tools/developer/json-formatter/JsonFormatterTool";
+import { useJsonFormatterPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function JsonFormatterPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<JsonFormatterToolContent>("json-formatter");
+  const page = useJsonFormatterPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -23,7 +20,8 @@ export default function JsonFormatterPage() {
           href="/"
           className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {t("docs.back")}
+          <ArrowRight size={16} className="ml-1" />
+          {t("docs.back")}
         </Link>
 
         <div className="flex items-center gap-4 mb-2">
@@ -31,14 +29,14 @@ export default function JsonFormatterPage() {
             <Braces size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p
           className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
         >
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 

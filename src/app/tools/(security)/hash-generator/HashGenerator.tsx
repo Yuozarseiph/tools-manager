@@ -2,18 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import HashGeneratorTool from "@/components/tools/HashGeneratorTool";
-import {
-  useToolContent,
-  type HashGeneratorToolContent,
-} from "@/hooks/useToolContent";
+import HashGeneratorTool from "@/components/tools/security/hash-generator/HashGeneratorTool";
+import { useHashGeneratorPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function HashGeneratorPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content = useToolContent<HashGeneratorToolContent>("hash-generator");
+  const page = useHashGeneratorPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -30,12 +28,12 @@ export default function HashGeneratorPage() {
             <ShieldCheck size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 

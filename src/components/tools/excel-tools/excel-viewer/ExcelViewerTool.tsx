@@ -2,7 +2,6 @@
 
 import { useState, ChangeEvent, useRef } from "react";
 import * as XLSX from "xlsx";
-import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   UploadCloud,
   Sheet,
@@ -14,18 +13,20 @@ import {
   Minimize,
   ZoomIn,
   ZoomOut,
-  X
+  X,
 } from "lucide-react";
+
+import { useThemeColors } from "@/hooks/useThemeColors";
 import {
-  useToolContent,
-  type ExcelViewerToolContent
-} from "@/hooks/useToolContent";
+  useExcelViewerContent,
+  type ExcelViewerToolContent,
+} from "./excel-viewer.content";
 
 type DataRow = { [key: string]: any };
 
 export default function ExcelViewerTool() {
   const theme = useThemeColors();
-  const content = useToolContent<ExcelViewerToolContent>("excel-viewer");
+  const content: ExcelViewerToolContent = useExcelViewerContent();
 
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<DataRow[]>([]);
@@ -39,9 +40,7 @@ export default function ExcelViewerTool() {
   const [zoomLevel, setZoomLevel] = useState(100);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleFileUpload = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
@@ -63,7 +62,7 @@ export default function ExcelViewerTool() {
   const processSheet = (wb: XLSX.WorkBook, sheetName: string) => {
     const ws = wb.Sheets[sheetName];
     const data: DataRow[] = XLSX.utils.sheet_to_json(ws, {
-      defval: ""
+      defval: "",
     });
 
     if (data.length > 0) {
@@ -86,9 +85,7 @@ export default function ExcelViewerTool() {
     }
   };
 
-  const handleSearch = (
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
@@ -99,9 +96,7 @@ export default function ExcelViewerTool() {
 
     const filtered = rows.filter((row) =>
       Object.values(row).some((val) =>
-        String(val)
-          .toLowerCase()
-          .includes(query)
+        String(val).toLowerCase().includes(query)
       )
     );
     setFilteredRows(filtered);
@@ -111,7 +106,7 @@ export default function ExcelViewerTool() {
     if (!filteredRows.length) return;
     const jsonString = JSON.stringify(filteredRows, null, 2);
     const blob = new Blob([jsonString], {
-      type: "application/json"
+      type: "application/json",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -128,15 +123,8 @@ export default function ExcelViewerTool() {
     const csvRows = filteredRows.map((row) =>
       headers
         .map((header) => {
-          const val =
-            row[header] !== undefined
-              ? String(row[header])
-              : "";
-          if (
-            val.includes(",") ||
-            val.includes('"') ||
-            val.includes("\n")
-          ) {
+          const val = row[header] !== undefined ? String(row[header]) : "";
+          if (val.includes(",") || val.includes('"') || val.includes("\n")) {
             return `"${val.replace(/"/g, '""')}"`;
           }
           return val;
@@ -146,7 +134,7 @@ export default function ExcelViewerTool() {
     const csvString = [csvHeaders, ...csvRows].join("\n");
     const bom = "\uFEFF";
     const blob = new Blob([bom + csvString], {
-      type: "text/csv;charset=utf-8;"
+      type: "text/csv;charset=utf-8;",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -181,7 +169,9 @@ export default function ExcelViewerTool() {
   return (
     <div
       ref={containerRef}
-      className={`rounded-2xl border overflow-hidden transition-all duration-300 ${theme.card} ${theme.border} shadow-sm flex flex-col ${
+      className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
+        theme.card
+      } ${theme.border} shadow-sm flex flex-col ${
         isFullscreen
           ? "fixed inset-0 z-50 h-screen w-screen rounded-none border-0"
           : "h-[600px]"
@@ -208,11 +198,7 @@ export default function ExcelViewerTool() {
               <>
                 <div className="flex items-center gap-1 bg-white dark:bg-white/5 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
                   <button
-                    onClick={() =>
-                      setZoomLevel((z) =>
-                        Math.max(50, z - 10)
-                      )
-                    }
+                    onClick={() => setZoomLevel((z) => Math.max(50, z - 10))}
                     className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-md transition-colors"
                     title={content.ui.toolbar.zoomOutTitle}
                   >
@@ -222,11 +208,7 @@ export default function ExcelViewerTool() {
                     {zoomLevel}%
                   </span>
                   <button
-                    onClick={() =>
-                      setZoomLevel((z) =>
-                        Math.min(200, z + 10)
-                      )
-                    }
+                    onClick={() => setZoomLevel((z) => Math.min(200, z + 10))}
                     className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-md transition-colors"
                     title={content.ui.toolbar.zoomInTitle}
                   >
@@ -307,7 +289,7 @@ export default function ExcelViewerTool() {
                 className={`text-xs px-3 py-1 rounded-md whitespace-nowrap transition-all font-medium border ${
                   activeSheet === name
                     ? "bg-blue-500 border-blue-500 text-white"
-                    : `${theme.secondary} border-transparent ${theme.text} hover:bg-black/5 dark:hover:bg-white/10 opacity-70 hover:opacity-100`
+                    : `${theme.secondary} border-transparent ${theme.text} hover:bg-black/5 dark:hover:bg白/10 opacity-70 hover:opacity-100`
                 }`}
               >
                 {name}
@@ -362,9 +344,7 @@ export default function ExcelViewerTool() {
                           {row[header] !== undefined ? (
                             String(row[header])
                           ) : (
-                            <span className="opacity-20 italic">
-                              null
-                            </span>
+                            <span className="opacity-20 italic">null</span>
                           )}
                         </td>
                       ))}
@@ -394,9 +374,7 @@ export default function ExcelViewerTool() {
                 className="text-blue-600 dark:text-blue-400 drop-shadow-sm"
               />
             </div>
-            <h4
-              className={`font-black text-2xl mb-3 ${theme.text}`}
-            >
+            <h4 className={`font-black text-2xl mb-3 ${theme.text}`}>
               {content.ui.empty.title}
             </h4>
             <p

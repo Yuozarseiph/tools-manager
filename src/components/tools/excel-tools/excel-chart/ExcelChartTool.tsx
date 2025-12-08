@@ -2,7 +2,6 @@
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
 import * as XLSX from "xlsx";
-import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   UploadCloud,
   BarChart3,
@@ -12,8 +11,10 @@ import {
   Settings2,
   Maximize2,
   Minimize2,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
+
+import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
 import BarChartComponent from "./charts/BarChartComponent";
@@ -21,17 +22,23 @@ import LineChartComponent from "./charts/LineChartComponent";
 import AreaChartComponent from "./charts/AreaChartComponent";
 import PieChartComponent from "./charts/PieChartComponent";
 import { normalizeDataRow } from "@/utils/persian-number-converter";
-import { useToolContent, type ExcelChartToolContent } from "@/hooks/useToolContent";
+
+import {
+  useExcelChartContent,
+  type ExcelChartToolContent,
+} from "./excel-chart.content";
 
 type DataRow = { [key: string]: any };
 
 export default function ExcelChartTool() {
   const theme = useThemeColors();
-  const content = useToolContent<ExcelChartToolContent>("excel-chart");
+  const content: ExcelChartToolContent = useExcelChartContent();
 
   const [data, setData] = useState<DataRow[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  const [chartType, setChartType] = useState<"bar" | "line" | "area" | "pie">("bar");
+  const [chartType, setChartType] = useState<"bar" | "line" | "area" | "pie">(
+    "bar"
+  );
   const [xAxisKey, setXAxisKey] = useState<string>("");
   const [dataKeys, setDataKeys] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState(0);
@@ -70,23 +77,18 @@ export default function ExcelChartTool() {
         setHasPersianNumbers(foundPersian);
         setData(normalizedData);
         setEndIndex(
-          Math.min(
-            normalizedData.length,
-            chartType === "pie" ? 20 : 50
-          )
+          Math.min(normalizedData.length, chartType === "pie" ? 20 : 50)
         );
 
         const keys = Object.keys(normalizedData[0]);
         setHeaders(keys);
 
         const textCol =
-          keys.find(
-            (k) => typeof normalizedData[0][k] === "string"
-          ) || keys[0];
+          keys.find((k) => typeof normalizedData[0][k] === "string") || keys[0];
         const numCol =
-          keys.find(
-            (k) => typeof normalizedData[0][k] === "number"
-          ) || keys[1] || keys[0];
+          keys.find((k) => typeof normalizedData[0][k] === "number") ||
+          keys[1] ||
+          keys[0];
 
         setXAxisKey(textCol);
         setDataKeys([numCol]);
@@ -105,26 +107,26 @@ export default function ExcelChartTool() {
       id: "bar",
       icon: BarChart3,
       label: content.ui.chartTypes.bar.label,
-      title: content.ui.chartTypes.bar.title
+      title: content.ui.chartTypes.bar.title,
     },
     {
       id: "line",
       icon: LineChartIcon,
       label: content.ui.chartTypes.line.label,
-      title: content.ui.chartTypes.line.title
+      title: content.ui.chartTypes.line.title,
     },
     {
       id: "area",
       icon: AreaChartIcon,
       label: content.ui.chartTypes.area.label,
-      title: content.ui.chartTypes.area.title
+      title: content.ui.chartTypes.area.title,
     },
     {
       id: "pie",
       icon: PieChartIcon,
       label: content.ui.chartTypes.pie.label,
-      title: content.ui.chartTypes.pie.title
-    }
+      title: content.ui.chartTypes.pie.title,
+    },
   ] as const;
 
   return (
@@ -132,9 +134,7 @@ export default function ExcelChartTool() {
       className={`rounded-2xl border overflow-hidden transition-all duration-300 ${theme.card} ${theme.border} shadow-sm`}
     >
       {/* Toolbar */}
-      <div
-        className={`p-6 border-b flex flex-col gap-6 ${theme.border}`}
-      >
+      <div className={`p-6 border-b flex flex-col gap-6 ${theme.border}`}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl cursor-pointer hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 w-full sm:w-auto active:scale-95">
             <UploadCloud size={20} />
@@ -156,9 +156,7 @@ export default function ExcelChartTool() {
               {chartTypeConfigs.map((type) => (
                 <button
                   key={type.id}
-                  onClick={() =>
-                    setChartType(type.id as typeof chartType)
-                  }
+                  onClick={() => setChartType(type.id as typeof chartType)}
                   className={`p-2 rounded-lg transition-all duration-200 relative group ${
                     chartType === type.id
                       ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
@@ -219,16 +217,10 @@ export default function ExcelChartTool() {
                   options={headers}
                   selectedValues={dataKeys}
                   onChange={(vals) => {
-                    if (
-                      chartType === "bar" &&
-                      vals.length > 2
-                    )
-                      return;
+                    if (chartType === "bar" && vals.length > 2) return;
                     setDataKeys(vals);
                   }}
-                  placeholder={
-                    content.ui.mapping.numericPlaceholder
-                  }
+                  placeholder={content.ui.mapping.numericPlaceholder}
                 />
               ) : (
                 <CustomDropdown
@@ -276,11 +268,7 @@ export default function ExcelChartTool() {
                     min={0}
                     max={data.length}
                     value={startIndex}
-                    onChange={(e) =>
-                      setStartIndex(
-                        Number(e.target.value) || 0
-                      )
-                    }
+                    onChange={(e) => setStartIndex(Number(e.target.value) || 0)}
                     className={`w-20 p-1.5 text-center rounded-lg border ${theme.border} bg-transparent`}
                   />
                   <span className="opacity-50">-</span>
@@ -289,11 +277,7 @@ export default function ExcelChartTool() {
                     min={0}
                     max={data.length}
                     value={endIndex}
-                    onChange={(e) =>
-                      setEndIndex(
-                        Number(e.target.value) || 0
-                      )
-                    }
+                    onChange={(e) => setEndIndex(Number(e.target.value) || 0)}
                     className={`w-20 p-1.5 text-center rounded-lg border ${theme.border} bg-transparent`}
                   />
                 </div>
@@ -303,12 +287,10 @@ export default function ExcelChartTool() {
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between text-xs opacity-70">
                     <span className="flex items-center gap-1">
-                      <Minimize2 size={12} />{" "}
-                      {content.ui.zoom.compact}
+                      <Minimize2 size={12} /> {content.ui.zoom.compact}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Maximize2 size={12} />{" "}
-                      {content.ui.zoom.expanded}
+                      <Maximize2 size={12} /> {content.ui.zoom.expanded}
                     </span>
                   </div>
                   <input
@@ -318,9 +300,7 @@ export default function ExcelChartTool() {
                     step={10}
                     value={zoomLevel}
                     onChange={(e) =>
-                      setZoomLevel(
-                        Number(e.target.value) || 100
-                      )
+                      setZoomLevel(Number(e.target.value) || 100)
                     }
                     className="w-full accent-blue-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                   />
@@ -344,10 +324,7 @@ export default function ExcelChartTool() {
             <div
               className="h-full transition-all duration-300"
               style={{
-                minWidth:
-                  chartType === "pie"
-                    ? "100%"
-                    : `${zoomLevel}%`
+                minWidth: chartType === "pie" ? "100%" : `${zoomLevel}%`,
               }}
             >
               {chartType === "bar" && (
@@ -397,14 +374,10 @@ export default function ExcelChartTool() {
               className="mb-6 text-gray-300 dark:text-gray-700"
               strokeWidth={1}
             />
-            <h4
-              className={`text-lg font-bold mb-2 ${theme.text}`}
-            >
+            <h4 className={`text-lg font-bold mb-2 ${theme.text}`}>
               {content.ui.empty.title}
             </h4>
-            <p
-              className={`text-sm ${theme.textMuted}`}
-            >
+            <p className={`text-sm ${theme.textMuted}`}>
               {content.ui.empty.description}
             </p>
           </div>

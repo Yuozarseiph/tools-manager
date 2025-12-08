@@ -1,0 +1,104 @@
+{
+  "fa": {
+    "id": "image-converter",
+    "category": "developer",
+    "title": "تبدیل آنلاین فرمت تصویر",
+    "description": "چندین تصویر را همزمان آپلود کنید و آن‌ها را به فرمت‌های مختلف مثل JPG، PNG، WebP و AVIF تبدیل کنید.",
+    "features": [
+      "آپلود چندین تصویر به صورت همزمان",
+      "پشتیبانی از فرمت‌های رایج: JPG, PNG, WebP, AVIF, GIF, BMP",
+      "امکان تنظیم کیفیت برای فرمت‌های فشرده",
+      "دانلود تکی یا به صورت فایل ZIP برای چند تصویر"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "تصاویر خود را اینجا رها کنید یا کلیک کنید",
+        "dropSubtitle": "فرمت‌های رایج تصویر مانند JPG، PNG، WebP، AVIF و GIF پشتیبانی می‌شوند.",
+        "addMore": "افزودن تصاویر بیشتر",
+        "counterSuffix": "تصویر"
+      },
+      "gallery": {
+        "sizeUnit": "KB"
+      },
+      "formats": {
+        "title": "انتخاب فرمت خروجی",
+        "jpegDesc": "JPG؛ مناسب برای عکس‌ها با حجم کمتر",
+        "pngDesc": "PNG؛ حفظ شفافیت و کیفیت بالا",
+        "webpDesc": "WebP؛ ترکیب کیفیت خوب و حجم کم (مخصوص وب)",
+        "avifDesc": "AVIF؛ نسل جدید با فشرده‌سازی بسیار بالا",
+        "gifDesc": "GIF؛ مناسب برای تصاویر متحرک ساده",
+        "bmpDesc": "BMP؛ فرمت خام با حجم بالا"
+      },
+      "quality": {
+        "label": "کیفیت تصویر خروجی",
+        "low": "حجم کمتر، کیفیت پایین‌تر",
+        "high": "حجم بیشتر، کیفیت بالاتر"
+      },
+      "buttons": {
+        "convertSingle": "تبدیل و دانلود تصویر",
+        "convertMulti": "تبدیل و دانلود همه تصاویر",
+        "processing": "در حال تبدیل تصاویر...",
+        "clearAll": "حذف همه تصاویر"
+      },
+      "alerts": {
+        "error": "در هنگام تبدیل تصاویر خطایی رخ داد. لطفاً دوباره تلاش کنید."
+      },
+      "page": {
+        "title": "تبدیل فرمت تصویر",
+        "description": "به‌راحتی فرمت چندین تصویر را به صورت همزمان تغییر دهید و خروجی را دانلود کنید.",
+        "subtitle": "ابزاری سریع برای تبدیل دسته‌ای تصاویر در مرورگر"
+      }
+    }
+  },
+  "en": {
+    "id": "image-converter",
+    "category": "developer",
+    "title": "Image format converter",
+    "description": "Upload multiple images at once and convert them to formats like JPG, PNG, WebP or AVIF.",
+    "features": [
+      "Upload and convert multiple images in one go",
+      "Supports popular formats: JPG, PNG, WebP, AVIF, GIF, BMP",
+      "Adjust quality for compressed formats",
+      "Download a single file or all as a ZIP archive"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "Drop your images here or click to upload",
+        "dropSubtitle": "Common formats such as JPG, PNG, WebP, AVIF and GIF are supported.",
+        "addMore": "Add more images",
+        "counterSuffix": "images"
+      },
+      "gallery": {
+        "sizeUnit": "KB"
+      },
+      "formats": {
+        "title": "Output format",
+        "jpegDesc": "JPG – good for photos with smaller size",
+        "pngDesc": "PNG – preserves transparency and high quality",
+        "webpDesc": "WebP – great balance between quality and size (for web)",
+        "avifDesc": "AVIF – next‑gen format with very high compression",
+        "gifDesc": "GIF – suitable for simple animations",
+        "bmpDesc": "BMP – raw bitmap format with large size"
+      },
+      "quality": {
+        "label": "Output image quality",
+        "low": "Smaller size, lower quality",
+        "high": "Larger size, higher quality"
+      },
+      "buttons": {
+        "convertSingle": "Convert & download image",
+        "convertMulti": "Convert & download all images",
+        "processing": "Converting images...",
+        "clearAll": "Clear all images"
+      },
+      "alerts": {
+        "error": "An error occurred while converting the images. Please try again."
+      },
+      "page": {
+        "title": "Image format converter",
+        "description": "Quickly change the format of multiple images directly in your browser.",
+        "subtitle": "A fast batch image conversion tool in the browser"
+      }
+    }
+  }
+}

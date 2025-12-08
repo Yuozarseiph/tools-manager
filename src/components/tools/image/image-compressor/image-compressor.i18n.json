@@ -1,0 +1,68 @@
+{
+  "fa": {
+    "id": "image-compressor",
+    "category": "developer",
+    "title": "فشرده‌ساز آنلاین تصویر",
+    "description": "حجم تصاویر خود را بدون افت محسوس کیفیت کاهش دهید و خروجی جدید دانلود کنید.",
+    "features": [
+      "پشتیبانی از فرمت‌های JPG، PNG، JPEG و WebP",
+      "تنظیم دستی کیفیت فشرده‌سازی",
+      "نمایش حجم قبل و بعد از فشرده‌سازی",
+      "دانلود سریع نسخهٔ فشرده شده"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "تصویر خود را اینجا رها کنید یا کلیک کنید"
+      },
+      "fileInfo": {
+        "original": "حجم اصلی:",
+        "compressed": "حجم پس از فشرده‌سازی:",
+        "reductionSuffix": "٪ کاهش حجم"
+      },
+      "settings": {
+        "title": "تنظیمات فشرده‌سازی",
+        "qualityLabel": "کیفیت تصویر خروجی"
+      },
+      "buttons": {
+        "start": "شروع فشرده‌سازی",
+        "download": "دانلود تصویر فشرده‌شده"
+      },
+      "alerts": {
+        "error": "در هنگام فشرده‌سازی تصویر خطایی رخ داد. لطفاً دوباره تلاش کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "image-compressor",
+    "category": "developer",
+    "title": "Online image compressor",
+    "description": "Reduce your image size without noticeable quality loss and download the optimized file.",
+    "features": [
+      "Supports JPG, PNG, JPEG and WebP formats",
+      "Manually adjust compression quality",
+      "See original vs compressed file size",
+      "Quickly download the compressed image"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "Drop an image here or click to upload"
+      },
+      "fileInfo": {
+        "original": "Original size:",
+        "compressed": "Compressed size:",
+        "reductionSuffix": "% size reduction"
+      },
+      "settings": {
+        "title": "Compression settings",
+        "qualityLabel": "Output image quality"
+      },
+      "buttons": {
+        "start": "Start compression",
+        "download": "Download compressed image"
+      },
+      "alerts": {
+        "error": "An error occurred while compressing the image. Please try again."
+      }
+    }
+  }
+}

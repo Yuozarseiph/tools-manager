@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, QrCode } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import QrGeneratorTool from "@/components/tools/QrGeneratorTool";
-import {
-  useToolContent,
-  type QrGeneratorToolContent,
-} from "@/hooks/useToolContent";
+import QrGeneratorTool from "@/components/tools/utility/qr-generator/QrGeneratorTool";
+import { useQrGeneratorPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function QrGeneratorPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<QrGeneratorToolContent>("qr-generator");
+  const page = useQrGeneratorPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,14 +28,14 @@ export default function QrGeneratorPage() {
             <QrCode size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p
           className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
         >
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 

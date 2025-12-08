@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, Minimize2 } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import ImageCompressorTool from "@/components/tools/ImageCompressorTool";
-import {
-  useToolContent,
-  type ImageCompressorToolContent,
-} from "@/hooks/useToolContent";
+import ImageCompressorTool from "@/components/tools/image/image-compressor/ImageCompressorTool";
+import { useImageCompressorPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ImageCompressorPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<ImageCompressorToolContent>("image-compressor");
+  const page = useImageCompressorPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,12 +28,12 @@ export default function ImageCompressorPage() {
             <Minimize2 size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.title}
+            {page.title}
           </h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          {content.description}
+          {page.description}
         </p>
       </div>
 

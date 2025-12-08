@@ -1,0 +1,80 @@
+{
+  "fa": {
+    "id": "image-to-pdf",
+    "category": "developer",
+    "title": "تبدیل تصویر به PDF",
+    "description": "چندین تصویر را انتخاب کنید و آن‌ها را به یک فایل PDF پشت‌سرهم تبدیل و دانلود کنید.",
+    "features": [
+      "پشتیبانی از انتخاب چند تصویر",
+      "قرار گرفتن هر تصویر در یک صفحهٔ جداگانه PDF",
+      "تنظیم خودکار اندازهٔ تصویر متناسب با صفحه",
+      "دانلود سریع فایل PDF نهایی در مرورگر"
+    ],
+    "ui": {
+      "upload": {
+        "selectText": "انتخاب تصاویر برای تبدیل به PDF",
+        "dropHint": "می‌توانید چندین تصویر با فرمت‌های مختلف انتخاب کنید."
+      },
+      "list": {
+        "title": "تصاویر انتخاب‌شده",
+        "countSuffix": "تصویر",
+        "clearAll": "حذف همه تصاویر",
+        "sizeUnit": "KB"
+      },
+      "buttons": {
+        "convert": "تبدیل تصاویر به PDF",
+        "converting": "در حال تبدیل تصاویر...",
+        "download": "دانلود فایل PDF"
+      },
+      "result": {
+        "ready": "فایل PDF آماده دانلود است."
+      },
+      "alerts": {
+        "error": "در هنگام تبدیل تصاویر به PDF مشکلی پیش آمد. لطفاً دوباره تلاش کنید."
+      },
+      "page": {
+        "title": "تبدیل تصویر به PDF",
+        "description": "به‌سادگی چند تصویر را انتخاب کنید و آن‌ها را در قالب یک فایل PDF واحد دانلود کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "image-to-pdf",
+    "category": "developer",
+    "title": "Image to PDF converter",
+    "description": "Select multiple images and convert them into a single multi‑page PDF file.",
+    "features": [
+      "Support for multiple image selection",
+      "Each image placed on a separate PDF page",
+      "Images automatically scaled to fit the page",
+      "Quickly download the final PDF file in your browser"
+    ],
+    "ui": {
+      "upload": {
+        "selectText": "Select images to convert to PDF",
+        "dropHint": "You can choose multiple images in different formats."
+      },
+      "list": {
+        "title": "Selected images",
+        "countSuffix": "images",
+        "clearAll": "Clear all images",
+        "sizeUnit": "KB"
+      },
+      "buttons": {
+        "convert": "Convert images to PDF",
+        "converting": "Converting images...",
+        "download": "Download PDF file"
+      },
+      "result": {
+        "ready": "Your PDF file is ready to download."
+      },
+      "alerts": {
+        "error": "Something went wrong while converting images to PDF. Please try again."
+      },
+      "page": {
+        "title": "Image to PDF converter",
+        "description": "Easily combine multiple images into a single PDF and download it in your browser."
+      }
+    }
+  }
+}

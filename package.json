@@ -1,6 +1,6 @@
 {
   "name": "tools-manager",
-  "version": "2.2.0 BETA",
+  "version": "2.5.0 BETA",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -17,6 +17,7 @@
     "colorthief": "^2.6.0",
     "dagre": "^0.8.5",
     "docx": "^9.5.1",
+    "dom-to-pptx": "^1.0.6",
     "downloadjs": "^1.4.7",
     "framer-motion": "^12.23.25",
     "html2canvas": "^1.4.1",

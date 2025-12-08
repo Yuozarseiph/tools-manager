@@ -1,5 +1,35 @@
 [
   {
+    "version": "2.5.0 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added the new \"HTML to PowerPoint (PPTX)\" tool with support for multiple slides, automatic detection of headings, paragraphs, lists and simple tables, and mapping them to fully editable PowerPoint slides",
+          "Client‑side PPTX generation entirely in the browser, with no file upload to any server, to keep conversions fast and privacy‑friendly"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Completed and unified the JSON‑based metadata infrastructure for all tools (titles, descriptions, canonical links and JSON‑LD structured data) in both Persian and English",
+          "Refined the Docs page structure with a categorized sidebar, dedicated icons per category and bilingual content loading from JSON files for better maintainability",
+          "Further separated server and client layers on tool pages to make Fast Refresh more stable, reduce errors caused by calling client functions from the server and prepare the codebase for future features"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed an issue in the Docs sidebar where selecting some entries immediately jumped back to the first document instead of keeping the selected one",
+          "Resolved several metadata/JSON‑LD issues in PDF‑related tools (such as PDF merge) that were caused by calling client‑side helpers from server components during build/development",
+          "Improved consistency of translations and rendering for newer categories (such as Presentation) across the Persian and English versions of Docs and related tools"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.2.0 BETA",
     "date": "—",
     "type": "update",

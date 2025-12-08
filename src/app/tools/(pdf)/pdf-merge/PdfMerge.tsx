@@ -2,19 +2,16 @@
 
 import { FileStack, ArrowRight } from "lucide-react";
 import Link from "next/link";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import PdfMerger from "@/components/tools/PdfMerger";
-import {
-  useToolContent,
-  type PdfMergeToolContent,
-} from "@/hooks/useToolContent";
+import PdfMerger from "@/components/tools/pdf/pdf-merge/PdfMerger";
+import { usePdfMergePageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function PdfMergePage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<PdfMergeToolContent>("pdf-merge");
+  const page = usePdfMergePageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,14 +28,14 @@ export default function PdfMergePage() {
             <FileStack size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed ${theme.textMuted}`}>
-          {content.ui.page.description}
+          {page.description}
           <span className="block mt-1 text-xs opacity-70">
-            {content.ui.page.subtitle}
+            {page.subtitle}
           </span>
         </p>
       </div>

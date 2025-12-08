@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import TextToPdfTool from "@/components/tools/TextToPdfTool";
-import {
-  useToolContent,
-  type TextToPdfToolContent,
-} from "@/hooks/useToolContent";
+import TextToPdfTool from "@/components/tools/pdf/text-to-pdf/TextToPdfTool";
+import { useTextToPdfPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function TextToPdfPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<TextToPdfToolContent>("text-to-pdf");
+  const page = useTextToPdfPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,14 +28,14 @@ export default function TextToPdfPage() {
             <FileText size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p
           className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
         >
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 

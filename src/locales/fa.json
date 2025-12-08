@@ -32,7 +32,8 @@
       "system": "سیستم",
       "utility": "کاربردی",
       "excel": "اکسل",
-      "audio": "صدا"
+      "audio": "صدا",
+      "powerpoint": "پاورپوینت"
     },
     "search": {
       "placeholder": "جستجو در ابزارها..."
@@ -69,6 +70,12 @@
         "description": "چندین تصویر را به ترتیب صفحات در یک فایل PDF واحد ترکیب کنید.",
         "badge": "جدید"
       },
+      "html-to-pptx": {
+        "title": "تبدیل HTML به پاورپوینت",
+        "description": "کد یا فایل HTML خود را به اسلایدهای PPTX قابل ویرایش تبدیل کنید.",
+        "badge": "جدید"
+      },
+
       "image-compressor": {
         "title": "کاهش حجم تصویر",
         "description": "کاهش هوشمند حجم تصاویر PNG, JPG, WebP بدون افت کیفیت محسوس.",
@@ -350,7 +357,8 @@
       "security": "امنیت",
       "system": "سیستم و شبکه",
       "utility": "ابزار کاربردی",
-      "audio": "ابزار صوتی"
+      "audio": "ابزار صوتی",
+      "presentation" : "ابزار پاورپوینت"
     },
     "section": {
       "featuresTitle": "ویژگی‌های کلیدی",

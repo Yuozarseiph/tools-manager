@@ -1,0 +1,32 @@
+{
+  "fa": {
+    "page": {
+      "title": "تبدیل آنلاین واحدها (طول، وزن، دما و بیشتر)",
+      "description": "میان واحدهای مختلف طول، وزن، دما و سایر دسته‌ها به‌صورت فوری و دقیق تبدیل انجام بده و مقدار معادل را بلافاصله ببین."
+    },
+    "seo": {
+      "title": "ابزار تبدیل واحد آنلاین | Tools Manager",
+      "description": "مقادیر را بین واحدهای متداول مانند متر و فوت، کیلوگرم و پوند، سانتی‌گراد و فارنهایت و سایر واحدها تبدیل کن.",
+      "canonical": "https://toolsmanager.yuozarseip.top/tools/unit-converter",
+      "ogTitle": "مبدل تحت‌وب واحدهای مختلف (طول، وزن، دما و …)",
+      "ogDescription": "بدون ماشین‌حساب، به‌سرعت بین واحدهای رایج در مهندسی، زندگی روزمره و برنامه‌نویسی تبدیل انجام بده.",
+      "applicationCategory": "UtilitiesApplication",
+      "inLanguage": "fa-IR"
+    }
+  },
+  "en": {
+    "page": {
+      "title": "Online unit converter (length, mass, temperature and more)",
+      "description": "Quickly convert between different units of length, mass, temperature and other categories with instant results."
+    },
+    "seo": {
+      "title": "Unit converter tool online | Tools Manager",
+      "description": "Convert values between common units like meters and feet, kilograms and pounds, Celsius and Fahrenheit and more.",
+      "canonical": "https://toolsmanager.yuozarseip.top/tools/unit-converter",
+      "ogTitle": "Web-based unit converter for multiple categories",
+      "ogDescription": "Perform fast conversions between everyday and engineering units directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "inLanguage": "en-US"
+    }
+  }
+}

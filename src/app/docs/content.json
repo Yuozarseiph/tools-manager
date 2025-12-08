@@ -1,0 +1,32 @@
+{
+  "fa": {
+    "page": {
+      "title": "مستندات و راهنمای ابزارها",
+      "description": "راهنمای کامل استفاده از ابزارهای Tools Manager، شامل توضیح قابلیت‌ها، نحوه کار و نکات حریم خصوصی هر ابزار."
+    },
+    "seo": {
+      "title": "مستندات Tools Manager | راهنمای ابزارها",
+      "description": "در این بخش می‌توانید توضیحات کامل، ویژگی‌ها و نحوه کار با ابزارهای مختلف (PDF، تصویر، اکسل، امنیت، سیستم و …) را ببینید.",
+      "canonical": "https://toolsmanager.yuozarseip.top/docs",
+      "ogTitle": "مستندات و راهنمای استفاده از ابزارهای Tools Manager",
+      "ogDescription": "قبل از استفاده از هر ابزار، صفحه مستندات آن را ببینید تا با محدودیت‌ها، نکات فنی و حریم خصوصی آن آشنا شوید.",
+      "applicationCategory": "Documentation",
+      "inLanguage": "fa-IR"
+    }
+  },
+  "en": {
+    "page": {
+      "title": "Tools Manager documentation",
+      "description": "Detailed guides for all Tools Manager utilities, including features, how they work and privacy notes."
+    },
+    "seo": {
+      "title": "Tools Manager docs | Tool guides",
+      "description": "Browse detailed descriptions, features and technical notes for PDF, image, Excel, security, system and other tools.",
+      "canonical": "https://toolsmanager.yuozarseip.top/docs",
+      "ogTitle": "Documentation and usage guide for Tools Manager tools",
+      "ogDescription": "Read each tool’s documentation to understand its capabilities, limitations, technical details and privacy behavior.",
+      "applicationCategory": "Documentation",
+      "inLanguage": "en-US"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "fa": {
+    "id": "word-counter",
+    "category": "developer",
+    "title": "شمارش کلمات و کاراکترها",
+    "description": "متن خود را بنویسید و تعداد کلمات، کاراکترها، جملات، پاراگراف‌ها و زمان تقریبی مطالعه را ببینید.",
+    "features": [
+      "شمارش لحظه‌ای کلمات و کاراکترها",
+      "نمایش تعداد جملات و پاراگراف‌ها",
+      "تخمین زمان مطالعه بر اساس سرعت خواندن استاندارد",
+      "امکان پاک کردن و کپی سریع متن"
+    ],
+    "ui": {
+      "editor": {
+        "title": "ویرایشگر متن",
+        "placeholder": "متن خود را اینجا بنویسید یا پیست کنید تا آمار آن به‌صورت خودکار محاسبه شود..."
+      },
+      "buttons": {
+        "clearTitle": "پاک کردن متن",
+        "copy": "کپی متن",
+        "copied": "کپی شد!"
+      },
+      "stats": {
+        "title": "آمار متن",
+        "words": "تعداد کلمات",
+        "chars": "تعداد کاراکترها (با فاصله)",
+        "charsNoSpace": "تعداد کاراکترها (بدون فاصله)",
+        "sentences": "تعداد جملات",
+        "paragraphs": "تعداد پاراگراف‌ها"
+      },
+      "readingTime": {
+        "label": "زمان تقریبی مطالعه",
+        "unit": "دقیقه"
+      },
+      "page": {
+        "title": "ابزار شمارش کلمات و کاراکترها",
+        "description": "برای نگارش محتوا، مقاله، شبکه‌های اجتماعی یا سئو، آمار دقیق متن خود را به‌صورت لحظه‌ای بررسی کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "word-counter",
+    "category": "developer",
+    "title": "Word and character counter",
+    "description": "Type or paste your text and see live statistics for words, characters, sentences, paragraphs and reading time.",
+    "features": [
+      "Real‑time word and character counting",
+      "Shows number of sentences and paragraphs",
+      "Estimated reading time based on typical reading speed",
+      "Quick clear and copy actions for the text"
+    ],
+    "ui": {
+      "editor": {
+        "title": "Text editor",
+        "placeholder": "Write or paste your text here to see live statistics..."
+      },
+      "buttons": {
+        "clearTitle": "Clear text",
+        "copy": "Copy text",
+        "copied": "Copied!"
+      },
+      "stats": {
+        "title": "Text statistics",
+        "words": "Words",
+        "chars": "Characters (with spaces)",
+        "charsNoSpace": "Characters (no spaces)",
+        "sentences": "Sentences",
+        "paragraphs": "Paragraphs"
+      },
+      "readingTime": {
+        "label": "Estimated reading time",
+        "unit": "minutes"
+      },
+      "page": {
+        "title": "Word & character counter tool",
+        "description": "Check detailed statistics for your content in real time for writing, blogging, social posts or SEO."
+      }
+    }
+  }
+}

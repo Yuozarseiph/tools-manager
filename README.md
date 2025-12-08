@@ -1,130 +1,285 @@
+```Below is an English-only section you can drop into your README to document the new structure and how to add a tool from scratch.
 
-# 🛠️ ToolsManager
+***
 
-**جعبه‌ابزار مدرن و همه‌کاره برای توسعه‌دهندگان و کاربران عادی**
-**A Modern & All-in-One Toolkit for Developers and Everyday Users**
+## 🧱 Architecture Overview
 
-![Next.js](https://img.shields.io/badge/Next.js-14.0-black?style=flat-square&logo=next.js)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+ToolsManager is built with the Next.js App Router (`app` directory) and uses a locale-aware route segment (`[locale]`) to support both Persian (RTL) and English (LTR) in a single codebase.[1][2]
+Each tool has its own route under `/app/[locale]/tools/...` and a corresponding implementation in `src/components/tools`, plus a small i18n content JSON and hook to keep UI text separate from logic.[3]
+Most tools are pure client-side utilities implemented as Client Components (`"use client"`), so they can freely use React hooks and browser APIs while still being statically prerendered at build time.[4][5]
 
-[Live Demo / مشاهده دمو](https://tools-manager.vercel.app)
+***
 
----
+## 📂 Project & Tool Structure
 
-## 📖 معرفی پروژه (Introduction)
+At a high level, the project is organized like this (simplified):
 
-**تولز منیجر** مجموعه‌ای قدرتمند از ابزارهای وب‌محور است که با هدف ساده‌سازی کارهای روزمره طراحی شده است. از تبدیل فرمت‌های فایل و ویرایش تصاویر گرفته تا ابزارهای مخصوص برنامه‌نویسان و محاسبات کاربردی، همه در یک رابط کاربری مدرن، سریع و واکنش‌گرا گردآوری شده‌اند.
+- `app/[locale]/tools/<tool-slug>/page.tsx`  
+  Route entry for each tool in the App Router.  
+- `src/components/tools/<category>/<tool-slug>/`  
+  Actual tool UI and logic (one main `*Tool.tsx` component, plus subcomponents if needed).  
+- `src/components/tools/<category>/<tool-slug>/<tool-slug>.i18n.json`  
+  Localized strings for that tool, typically shaped as `{ "fa": {...}, "en": {...} }`.  
+- `src/components/tools/<category>/<tool-slug>/<tool-slug>.content.ts`  
+  A small hook (`useXxxContent`) that reads the JSON and returns the right language based on `LanguageContext`.  
+- `src/context/LanguageContext.tsx`  
+  Provides current locale (`fa` / `en`) to all client components.  
+- `src/hooks/useThemeColors.ts`  
+  Centralized theming hook (dark/light mode, card/background/border classes).  
 
-**ToolsManager** is a powerful suite of web-based utilities designed to simplify daily tasks. From file conversion and image editing to developer-centric tools and utility calculations, everything is gathered in a modern, fast, and responsive interface.
+This separation lets you:  
+- Keep routing (App Router) and layout concerns in `app`.  
+- Keep visual logic and stateful code in `components/tools`.  
+- Keep copy, descriptions, and UI labels in JSON, making it trivial to localize or tweak text without touching logic.
 
----
+***
 
-## ✨ ویژگی‌های کلیدی (Key Features)
+## 🧩 Anatomy of a Single Tool Module
 
-### 🇮🇷 فارسی
-- **رابط کاربری مدرن:** طراحی واکنش‌گرا با Tailwind CSS.
-- **تم تاریک و روشن:** پشتیبانی کامل از Dark Mode.
-- **دو زبانه:** پشتیبانی هم‌زمان از فارسی (RTL) و انگلیسی (LTR).
-- **حریم خصوصی:** پردازش بسیاری از فایل‌ها (مثل عکس و PDF) در سمت کاربر (Client-Side).
-- **معماری ماژولار:** ساختار کد تمیز و توسعه‌پذیر.
+A fully integrated tool usually consists of:
 
-### 🇺🇸 English
-- **Modern UI:** Responsive design built with Tailwind CSS.
-- **Dark/Light Mode:** Full theme support.
-- **Bilingual:** Simultaneous Persian (RTL) and English (LTR) support.
-- **Privacy Focused:** Client-side processing for files like images and PDFs.
-- **Modular Architecture:** Clean and extensible code structure.
+1. **Route file (App Router page):**  
+   - Path: `app/[locale]/tools/<tool-slug>/page.tsx`  
+   - Responsibilities:  
+     - Export a default React component for the page.  
+     - Render layout wrappers if needed and include the main `<XxxTool />` component from `src/components/tools/...`.  
 
----
+2. **Tool component(s):**  
+   - Path: `src/components/tools/<category>/<tool-slug>/<XxxTool>.tsx`  
+   - Responsibilities:  
+     - Marked `"use client"` at the top.  
+     - Use `useThemeColors()` for consistent styling.  
+     - Use `useLanguage()` or a dedicated `useXxxContent()` hook to pull localized texts.  
+     - Implement actual logic (uploading files, text processing, drawing, etc.).  
 
-## 🧰 لیست ابزارها (Tools List)
+3. **i18n content JSON:**  
+   - Path: `src/components/tools/<category>/<tool-slug>/<tool-slug>.i18n.json`  
+   - Shape (example pattern you already use for audio-editor / code-visualizer):  
+     ```json
+     {
+       "fa": {
+         "id": "my-tool",
+         "category": "dev",
+         "title": "عنوان فارسی",
+         "description": "توضیح ابزار...",
+         "features": ["...", "..."],
+         "ui": { /* all UI strings */ }
+       },
+       "en": {
+         "id": "my-tool",
+         "category": "dev",
+         "title": "My Tool",
+         "description": "Description...",
+         "features": ["...", "..."],
+         "ui": { /* same keys as fa */ }
+       }
+     }
+     ```
+   - This mirrors the structure you used for `audio-editor` and `code-visualizer`, including a `ui` object with nested sections (tabs, header, actions, errors, etc.).[6]
 
-**توسعه‌دهنده (Dev Tools):**
-- JSON Formatter, Base64 Converter, Hash Generator, Code Visualizer, User Agent Parser
+4. **Content hook:**  
+   - Path: `src/components/tools/<category>/<tool-slug>/<tool-slug>.content.ts`  
+   - Typical shape:  
+     ```ts
+     "use client";
 
-**تصویر (Image Tools):**
-- Image Compressor, Image Converter, Image Resizer, Color Picker, QR Generator
+     import rawContent from "./my-tool.i18n.json";
+     import { useLanguage } from "@/context/LanguageContext";
 
-**اسناد (Documents):**
-- Word to PDF, Text to PDF, PDF Merger, Image to PDF, Excel Viewer/Editor
+     export type MyToolContent = (typeof rawContent)["fa"]; // same structure for fa/en
 
-**متن (Text Utils):**
-- Markdown Editor, Word Counter, Password Generator
+     const CONTENT_BY_LOCALE = rawContent as Record<"fa" | "en", MyToolContent>;
 
-**کاربردی (Utilities):**
-- Date Converter, Unit Converter, IP Checker, Audio Editor
+     export function useMyToolContent(): MyToolContent {
+       const { locale } = useLanguage();
+       return CONTENT_BY_LOCALE[locale === "en" ? "en" : "fa"];
+     }
+     ```
 
----
+This pattern keeps the code for all tools consistent and makes them easy to maintain and extend.
 
-## 🚀 شروع کار (Getting Started)
+***
 
-### پیش‌نیازها (Prerequisites)
-- Node.js (v18+)
-- npm / yarn / pnpm
+## 🧪 Step‑by‑Step: Adding a New Tool
 
-### نصب (Installation)
+Imagine you want to add a new tool called **“CSV to JSON”** under the **Dev Tools** category. The steps are:
 
-1. **Clone the repository:**
-   ```
-   git clone https://github.com/your-username/tools-manager.git
-   cd tools-manager
-   ```
+1. **Create the route (App Router page):**  
+   - File: `app/[locale]/tools/csv-to-json/page.tsx`  
+   - Example:  
+     ```tsx
+     import CsvToJsonTool from "@/components/tools/dev/csv-to-json/CsvToJsonTool";
 
-2. **Install dependencies:**
-   ```
-   npm install
-   # or
-   yarn install
-   ```
+     export default function CsvToJsonPage() {
+       return <CsvToJsonTool />;
+     }
+     ```
 
-3. **Run development server:**
-   ```
-   npm run dev
-   ```
+2. **Create the folder for the tool component:**  
+   - Create: `src/components/tools/dev/csv-to-json/`  
+   - Inside it, add `CsvToJsonTool.tsx` with `"use client"` at the top:  
+     ```tsx
+     "use client";
 
-4. **Open in browser:**
-   Navigate to `http://localhost:3000`
+     import { useState } from "react";
+     import { useThemeColors } from "@/hooks/useThemeColors";
+     import { useLanguage } from "@/context/LanguageContext";
+     import { useCsvToJsonContent, type CsvToJsonContent } from "./csv-to-json.content";
 
----
+     export default function CsvToJsonTool() {
+       const theme = useThemeColors();
+       const content: CsvToJsonContent = useCsvToJsonContent();
 
-## 📂 ساختار پروژه (Project Structure)
+       const [input, setInput] = useState("");
+       const [output, setOutput] = useState<string | null>(null);
+       const [error, setError] = useState<string | null>(null);
 
+       const handleConvert = () => {
+         try {
+           setError(null);
+           // your CSV parsing logic here
+           const result = /* parse CSV → JSON string */;
+           setOutput(result);
+         } catch (e) {
+           setError(content.ui.errors.parseFailed);
+           setOutput(null);
+         }
+       };
+
+       return (
+         <div className={`rounded-2xl p-4 sm:p-6 ${theme.card} ${theme.border}`}>
+           <h1 className={`text-lg font-semibold mb-2 ${theme.text}`}>
+             {content.title}
+           </h1>
+           <p className={`text-sm mb-4 ${theme.textMuted}`}>
+             {content.description}
+           </p>
+
+           {/* input textarea, button, output area using content.ui.* labels */}
+         </div>
+       );
+     }
+     ```
+
+3. **Create the i18n JSON file:**  
+   - File: `src/components/tools/dev/csv-to-json/csv-to-json.i18n.json`  
+   - Example skeleton:  
+     ```json
+     {
+       "fa": {
+         "id": "csv-to-json",
+         "category": "dev",
+         "title": "تبدیل CSV به JSON",
+         "description": "فایل یا متن CSV را به JSON ساخت‌یافته تبدیل کنید.",
+         "features": [
+           "چسباندن متن CSV در مرورگر",
+           "پشتیبانی از جداکننده‌های مختلف",
+           "عدم نیاز به آپلود روی سرور"
+         ],
+         "ui": {
+           "header": {
+             "title": "تبدیل CSV به JSON",
+             "subtitle": "همه‌چیز روی مرورگر شما پردازش می‌شود."
+           },
+           "editor": {
+             "inputLabel": "ورودی CSV",
+             "outputLabel": "خروجی JSON",
+             "placeholder": "CSV را اینجا پیست کنید...",
+             "convertButton": "تبدیل",
+             "clearButton": "پاک کردن"
+           },
+           "errors": {
+             "parseFailed": "خطا در پردازش CSV. فرمت را بررسی کنید."
+           }
+         }
+       },
+       "en": {
+         "id": "csv-to-json",
+         "category": "dev",
+         "title": "CSV to JSON",
+         "description": "Convert CSV files or text into structured JSON.",
+         "features": [
+           "Paste CSV directly in the browser",
+           "Supports different delimiters",
+           "No server upload required"
+         ],
+         "ui": {
+           "header": {
+             "title": "CSV to JSON",
+             "subtitle": "All processing happens locally in your browser."
+           },
+           "editor": {
+             "inputLabel": "CSV input",
+             "outputLabel": "JSON output",
+             "placeholder": "Paste your CSV here...",
+             "convertButton": "Convert",
+             "clearButton": "Clear"
+           },
+           "errors": {
+             "parseFailed": "Failed to parse CSV. Please check the format."
+           }
+         }
+       }
+     }
+     ```
+
+4. **Create the content hook for the tool:**  
+   - File: `src/components/tools/dev/csv-to-json/csv-to-json.content.ts`  
+   - Example:  
+     ```ts
+     "use client";
+
+     import rawContent from "./csv-to-json.i18n.json";
+     import { useLanguage } from "@/context/LanguageContext";
+
+     export type CsvToJsonContent = (typeof rawContent)["fa"];
+
+     const CONTENT_BY_LOCALE = rawContent as Record<"fa" | "en", CsvToJsonContent>;
+
+     export function useCsvToJsonContent(): CsvToJsonContent {
+       const { locale } = useLanguage();
+       return CONTENT_BY_LOCALE[locale === "en" ? "en" : "fa"];
+     }
+     ```
+
+5. **(Optional but recommended) Register the tool in your global data/metadata:**  
+   - If you have a central tools/docs registry (for listing tools on `/tools`, `/docs`, or the homepage), add an entry for `csv-to-json` there:  
+     - `id`, `slug`, `category`, `icon`, and a short `summary` in both languages.  
+   - This keeps global navigation and documentation in sync with the actual tools.
+
+6. **Run and test in dev & production:**  
+   - `npm run dev` → test `/fa/tools/csv-to-json` and `/en/tools/csv-to-json`.  
+   - `npm run build && npm run start` → verify it still builds statically and behaves correctly.  
+
+***
+
+## 🌐 i18n, Theming, and Client Components
+
+- **i18n:** The `[locale]` segment in the App Router combined with `LanguageContext` ensures every tool reads the current locale and picks the right branch from its `*.i18n.json` file.[2]
+- **Theming:** `useThemeColors()` returns Tailwind-compatible class names for background, text, border, primary/secondary, ensuring all tools look consistent in light and dark mode.  
+- **Client components:** Any interactive tool (`useState`, file uploads, drag-and-drop, audio/video, etc.) must start with `"use client"` so React hooks and browser APIs are available while Next.js still statically prerenders the entry page.[5][4]
+
+You can adapt the CSV example above to any new tool you add; just keep to this pattern (route → component → i18n JSON → content hook → optional registry entry) and the new tool will integrate cleanly with the rest of ToolsManager.
+
+[1](https://nextjs.org/docs/app)
+[2](https://next-intl.dev/docs/routing/setup)
+[3](https://nextjs.org/docs/app/getting-started/project-structure)
+[4](https://www.wisp.blog/blog/should-i-avoid-using-hooks-in-nextjs)
+[5](https://dev.to/abdullah-dev0/server-and-client-component-patterns-in-nextjs-201p)
+[6](https://img.shields.io/badge/Next.js-14.0-black?style=flat-square&logo=next.js)
+[7](https://nextjs.org/docs/app/guides)
+[8](https://github.com/pmndrs/zustand/discussions/2412)
+[9](https://www.builder.io/blog/next-14-app-router)
+[10](https://zenn.dev/shomtsm/articles/88742941e1dbe5)
+[11](https://github.com/vercel/next.js/discussions/50146)
+[12](https://nextjs.org/docs/app/getting-started/layouts-and-pages)
+[13](https://github.com/i18nexus/next-i18n-router)
+[14](https://makerkit.dev/courses/nextjs-app-router/router)
+[15](https://www.npmjs.com/package/next-i18n-router/v/4.1.0)
+[16](https://stackoverflow.com/questions/79356417/how-to-organize-layouts-in-next-14-using-app-router-without-nesting)
+[17](https://github.com/i18nexus/next-i18n-router/blob/main/README.md)
+[18](https://stackoverflow.com/questions/76939269/does-next-js-always-require-use-client-to-be-able-to-use-a-hook)
+[19](https://www.reddit.com/r/nextjs/comments/1brg5z7/world_class_next_14_app_router_open_source_full/)
+[20](https://www.reddit.com/r/nextjs/comments/1ezamqy/using_react_hooks_with_nextjs_is_really_confusing/)
+[21](https://dev.to/muhammad_usman_35b52e4f04/nextjs-14-app-router-building-modern-full-stack-applications-52ej)
 ```
-tools-manager/
-├── app/                  # Next.js App Router
-│   ├── [locale]/         # i18n routing
-│   │   ├── tools/        # Tool pages
-├── components/           # UI Components
-├── context/              # React Contexts (Theme, Lang)
-├── data/                 # Static Data & Configs
-├── hooks/                # Custom Hooks
-└── public/               # Assets
-```
-
----
-
-## 🤝 مشارکت (Contribution)
-
-ما از مشارکت شما استقبال می‌کنیم! اگر باگی پیدا کردید یا ایده‌ای دارید، لطفاً Pull Request بزنید.
-
-We welcome your contributions! If you find a bug or have an idea, please submit a Pull Request.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📜 مجوز (License)
-
-This project is licensed under the MIT License.
-
----
-
-**Made with ❤️ by [Your Name]**
-
-[Donate / حمایت مالی](https://reymit.ir/yuozarseiph)

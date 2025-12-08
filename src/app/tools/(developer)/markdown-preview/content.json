@@ -1,0 +1,32 @@
+{
+  "fa": {
+    "page": {
+      "title": "ویرایش و پیش‌نمایش Markdown آنلاین",
+      "description": "متن Markdown را در مرورگر بنویس یا بچسبان، پیش‌نمایش زنده را ببین و خروجی نهایی را برای مستندات، README و وبلاگ‌ها استفاده کن."
+    },
+    "seo": {
+      "title": "ویرایشگر Markdown آنلاین | Tools Manager",
+      "description": "یک ویرایشگر ساده و کاربردی برای نوشتن و پیش‌نمایش Markdown در مرورگر، مناسب برای README، مستندات و محتوای فنی.",
+      "canonical": "https://toolsmanager.yuozarseip.top/tools/markdown",
+      "ogTitle": "ویرایشگر و پیش‌نمایشگر Markdown در مرورگر",
+      "ogDescription": "Markdown بنویس، پیش‌نمایش رندر شده را ببین و متن را برای استفاده در GitHub، بلاگ یا مستندات کپی کن؛ بدون نیاز به نصب ابزار اضافی.",
+      "applicationCategory": "ProductivityApplication",
+      "inLanguage": "fa-IR"
+    }
+  },
+  "en": {
+    "page": {
+      "title": "Online Markdown editor & preview",
+      "description": "Write or paste Markdown in your browser, see a live preview and reuse the output for docs, READMEs and blog posts."
+    },
+    "seo": {
+      "title": "Markdown editor online | Tools Manager",
+      "description": "A simple, focused editor for writing and previewing Markdown directly in the browser, ideal for technical content and documentation.",
+      "canonical": "https://toolsmanager.yuozarseip.top/tools/markdown",
+      "ogTitle": "In‑browser Markdown editor and previewer",
+      "ogDescription": "Compose Markdown, inspect the rendered preview and copy the result for GitHub, blogs or documentation without installing extra tools.",
+      "applicationCategory": "ProductivityApplication",
+      "inLanguage": "en-US"
+    }
+  }
+}

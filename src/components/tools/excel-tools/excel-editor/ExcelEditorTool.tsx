@@ -2,7 +2,6 @@
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
 import * as XLSX from "xlsx";
-import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   UploadCloud,
   Save,
@@ -13,12 +12,14 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
 } from "lucide-react";
+
+import { useThemeColors } from "@/hooks/useThemeColors";
 import {
-  useToolContent,
-  type ExcelEditorToolContent
-} from "@/hooks/useToolContent";
+  useExcelEditorContent,
+  type ExcelEditorToolContent,
+} from "./excel-editor.content";
 
 type DataRow = { [key: string]: string | number | boolean | null };
 
@@ -26,7 +27,7 @@ const ROWS_PER_PAGE = 10;
 
 export default function ExcelEditorTool() {
   const theme = useThemeColors();
-  const content = useToolContent<ExcelEditorToolContent>("excel-editor");
+  const content: ExcelEditorToolContent = useExcelEditorContent();
 
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<DataRow[]>([]);
@@ -39,16 +40,12 @@ export default function ExcelEditorTool() {
     if (!searchQuery) return rows;
     return rows.filter((row) =>
       Object.values(row).some((val) =>
-        String(val)
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
+        String(val).toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
   }, [rows, searchQuery]);
 
-  const totalPages = Math.ceil(
-    filteredRows.length / ROWS_PER_PAGE
-  );
+  const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
 
   const paginatedRows = filteredRows.slice(
     (currentPage - 1) * ROWS_PER_PAGE,
@@ -59,9 +56,7 @@ export default function ExcelEditorTool() {
     setCurrentPage(1);
   }, [searchQuery]);
 
-  const handleFileUpload = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
@@ -70,11 +65,12 @@ export default function ExcelEditorTool() {
     reader.onload = (e) => {
       const data = e.target?.result;
       const wb = XLSX.read(data as string, {
-        type: "binary"
+        type: "binary",
       });
       const ws = wb.Sheets[wb.SheetNames[0]];
-      const dataJson: DataRow[] =
-        XLSX.utils.sheet_to_json(ws, { defval: "" });
+      const dataJson: DataRow[] = XLSX.utils.sheet_to_json(ws, {
+        defval: "",
+      });
 
       if (dataJson.length > 0) {
         setHeaders(Object.keys(dataJson[0]));
@@ -88,9 +84,7 @@ export default function ExcelEditorTool() {
   const saveToHistory = () => {
     setHistory((prev) => {
       const newHistory = [...prev, rows];
-      return newHistory.length > 10
-        ? newHistory.slice(1)
-        : newHistory;
+      return newHistory.length > 10 ? newHistory.slice(1) : newHistory;
     });
   };
 
@@ -110,7 +104,7 @@ export default function ExcelEditorTool() {
     const newRows = [...rows];
     newRows[globalIndex] = {
       ...newRows[globalIndex],
-      [header]: value
+      [header]: value,
     };
     setRows(newRows);
   };
@@ -172,9 +166,7 @@ export default function ExcelEditorTool() {
                 className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-sm whitespace-nowrap"
               >
                 <Save size={16} />
-                <span>
-                  {content.ui.actions.exportExcel}
-                </span>
+                <span>{content.ui.actions.exportExcel}</span>
               </button>
 
               <div
@@ -224,9 +216,7 @@ export default function ExcelEditorTool() {
               type="text"
               placeholder={content.ui.search.placeholder}
               value={searchQuery}
-              onChange={(e) =>
-                setSearchQuery(e.target.value)
-              }
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={`w-full pl-3 pr-9 py-2 text-sm rounded-xl border outline-none focus:ring-2 ring-blue-500/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
             />
           </div>
@@ -265,11 +255,8 @@ export default function ExcelEditorTool() {
                 </thead>
                 <tbody>
                   {paginatedRows.map((row, index) => {
-                    const realIndex =
-                      (currentPage - 1) * ROWS_PER_PAGE +
-                      index;
-                    const originalIndex =
-                      rows.indexOf(row);
+                    const realIndex = (currentPage - 1) * ROWS_PER_PAGE + index;
+                    const originalIndex = rows.indexOf(row);
 
                     return (
                       <tr
@@ -286,9 +273,7 @@ export default function ExcelEditorTool() {
                           >
                             <input
                               type="text"
-                              value={String(
-                                row[header] ?? ""
-                              )}
+                              value={String(row[header] ?? "")}
                               onFocus={saveToHistory}
                               onChange={(e) =>
                                 handleCellChange(
@@ -304,14 +289,9 @@ export default function ExcelEditorTool() {
                         ))}
                         <td className="p-1 text-center">
                           <button
-                            onClick={() =>
-                              deleteRow(originalIndex)
-                            }
+                            onClick={() => deleteRow(originalIndex)}
                             className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors opacity-0 group-hover:opacity-100"
-                            title={
-                              content.ui.table
-                                .deleteTooltip
-                            }
+                            title={content.ui.table.deleteTooltip}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -327,20 +307,13 @@ export default function ExcelEditorTool() {
             <div
               className={`p-3 border-t flex items-center justify-between bg-gray-50/80 dark:bg-black/20 ${theme.border}`}
             >
-              <span
-                className={`text-xs ${theme.textMuted}`}
-              >
+              <span className={`text-xs ${theme.textMuted}`}>
                 {content.ui.pagination.summaryPrefix}
                 {filteredRows.length === 0
                   ? 0
-                  : (currentPage - 1) *
-                      ROWS_PER_PAGE +
-                    1}
+                  : (currentPage - 1) * ROWS_PER_PAGE + 1}
                 {content.ui.pagination.summaryFromToSeparator}
-                {Math.min(
-                  currentPage * ROWS_PER_PAGE,
-                  filteredRows.length
-                )}
+                {Math.min(currentPage * ROWS_PER_PAGE, filteredRows.length)}
                 {content.ui.pagination.summaryOfWord}
                 {filteredRows.length}
                 {content.ui.pagination.summarySuffix}
@@ -348,27 +321,18 @@ export default function ExcelEditorTool() {
 
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() =>
-                    setCurrentPage((p) =>
-                      Math.max(1, p - 1)
-                    )
-                  }
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   className={`p-1 rounded-lg disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${theme.text}`}
                 >
                   <ChevronRight size={18} />
                 </button>
-                <span
-                  className={`text-sm font-mono px-2 ${theme.text}`}
-                >
-                  {currentPage} /{" "}
-                  {Math.max(1, totalPages)}
+                <span className={`text-sm font-mono px-2 ${theme.text}`}>
+                  {currentPage} / {Math.max(1, totalPages)}
                 </span>
                 <button
                   onClick={() =>
-                    setCurrentPage((p) =>
-                      Math.min(totalPages, p + 1)
-                    )
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
                   disabled={currentPage === totalPages}
                   className={`p-1 rounded-lg disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${theme.text}`}
@@ -381,17 +345,13 @@ export default function ExcelEditorTool() {
         ) : (
           // Empty state
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 animate-in zoom-in-95 duration-500">
-            <div
-              className={`w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-6 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/20`}
-            >
+            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-6 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/20">
               <FileSpreadsheet
                 size={48}
                 className="text-emerald-600 dark:text-emerald-400 drop-shadow-sm"
               />
             </div>
-            <h4
-              className={`font-black text-2xl mb-3 ${theme.text}`}
-            >
+            <h4 className={`font-black text-2xl mb-3 ${theme.text}`}>
               {content.ui.empty.title}
             </h4>
             <p

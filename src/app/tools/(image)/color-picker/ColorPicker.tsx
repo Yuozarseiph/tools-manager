@@ -2,18 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, Pipette } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import ColorPickerTool from "@/components/tools/ColorPickerTool";
-import {
-  useToolContent,
-  type ColorPickerToolContent,
-} from "@/hooks/useToolContent";
+import ColorPickerTool from "@/components/tools/image/color-picker/ColorPickerTool";
+import { useColorPickerPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ColorPickerPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content = useToolContent<ColorPickerToolContent>("color-picker");
+  const page = useColorPickerPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -30,12 +28,12 @@ export default function ColorPickerPage() {
             <Pipette size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.title}
+            {page.title}
           </h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
-          {content.description}
+          {page.description}
         </p>
       </div>
 

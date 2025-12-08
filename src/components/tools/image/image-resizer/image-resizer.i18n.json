@@ -1,0 +1,68 @@
+{
+  "fa": {
+    "id": "image-resizer",
+    "category": "developer",
+    "title": "تغییر اندازه آنلاین تصویر",
+    "description": "ابعاد تصاویر خود را به‌صورت دقیق تنظیم کنید و نسخهٔ جدید را دانلود کنید.",
+    "features": [
+      "تغییر اندازه تصویر با حفظ نسبت طول و عرض",
+      "نمایش ابعاد اصلی تصویر بعد از آپلود",
+      "امکان قفل/باز کردن نسبت تصویر",
+      "دانلود سریع نسخهٔ تغییر اندازه داده‌شده"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "تصویر خود را اینجا رها کنید یا کلیک کنید"
+      },
+      "fileInfo": {
+        "originalDims": "ابعاد اصلی:"
+      },
+      "inputs": {
+        "widthLabel": "عرض (پیکسل)",
+        "heightLabel": "ارتفاع (پیکسل)"
+      },
+      "buttons": {
+        "lockTitle": "قفل یا آزاد کردن نسبت تصویر",
+        "resizeAndDownload": "تغییر اندازه و دانلود",
+        "clear": "حذف تصویر"
+      },
+      "page": {
+        "title": "تغییر اندازه تصویر",
+        "description": "به‌راحتی ابعاد تصویر را در مرورگر خود تغییر دهید و نسخهٔ جدید را ذخیره کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "image-resizer",
+    "category": "developer",
+    "title": "Online image resizer",
+    "description": "Resize your images to exact dimensions and download the new version.",
+    "features": [
+      "Resize images while keeping aspect ratio",
+      "See original image dimensions after upload",
+      "Toggle aspect ratio lock on or off",
+      "Quickly download the resized image"
+    ],
+    "ui": {
+      "upload": {
+        "dropTitle": "Drop an image here or click to upload"
+      },
+      "fileInfo": {
+        "originalDims": "Original dimensions:"
+      },
+      "inputs": {
+        "widthLabel": "Width (px)",
+        "heightLabel": "Height (px)"
+      },
+      "buttons": {
+        "lockTitle": "Lock or unlock aspect ratio",
+        "resizeAndDownload": "Resize & download",
+        "clear": "Remove image"
+      },
+      "page": {
+        "title": "Image resizer",
+        "description": "Change image dimensions directly in your browser and save the resized file."
+      }
+    }
+  }
+}

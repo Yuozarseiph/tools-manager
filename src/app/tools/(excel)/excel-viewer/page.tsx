@@ -1,14 +1,12 @@
-// app/tools/(excel)/excel-viewer/page.tsx
 import type { Metadata } from "next";
-import ExcelViewer from "./ExcelViewer";
-import faMeta from "@/data/meta/fameta.json";
-import enMeta from "@/data/meta/enmeta.json";
+import ExcelViewerPage from "./ExcelViewer";
+import { getExcelViewerSeo } from "./content";
 
-const KEY = "tools/excel-viewer" as const;
+// سئوی هر دو زبان
+const fa = getExcelViewerSeo("fa");
+const en = getExcelViewerSeo("en");
 
-const fa = (faMeta as any)[KEY];
-const en = (enMeta as any)[KEY];
-
+// ترکیب فارسی + انگلیسی برای Meta
 const combinedTitle = `${fa.title} / ${en.title}`;
 const combinedDescription = `${fa.description} / ${en.description}`;
 const canonicalUrl = fa.canonical;
@@ -18,6 +16,10 @@ export const metadata: Metadata = {
   description: combinedDescription,
   alternates: {
     canonical: canonicalUrl,
+    languages: {
+      "fa-IR": fa.canonical,
+      "en-US": en.canonical,
+    },
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
@@ -26,24 +28,40 @@ export const metadata: Metadata = {
     }`,
     url: canonicalUrl,
     type: "website",
+    locale: "fa_IR",
+    alternateLocale: ["en_US"],
   },
 };
 
 function buildJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: combinedTitle.replace(/\s*\|\s*Tools Manager$/, ""),
-    description: combinedDescription,
-    url: canonicalUrl,
-    applicationCategory: fa.applicationCategory ?? "BusinessApplication",
-    inLanguage: [fa.inLanguage ?? "fa-IR", en.inLanguage ?? "en-US"],
-    provider: {
-      "@type": "Organization",
-      name: "Tools Manager",
-      url: "https://toolsmanager.yuozarseip.top",
-    },
+  const baseProvider = {
+    "@type": "Organization",
+    name: "Tools Manager",
+    url: "https://toolsmanager.yuozarseip.top",
   };
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: fa.description,
+      url: fa.canonical,
+      applicationCategory: fa.applicationCategory ?? "BusinessApplication",
+      inLanguage: fa.inLanguage ?? "fa-IR",
+      provider: baseProvider,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: en.description,
+      url: en.canonical,
+      applicationCategory: en.applicationCategory ?? "BusinessApplication",
+      inLanguage: en.inLanguage ?? "en-US",
+      provider: baseProvider,
+    },
+  ];
 }
 
 export default function Page() {
@@ -57,7 +75,8 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <ExcelViewer />
+
+      <ExcelViewerPage />
     </div>
   );
 }

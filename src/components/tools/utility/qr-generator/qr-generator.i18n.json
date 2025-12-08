@@ -1,0 +1,68 @@
+{
+  "fa": {
+    "id": "qr-generator",
+    "category": "developer",
+    "title": "تولید QR Code آنلاین",
+    "description": "برای هر متن یا لینک، به‌سرعت QR Code بسازید و آن را به‌صورت فایل PNG دانلود کنید.",
+    "features": [
+      "پشتیبانی از متن و لینک دلخواه",
+      "تنظیم رنگ پس‌زمینه و رنگ اصلی QR",
+      "تنظیم اندازه خروجی بین 128 تا 1024 پیکسل",
+      "دانلود مستقیم QR Code به‌صورت تصویر PNG"
+    ],
+    "ui": {
+      "input": {
+        "label": "متن یا لینک برای تبدیل به QR",
+        "placeholder": "متن، آدرس سایت، شماره تلفن یا هر رشتهٔ دلخواه را اینجا وارد کنید..."
+      },
+      "colors": {
+        "fgLabel": "رنگ QR (رنگ اصلی)",
+        "bgLabel": "رنگ پس‌زمینه"
+      },
+      "size": {
+        "label": "اندازه QR Code",
+        "unit": "px"
+      },
+      "buttons": {
+        "downloadPng": "دانلود QR به صورت PNG"
+      },
+      "page": {
+        "title": "ابزار تولید QR Code",
+        "description": "به‌راحتی برای متن و لینک‌های خود QR Code بسازید و تصویر آن را برای چاپ یا استفاده در وب ذخیره کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "qr-generator",
+    "category": "developer",
+    "title": "QR Code generator",
+    "description": "Quickly create QR Codes for any text or URL and download them as PNG images.",
+    "features": [
+      "Supports arbitrary text and URLs",
+      "Customize foreground and background colors",
+      "Adjust output size between 128 and 1024 pixels",
+      "Download QR Code directly as a PNG image"
+    ],
+    "ui": {
+      "input": {
+        "label": "Text or URL to encode",
+        "placeholder": "Enter any text, website address, phone number or other data..."
+      },
+      "colors": {
+        "fgLabel": "QR color (foreground)",
+        "bgLabel": "Background color"
+      },
+      "size": {
+        "label": "QR Code size",
+        "unit": "px"
+      },
+      "buttons": {
+        "downloadPng": "Download QR as PNG"
+      },
+      "page": {
+        "title": "QR Code generator tool",
+        "description": "Generate QR Codes for your content and save them as images for print or web usage."
+      }
+    }
+  }
+}

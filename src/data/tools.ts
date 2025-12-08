@@ -1,4 +1,3 @@
-// data/tools.ts
 import {
   FileStack,
   Image as ImageIcon,
@@ -24,6 +23,7 @@ import {
   PieChart,
   Sparkles,
   AudioLines,
+  Presentation,
 } from "lucide-react";
 
 export interface Tool {
@@ -39,8 +39,9 @@ export interface Tool {
     | "utility"
     | "system"
     | "excel"
-    | "audio";
-  badgeKey?: string; // مسیری که t ازش می‌خواند، مثلاً "tools.items.pdf-merge.badge"
+    | "audio"
+    | "powerpoint";
+  badgeKey?: string;
 }
 
 export const TOOLS: Tool[] = [
@@ -68,6 +69,15 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "pdf",
     badgeKey: "tools.items.word-to-pdf.badge",
+  },
+  // --- PowerPoint ---
+  {
+    id: "html-to-pptx",
+    Icon: Presentation,
+    href: "/tools/html-to-pptx",
+    status: "active",
+    category: "powerpoint",
+    badgeKey: "tools.items.html-to-pptx.badge",
   },
 
   // --- Image ---

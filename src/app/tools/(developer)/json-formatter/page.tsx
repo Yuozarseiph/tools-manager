@@ -1,13 +1,10 @@
-// app/tools/(developer)/json-formatter/page.tsx
 import type { Metadata } from "next";
-import JsonFormatter from "./JsonFormatter";
-import faMeta from "@/data/meta/fameta.json";
-import enMeta from "@/data/meta/enmeta.json";
+import JsonFormatterPage from "./JsonFormatter";
+import { getJsonFormatterSeo } from "./content";
 
-const KEY = "tools/json-formatter" as const;
-
-const fa = (faMeta as any)[KEY];
-const en = (enMeta as any)[KEY];
+// سئوی هر دو زبان
+const fa = getJsonFormatterSeo("fa");
+const en = getJsonFormatterSeo("en");
 
 // ترکیب فارسی + انگلیسی برای Meta
 const combinedTitle = `${fa.title} / ${en.title}`;
@@ -19,32 +16,53 @@ export const metadata: Metadata = {
   description: combinedDescription,
   alternates: {
     canonical: canonicalUrl,
+    languages: {
+      "fa-IR": fa.canonical,
+      "en-US": en.canonical,
+    },
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
+    description: `${
+      fa.ogDescription ?? fa.description
+    } / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
+    locale: "fa_IR",
+    alternateLocale: ["en_US"],
   },
 };
 
 // JSON-LD دو زبانه برای WebApplication
 function buildJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: combinedTitle.replace(/\s*\|\s*Tools Manager$/, ""),
-    description: combinedDescription,
-    url: canonicalUrl,
-    applicationCategory:
-      fa.applicationCategory ?? "DeveloperApplication",
-    inLanguage: [fa.inLanguage ?? "fa-IR", en.inLanguage ?? "en-US"],
-    provider: {
-      "@type": "Organization",
-      name: "Tools Manager",
-      url: "https://toolsmanager.yuozarseip.top",
-    },
+  const baseProvider = {
+    "@type": "Organization",
+    name: "Tools Manager",
+    url: "https://toolsmanager.yuozarseip.top",
   };
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: fa.description,
+      url: fa.canonical,
+      applicationCategory: fa.applicationCategory ?? "DeveloperApplication",
+      inLanguage: fa.inLanguage ?? "fa-IR",
+      provider: baseProvider,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: en.description,
+      url: en.canonical,
+      applicationCategory: en.applicationCategory ?? "DeveloperApplication",
+      inLanguage: en.inLanguage ?? "en-US",
+      provider: baseProvider,
+    },
+  ];
 }
 
 export default function Page() {
@@ -54,13 +72,11 @@ export default function Page() {
     <div>
       <script
         type="application/ld+json"
-        // تزریق JSON-LD در HTML اولیه مطابق داک رسمی Next.js برای App Router
-        // و توصیه‌های سئو برای Structured Data است. [web:47][web:135][web:150]
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <JsonFormatter />
+      <JsonFormatterPage />
     </div>
   );
 }

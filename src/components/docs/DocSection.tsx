@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemePalette } from "@/constants/themes";
-import { DocSectionItem } from "@/types/docs";
+import type { DocSectionItem } from "@/data/docs/docs.content";
 import { ShieldCheck, Info, Cpu, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -42,31 +42,33 @@ export default function DocSection({ data, theme, index }: Props) {
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        {/* Features List */}
-        <div
-          className={`p-6 rounded-2xl border ${theme.border} ${theme.card}`}
-        >
-          <h4
-            className={`font-bold mb-4 text-lg flex items-center gap-2 ${theme.text}`}
+        {/* Features List (در صورت وجود) */}
+        {data.features && data.features.length > 0 && (
+          <div
+            className={`p-6 rounded-2xl border ${theme.border} ${theme.card}`}
           >
-            <CheckCircle2 size={18} className="text-green-500" />
-            {t("docs.section.featuresTitle")}
-          </h4>
-          <ul className={`space-y-3 ${theme.textMuted}`}>
-            {data.features.map((feat, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2 text-sm"
-              >
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                <span className="leading-relaxed">{feat}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            <h4
+              className={`font-bold mb-4 text-lg flex items-center gap-2 ${theme.text}`}
+            >
+              <CheckCircle2 size={18} className="text-green-500" />
+              {t("docs.section.featuresTitle")}
+            </h4>
+            <ul className={`space-y-3 ${theme.textMuted}`}>
+              {data.features.map((feat, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm"
+                >
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                  <span className="leading-relaxed">{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* How it works (if exists) */}
-        {data.howItWorks && (
+        {data.howItWorks && data.howItWorks.length > 0 && (
           <div
             className={`p-6 rounded-2xl border ${theme.border} ${theme.bg}`}
           >

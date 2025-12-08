@@ -1,0 +1,102 @@
+{
+  "fa": {
+    "id": "excel-editor",
+    "category": "excel",
+    "title": "ویرایشگر آنلاین اکسل",
+    "description": "فایل‌های Excel یا CSV را در مرورگر خود ویرایش کنید و خروجی جدید بگیرید.",
+    "features": [
+      "آپلود مستقیم فایل Excel یا CSV",
+      "ویرایش سلول‌ها به صورت جدولی",
+      "افزودن و حذف سطرها",
+      "جستجوی سریع در داده‌ها",
+      "امکان بازگشت (Undo) به وضعیت قبلی",
+      "دانلود خروجی به صورت فایل Excel جدید"
+    ],
+    "ui": {
+      "upload": {
+        "buttonInitial": "انتخاب فایل Excel / CSV",
+        "buttonChange": "تغییر فایل داده",
+        "acceptHint": "فرمت‌های مجاز: .xlsx، .xls، .csv"
+      },
+      "actions": {
+        "exportExcel": "دانلود فایل Excel",
+        "addRow": "افزودن سطر جدید",
+        "undoTitle": "بازگشت به تغییر قبلی",
+        "closeFileTitle": "بستن فایل و پاک‌کردن داده‌ها",
+        "resetConfirm": "آیا از بستن فایل و پاک‌کردن همه داده‌ها مطمئن هستید؟"
+      },
+      "search": {
+        "placeholder": "جستجو در تمام ستون‌ها..."
+      },
+      "table": {
+        "indexHeader": "ردیف",
+        "deleteHeader": "حذف",
+        "deleteTooltip": "حذف این سطر"
+      },
+      "pagination": {
+        "summaryPrefix": "نمایش ",
+        "summaryFromToSeparator": " تا ",
+        "summaryOfWord": " از ",
+        "summarySuffix": " ردیف"
+      },
+      "empty": {
+        "title": "هیچ فایلی انتخاب نشده است",
+        "description": "برای شروع، یک فایل Excel یا CSV انتخاب کنید تا داده‌ها در اینجا قابل ویرایش باشند."
+      },
+      "page": {
+        "title": "ویرایشگر آنلاین اکسل",
+        "description": "بدون نیاز به نصب نرم‌افزار، فایل‌های Excel یا CSV را در مرورگر خود ویرایش و ذخیره کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "excel-editor",
+    "category": "excel",
+    "title": "Online Excel editor",
+    "description": "Edit Excel or CSV files directly in your browser and export the result.",
+    "features": [
+      "Upload Excel or CSV files",
+      "Edit cells in a spreadsheet-like table",
+      "Add and remove rows",
+      "Quick search across all columns",
+      "Undo recent changes",
+      "Download the edited data as a new Excel file"
+    ],
+    "ui": {
+      "upload": {
+        "buttonInitial": "Choose Excel / CSV file",
+        "buttonChange": "Change data file",
+        "acceptHint": "Supported formats: .xlsx, .xls, .csv"
+      },
+      "actions": {
+        "exportExcel": "Export to Excel",
+        "addRow": "Add new row",
+        "undoTitle": "Undo last change",
+        "closeFileTitle": "Close file and clear data",
+        "resetConfirm": "Are you sure you want to close the file and clear all data?"
+      },
+      "search": {
+        "placeholder": "Search across all columns..."
+      },
+      "table": {
+        "indexHeader": "Row",
+        "deleteHeader": "Delete",
+        "deleteTooltip": "Delete this row"
+      },
+      "pagination": {
+        "summaryPrefix": "Showing ",
+        "summaryFromToSeparator": " to ",
+        "summaryOfWord": " of ",
+        "summarySuffix": " rows"
+      },
+      "empty": {
+        "title": "No file selected",
+        "description": "Upload an Excel or CSV file to start editing its data in this table."
+      },
+      "page": {
+        "title": "Online Excel editor",
+        "description": "Edit Excel or CSV files in your browser and export the updated sheet as a new file."
+      }
+    }
+  }
+}

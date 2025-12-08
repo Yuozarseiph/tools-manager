@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, MonitorSmartphone } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import UserAgentTool from "@/components/tools/UserAgentTool";
-import {
-  useToolContent,
-  type UserAgentToolContent,
-} from "@/hooks/useToolContent";
+import UserAgentTool from "@/components/tools/system/user-agent/UserAgentTool";
+import { useUserAgentPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function UserAgentPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<UserAgentToolContent>("user-agent");
+  const page = useUserAgentPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,14 +28,14 @@ export default function UserAgentPage() {
             <MonitorSmartphone size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p
           className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
         >
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 

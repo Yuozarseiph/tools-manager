@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight, Scale } from "lucide-react";
+
 import { useThemeColors } from "@/hooks/useThemeColors";
-import UnitConverterTool from "@/components/tools/UnitConverterTool";
-import {
-  useToolContent,
-  type UnitConverterToolContent,
-} from "@/hooks/useToolContent";
+import UnitConverterTool from "@/components/tools/utility/unit-converter/UnitConverterTool";
+import { useUnitConverterPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function UnitConverterPage() {
   const theme = useThemeColors();
   const { t } = useLanguage();
-  const content =
-    useToolContent<UnitConverterToolContent>("unit-converter");
+  const page = useUnitConverterPageContent();
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -31,14 +28,14 @@ export default function UnitConverterPage() {
             <Scale size={24} className="text-white" />
           </div>
           <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {content.ui.page.title}
+            {page.title}
           </h1>
         </div>
 
         <p
           className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
         >
-          {content.ui.page.description}
+          {page.description}
         </p>
       </div>
 
