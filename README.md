@@ -1,4 +1,4 @@
-```Below is an English-only section you can drop into your README to document the new structure and how to add a tool from scratch.
+Below is an English-only section you can drop into your README to document the new structure and how to add a tool from scratch.
 
 ***
 
@@ -282,4 +282,3 @@ You can adapt the CSV example above to any new tool you add; just keep to this p
 [19](https://www.reddit.com/r/nextjs/comments/1brg5z7/world_class_next_14_app_router_open_source_full/)
 [20](https://www.reddit.com/r/nextjs/comments/1ezamqy/using_react_hooks_with_nextjs_is_really_confusing/)
 [21](https://dev.to/muhammad_usman_35b52e4f04/nextjs-14-app-router-building-modern-full-stack-applications-52ej)
-```
