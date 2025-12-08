@@ -1,43 +1,79 @@
 ToolsManager – Proprietary License
-Copyright (c) 2025 Your Name
+
+Copyright (c) 2025 YUO ZAR SEIPH
 All rights reserved.
+Official brand website: https://yuozarseiph.top/
 
 1. Grant of License
-You are granted a limited, non-exclusive, non-transferable, revocable license to:
-- Download, install, and run this software ("Software") on your own devices;
-- Use the Software for personal, non-commercial purposes only.
 
-No other rights are granted. This License does not transfer any ownership or intellectual property rights to you.
+You are granted a limited, non-exclusive, non-transferable, and revocable license to:
+
+Download, install, and run this software ("Software") on your own devices;
+
+Use the Software for personal and educational purposes only.
+
+No other rights are granted under this License. This License does not transfer any ownership, title, or intellectual property rights in the Software to you.
 
 2. Prohibited Uses
-You MAY NOT:
-- Use the Software, or any part of it, for any commercial purpose. This includes, but is not limited to:
-  - Selling the Software or access to it;
-  - Hosting the Software as a paid or ad-supported service;
-  - Using the Software as part of a product or service that generates revenue directly or indirectly.
-- Copy, fork, publish, distribute, sublicense, or make the Software available in any public or private repository, website, or platform, except the original official repository controlled by the copyright holder.
-- Modify the Software to create derivative works, or reuse its source code, components, or logic in other projects, whether open-source or proprietary.
-- Copy or substantially reproduce the user interface, visual design, layout, or UX flows of the Software in other projects, whether open-source or proprietary.
-- Remove, hide, or alter any copyright notices, author names, license notices, or branding included in the Software.
 
-All rights not expressly granted in this License are reserved.
+You MAY NOT, under any circumstances:
+
+Use the Software or any part thereof for any commercial purpose, including but not limited to:
+
+Selling the Software or providing access to it;
+
+Offering the Software as a paid, freemium, or ad-supported service;
+
+Using the Software in a product, service, or business that generates revenue directly or indirectly.
+
+Copy, fork, clone, publish, distribute, sublicense, lease, rent, or otherwise make available the Software or any part of it on any public or private platform, repository, website, marketplace, or network, except the original official repository controlled by the copyright holder.
+
+Modify, translate, adapt, reverse engineer, decompile, disassemble, or attempt to derive the source code or internal logic of the Software.
+
+Create derivative works based on the Software, or reuse any part of its source code, architecture, logic, workflows, or internal design in any other project, whether open-source or proprietary.
+
+Copy, imitate, or substantially reproduce the user interface (UI), visual design, layout, branding, or user experience (UX) of the Software in any form or implementation.
+
+Remove, obscure, modify, or alter any copyright notices, license terms, author information, or branding included in the Software.
+
+All rights not expressly granted in this License are strictly reserved by the copyright holder.
 
 3. Contributions
-You MAY submit contributions (such as bug fixes, features, or translations) via pull requests to the official repository.
+
+You MAY submit contributions (including but not limited to bug fixes, features, extensions, or translations) to the official repository through pull requests.
 
 By submitting a contribution ("Contribution"), you agree that:
-- You grant the copyright holder a worldwide, perpetual, irrevocable, royalty-free license to use, modify, merge, publish, and distribute your Contribution as part of the Software;
-- You do NOT obtain any ownership or additional rights over the Software as a whole;
-- You may be credited by name (for example, in the UI of the tool you contributed to, or in a CONTRIBUTORS file), at the sole discretion of the copyright holder;
-- This credit is purely attribution and does not create any legal, financial, or commercial rights.
 
-You may NOT use your own Contribution as a basis to create or distribute a competing copy, fork, or derivative of the Software that violates Section 2.
+You grant the copyright holder a worldwide, perpetual, irrevocable, royalty-free, and sublicensable license to use, reproduce, modify, merge, publish, distribute, and incorporate your Contribution into the Software;
 
-4. No Warranty
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+You do not acquire any ownership, license, or rights in the Software as a result of your Contribution;
 
-5. Termination
-Any violation of this License will result in the automatic termination of your rights to use the Software. Upon termination, you must stop using the Software and destroy any copies in your possession.
+Attribution (e.g., contributor credit) may be provided at the sole discretion of the copyright holder and does not grant any legal, financial, or commercial rights;
 
-6. Governing Law
-This License shall be governed by and construed in accordance with the laws of [your country/region], without regard to its conflict of law principles.
+You may not use your own Contribution as the basis for creating or distributing any competing product, fork, or derivative that violates this License.
+
+4. Trademarks
+
+This License does not grant you any rights to use any trademarks, service marks, names, logos, domain names, or branding associated with the Software or with YUO ZAR SEIPH.
+
+Any unauthorized use of branding or trademarks is strictly prohibited.
+
+5. No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+6. Termination
+
+Any violation of this License will automatically and immediately terminate all rights granted to you.
+
+Upon termination, you must:
+
+Cease all use of the Software;
+
+Permanently delete all copies in your possession or control.
+
+7. Governing Law
+
+This License shall be governed by and construed in accordance with the laws of the Netherlands, without regard to conflict of law principles.
