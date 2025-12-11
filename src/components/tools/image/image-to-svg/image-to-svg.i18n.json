@@ -1,0 +1,138 @@
+{
+  "fa": {
+    "id": "image-to-svg",
+    "category": "image",
+    "title": "تبدیل تصویر به SVG وکتور",
+    "description": "تصاویر بیت‌مپ (JPG/PNG/WebP) را به خروجی SVG وکتوری و قابل‌ویرایش تبدیل کنید.",
+    "features": [
+      "تبدیل کامل در مرورگر، بدون ارسال فایل به سرور",
+      "پشتیبانی از فرمت‌های رایج تصویر مانند JPG، PNG و WebP",
+      "پیش‌نمایش هم‌زمان تصویر اصلی و خروجی SVG",
+      "امکان دانلود مستقیم فایل SVG نهایی برای ویرایش در ابزارهای وکتور"
+    ],
+    "ui": {
+      "alerts": {
+        "heavyImageTitle": "هشدار مهم دربارهٔ ابعاد تصویر",
+        "heavyImageBody":
+          "تبدیل تصویر به SVG روی مرورگر بسیار وابسته به ابعاد و حجم تصویر است. برای تصاویر خیلی بزرگ (مثلاً بالاتر از 3000×3000 پیکسل یا فایل‌های سنگین‌تر از 5 مگابایت) ممکن است فرایند تبدیل طولانی شود، مصرف CPU و رم بالا برود یا مرورگر برای چند ثانیه فریز شود.",
+        "heavyImageNote":
+          "توصیه می‌شود قبل از تبدیل، تصویر را تا حد ممکن کوچک‌تر یا فشرده‌تر کنید و روی دستگاه‌های ضعیف با احتیاط از این ابزار استفاده کنید."
+      },
+      "upload": {
+        "title": "یک تصویر (JPG/PNG/WebP) را انتخاب کنید",
+        "subtitle": "تصویر شما به صورت کامل در مرورگر به SVG وکتوری تبدیل می‌شود."
+      },
+      "file": {
+        "sizeUnit": "مگابایت",
+        "removeTitle": "حذف فایل"
+      },
+      "buttons": {
+        "convertIdle": "تبدیل به SVG وکتور",
+        "convertLoading": "در حال تبدیل به SVG...",
+        "manualDownload": "دانلود فایل SVG",
+        "convertAgain": "تبدیل مجدد تصویر"
+      },
+      "errors": {
+        "genericPrefix": "در هنگام پردازش تصویر خطایی رخ داد:",
+        "invalidType": "لطفاً فقط فایل‌های تصویری مانند JPG, PNG, WebP انتخاب کنید.",
+        "emptyContent": "محتوای معتبری در تصویر یافت نشد.",
+        "unknown": "خطای ناشناخته.",
+        "loadImage": "بارگذاری تصویر در مرورگر با مشکل مواجه شد."
+      },
+      "preview": {
+        "title": "پیش‌نمایش تصویر و خروجی SVG",
+        "originalTitle": "تصویر اصلی",
+        "svgTitle": "خروجی SVG وکتوری",
+        "empty": "پس از انتخاب تصویر، پیش‌نمایش و خروجی SVG در این بخش نمایش داده می‌شود."
+      },
+      "guide": {
+        "title": "راهنما و نکات استفاده",
+        "items": [
+          "برای بهترین نتیجه از تصاویر با کنتراست خوب و پس‌زمینه ساده استفاده کنید.",
+          "هرچه تصویر پیچیده‌تر و پرجزئیات‌تر باشد، سایز فایل SVG خروجی بزرگ‌تر می‌شود.",
+          "بعد از تبدیل، می‌توانید SVG را در نرم‌افزارهای وکتور مثل Figma، Illustrator یا Inkscape ویرایش کنید."
+        ]
+      },
+      "progress": {
+        "idle": "",
+        "reading": "در حال خواندن فایل تصویر...",
+        "converting": "در حال آماده‌سازی تصویر برای تبدیل...",
+        "rendering": "در حال رندر تصویر روی بوم (Canvas)...",
+        "generating": "در حال وکتور کردن تصویر و تولید SVG...",
+        "success": "تبدیل با موفقیت انجام شد."
+      },
+      "page": {
+        "title": "تبدیل تصویر به SVG وکتور",
+        "description": "به‌سادگی یک تصویر بیت‌مپ انتخاب کنید و نسخهٔ وکتوری آن را در قالب فایل SVG دانلود کنید."
+      }
+    }
+  },
+  "en": {
+    "id": "image-to-svg",
+    "category": "image",
+    "title": "Image to SVG converter",
+    "description": "Convert bitmap images (JPG/PNG/WebP) into editable vector SVG output.",
+    "features": [
+      "Fully client-side conversion without uploading files to a server",
+      "Supports common image formats such as JPG, PNG, and WebP",
+      "Side‑by‑side preview of the original image and SVG output",
+      "Download the final SVG file for editing in vector tools"
+    ],
+    "ui": {
+      "alerts": {
+        "heavyImageTitle": "Important warning about image dimensions",
+        "heavyImageBody":
+          "Converting an image to SVG in the browser is highly dependent on the image size and file weight. For very large images (e.g. above 3000×3000 pixels or files larger than 5 MB), the conversion process may take a long time, increase CPU and RAM usage, or temporarily freeze the browser.",
+        "heavyImageNote":
+          "It is recommended to downscale or compress your image as much as possible before converting, and use this tool with care on low‑end devices."
+      },
+      "upload": {
+        "title": "Select an image (JPG/PNG/WebP)",
+        "subtitle": "Your image will be fully converted to vector SVG directly in the browser."
+      },
+      "file": {
+        "sizeUnit": "MB",
+        "removeTitle": "Remove file"
+      },
+      "buttons": {
+        "convertIdle": "Convert to vector SVG",
+        "convertLoading": "Converting to SVG...",
+        "manualDownload": "Download SVG file",
+        "convertAgain": "Convert image again"
+      },
+      "errors": {
+        "genericPrefix": "An error occurred while processing the image:",
+        "invalidType": "Please select only image files such as JPG, PNG, or WebP.",
+        "emptyContent": "No valid content was found in the image.",
+        "unknown": "Unknown error.",
+        "loadImage": "Loading the image in the browser failed."
+      },
+      "preview": {
+        "title": "Image and SVG preview",
+        "originalTitle": "Original image",
+        "svgTitle": "Vector SVG output",
+        "empty": "After selecting an image, the preview and SVG output will appear here."
+      },
+      "guide": {
+        "title": "Usage tips",
+        "items": [
+          "For best results, use images with good contrast and simple backgrounds.",
+          "The more complex and detailed the image, the larger the resulting SVG file size will be.",
+          "After conversion, you can edit the SVG in vector editors like Figma, Illustrator, or Inkscape."
+        ]
+      },
+      "progress": {
+        "idle": "",
+        "reading": "Reading image file...",
+        "converting": "Preparing image for conversion...",
+        "rendering": "Rendering image onto canvas...",
+        "generating": "Vectorizing image and generating SVG...",
+        "success": "Conversion completed successfully."
+      },
+      "page": {
+        "title": "Image to SVG converter",
+        "description": "Easily convert a bitmap image to a vector SVG and download it directly in your browser."
+      }
+    }
+  }
+}

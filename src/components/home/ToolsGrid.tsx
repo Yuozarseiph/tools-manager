@@ -104,10 +104,11 @@ export default function ToolsGrid() {
   };
 
   return (
-    <div className="pb-20 space-y-10">
-      <div className="max-w-lg mx-auto relative z-20">
+    <div className="pb-28 pt-2 space-y-8 md:space-y-10">
+      {/* سرچ – تمام عرض، مرکز */}
+      <div className="max-w-lg mx-auto relative z-20 px-4 sm:px-0">
         <div
-          className={`absolute right-4 top-1/2 -translate-y-1/2 ${theme.textMuted}`}
+          className={`absolute right-7 top-1/2 -translate-y-1/2 ${theme.textMuted}`}
         >
           <Search size={20} />
         </div>
@@ -116,38 +117,90 @@ export default function ToolsGrid() {
           placeholder={t("tool.search.placeholder")}
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className={`w-full py-4 pr-12 pl-12 rounded-2xl border-2 transition-all outline-none shadow-sm text-lg
-          ${theme.bg} ${theme.text} ${theme.border} focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
+          className={`
+            w-full py-3.5 pr-11 pl-11 rounded-2xl border-2
+            transition-all outline-none shadow-sm text-base md:text-lg
+            ${theme.bg} ${theme.text} ${theme.border}
+            focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10
+          `}
         />
         {searchQuery && (
           <button
             onClick={() => handleSearchChange("")}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 transition-colors"
+            className="
+              absolute left-7 top-1/2 -translate-y-1/2
+              p-1.5 rounded-full
+              hover:bg-zinc-200 dark:hover:bg-zinc-700
+              text-zinc-500 transition-colors
+            "
           >
             <X size={18} />
           </button>
         )}
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => handleCategoryChange(cat.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200
-            ${
-              activeCategory === cat.id
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
-            }`}
-          >
-            <cat.icon size={16} />
-            {t(`tool.categories.${cat.id}`)}
-          </button>
-        ))}
+      {/* دسته‌بندی‌ها – موبایل: اسکرول افقی، دسکتاپ: wrap */}
+      {/* موبایل */}
+      <div className="md:hidden -mx-4 px-4 overflow-x-auto">
+        <div className="flex gap-2 pb-1">
+          {CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleCategoryChange(cat.id)}
+                className={`
+                  flex items-center gap-1.5
+                  px-3.5 py-2
+                  rounded-full text-xs font-semibold
+                  flex-shrink-0
+                  transition-all duration-200
+                  ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
+                      : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
+                  }
+                `}
+              >
+                <Icon size={16} />
+                <span className="whitespace-nowrap">
+                  {t(`tool.categories.${cat.id}`)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* دسکتاپ / تبلت */}
+      <div className="hidden md:flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4">
+        {CATEGORIES.map((cat) => {
+          const Icon = cat.icon;
+          const isActive = activeCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`
+                flex items-center gap-2 px-4 py-2.5 rounded-xl
+                text-sm font-bold transition-all duration-200
+                ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
+                    : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
+                }
+              `}
+            >
+              <Icon size={16} />
+              {t(`tool.categories.${cat.id}`)}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* گرید ابزارها */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-0">
         <AnimatePresence mode="popLayout">
           {visibleTools.length > 0 ? (
             visibleTools.map((tool) => (
@@ -161,16 +214,25 @@ export default function ToolsGrid() {
               >
                 <Link
                   href={tool.href}
-                  className={`relative group block p-4 md:p-6 rounded-3xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl h-full flex flex-col
-                  ${theme.card} ${theme.border}
-                  ${
-                    tool.status === "coming-soon"
-                      ? "opacity-60 grayscale pointer-events-none"
-                      : ""
-                  }`}
+                  className={`
+                    relative group block p-4 md:p-6 rounded-3xl border
+                    transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
+                    h-full flex flex-col
+                    ${theme.card} ${theme.border}
+                    ${
+                      tool.status === "coming-soon"
+                        ? "opacity-60 grayscale pointer-events-none"
+                        : ""
+                    }
+                  `}
                 >
                   <div
-                    className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg transition-colors duration-300 ${theme.secondary}`}
+                    className={`
+                      w-12 h-12 md:w-14 md:h-14 rounded-2xl
+                      flex items-center justify-center mb-4 md:mb-6
+                      shadow-lg transition-colors duration-300
+                      ${theme.secondary}
+                    `}
                   >
                     <tool.Icon
                       className={`w-6 h-6 md:w-7 md:h-7 ${theme.accent}`}
@@ -186,7 +248,10 @@ export default function ToolsGrid() {
                       </h2>
                       {tool.badge && (
                         <span
-                          className={`text-[10px] font-bold px-2 py-1 rounded-full border ${theme.border} ${theme.bg} ${theme.textMuted}`}
+                          className={`
+                            text-[10px] font-bold px-2 py-1 rounded-full
+                            border ${theme.border} ${theme.bg} ${theme.textMuted}
+                          `}
                         >
                           {tool.badge}
                         </span>
@@ -199,8 +264,17 @@ export default function ToolsGrid() {
                     </p>
                   </div>
 
+                  {/* CTA: روی موبایل همیشه دیده میشه، روی دسکتاپ فقط روی hover */}
                   <div
-                    className={`mt-4 md:mt-6 pt-4 md:pt-6 border-t flex items-center text-xs md:text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 duration-300 ${theme.border} ${theme.accent}`}
+                    className={`
+                      mt-4 md:mt-6 pt-4 md:pt-6 border-t flex items-center
+                      text-xs md:text-sm font-semibold
+                      ${theme.border} ${theme.accent}
+                      opacity-100 translate-x-0
+                      md:opacity-0 md:-translate-x-2
+                      md:group-hover:opacity-100 md:group-hover:translate-x-0
+                      transition-all duration-300
+                    `}
                   >
                     {t("tool.item.cta")}
                     <ArrowLeft size={16} className="mr-2" />
@@ -212,7 +286,10 @@ export default function ToolsGrid() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="col-span-full text-center py-20 opacity-50 flex flex-col items-center gap-4"
+              className="
+                col-span-full text-center py-20 opacity-50
+                flex flex-col items-center gap-4
+              "
             >
               <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                 <Search size={32} className={theme.textMuted} />
@@ -235,10 +312,13 @@ export default function ToolsGrid() {
       </div>
 
       {visibleCount < filteredTools.length && (
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-2 md:mt-4">
           <button
             onClick={() => setVisibleCount((c) => c + 9)}
-            className={`px-4 py-2 text-sm rounded-xl font-medium shadow-sm ${theme.primary}`}
+            className={`
+              px-4 py-2 text-sm rounded-xl font-medium shadow-sm
+              ${theme.primary}
+            `}
           >
             {t("tool.loadMore")}
           </button>

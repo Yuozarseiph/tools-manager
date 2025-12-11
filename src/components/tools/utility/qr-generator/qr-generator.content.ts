@@ -2,10 +2,9 @@
 
 import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
-
 import rawContent from "./qr-generator.i18n.json";
 
-type DocCategoryKey = "utility";
+type DocCategoryKey = "developer" | "utility";
 
 interface BaseDocsFields {
   id: string;
@@ -13,12 +12,6 @@ interface BaseDocsFields {
   title: string;
   description: string;
   features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
 }
 
 export interface QrGeneratorToolContent extends BaseDocsFields {
@@ -36,21 +29,35 @@ export interface QrGeneratorToolContent extends BaseDocsFields {
       label: string;
       unit: string;
     };
+    margin: {
+      label: string;
+      unit: string;
+    };
+    corners: {
+      label: string;
+      square: string;
+      rounded: string;
+    };
+    logo: {
+      label: string;
+      selectButton: string;
+      removeButton: string;
+      sizeLabel: string;
+      sizeUnit: string;
+    };
     buttons: {
       downloadPng: string;
     };
-    page: {
-      title: string;
-      description: string;
-    };
+  };
+  page: {
+    title: string;
+    description: string;
   };
 }
 
-// ساختار فایل i18n: { fa: QrGeneratorToolContent; en: QrGeneratorToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, QrGeneratorToolContent>;
+const content = rawContent as Record<Locale, QrGeneratorToolContent>;
 
 export function useQrGeneratorContent(): QrGeneratorToolContent {
-  const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  const { locale } = useLanguage(); // اینجا رو تغییر دادم
+  return content[locale] || content["en"];
 }

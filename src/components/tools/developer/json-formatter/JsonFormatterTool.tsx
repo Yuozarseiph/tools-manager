@@ -24,7 +24,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import CustomJsonNode from "../../CustomJsonNode";
+import CustomJsonNode from "./CustomJsonNode";
 import { getLayoutedElements } from "@/utils/json-to-graph";
 
 import {

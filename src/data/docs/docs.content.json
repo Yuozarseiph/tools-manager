@@ -63,7 +63,6 @@
         "اکسپورت به HTML"
       ]
     },
-
     {
       "id": "excel-chart",
       "title": "رسم نمودار از اکسل",
@@ -90,27 +89,32 @@
       ],
       "privacyNote": "فایل اکسل شما در مرورگر پردازش شده و نسخه ویرایش شده مستقیماً در سیستم شما ساخته می‌شود."
     },
-
     {
       "id": "image-compressor",
       "title": "فشرده‌سازی هوشمند تصاویر",
       "category": "image",
-      "description": "کاهش حجم تصاویر PNG و JPEG تا ۹۰٪ بدون افت محسوس کیفیت برای استفاده در وب.",
+      "description": "کاهش حجم تصاویر PNG، JPG و WebP تا ۹۰٪ بدون افت محسوس کیفیت برای استفاده در وب.",
       "features": [
+        "ورود تصویر از دستگاه یا از طریق لینک (URL)",
         "تنظیم درصد فشرده‌سازی",
         "حذف متادیتا (EXIF)",
-        "تغییر سایز خودکار"
+        "تغییر سایز خودکار",
+        "پردازش کاملاً لوکال در مرورگر بدون آپلود فایل"
       ],
       "howItWorks": [
-        "تصویر روی یک Canvas مخفی رسم شده و با الگوریتم‌های فشرده‌سازی مرورگر مجدداً انکود می‌شود."
-      ]
+        "تصویر ورودی (از دستگاه یا URL) در مرورگر خوانده می‌شود و با استفاده از Canvas یا کتابخانه‌های فشرده‌سازی سمت کلاینت، دوباره با کیفیت و حجم جدید انکود می‌شود.",
+        "سطح کیفیت خروجی با یک اسلایدر قابل تنظیم است و بر همین اساس، پارامترهای فشرده‌سازی اعمال می‌شوند.",
+        "در انتها یک Blob تصویر جدید ساخته شده و با نام حاوی پسوند صحیح (متناسب با نوع واقعی تصویر) برای دانلود آماده می‌شود."
+      ],
+      "privacyNote": "تمام عملیات فشرده‌سازی روی دستگاه شما انجام می‌شود. چه تصویر را از روی دیسک انتخاب کنید و چه از طریق URL بارگذاری کنید، فایل‌ها هرگز به سرور ارسال یا در جایی ذخیره نمی‌شوند و صرفاً در حافظه موقت مرورگر استفاده می‌گردند."
     },
     {
       "id": "color-picker",
       "title": "استخراج رنگ از تصویر",
       "category": "image",
-      "description": "آپلود عکس و استخراج کد رنگ (HEX, RGB) هر نقطه‌ای از آن به همراه پالت رنگی تصویر.",
+      "description": "آپلود یا بارگذاری تصویر از لینک (URL) و استخراج کد رنگ (HEX, RGB, HSL) هر نقطه‌ای از آن به همراه پالت رنگی تصویر.",
       "features": [
+        "ورود تصویر از دستگاه یا آدرس URL",
         "ذره‌بین برای دقت پیکسلی",
         "کپی سریع کد رنگ",
         "تولید پالت رنگی غالب"
@@ -120,7 +124,51 @@
         "content": "ما از متد getImageData برای دسترسی به آرایه پیکسلی تصویر استفاده می‌کنیم."
       }
     },
-
+    {
+      "id": "image-resizer",
+      "title": "تغییر اندازه تصویر (Resize)",
+      "category": "image",
+      "description": "تغییر اندازه تصاویر PNG، JPG، WebP و فرمت‌های رایج دیگر با حفظ کیفیت، برای استفاده در وب، شبکه‌های اجتماعی یا طراحی رابط کاربری.",
+      "features": [
+        "ورود تصویر از دستگاه یا از طریق لینک (URL)",
+        "تنظیم دقیق عرض و ارتفاع با قفل نسبت تصویر (Aspect Ratio Lock)",
+        "پیش‌نمایش زنده قبل از دانلود خروجی",
+        "خروجی با کیفیت بالا و بدون افت محسوس جزئیات",
+        "پردازش کامل در مرورگر بدون آپلود روی سرور"
+      ],
+      "howItWorks": [
+        "تصویر ورودی (از دستگاه یا URL) روی یک Canvas مخفی در مرورگر رسم می‌شود و ابعاد آن بر اساس عرض و ارتفاع جدید تنظیم می‌گردد.",
+        "پس از رندر مجدد، خروجی Canvas با استفاده از متد toBlob به یک فایل تصویر جدید تبدیل شده و با نامی شامل ابعاد جدید (مثلاً resized-800x600.jpg) برای دانلود آماده می‌شود.",
+        "در حالت لینک (URL)، خود مرورگر با استفاده از fetch تصویر را دانلود کرده و به یک فایل موقت تبدیل می‌کند؛ هیچ فایلی به سرور ابزار ارسال یا ذخیره نمی‌شود."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی Canvas و فرمت خروجی",
+        "content": "برای تغییر اندازه، تصویر روی Canvas با فعال بودن imageSmoothingEnabled و imageSmoothingQuality=\"high\" رسم می‌شود تا در ابعاد جدید لبه‌ها نرم و شارپ باقی بمانند. فرمت و پسوند فایل خروجی بر اساس نوع واقعی تصویر (MIMEType) و یک مپ امن به پسوندهای رایج انتخاب می‌شود تا فایل خروجی در سیستم‌عامل و ابزارهای دیگر به‌درستی به عنوان تصویر شناخته شود."
+      },
+      "privacyNote": "تمام پردازش‌ها (لود تصویر، رسم روی Canvas و تولید خروجی) به‌صورت کامل در حافظه مرورگر انجام می‌شود. چه تصویر را از دستگاه انتخاب کنید و چه از طریق URL، هیچ فایلی به سرور آپلود یا ذخیره نمی‌شود و با بستن صفحه همه داده‌ها از بین می‌روند."
+    },
+    {
+      "id": "image-to-svg",
+      "title": "تبدیل تصویر به SVG وکتور",
+      "category": "image",
+      "description": "تبدیل تصاویر بیت‌مپ (JPG، PNG، WebP و ...) به خروجی SVG وکتوری و قابل‌ویرایش، مناسب برای لوگو، آیکون و گرافیک‌های مقیاس‌پذیر.",
+      "features": [
+        "پشتیبانی از فرمت‌های رایج تصویر مانند JPG، PNG و WebP",
+        "پیش‌نمایش هم‌زمان تصویر اصلی و خروجی SVG",
+        "تبدیل کامل در مرورگر بدون ارسال فایل به سرور",
+        "امکان دانلود مستقیم فایل SVG برای ویرایش در ابزارهایی مثل Figma و Illustrator"
+      ],
+      "howItWorks": [
+        "تصویر ورودی روی یک Canvas مخفی در مرورگر رسم می‌شود و دادهٔ خام پیکسل‌ها (ImageData) استخراج می‌شود.",
+        "کتابخانهٔ ImageTracerJS دادهٔ پیکسلی را تحلیل کرده، رنگ‌ها و لبه‌ها را خوشه‌بندی می‌کند و آن را به مسیرهای وکتوری (Path) در قالب یک رشته SVG تبدیل می‌کند.",
+        "رشتهٔ SVG تولیدشده در همان صفحه به‌صورت پیش‌نمایش نمایش داده شده و در صورت نیاز به‌صورت فایل SVG قابل دانلود است."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی و محدودیت‌ها",
+        "content": "فرایند وکتورسازی کاملاً سمت کلاینت و با استفاده از Canvas API و کتابخانه ImageTracerJS انجام می‌شود. برای تصاویر با ابعاد یا حجم بسیار بالا، مصرف CPU و رم می‌تواند زیاد شود و ممکن است فرایند تبدیل چند ثانیه طول بکشد یا برای لحظاتی باعث فریز شدن مرورگر شود. برای بهترین کارایی، پیشنهاد می‌شود قبل از تبدیل، تصویر را تا حد امکان کوچک‌تر یا فشرده‌تر کنید و برای گرافیک‌هایی با کنتراست و جزئیات مناسب از این ابزار استفاده کنید."
+      },
+      "privacyNote": "هیچ تصویری به سرور ارسال یا ذخیره نمی‌شود و تمام مراحل وکتورسازی (Canvas و تبدیل به SVG) در حافظهٔ مرورگر شما انجام می‌شود."
+    },
     {
       "id": "pdf-merge",
       "title": "ادغام فایل‌های PDF",
@@ -148,7 +196,6 @@
       ],
       "privacyNote": "برخلاف سایر سرویس‌ها، فایل ورد شما آپلود نمی‌شود و تبدیل در مرورگر انجام می‌گیرد."
     },
-
     {
       "id": "password-generator",
       "title": "پسورد ساز امن",
@@ -175,7 +222,6 @@
         "سرعت بالا"
       ]
     },
-
     {
       "id": "ip-checker",
       "title": "بررسی IP و موقعیت",
@@ -202,7 +248,6 @@
         "بررسی موتور رندرینگ"
       ]
     },
-
     {
       "id": "qr-generator",
       "title": "سازنده QR Code",
@@ -243,7 +288,6 @@
         "تحلیل تراکم کلمات"
       ]
     },
-
     {
       "id": "audio-editor",
       "title": "ویرایشگر صوت (بتا)",
@@ -286,9 +330,59 @@
         "content": "موتور تبدیل بر پایه کتابخانه PptxGenJS ساخته شده است و HTML را ابتدا به یک مدل میانی اسلاید (تیتر، متن، لیست، جدول) تبدیل می‌کند، سپس این مدل را به اسلایدهای پاورپوینت مپ می‌کند. استایل‌های پیچیده CSS (layoutهای چندستونه سنگین، positionهای تو در تو، انیمیشن و افکت‌های خاص) به‌طور کامل بازتولید نمی‌شوند و فقط رنگ، اندازه فونت، چینش و بک‌گراند ساده منتقل می‌شود. برای بهترین نتیجه، هر اسلاید باید یک کانتینر مستقل (مثلاً section.slide) با چیدمان ساده و جداول استاندارد باشد."
       },
       "privacyNote": "تمام عملیات تبدیل روی مرورگر شما انجام می‌شود و HTML یا فایل‌های شما روی سرور ذخیره یا پردازش نمی‌شوند."
+    },
+    {
+      "id": "audio-extractor",
+      "title": "استخراج صدا از ویدیو",
+      "category": "audio",
+      "description": "جداسازی صدا از فایل‌های ویدیویی و دانلود آن در فرمت‌های مختلف صوتی (MP3, WAV, OGG, M4A) به صورت کامل در مرورگر، بدون نیاز به آپلود.",
+      "features": [
+        "پشتیبانی از فرمت‌های ویدیویی رایج (MP4, AVI, MOV, MKV, WEBM)",
+        "خروجی در چهار فرمت صوتی: MP3، WAV، OGG و M4A",
+        "انتخاب سه سطح کیفیت صدا (کم، متوسط، بالا)",
+        "نمایش پیشرفت استخراج به صورت درصد",
+        "نمایش مدت زمان و حجم فایل ویدیویی",
+        "تبدیل کاملاً سمت کلاینت با استفاده از FFmpeg.wasm",
+        "بدون محدودیت حجم فایل (تا میزان توان سخت‌افزاری دستگاه)"
+      ],
+      "howItWorks": [
+        "فایل ویدیو توسط کتابخانه FFmpeg.wasm (نسخه WebAssembly از FFmpeg) در همان مرورگر بارگذاری و پردازش می‌شود.",
+        "فایل ویدیویی به حافظه موقت FFmpeg منتقل شده و دستور استخراج صدا با پارامترهای مشخص‌شده (فرمت و کیفیت) اجرا می‌شود.",
+        "FFmpeg ترک صوتی را از ویدیو جدا کرده و با کدک مناسب (libmp3lame برای MP3، pcm_s16le برای WAV، libvorbis برای OGG، aac برای M4A) انکود می‌کند.",
+        "در طول فرایند، FFmpeg به صورت مداوم درصد پیشرفت را گزارش می‌دهد که در نوار پیشرفت نمایش داده می‌شود.",
+        "پس از اتمام، فایل صوتی نهایی در حافظه مرورگر ساخته شده و آماده دانلود می‌شود."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی و محدودیت‌ها",
+        "content": "این ابزار از FFmpeg.wasm استفاده می‌کند که یک پیاده‌سازی کامل WebAssembly از FFmpeg است. بارگذاری اولیه FFmpeg (حدود 30MB) ممکن است چند ثانیه طول بکشد. پردازش ویدیوهای بزرگ یا طولانی (بیش از 100MB یا 30 دقیقه) می‌تواند فشار قابل توجهی بر CPU و رم دستگاه وارد کند و ممکن است مرورگر برای چند دقیقه کُند شود یا موقتاً فریز شود. برای بهترین عملکرد، پیشنهاد می‌شود از ویدیوهای کوتاه‌تر یا با کیفیت متوسط استفاده کنید. در صورت بروز خطا یا فریز طولانی، صفحه را رفرش کنید و با فایل کوچک‌تر امتحان کنید. همچنین توصیه می‌شود سایر برنامه‌های سنگین را در طول پردازش ببندید."
+      },
+      "privacyNote": "تمام عملیات استخراج صدا به صورت کاملاً محلی در مرورگر شما با استفاده از FFmpeg.wasm انجام می‌شود. هیچ فایل ویدیویی یا صوتی به سرور آپلود، ارسال یا ذخیره نمی‌شود و تمام داده‌ها فقط در حافظه موقت مرورگر شما باقی می‌مانند و پس از بستن صفحه یا رفرش کردن، به طور کامل پاک می‌شوند."
+    },
+    {
+      "id": "image-editor",
+      "title": "ویرایشگر تصویر",
+      "category": "image",
+      "description": "ویرایش سریع تصاویر در مرورگر با قابلیت کراپ، چرخش، معکوس کردن، تنظیم روشنایی و کنتراست و اعمال فیلترهای ساده، بدون نیاز به نصب نرم‌افزار.",
+      "features": [
+        "آپلود تصویر از دستگاه یا بارگذاری از طریق لینک (URL)",
+        "ابزارهای پایه مانند کراپ، چرخش، معکوس‌سازی (Flip) و تغییر اندازه",
+        "تنظیم روشنایی، کنتراست، اشباع رنگ و فیلترهای ساده",
+        "پیش‌نمایش زنده همه تغییرات قبل از دانلود",
+        "دانلود خروجی با فرمت استاندارد (JPG یا PNG) مستقیماً روی دستگاه شما",
+        "پردازش کاملاً سمت کلاینت روی Canvas بدون ارسال فایل به سرور"
+      ],
+      "howItWorks": [
+        "تصویر ورودی (از دستگاه یا URL) در یک عنصر Canvas در مرورگر رسم می‌شود و تمام تغییرات (کراپ، چرخش، فیلترها و...) به صورت پیکسلی روی همان Canvas اعمال می‌شوند.",
+        "بعد از اتمام ویرایش، محتوای Canvas با استفاده از متد toBlob به یک فایل تصویر جدید تبدیل شده و با نام و پسوند مناسب (مثلاً edited-image.jpg یا edited-image.png) برای دانلود آماده می‌شود.",
+        "در حالت URL، خود مرورگر تصویر را با fetch دانلود کرده و به Blob/File تبدیل می‌کند؛ هیچ فایلی به سرور ابزار ارسال یا ذخیره نمی‌شود."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی و محدودیت‌ها",
+        "content": "تمام افکت‌ها و تغییرات روی داده‌های پیکسلی Canvas اعمال می‌شوند؛ عملیات تکراری و سنگین روی تصاویر بسیار بزرگ می‌تواند باعث مصرف بیشتر CPU و RAM و کندی موقت مرورگر شود. برای کارایی بهتر، پیشنهاد می‌شود قبل از ویرایش سنگین، تصویر را فشرده‌تر یا کوچک‌تر کنید و خروجی را با فرمت مناسب (مثلاً JPG برای عکس و PNG برای گرافیک شفاف) دانلود کنید."
+      },
+      "privacyNote": "هیچ تصویری به سرور آپلود یا ذخیره نمی‌شود. تمام مراحل پردازش (لود تصویر، ویرایش روی Canvas و ساخت خروجی) فقط در حافظه مرورگر شما انجام می‌شود و با بستن صفحه، داده‌ها از بین می‌روند."
     }
   ],
-
   "en": [
     {
       "id": "base64",
@@ -353,7 +447,6 @@
         "Export to HTML"
       ]
     },
-
     {
       "id": "excel-chart",
       "title": "Charts from Excel",
@@ -380,27 +473,32 @@
       ],
       "privacyNote": "Your Excel file is processed in the browser and the edited version is generated directly on your device."
     },
-
     {
       "id": "image-compressor",
       "title": "Smart image compressor",
       "category": "image",
-      "description": "Reduce PNG and JPEG file size by up to 90% with minimal visible quality loss for web use.",
+      "description": "Reduce PNG, JPG and WebP file size by up to 90% with minimal visible quality loss for web use.",
       "features": [
+        "Load images from your device or from a URL",
         "Adjustable compression level",
         "EXIF metadata removal",
-        "Automatic resize"
+        "Automatic resize",
+        "Fully client-side processing with no file upload"
       ],
       "howItWorks": [
-        "The image is drawn onto a hidden canvas and re-encoded using the browser’s image compression algorithms."
-      ]
+        "The input image (from device or URL) is loaded in the browser and re-encoded using canvas or client-side compression libraries with the selected quality.",
+        "The output quality is controlled with a slider, which directly affects the compression parameters.",
+        "A new image Blob is then generated and downloaded with a correct file extension that matches the actual image type."
+      ],
+      "privacyNote": "All compression happens locally in your browser. Whether you pick an image from disk or load it from a URL, the file is never uploaded, logged or stored on any server and only lives in temporary browser memory."
     },
     {
       "id": "color-picker",
       "title": "Color picker from image",
       "category": "image",
-      "description": "Upload an image and pick HEX/RGB codes for any pixel, plus generate a color palette.",
+      "description": "Upload an image or load it from a URL, pick HEX/RGB/HSL codes for any pixel, and generate a color palette.",
       "features": [
+        "Load image from device or URL",
         "Magnifier for pixel-level precision",
         "One-click color copy",
         "Generation of the dominant color palette"
@@ -410,7 +508,51 @@
         "content": "The tool uses getImageData to access the raw pixel array of the image."
       }
     },
-
+    {
+      "id": "image-resizer",
+      "title": "Image resizer",
+      "category": "image",
+      "description": "Resize PNG, JPG, WebP and other common image formats while preserving quality, perfect for web assets, social media and UI design.",
+      "features": [
+        "Load images from your device or directly from a URL",
+        "Precise width and height control with aspect-ratio lock toggle",
+        "Live preview of the resized image before download",
+        "High-quality resampling with minimal visible artifacts",
+        "Fully client-side processing with no server upload"
+      ],
+      "howItWorks": [
+        "The input image (from device or URL) is drawn onto a hidden Canvas element in the browser, and its dimensions are updated according to the new width and height values.",
+        "After re-rendering, the Canvas is converted to a new image file using toBlob, and the download is triggered with a filename that includes the new dimensions (for example, resized-800x600.jpg).",
+        "When using a URL, the browser fetches the image and converts it into a temporary File/Blob object locally; no data is sent to or stored on any server."
+      ],
+      "technicalNote": {
+        "title": "Canvas rendering & output format",
+        "content": "The tool enables imageSmoothingEnabled and sets imageSmoothingQuality to \"high\" when drawing onto the Canvas to keep edges smooth at the new size. The output MIME type and file extension are derived from the actual image type (MIMEType) and mapped to a known extension so the resulting file is correctly recognized as an image by the OS and other tools."
+      },
+      "privacyNote": "All operations (image loading, Canvas rendering and file generation) run entirely inside your browser. Whether you pick an image from your device or provide a URL, no files are ever uploaded, logged or stored on any server, and all data is discarded when you close or refresh the page."
+    },
+    {
+      "id": "image-to-svg",
+      "title": "Image to SVG vector converter",
+      "category": "image",
+      "description": "Convert bitmap images (JPG, PNG, WebP, etc.) into editable vector SVG output, ideal for logos, icons and scalable graphics.",
+      "features": [
+        "Support for common image formats like JPG, PNG and WebP",
+        "Side-by-side preview of the original image and SVG output",
+        "Fully client-side conversion with no file upload",
+        "Direct SVG download for editing in tools like Figma or Illustrator"
+      ],
+      "howItWorks": [
+        "The input image is drawn onto a hidden Canvas element in the browser and raw pixel data (ImageData) is extracted.",
+        "The ImageTracerJS library analyzes the pixel data, clusters colors and edges, and converts it into vector paths (SVG paths) as a single SVG string.",
+        "The generated SVG string is rendered as a live preview on the page and can be downloaded as an .svg file."
+      ],
+      "technicalNote": {
+        "title": "Technical details & limitations",
+        "content": "Vectorization runs entirely in the browser using the Canvas API together with the ImageTracerJS raster-to-vector algorithm. For very large or high-resolution images, CPU and memory usage can be significant and the conversion may take several seconds or temporarily freeze the browser. For best performance and cleaner results, downscale or compress your image beforehand and use source images with good contrast and clear shapes."
+      },
+      "privacyNote": "No images are uploaded or stored on any server; all processing (canvas rendering and SVG generation) happens locally in your browser."
+    },
     {
       "id": "pdf-merge",
       "title": "Merge PDF files",
@@ -423,7 +565,7 @@
       ],
       "technicalNote": {
         "title": "pdf-lib library",
-        "content": "Merging works by manipulating the internal PDF structure, without re‑rendering pages."
+        "content": "Merging works by manipulating the internal PDF structure, without re-rendering pages."
       }
     },
     {
@@ -438,12 +580,11 @@
       ],
       "privacyNote": "Unlike many services, your Word file is never uploaded; the conversion runs entirely in the browser."
     },
-
     {
       "id": "password-generator",
       "title": "Secure password generator",
       "category": "security",
-      "description": "Generate strong, hard‑to‑guess passwords using system entropy sources.",
+      "description": "Generate strong, hard-to-guess passwords using system entropy sources.",
       "features": [
         "No repeating, predictable patterns",
         "Support for special characters",
@@ -460,12 +601,11 @@
       "category": "security",
       "description": "Create digital fingerprints (hashes) for text and files using standard algorithms.",
       "features": [
-        "Support for SHA‑256, SHA‑512 and MD5",
+        "Support for SHA-256, SHA-512 and MD5",
         "File integrity verification",
         "High performance"
       ]
     },
-
     {
       "id": "ip-checker",
       "title": "IP & location checker",
@@ -479,24 +619,23 @@
     },
     {
       "id": "user-agent",
-      "title": "User‑Agent analyzer",
+      "title": "User-Agent analyzer",
       "category": "system",
-      "description": "Extract browser, OS and device information from the User‑Agent string.",
+      "description": "Extract browser, OS and device information from the User-Agent string.",
       "features": [
         "Detect exact browser version",
         "Detect device type (mobile/desktop)",
         "Inspect rendering engine"
       ]
     },
-
     {
       "id": "qr-generator",
       "title": "QR code generator",
       "category": "utility",
-      "description": "Create QR codes for links, text, email or Wi‑Fi with customization options.",
+      "description": "Create QR codes for links, text, email or Wi-Fi with customization options.",
       "features": [
         "Custom foreground and background colors",
-        "Configurable error‑correction level",
+        "Configurable error-correction level",
         "Download as PNG or SVG"
       ]
     },
@@ -518,7 +657,7 @@
       "description": "Convert between Jalali (Shamsi), Gregorian and Hijri dates.",
       "features": [
         "Accurate Jalali calendar",
-        "Leap‑year calculation",
+        "Leap-year calculation",
         "Display of local holidays/events (where available)"
       ]
     },
@@ -533,7 +672,6 @@
         "Keyword density analysis"
       ]
     },
-
     {
       "id": "audio-editor",
       "title": "Audio editor (beta)",
@@ -542,12 +680,12 @@
       "features": [
         "Trim any custom range of audio",
         "Preview playback of the selected range",
-        "Apply fade‑in / fade‑out at the start and end of the clip",
+        "Apply fade-in / fade-out at the start and end of the clip",
         "Export as a WAV file"
       ],
       "howItWorks": [
         "The audio file is decoded into an AudioBuffer using the Web Audio API, and the selected range is cut out based on start and end times.",
-        "Fade‑in and fade‑out effects are applied directly to the raw audio data, and the final output is encoded as WAV in the browser."
+        "Fade-in and fade-out effects are applied directly to the raw audio data, and the final output is encoded as WAV in the browser."
       ],
       "privacyNote": "All audio processing is done locally with the Web Audio API, and no files are uploaded or stored on any server."
     },
@@ -558,24 +696,75 @@
       "description": "Convert structured HTML slides into fully editable PowerPoint (PPTX) files in the browser using an HTML parser and PptxGenJS.",
       "features": [
         "Live HTML preview next to the export button",
-        "Multi‑slide support using the .slide CSS class",
+        "Multi-slide support using the .slide CSS class",
         "Automatic detection of headings, paragraphs, lists and simple tables",
         "Preserves core styles such as fonts, colors, backgrounds and basic text layout",
         "Editable PPTX output compatible with PowerPoint and Google Slides",
-        "Client‑side only conversion (no file is sent to any server)"
+        "Client-side only conversion (no file is sent to any server)"
       ],
       "howItWorks": [
         "The user pastes slide HTML into the editor or uploads a .html file.",
         "An HTML parser scans each section with the .slide class, building an internal slide model with headings (h1..h3), paragraphs, list items and simple tables.",
         "Basic styles for each element (text color, font size, alignment, background color and logical slide type such as title-slide or content-slide) are mapped to the corresponding PptxGenJS text and table options.",
         "Using PptxGenJS, the tool creates slides with text boxes, bullet lists and tables positioned within a fixed template; if there is not enough space, long text is automatically split across multiple slides.",
-        "Finally, a standards‑compliant .pptx file is generated in the browser for the user to download."
+        "Finally, a standards-compliant .pptx file is generated in the browser for the user to download."
       ],
       "technicalNote": {
         "title": "Technical details & limitations",
-        "content": "The converter is built on top of PptxGenJS: HTML is first transformed into an intermediate slide model (title, body text, lists, tables) and then rendered programmatically as PowerPoint slides. Complex CSS layouts (heavy multi‑column flex/grid, deeply nested positioning, animations and advanced visual effects) are not faithfully reproduced; only essential style information such as font size, colors, alignment and simple backgrounds is carried over. For best results, design each slide as a simple container (e.g. section.slide) with straightforward layout and regular HTML tables."
+        "content": "The converter is built on top of PptxGenJS: HTML is first transformed into an intermediate slide model (title, body text, lists, tables) and then rendered programmatically as PowerPoint slides. Complex CSS layouts (heavy multi-column flex/grid, deeply nested positioning, animations and advanced visual effects) are not faithfully reproduced; only essential style information such as font size, colors, alignment and simple backgrounds is carried over. For best results, design each slide as a simple container (e.g. section.slide) with straightforward layout and regular HTML tables."
       },
       "privacyNote": "All processing happens locally in your browser. Your HTML and files are never uploaded, logged or stored on any server."
+    },
+    {
+      "id": "audio-extractor",
+      "title": "Extract audio from video",
+      "category": "audio",
+      "description": "Separate audio from video files and download it in various audio formats (MP3, WAV, OGG, M4A) entirely in the browser, with no upload required.",
+      "features": [
+        "Support for common video formats (MP4, AVI, MOV, MKV, WEBM)",
+        "Output in four audio formats: MP3, WAV, OGG and M4A",
+        "Three quality levels (low, medium, high)",
+        "Real-time progress display as a percentage",
+        "Display of video duration and file size",
+        "Fully client-side conversion using FFmpeg.wasm",
+        "No file size limit (up to your device's hardware capacity)"
+      ],
+      "howItWorks": [
+        "The video file is loaded and processed in the browser by FFmpeg.wasm (a WebAssembly build of FFmpeg).",
+        "The video file is transferred to FFmpeg's temporary memory and the audio extraction command is executed with specified parameters (format and quality).",
+        "FFmpeg separates the audio track from the video and encodes it with the appropriate codec (libmp3lame for MP3, pcm_s16le for WAV, libvorbis for OGG, aac for M4A).",
+        "Throughout the process, FFmpeg continuously reports the progress percentage, which is shown in a progress bar.",
+        "Once complete, the final audio file is created in browser memory and is ready for download."
+      ],
+      "technicalNote": {
+        "title": "Technical details & limitations",
+        "content": "This tool uses FFmpeg.wasm, which is a full WebAssembly port of FFmpeg. The initial FFmpeg load (around 30MB) may take a few seconds. Processing large or long videos (over 100MB or 30 minutes) can put significant strain on your device's CPU and RAM, and the browser may slow down or temporarily freeze for several minutes. For best performance, use shorter or medium-quality videos. If you encounter errors or prolonged freezing, refresh the page and try with a smaller file. It's also recommended to close other heavy applications during processing."
+      },
+      "privacyNote": "All audio extraction operations are performed entirely locally in your browser using FFmpeg.wasm. No video or audio files are uploaded, sent or stored on any server, and all data remains only in your browser's temporary memory and is completely cleared after you close or refresh the page."
+    },
+    {
+      "id": "image-editor",
+      "title": "Image editor",
+      "category": "image",
+      "description": "Fast in‑browser image editing with crop, rotate, flip, basic filters and adjustments, no software installation required.",
+      "features": [
+        "Load images from your device or directly from a URL",
+        "Basic tools such as crop, rotate, flip and resize",
+        "Adjust brightness, contrast, saturation and apply simple filters",
+        "Live preview of all edits before downloading",
+        "Download the final result as a standard JPG or PNG file",
+        "Fully client‑side Canvas processing with no file upload"
+      ],
+      "howItWorks": [
+        "The input image (from device or URL) is drawn onto an HTML Canvas element in the browser, and all edits (crop, rotation, filters, etc.) are applied directly to the pixel data.",
+        "Once editing is complete, the Canvas content is converted to a new image file using toBlob and downloaded with a suitable filename and extension (for example, edited-image.jpg or edited-image.png).",
+        "When using a URL, the browser fetches the image and converts it into a local Blob/File object; no image data is sent to or stored on any server."
+      ],
+      "technicalNote": {
+        "title": "Technical details & limitations",
+        "content": "All effects and transformations are applied to the Canvas pixel buffer; repeated heavy operations on very large images can consume significant CPU and memory and may temporarily slow down the browser. For best performance, downscale or compress large images before heavy editing and choose an appropriate output format (e.g. JPG for photos, PNG for graphics with transparency)."
+      },
+      "privacyNote": "No images are uploaded or stored on any server. All processing steps (loading, editing on Canvas and exporting) run entirely in your browser’s memory and are discarded as soon as you close or refresh the page."
     }
   ]
 }

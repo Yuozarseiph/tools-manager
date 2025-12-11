@@ -12,13 +12,13 @@ type ThemeOption = {
   id: ThemeName;
   icon: typeof Sun;
   labelFallback: string;
-  labelKey: string; // برای t(...)
+  labelKey: string;
 };
 
 export default function ThemeSwitcher() {
   const { changeTheme, themeName } = useTheme();
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -28,14 +28,14 @@ export default function ThemeSwitcher() {
       id: "royal-blue-light",
       icon: Sun,
       labelFallback: "روشن",
-      labelKey: "theme.light"
+      labelKey: "theme.light",
     },
     {
       id: "royal-blue-dark",
       icon: Moon,
       labelFallback: "تاریک",
-      labelKey: "theme.dark"
-    }
+      labelKey: "theme.dark",
+    },
   ];
 
   useEffect(() => {
@@ -48,24 +48,25 @@ export default function ThemeSwitcher() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const switchTitle =
-    t("theme.switchTitle") ?? "تغییر حالت روشن / تاریک";
+  const switchTitle = t("theme.switchTitle") ?? "تغییر حالت روشن / تاریک";
+
+  // برای تعیین جهت منو (RTL / LTR)
+  const isRTL = locale === "fa";
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* دکمه اصلی – معلق و هماهنگ با تم */}
+      {/* دکمه اصلی */}
       <button
         onClick={() => setIsOpen((v) => !v)}
         className={`
           rounded-full p-2 flex items-center justify-center
           border ${theme.border} ${theme.card}
           shadow-md shadow-black/10
-          transition-transform transition-opacity
-          hover:opacity-90 active:scale-95
+          duration-300 transition-all
+          hover:scale-105 active:scale-95
         `}
         aria-haspopup="menu"
         aria-expanded={isOpen}
@@ -87,10 +88,9 @@ export default function ThemeSwitcher() {
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             className={`
-              absolute top-full mt-2 right-0
-              min-w-[150px]
-              rounded-xl border ${theme.border} ${theme.card}
-              shadow-xl shadow-black/20
+              absolute top-full mt-2
+              ${isRTL ? "left-0 origin-top-left" : "right-0 origin-top-right"}
+              min-w-[170px]
               p-1.5 z-50 flex flex-col gap-1
             `}
             role="menu"
@@ -98,8 +98,7 @@ export default function ThemeSwitcher() {
             {options.map((opt) => {
               const Icon = opt.icon;
               const active = themeName === opt.id;
-              const label =
-                t(opt.labelKey) ?? opt.labelFallback;
+              const label = t(opt.labelKey) ?? opt.labelFallback;
 
               return (
                 <button
@@ -112,6 +111,7 @@ export default function ThemeSwitcher() {
                   className={`
                     w-full flex items-center gap-3 p-2
                     rounded-lg text-sm font-medium
+                    backdrop-blur-sm shadow-md shadow-black/10
                     border ${theme.border}
                     transition-colors
                     ${
@@ -124,9 +124,7 @@ export default function ThemeSwitcher() {
                   <Icon
                     size={16}
                     className={
-                      active
-                        ? theme.accent
-                        : theme.textMuted
+                      active ? theme.accent : theme.textMuted
                     }
                   />
                   <span className={theme.text}>{label}</span>

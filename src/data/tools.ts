@@ -45,7 +45,24 @@ export interface Tool {
 }
 
 export const TOOLS: Tool[] = [
-  // --- PDF ---
+  // --- Most Used / Daily Tools ---
+
+  {
+    id: "image-compressor",
+    Icon: Minimize2,
+    href: "/tools/image-compressor",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.image-compressor.badge",
+  },
+  {
+    id: "image-to-pdf",
+    Icon: ImageIcon,
+    href: "/tools/image-to-pdf",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.image-to-pdf.badge",
+  },
   {
     id: "pdf-merge",
     Icon: FileStack,
@@ -53,6 +70,14 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "pdf",
     badgeKey: "tools.items.pdf-merge.badge",
+  },
+  {
+    id: "word-to-pdf",
+    Icon: FileType,
+    href: "/tools/word-to-pdf",
+    status: "active",
+    category: "pdf",
+    badgeKey: "tools.items.word-to-pdf.badge",
   },
   {
     id: "text-to-pdf",
@@ -63,40 +88,41 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.text-to-pdf.badge",
   },
   {
-    id: "word-to-pdf",
-    Icon: FileType,
-    href: "/tools/word-to-pdf",
+    id: "qr-gen",
+    Icon: QrCode,
+    href: "/tools/qr-generator",
     status: "active",
-    category: "pdf",
-    badgeKey: "tools.items.word-to-pdf.badge",
+    category: "utility",
+    badgeKey: "tools.items.qr-gen.badge",
   },
-  // --- PowerPoint ---
   {
-    id: "html-to-pptx",
-    Icon: Presentation,
-    href: "/tools/html-to-pptx",
+    id:"audio-extractor",
+    Icon: AudioLines,
+    href:"/tools/audio-extractor",
+    status:"active",
+    category:"audio",
+    badgeKey:"tools.items.audio-extractor.badge",
+  },
+  {
+    id: "image-editor",
+    Icon: Sparkles,
+    href: "/tools/image-editor",
     status: "active",
-    category: "powerpoint",
-    badgeKey: "tools.items.html-to-pptx.badge",
+    category: "image",
+    badgeKey: "tools.items.image-editor.badge",
+  }
+  ,
+  {
+    id: "word-counter",
+    Icon: TextCursorInput,
+    href: "/tools/word-counter",
+    status: "active",
+    category: "utility",
+    badgeKey: "tools.items.word-counter.badge",
   },
 
-  // --- Image ---
-  {
-    id: "image-to-pdf",
-    Icon: ImageIcon,
-    href: "/tools/image-to-pdf",
-    status: "active",
-    category: "image",
-    badgeKey: "tools.items.image-to-pdf.badge",
-  },
-  {
-    id: "image-compressor",
-    Icon: Minimize2,
-    href: "/tools/image-compressor",
-    status: "active",
-    category: "image",
-    badgeKey: "tools.items.image-compressor.badge",
-  },
+  // --- Visual / Media Tools ---
+
   {
     id: "image-resizer",
     Icon: Scaling,
@@ -114,6 +140,14 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.image-converter.badge",
   },
   {
+    id: "image-to-svg",
+    Icon: ImageIcon,
+    href: "/tools/image-to-svg",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.image-to-svg.badge",
+  },
+  {
     id: "color-picker",
     Icon: Pipette,
     href: "/tools/color-picker",
@@ -121,23 +155,59 @@ export const TOOLS: Tool[] = [
     category: "image",
     badgeKey: "tools.items.color-picker.badge",
   },
+
+  // --- Office / Document / Data ---
+
   {
-    id: "background-remover",
-    Icon: Sparkles,
-    href: "/tools/background-remover",
-    status: "coming-soon",
-    category: "image",
-    badgeKey: "tools.items.background-remover.badge",
+    id: "excel-viewer",
+    Icon: FileSpreadsheet,
+    href: "/tools/excel-viewer",
+    status: "active",
+    category: "excel",
+    badgeKey: "tools.items.excel-viewer.badge",
+  },
+  {
+    id: "excel-editor",
+    Icon: Edit3,
+    href: "/tools/excel-editor",
+    status: "active",
+    category: "excel",
+    badgeKey: "tools.items.excel-editor.badge",
+  },
+  {
+    id: "excel-chart",
+    Icon: PieChart,
+    href: "/tools/excel-chart",
+    status: "active",
+    category: "excel",
+    badgeKey: "tools.items.excel-chart.badge",
+  },
+  {
+    id: "html-to-pptx",
+    Icon: Presentation,
+    href: "/tools/html-to-pptx",
+    status: "active",
+    category: "powerpoint",
+    badgeKey: "tools.items.html-to-pptx.badge",
   },
 
-  // --- System ---
+  // --- Utility / System ---
+
   {
-    id: "user-agent",
-    Icon: MonitorSmartphone,
-    href: "/tools/user-agent",
+    id: "unit-converter",
+    Icon: Scale,
+    href: "/tools/unit-converter",
     status: "active",
-    category: "system",
-    badgeKey: "tools.items.user-agent.badge",
+    category: "utility",
+    badgeKey: "tools.items.unit-converter.badge",
+  },
+  {
+    id: "date-converter",
+    Icon: CalendarDays,
+    href: "/tools/date-converter",
+    status: "active",
+    category: "utility",
+    badgeKey: "tools.items.date-converter.badge",
   },
   {
     id: "ip-checker",
@@ -147,8 +217,36 @@ export const TOOLS: Tool[] = [
     category: "system",
     badgeKey: "tools.items.ip-checker.badge",
   },
+  {
+    id: "user-agent",
+    Icon: MonitorSmartphone,
+    href: "/tools/user-agent",
+    status: "active",
+    category: "system",
+    badgeKey: "tools.items.user-agent.badge",
+  },
 
-  // --- Developer ---
+  // --- Security ---
+
+  {
+    id: "password-generator",
+    Icon: KeyRound,
+    href: "/tools/password-generator",
+    status: "active",
+    category: "security",
+    badgeKey: "tools.items.password-generator.badge",
+  },
+  {
+    id: "hash-generator",
+    Icon: ShieldCheck,
+    href: "/tools/hash-generator",
+    status: "active",
+    category: "security",
+    badgeKey: "tools.items.hash-generator.badge",
+  },
+
+  // --- Developer Tools (Specialized users) ---
+
   {
     id: "json-formatter",
     Icon: Braces,
@@ -182,85 +280,8 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.code-visualizer.badge",
   },
 
-  // --- Excel ---
-  {
-    id: "excel-viewer",
-    Icon: FileSpreadsheet,
-    href: "/tools/excel-viewer",
-    status: "active",
-    category: "excel",
-    badgeKey: "tools.items.excel-viewer.badge",
-  },
-  {
-    id: "excel-editor",
-    Icon: Edit3,
-    href: "/tools/excel-editor",
-    status: "active",
-    category: "excel",
-    badgeKey: "tools.items.excel-editor.badge",
-  },
-  {
-    id: "excel-chart",
-    Icon: PieChart,
-    href: "/tools/excel-chart",
-    status: "active",
-    category: "excel",
-    badgeKey: "tools.items.excel-chart.badge",
-  },
+  // --- Audio (Niche) ---
 
-  // --- Security ---
-  {
-    id: "password-generator",
-    Icon: KeyRound,
-    href: "/tools/password-generator",
-    status: "active",
-    category: "security",
-    badgeKey: "tools.items.password-generator.badge",
-  },
-  {
-    id: "hash-generator",
-    Icon: ShieldCheck,
-    href: "/tools/hash-generator",
-    status: "active",
-    category: "security",
-    badgeKey: "tools.items.hash-generator.badge",
-  },
-
-  // --- General Tools ---
-  {
-    id: "date-converter",
-    Icon: CalendarDays,
-    href: "/tools/date-converter",
-    status: "active",
-    category: "utility",
-    badgeKey: "tools.items.date-converter.badge",
-  },
-  {
-    id: "word-counter",
-    Icon: TextCursorInput,
-    href: "/tools/word-counter",
-    status: "active",
-    category: "utility",
-    badgeKey: "tools.items.word-counter.badge",
-  },
-  {
-    id: "unit-converter",
-    Icon: Scale,
-    href: "/tools/unit-converter",
-    status: "active",
-    category: "utility",
-    badgeKey: "tools.items.unit-converter.badge",
-  },
-  {
-    id: "qr-gen",
-    Icon: QrCode,
-    href: "/tools/qr-generator",
-    status: "active",
-    category: "utility",
-    badgeKey: "tools.items.qr-gen.badge",
-  },
-
-  // --- Audio ---
   {
     id: "audio-editor",
     Icon: AudioLines,

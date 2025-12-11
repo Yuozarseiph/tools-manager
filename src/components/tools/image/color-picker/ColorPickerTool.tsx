@@ -40,6 +40,10 @@ export default function ColorPickerTool() {
   const [magnifierPos, setMagnifierPos] = useState({ x: 0, y: 0 });
   const [showMagnifier, setShowMagnifier] = useState(false);
 
+  // URL state
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +63,8 @@ export default function ColorPickerTool() {
           setImageLoaded(false);
           setPickedColors([]);
           setPalette([]);
+          setHoverColor("#ffffff");
+          setImageUrlInput("");
         }
       },
       [image]
@@ -78,10 +84,10 @@ export default function ColorPickerTool() {
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
-      ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(
-          result[3],
+      ? `rgb(${parseInt(result[1], 16)}, ${parseInt(
+          result[2],
           16
-        )})`
+        )}, ${parseInt(result[3], 16)})`
       : hex;
   };
 
@@ -115,9 +121,9 @@ export default function ColorPickerTool() {
       }
     }
 
-    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(
-      l * 100
-    )}%)`;
+    return `hsl(${Math.round(h * 360)}, ${Math.round(
+      s * 100
+    )}%, ${Math.round(l * 100)}%)`;
   };
 
   const formatColor = (hex: string) => {
@@ -267,6 +273,7 @@ export default function ColorPickerTool() {
     setPickedColors([]);
     setPalette([]);
     setHoverColor("#ffffff");
+    setImageUrlInput("");
   };
 
   useEffect(() => {
@@ -276,6 +283,43 @@ export default function ColorPickerTool() {
       }
     };
   }, [image]);
+
+  // لود تصویر از URL (دانلود با اینترنت خود کاربر، پردازش فقط در مرورگر)
+  const handleAddFromUrl = async () => {
+    const url = imageUrlInput.trim();
+    if (!url) return;
+
+    setIsAddingFromUrl(true);
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const blob = await res.blob();
+      if (!blob.type.startsWith("image/")) {
+        throw new Error("Not an image");
+      }
+
+      if (image) {
+        URL.revokeObjectURL(image);
+      }
+
+      const objectUrl = URL.createObjectURL(blob);
+      setImage(objectUrl);
+      setImageLoaded(false);
+      setPickedColors([]);
+      setPalette([]);
+      setHoverColor("#ffffff");
+      setImageUrlInput("");
+    } catch (e) {
+      console.error("Error loading image from URL:", e);
+      // اگر خواستی، می‌تونی این رو ببری تو i18n (مثلاً ui.upload.urlError)
+      alert("خطا در دانلود تصویر از لینک. لطفاً آدرس را بررسی کن.");
+    } finally {
+      setIsAddingFromUrl(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -596,6 +640,32 @@ export default function ColorPickerTool() {
               </div>
             </motion.div>
           )}
+        </div>
+      </div>
+
+      {/* بخش لود از URL */}
+      <div className="space-y-2">
+        <p className={`text-xs ${theme.textMuted}`}>
+          {content.ui.upload.urlHint}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="url"
+            value={imageUrlInput}
+            onChange={(e) => setImageUrlInput(e.target.value)}
+            placeholder={content.ui.upload.urlPlaceholder}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          />
+          <button
+            type="button"
+            onClick={handleAddFromUrl}
+            disabled={isAddingFromUrl}
+            className="px-4 py-2 rounded-xl text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 disabled:opacity-60"
+          >
+            {isAddingFromUrl
+              ? content.ui.upload.urlLoading
+              : content.ui.upload.urlButton}
+          </button>
         </div>
       </div>
     </div>

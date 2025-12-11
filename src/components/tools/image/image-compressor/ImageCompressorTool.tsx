@@ -29,6 +29,10 @@ export default function ImageCompressorTool() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [quality, setQuality] = useState(0.8);
 
+  // URL state
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp"] },
     maxFiles: 1,
@@ -36,6 +40,7 @@ export default function ImageCompressorTool() {
       if (acceptedFiles.length > 0) {
         setFile(acceptedFiles[0]);
         setCompressedFile(null);
+        setImageUrlInput("");
       }
     },
   });
@@ -62,6 +67,43 @@ export default function ImageCompressorTool() {
   const handleDownload = () => {
     if (compressedFile && file) {
       download(compressedFile, `min-${file.name}`, compressedFile.type);
+    }
+  };
+
+  // لود تصویر از URL (دانلود با اینترنت خود کاربر، پردازش فقط در مرورگر)
+  const handleAddFromUrl = async () => {
+    const url = imageUrlInput.trim();
+    if (!url) return;
+
+    setIsAddingFromUrl(true);
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const blob = await res.blob();
+      if (!blob.type.startsWith("image/")) {
+        throw new Error("Not an image");
+      }
+
+      const urlParts = url.split("/");
+      const lastPart = urlParts[urlParts.length - 1] || "image-from-url";
+      const cleanName = lastPart.split("?")[0] || "image-from-url";
+
+      const fetchedFile = new File([blob], cleanName, {
+        type: blob.type || "image/*",
+      });
+
+      setFile(fetchedFile);
+      setCompressedFile(null);
+      setImageUrlInput("");
+    } catch (err) {
+      // اگر خواستی جداش کنی، می‌تونی ui.alerts.urlError هم تعریف کنی
+      alert(content.ui.alerts.error);
+      console.error(err);
+    } finally {
+      setIsAddingFromUrl(false);
     }
   };
 
@@ -97,6 +139,11 @@ export default function ImageCompressorTool() {
             <p className={`text-lg font-bold ${theme.text}`}>
               {content.ui.upload.dropTitle}
             </p>
+            {content.ui.upload.dropSubtitle && (
+              <p className={`text-sm ${theme.textMuted}`}>
+                {content.ui.upload.dropSubtitle}
+              </p>
+            )}
           </div>
         </div>
       ) : (
@@ -190,6 +237,32 @@ export default function ImageCompressorTool() {
           </div>
         </motion.div>
       )}
+
+      {/* لود از URL */}
+      <div className="mt-6 space-y-2">
+        <p className={`text-xs ${theme.textMuted}`}>
+          {content.ui.upload.urlHint}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="url"
+            value={imageUrlInput}
+            onChange={(e) => setImageUrlInput(e.target.value)}
+            placeholder={content.ui.upload.urlPlaceholder}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          />
+          <button
+            type="button"
+            onClick={handleAddFromUrl}
+            disabled={isAddingFromUrl}
+            className="px-4 py-2 rounded-xl text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 disabled:opacity-60"
+          >
+            {isAddingFromUrl
+              ? content.ui.upload.urlLoading
+              : content.ui.upload.urlButton}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

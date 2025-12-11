@@ -1,5 +1,112 @@
 [
   {
+    "version": "2.7.0 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added URL loading support to image tools such as Image Resizer, Image Compressor and Image to PDF, with fully client‑side processing and no file uploads to any server",
+          "Introduced a new \"Image editor\" tool with core features like crop, rotate, flip, brightness/contrast adjustment and simple filters applied directly in the browser",
+          "Defined centralized bilingual metadata for the Image Editor tool, including title, description, canonical URL and JSON‑LD structured data for better SEO",
+          "Added a dedicated Image Editor section to the Docs page with technical details, usage examples and clear privacy notes"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Refined output filename conventions across image tools using clearer patterns such as \"edited-{timestamp}.{ext}\" and \"resized-{width}x{height}.{ext}\" based on the actual MIME type of the image",
+          "Standardized privacy messages across all image tools (Resize, Compress, Image to PDF, Image to SVG and Image Editor) to consistently highlight 100% client‑side processing",
+          "Optimized memory usage and Blob/File lifecycle management in image tools to avoid memory leaks when repeatedly changing images or keeping tools open for long sessions",
+          "Improved error and helper messages when loading images from URLs, including clearer feedback for CORS issues, invalid links and non‑image responses"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed incorrect output extension detection in the Image Resizer when working with URL‑based images that have no file extension or long query strings",
+          "Resolved an issue where the previous preview image could remain visible in the Resizer and Compressor after clearing the file and selecting a new one",
+          "Fixed minor inconsistencies in note/alert (info / warning / error) styles in the Docs page when toggling between light and dark themes",
+          "Addressed several rare crashes in image tools when handling extremely large images by adding better Canvas error handling and guard conditions"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "2.6.0 BETA",
+    "date": "Dec 10, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added new \"Extract audio from video\" tool with support for MP4, AVI, MOV, MKV and WEBM input formats and output in four formats: MP3, WAV, OGG and M4A",
+          "Three quality level options (low, medium, high) with corresponding bitrate display for each output format",
+          "Real‑time percentage progress bar during audio extraction with helpful guidance messages to prevent user confusion",
+          "Full client‑side processing using FFmpeg.wasm with no file upload to any server",
+          "Automatic display of video duration and file size after upload",
+          "Important warning before extraction about potential processing time for large videos and temporary browser slowdown",
+          "In‑progress notification reminding users to be patient and not close the browser window",
+          "Complete bilingual metadata for the audio extractor tool including title, description, canonical URL and JSON‑LD",
+          "Dedicated section for the audio extractor in the Docs page with full technical details and privacy notes"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Enhanced \"Image resizer\" tool with live image preview, current dimensions display alongside original dimensions and a reset‑to‑original button",
+          "Added pixel unit (px) labels to width and height inputs in the image resizer for better clarity",
+          "Improved aspect‑ratio lock status display with an informative blue note explaining that changing one dimension auto‑adjusts the other",
+          "Fully extracted all UI strings for the image resizer into bilingual JSON files and removed all hard‑coded text from the main component",
+          "Better memory management in the image resizer by using FileReader and readAsDataURL instead of URL.createObjectURL for preview rendering",
+          "Added smooth animations with Framer Motion when switching between upload and edit modes in the image resizer",
+          "Improved output image quality by setting imageSmoothingQuality to 'high' and quality to 0.95 in the resizer",
+          "Changed output filename format to 'resized-{width}x{height}.{ext}' for better transparency"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed 'ffmpeg.wasm does not support nodejs' error by dynamically importing FFmpeg only on the client side and preventing execution during SSR",
+          "Resolved image preview not displaying in the resizer by switching from URL.createObjectURL to FileReader for loading",
+          "Fixed missing warnings and guidance messages in the audio extractor due to outdated translation JSON files",
+          "Removed redundant isClient state that prevented the component from rendering on first load and replaced it with a simple typeof window check"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "2.5.5 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added the new \"Image to SVG vector\" tool under the Image category, performing fully client‑side raster‑to‑vector conversion (Canvas + ImageTracerJS) with side‑by‑side preview of the original image and SVG output plus direct SVG download for editing in vector tools [web:242]",
+          "Introduced dedicated bilingual metadata and JSON‑based config for the new Image to SVG tool, including title, description, canonical URL, JSON‑LD structured data and a dedicated section in the Docs page"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Extended the theme system with dedicated design tokens for notes and alerts (info / warning / error) and updated Docs and tools to use these tokens instead of hard‑coded Tailwind color classes for better light/dark consistency",
+          "Added theme configuration for scrollbar colors and divider gradients and applied it to the Docs layout so scrollbars and separators follow the active theme instead of fixed colors",
+          "Moved all UI strings for the Image to SVG tool (including the large‑image performance warning and usage notes) into JSON translation files and wired them to the LanguageContext/i18n system for full bilingual support",
+          "Updated the Docs section component to render technical and privacy notes using theme‑driven note styles instead of yellow/green hard‑coded backgrounds in light and dark modes"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed a TypeScript build error related to the imagetracerjs library by adding a custom .d.ts declaration file, preventing implicit any for the Image to SVG conversion module [web:242]",
+          "Removed remaining hard‑coded strings and colors from Docs and image‑related tools and aligned them with the centralized theming and translation infrastructure"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.5.0 BETA",
     "date": "—",
     "type": "update",

@@ -12,8 +12,13 @@
     ],
     "ui": {
       "upload": {
-        "selectText": "انتخاب تصاویر برای تبدیل به PDF",
-        "dropHint": "می‌توانید چندین تصویر با فرمت‌های مختلف انتخاب کنید."
+        "selectText": "تصاویر را انتخاب کن",
+        "dropHint": "می‌توانی چند تصویر را هم‌زمان انتخاب کنی تا در یک فایل PDF ترکیب شوند.",
+        "urlPlaceholder": "آدرس تصویر (URL) را وارد کن",
+        "urlButton": "افزودن از لینک",
+        "urlLoading": "در حال دانلود تصویر از لینک…",
+        "urlHint": "تصاویر با اینترنت خودتان دانلود می‌شوند و فقط داخل مرورگر شما به PDF تبدیل می‌شوند؛ هیچ فایلی به سرور ما ارسال نمی‌شود.",
+        "urlError": "دانلود تصویر از این لینک ممکن نیست. لطفاً از یک آدرس معتبر استفاده کن."
       },
       "list": {
         "title": "تصاویر انتخاب‌شده",
@@ -51,8 +56,13 @@
     ],
     "ui": {
       "upload": {
-        "selectText": "Select images to convert to PDF",
-        "dropHint": "You can choose multiple images in different formats."
+        "selectText": "Select images",
+        "dropHint": "You can select multiple images to combine them into a single PDF file.",
+        "urlPlaceholder": "Enter image URL",
+        "urlButton": "Add from URL",
+        "urlLoading": "Downloading image from URL…",
+        "urlHint": "Images are downloaded over your own internet connection and converted to PDF only in your browser; no files are uploaded to our servers.",
+        "urlError": "Could not download image from this URL. Please use a valid image link."
       },
       "list": {
         "title": "Selected images",

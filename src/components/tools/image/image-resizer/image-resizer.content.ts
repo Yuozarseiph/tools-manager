@@ -2,7 +2,6 @@
 
 import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
-
 import rawContent from "./image-resizer.i18n.json";
 
 type DocCategoryKey = "image";
@@ -26,29 +25,45 @@ export interface ImageResizerToolContent extends BaseDocsFields {
   ui: {
     upload: {
       dropTitle: string;
+      dropSubtitle: string;
+      urlPlaceholder: string;
+      urlButton: string;
+      urlLoading: string;
+      urlHint: string;
+      urlError: string;
+    };
+    alerts: {
+      error: string;
     };
     fileInfo: {
       originalDims: string;
+      currentDims: string;
     };
     inputs: {
       widthLabel: string;
       heightLabel: string;
+      widthPlaceholder: string;
+      heightPlaceholder: string;
     };
     buttons: {
-      lockTitle: string;
-      resizeAndDownload: string;
       clear: string;
+      lockTitle: string;
+      unlockTitle: string;
+      resizeAndDownload: string;
+      resetDims: string;
     };
-    page: {
-      title: string;
-      description: string;
+    info: {
+      aspectRatioLocked: string;
+      aspectRatioUnlocked: string;
     };
+  };
+  page: {
+    title: string;
+    description: string;
   };
 }
 
-// ساختار فایل i18n: { fa: ImageResizerToolContent; en: ImageResizerToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, ImageResizerToolContent>;
+const CONTENT_BY_LOCALE = rawContent as Record<Locale, ImageResizerToolContent>;
 
 export function useImageResizerContent(): ImageResizerToolContent {
   const { locale } = useLanguage();

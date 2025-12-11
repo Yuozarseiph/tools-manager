@@ -18,32 +18,55 @@ import {
   type UserAgentToolContent,
 } from "./user-agent.content";
 
+interface ParsedInfo {
+  browser: { name?: string; version?: string };
+  os: { name?: string; version?: string };
+  device: { model?: string; vendor?: string; type?: string };
+  cpu: { architecture?: string };
+  engine: { name?: string; version?: string };
+}
+
 export default function UserAgentTool() {
   const theme = useThemeColors();
   const content: UserAgentToolContent = useUserAgentContent();
 
-  const [info, setInfo] = useState<any>(null);
+  const [info, setInfo] = useState<ParsedInfo | null>(null);
   const [uaString, setUaString] = useState("");
   const [copied, setCopied] = useState(false);
+  const [detailedInfo, setDetailedInfo] = useState<any>(null);
 
   useEffect(() => {
     const parser = new UAParser();
     const result = parser.getResult();
     setInfo(result);
+    
     if (typeof navigator !== "undefined") {
       setUaString(navigator.userAgent);
 
+      // استفاده از User-Agent Client Hints API برای اطلاعات دقیق‌تر
       const uaData = (navigator as any).userAgentData;
+      
       if (uaData && uaData.getHighEntropyValues) {
         uaData
-          .getHighEntropyValues(["platformVersion"])
+          .getHighEntropyValues([
+            "platform",
+            "platformVersion",
+            "architecture",
+            "model",
+            "uaFullVersion",
+            "fullVersionList",
+            "bitness",
+          ])
           .then((ua: any) => {
-            if (uaData.platform === "Windows") {
+            setDetailedInfo(ua);
+            
+            // تشخیص دقیق‌تر ویندوز 11
+            if (ua.platform === "Windows") {
               const majorPlatformVersion = parseInt(
-                ua.platformVersion.split(".")[0]
+                ua.platformVersion?.split(".")[0] || "0"
               );
               if (majorPlatformVersion >= 13) {
-                setInfo((prev: any) =>
+                setInfo((prev) =>
                   prev
                     ? {
                         ...prev,
@@ -55,10 +78,104 @@ export default function UserAgentTool() {
                       }
                     : prev
                 );
+              } else if (majorPlatformVersion > 0) {
+                setInfo((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        os: {
+                          ...prev.os,
+                          name: "Windows",
+                          version: "10",
+                        },
+                      }
+                    : prev
+                );
               }
             }
+
+            // تشخیص دقیق‌تر مدل دستگاه
+            if (ua.model) {
+              setInfo((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      device: {
+                        ...prev.device,
+                        model: ua.model,
+                      },
+                    }
+                  : prev
+              );
+            }
+
+            // تشخیص دقیق‌تر معماری پردازنده
+            if (ua.architecture || ua.bitness) {
+              setInfo((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      cpu: {
+                        ...prev.cpu,
+                        architecture: ua.architecture || `${ua.bitness}-bit` || prev.cpu.architecture,
+                      },
+                    }
+                  : prev
+              );
+            }
+
+            // ورژن دقیق مرورگر
+            if (ua.uaFullVersion) {
+              setInfo((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      browser: {
+                        ...prev.browser,
+                        version: ua.uaFullVersion,
+                      },
+                    }
+                  : prev
+              );
+            }
           })
-          .catch(() => {});
+          .catch(() => {
+            // fallback به روش قدیمی
+          });
+      }
+
+      // تشخیص اندروید از user agent
+      const androidMatch = navigator.userAgent.match(/Android\s+([\d.]+)/i);
+      if (androidMatch) {
+        setInfo((prev) =>
+          prev
+            ? {
+                ...prev,
+                os: {
+                  ...prev.os,
+                  name: "Android",
+                  version: androidMatch[1],
+                },
+              }
+            : prev
+        );
+      }
+
+      // تشخیص iOS
+      const iosMatch = navigator.userAgent.match(/OS\s+([\d_]+)/i);
+      if (iosMatch && navigator.userAgent.includes("iPhone")) {
+        setInfo((prev) =>
+          prev
+            ? {
+                ...prev,
+                os: {
+                  ...prev.os,
+                  name: "iOS",
+                  version: iosMatch[1].replace(/_/g, "."),
+                },
+              }
+            : prev
+        );
       }
     }
   }, []);
@@ -81,6 +198,11 @@ export default function UserAgentTool() {
   const screenHeight = typeof window !== "undefined" ? window.screen.height : 0;
   const colorDepth =
     typeof window !== "undefined" ? window.screen.colorDepth : 0;
+
+  // اطلاعات بهتر از پردازنده
+  const cpuInfo = detailedInfo?.architecture 
+    ? `${detailedInfo.architecture}${detailedInfo.bitness ? ` (${detailedInfo.bitness}-bit)` : ''}`
+    : info.cpu.architecture || content.ui.cards.cpu.fallback;
 
   return (
     <div className="grid gap-8">
@@ -118,7 +240,7 @@ export default function UserAgentTool() {
           icon={Chrome}
           title={content.ui.cards.browser.title}
           value={`${info.browser.name || "Unknown"} ${
-            info.browser.version || ""
+            info.browser.version?.split(".")[0] || ""
           }`}
           sub={
             info.engine.name
@@ -136,7 +258,9 @@ export default function UserAgentTool() {
           title={content.ui.cards.os.title}
           value={`${info.os.name || "Unknown"} ${info.os.version || ""}`}
           sub={
-            info.cpu.architecture
+            detailedInfo?.platform
+              ? `${content.ui.cards.os.archPrefix} ${detailedInfo.platform}`
+              : info.cpu.architecture
               ? `${content.ui.cards.os.archPrefix} ${info.cpu.architecture}`
               : ""
           }
@@ -147,7 +271,11 @@ export default function UserAgentTool() {
         <InfoCard
           icon={Smartphone}
           title={content.ui.cards.device.title}
-          value={info.device.model || content.ui.cards.device.fallback}
+          value={
+            detailedInfo?.model ||
+            info.device.model ||
+            content.ui.cards.device.fallback
+          }
           sub={`${info.device.vendor || ""} ${
             info.device.type || content.ui.cards.device.desktopLabel
           }`}
@@ -158,7 +286,7 @@ export default function UserAgentTool() {
         <InfoCard
           icon={Cpu}
           title={content.ui.cards.cpu.title}
-          value={info.cpu.architecture || content.ui.cards.cpu.fallback}
+          value={cpuInfo}
           sub={cores ? `${cores} ${content.ui.cards.cpu.coresSuffix}` : ""}
           theme={theme}
           color="text-green-500"
@@ -207,7 +335,10 @@ export default function UserAgentTool() {
           />
           <DetailItem
             label={content.ui.details.platform}
-            value={typeof navigator !== "undefined" ? navigator.platform : "?"}
+            value={
+              detailedInfo?.platform ||
+              (typeof navigator !== "undefined" ? navigator.platform : "?")
+            }
             theme={theme}
           />
         </div>

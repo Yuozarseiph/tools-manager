@@ -10,3 +10,28 @@ html,
 body {
   scroll-behavior: smooth;
 }
+html {
+  scrollbar-width: thin; /* نازک */
+  scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+}
+
+/* WebKit: Chrome / Edge / Safari */
+html::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent; /* با پس‌زمینه‌ی شیشه‌ای سایت قاطی می‌شه */
+}
+
+html::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7); /* slate-400 تقریبی */
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8); /* آبی برجسته‌تر روی hover */
+}

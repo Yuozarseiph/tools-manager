@@ -17,6 +17,10 @@ export default function ImageToPdfConverter() {
   const [converting, setConverting] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
+  // URL state
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -89,11 +93,47 @@ export default function ImageToPdfConverter() {
     link.click();
   };
 
+  // لود تصویر از URL (دانلود با اینترنت خود کاربر، فقط در مرورگر به PDF تبدیل می‌شود)
+  const handleAddFromUrl = async () => {
+    const url = imageUrlInput.trim();
+    if (!url) return;
+
+    setIsAddingFromUrl(true);
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const blob = await res.blob();
+      if (!blob.type.startsWith("image/")) {
+        throw new Error("Not an image");
+      }
+
+      const urlParts = url.split("/");
+      const lastPart = urlParts[urlParts.length - 1] || "image-from-url";
+      const cleanName = lastPart.split("?")[0] || "image-from-url";
+
+      const fetchedFile = new File([blob], cleanName, {
+        type: blob.type || "image/*",
+      }); // [web:316][web:327]
+
+      setSelectedImages((prev) => [...prev, fetchedFile]);
+      setPdfUrl(null);
+      setImageUrlInput("");
+    } catch (err) {
+      console.error(err);
+      alert(content.ui.upload.urlError);
+    } finally {
+      setIsAddingFromUrl(false);
+    }
+  };
+
   return (
     <div
       className={`w-full max-w-2xl mx-auto p-6 space-y-6 rounded-xl transition-colors duration-300 ${colors.card}`}
     >
-      {/* بخش آپلود */}
+      {/* بخش آپلود از دیوایس */}
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-300 cursor-pointer ${colors.border} hover:border-opacity-70`}
       >
@@ -117,6 +157,32 @@ export default function ImageToPdfConverter() {
             {content.ui.upload.dropHint}
           </p>
         </label>
+      </div>
+
+      {/* بخش لود از URL */}
+      <div className="space-y-2">
+        <p className={`text-xs ${colors.textMuted}`}>
+          {content.ui.upload.urlHint}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="url"
+            value={imageUrlInput}
+            onChange={(e) => setImageUrlInput(e.target.value)}
+            placeholder={content.ui.upload.urlPlaceholder}
+            className={`flex-1 px-3 py-2 rounded-lg text-xs border ${colors.border} ${colors.card} ${colors.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          />
+          <button
+            type="button"
+            onClick={handleAddFromUrl}
+            disabled={isAddingFromUrl}
+            className="px-4 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 disabled:opacity-60"
+          >
+            {isAddingFromUrl
+              ? content.ui.upload.urlLoading
+              : content.ui.upload.urlButton}
+          </button>
+        </div>
       </div>
 
       {/* لیست تصاویر انتخاب شده */}
@@ -152,7 +218,8 @@ export default function ImageToPdfConverter() {
                     {image.name}
                   </p>
                   <p className={`text-xs ${colors.textMuted}`}>
-                    {(image.size / 1024).toFixed(2)} {content.ui.list.sizeUnit}
+                    {(image.size / 1024).toFixed(2)}{" "}
+                    {content.ui.list.sizeUnit}
                   </p>
                 </div>
                 <button

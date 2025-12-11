@@ -29,6 +29,10 @@ export interface ImageConverterToolContent extends BaseDocsFields {
       dropSubtitle: string;
       addMore: string;
       counterSuffix: string;
+      urlPlaceholder: string;
+      urlButton: string;
+      urlLoading: string;
+      urlHint: string;
     };
     gallery: {
       sizeUnit: string;

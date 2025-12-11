@@ -1,7 +1,7 @@
 {
   "fa": {
     "id": "image-resizer",
-    "category": "developer",
+    "category": "image",
     "title": "تغییر اندازه آنلاین تصویر",
     "description": "ابعاد تصاویر خود را به‌صورت دقیق تنظیم کنید و نسخهٔ جدید را دانلود کنید.",
     "features": [
@@ -12,29 +12,47 @@
     ],
     "ui": {
       "upload": {
-        "dropTitle": "تصویر خود را اینجا رها کنید یا کلیک کنید"
+        "dropTitle": "یک تصویر اینجا رها کن یا کلیک کن تا انتخاب کنی",
+        "dropSubtitle": "فرمت‌های رایج مانند JPG، PNG، WebP و GIF پشتیبانی می‌شوند.",
+        "urlPlaceholder": "آدرس تصویر (URL) را وارد کن",
+        "urlButton": "افزودن از لینک",
+        "urlLoading": "در حال دانلود تصویر از لینک…",
+        "urlHint": "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما ریسایز و دانلود می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود.",
+        "urlError": "دانلود تصویر از این لینک ممکن نیست. لطفاً از یک آدرس معتبر استفاده کن."
+      },
+      "alerts": {
+        "error": "در هنگام تغییر اندازه تصویر خطایی رخ داد. لطفاً دوباره تلاش کنید."
       },
       "fileInfo": {
-        "originalDims": "ابعاد اصلی:"
+        "originalDims": "اندازه اصلی:",
+        "currentDims": "اندازه جدید:"
       },
       "inputs": {
-        "widthLabel": "عرض (پیکسل)",
-        "heightLabel": "ارتفاع (پیکسل)"
+        "widthLabel": "عرض",
+        "heightLabel": "ارتفاع",
+        "widthPlaceholder": "عرض به پیکسل",
+        "heightPlaceholder": "ارتفاع به پیکسل"
       },
       "buttons": {
-        "lockTitle": "قفل یا آزاد کردن نسبت تصویر",
+        "clear": "حذف تصویر",
+        "lockTitle": "قفل نسبت تصویر فعال",
+        "unlockTitle": "قفل نسبت تصویر غیرفعال",
         "resizeAndDownload": "تغییر اندازه و دانلود",
-        "clear": "حذف تصویر"
+        "resetDims": "بازگشت به اندازه اصلی"
       },
-      "page": {
-        "title": "تغییر اندازه تصویر",
-        "description": "به‌راحتی ابعاد تصویر را در مرورگر خود تغییر دهید و نسخهٔ جدید را ذخیره کنید."
+      "info": {
+        "aspectRatioLocked": "نسبت تصویر قفل شده - تغییر یک بعد، بعد دیگر را تنظیم می‌کند",
+        "aspectRatioUnlocked": "نسبت تصویر آزاد - می‌توانید ابعاد را جداگانه تغییر دهید"
       }
+    },
+    "page": {
+      "title": "ابزار تغییر اندازه تصویر",
+      "description": "به‌راحتی ابعاد تصویر را در مرورگر خود تغییر دهید و نسخهٔ جدید را ذخیره کنید."
     }
   },
   "en": {
     "id": "image-resizer",
-    "category": "developer",
+    "category": "image",
     "title": "Online image resizer",
     "description": "Resize your images to exact dimensions and download the new version.",
     "features": [
@@ -45,24 +63,42 @@
     ],
     "ui": {
       "upload": {
-        "dropTitle": "Drop an image here or click to upload"
+        "dropTitle": "Drop an image here or click to upload",
+        "dropSubtitle": "Common formats like JPG, PNG, WebP and GIF are supported.",
+        "urlPlaceholder": "Enter image URL",
+        "urlButton": "Add from URL",
+        "urlLoading": "Downloading image from URL…",
+        "urlHint": "The image is downloaded over your own internet connection and resized only in your browser; no files are uploaded to our servers.",
+        "urlError": "Could not download image from this URL. Please use a valid image link."
+      },
+      "alerts": {
+        "error": "An error occurred while resizing the image. Please try again."
       },
       "fileInfo": {
-        "originalDims": "Original dimensions:"
+        "originalDims": "Original size:",
+        "currentDims": "New size:"
       },
       "inputs": {
-        "widthLabel": "Width (px)",
-        "heightLabel": "Height (px)"
+        "widthLabel": "Width",
+        "heightLabel": "Height",
+        "widthPlaceholder": "Width in pixels",
+        "heightPlaceholder": "Height in pixels"
       },
       "buttons": {
-        "lockTitle": "Lock or unlock aspect ratio",
-        "resizeAndDownload": "Resize & download",
-        "clear": "Remove image"
+        "clear": "Remove image",
+        "lockTitle": "Aspect ratio locked",
+        "unlockTitle": "Aspect ratio unlocked",
+        "resizeAndDownload": "Resize & Download",
+        "resetDims": "Reset to original"
       },
-      "page": {
-        "title": "Image resizer",
-        "description": "Change image dimensions directly in your browser and save the resized file."
+      "info": {
+        "aspectRatioLocked": "Aspect ratio locked - changing one dimension adjusts the other",
+        "aspectRatioUnlocked": "Aspect ratio unlocked - you can change dimensions independently"
       }
+    },
+    "page": {
+      "title": "Image resizer tool",
+      "description": "Change image dimensions directly in your browser and save the resized file."
     }
   }
 }

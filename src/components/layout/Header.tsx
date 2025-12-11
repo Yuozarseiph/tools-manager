@@ -10,8 +10,9 @@ import {
   Mail,
   FileQuestionMark,
   LogsIcon,
+  Home,
   Menu,
-  X
+  X,
 } from "lucide-react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -21,7 +22,7 @@ const navItems = [
   { href: "/docs", icon: Book, key: "nav.docs" },
   { href: "/contact", icon: Mail, key: "nav.contact" },
   { href: "/about", icon: FileQuestionMark, key: "nav.about" },
-  { href: "/changelog", icon: LogsIcon, key: "nav.changelog" }
+  { href: "/changelog", icon: LogsIcon, key: "nav.changelog" },
 ];
 
 export default function Header() {
@@ -29,86 +30,137 @@ export default function Header() {
   const pathname = usePathname();
   const { t, locale, setLocale } = useLanguage();
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileVisible, setMobileVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleLocale = () => setLocale(locale === "fa" ? "en" : "fa");
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const navLinkClass = (path: string) =>
-    `text-sm font-bold  trans rounded-full border ${theme.border} bg-transparent backdrop-blur-md px-4 py-2 transition-all duration-250 flex items-center gap-1.5 ${
-      pathname === path
-        ? "text-blue-600 dark:text-blue-400"
-        : theme.textMuted
-    } hover:text-blue-500 hover:scale-105`;
+    `
+      text-sm font-semibold
+      inline-flex items-center gap-1.5
+      px-3.5 py-2
+      rounded-full
+      border ${theme.border} ${theme.card}
+      backdrop-blur-xl
+      shadow-md shadow-black/15
+      transition-all duration-200
+      ${
+        pathname === path ? "text-blue-600 dark:text-blue-400" : theme.textMuted
+      }
+      hover:scale-105 active:scale-95
+    `;
 
-  const toggleLocale = () =>
-    setLocale(locale === "fa" ? "en" : "fa");
+  // دکمه‌های دایره‌ای پایین (Docs و FAB منو)
+  const bottomCircleBase = `
+    pointer-events-auto
+    w-12 h-12
+    rounded-full
+    border ${theme.border} ${theme.card}
+    backdrop-blur-xl
+    shadow-lg shadow-black/30
+    flex items-center justify-center
+    transition-all duration-200
+    active:scale-95
+  `;
 
-  const openMobile = () => {
-    setMobileVisible(true);
-    requestAnimationFrame(() => setMobileOpen(true));
-  };
+  const docsCircleClass = `
+    ${bottomCircleBase}
+    ${
+      pathname === "/docs"
+        ? "text-blue-500"
+        : "text-slate-300 dark:text-slate-200"
+    }
+  `;
 
-  const closeMobile = () => {
-    setMobileOpen(false);
-    setTimeout(() => setMobileVisible(false), 220);
-  };
+  const menuFabClass = `
+    ${bottomCircleBase}
+    ${theme.text}
+  `;
+
+  // آیتم‌های داخل منو (فقط آیکن)
+  const menuItems = [
+    { id: "home", icon: Home, href: "/", external: false },
+    { id: "contact", icon: Mail, href: "/contact", external: false },
+    { id: "about", icon: FileQuestionMark, href: "/about", external: false },
+    { id: "changelog", icon: LogsIcon, href: "/changelog", external: false },
+    {
+      id: "donate",
+      icon: Heart,
+      href: "https://reymit.ir/yuozarseiph",
+      external: true,
+    },
+  ] as const;
 
   return (
     <>
-      <header className="sticky top-0 z-100">
+      {/* هدر بالای صفحه – شیشه‌ای */}
+      <header className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4 sm:gap-6">
-            <Link
-              href="/"
+          <Link
+            href="/"
+            className={`
+              flex items-center gap-2 select-none
+              rounded-full`}
+          >
+            <div
               className={`
-                flex items-center gap-2 select-none
-                rounded-full border ${theme.border} bg-transparent backdrop-blur-md
-                px-2.5 py-1.5
+                w-8 h-8 sm:w-9 sm:h-9 rounded-full
+                flex items-center justify-center
+                ${theme.primary}
               `}
             >
-              <div
-                className={`
-                  w-8 h-8 sm:w-9 sm:h-9 rounded-xl
-                  flex items-center justify-center
-                  ${theme.primary}
-                `}
-              >
-                <Wand2 size={18} className="text-white" />
-              </div>
-              <span
-                className={`hidden xs:inline text-sm sm:text-base font-black ${theme.text}`}
-              >
-                Tools<span className={theme.accent}>Manager</span>
-              </span>
-            </Link>
+              <Wand2 size={18} className="text-white" />
+            </div>
+            <span
+              className={`
+                hidden xs:inline text-sm sm:text-base font-black
+                ${theme.text}
+              `}
+            >
+              Tools<span className={theme.accent}>Manager</span>
+            </span>
+          </Link>
 
-            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
-              {navItems.map(({ href, icon: Icon, key }) => (
-                <Link key={href} href={href} className={navLinkClass(href)}>
-                  <Icon size={16} />
-                  {t(key)}
-                </Link>
-              ))}
-            </nav>
-          </div>
+          {/* منوی بالایی (دسکتاپ) */}
+          <nav className="hidden md:flex items-center gap-3 lg:gap-4">
+            {navItems.map(({ href, icon: Icon, key }) => (
+              <Link key={href} href={href} className={navLinkClass(href)}>
+                <Icon size={16} />
+                {t(key)}
+              </Link>
+            ))}
+          </nav>
 
+          {/* اکشن‌های سمت راست – شیشه‌ای */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={toggleLocale}
               className={`
-                px-2.5 py-1.5 rounded-full text-xs font-bold
-                border ${theme.border} bg-transparent backdrop-blur-md ${theme.text}
+                w-9 h-9 sm:w-10 sm:h-10
+                rounded-full text-xs font-bold
+                border ${theme.border} ${theme.card}
+                ${theme.text}
+                flex items-center justify-center
+                backdrop-blur-xl
+                shadow-md shadow-black/15
                 hover:opacity-90 transition-opacity
               `}
-              title={
-                locale === "fa"
-                  ? "Switch to English"
-                  : "تغییر به فارسی"
-              }
+              title={locale === "fa" ? "Switch to English" : "تغییر به فارسی"}
             >
               {locale === "fa" ? "EN" : "فا"}
             </button>
 
-            <div className="inline-flex items-center justify-center">
+            <div
+              className={`
+                inline-flex items-center justify-center
+                w-9 h-9 sm:w-10 sm:h-10
+                rounded-full
+                border ${theme.border} ${theme.card}
+                backdrop-blur-xl
+                shadow-md shadow-black/15
+              `}
+            >
               <ThemeSwitcher />
             </div>
 
@@ -118,145 +170,130 @@ export default function Header() {
               rel="noopener noreferrer"
               className={`
                 hidden sm:inline-flex items-center gap-1.5
-                rounded-full border ${theme.border}
-                backdrop-blur-md
-                px-3 py-1.5 text-xs font-semibold hover:opacity-90 transition-opacity
+                rounded-full border ${theme.border} ${theme.card}
+                backdrop-blur-xl
+                px-3 py-2 text-sm font-semibold
+                shadow-md shadow-black/15
+                hover:scale-105 active:scale-95
+                transition-all duration-200
               `}
               title="حمایت مالی"
             >
-              <Heart
-                size={16}
-                className="text-red-500 fill-red-500"
-              />
-              <span className={theme.textMuted}>
-                {t("nav.donate")}
-              </span>
+              <Heart size={16} className="text-red-500 fill-red-500" />
+              <span className={theme.textMuted}>{t("nav.donate")}</span>
             </a>
-
-            <a
-              href="https://reymit.ir/yuozarseiph"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`
-                sm:hidden inline-flex items-center justify-center
-                w-9 h-9 rounded-full border ${theme.border}
-                bg-transparent backdrop-blur-md
-              `}
-              title="حمایت مالی"
-            >
-              <Heart
-                size={18}
-                className="text-red-500 fill-red-500"
-              />
-            </a>
-
-            <button
-              className={`
-                md:hidden w-9 h-9 flex items-center justify-center
-                rounded-full border ${theme.border} bg-transparent backdrop-blur-md
-                
-                ${theme.textMuted} hover:opacity-80 transition-opacity
-              `}
-              onClick={() =>
-                mobileOpen ? closeMobile() : openMobile()
-              }
-              aria-label="Toggle navigation"
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
           </div>
         </div>
       </header>
 
-      {mobileVisible && (
+      {/* نوار پایین – فقط موبایل: Docs + FAB منو (آیکن-only) */}
+      <nav
+        className="
+          md:hidden
+          fixed bottom-4 left-0 right-0 z-[60]
+          pointer-events-none
+        "
+      >
         <div
-          className={`
-            fixed inset-0 z-50 md:hidden flex items-center justify-center
-            bg-black/40 backdrop-blur-xl
-            transition-opacity duration-200
-            ${mobileOpen ? "opacity-100" : "opacity-0"}
-          `}
-          onClick={closeMobile}
+          className="relative max-w-md mx-auto flex items-center justify-between px-6"
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
-          <div
-            className={`
-              w-full max-w-xs mx-auto px-4
-              transition-transform duration-200
-              ${mobileOpen ? "translate-y-0 scale-100" : "translate-y-3 scale-95"}
-            `}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col gap-3 items-stretch">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <button
-                  onClick={toggleLocale}
-                  className={`
-                    px-4 py-2 rounded-full text-xs font-bold
-                    border ${theme.border} ${theme.card} ${theme.text}
-                    shadow-md shadow-black/10 backdrop-blur-md
-                    hover:opacity-90 transition-opacity
-                  `}
-                >
-                  {locale === "fa"
-                    ? "Switch to English"
-                    : "تغییر به فارسی"}
-                </button>
-                <div
-                  className={`
-                    px-3 py-2 z-100 rounded-full border ${theme.border} ${theme.card}
-                    shadow-md shadow-black/10 backdrop-blur-md
-                  `}
-                >
-                  <ThemeSwitcher />
-                </div>
-              </div>
+          {/* Docs سمت چپ/راست (بسته به RTL) فقط آیکن */}
+          <Link href="/docs" className={docsCircleClass}>
+            <Book size={20} />
+          </Link>
 
-              {navItems.map(({ href, icon: Icon, key }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`
-                    flex items-center justify-between
-                    rounded-2xl px-4 py-3
-                    border ${theme.border} ${theme.card}
-                    shadow-xl shadow-black/20 backdrop-blur-md
-                    text-sm font-medium ${theme.text}
-                    active:scale-[0.97] transition-all
-                  `}
-                  onClick={closeMobile}
-                >
-                  <span className="flex items-center gap-2">
-                    <Icon size={18} className={theme.textMuted} />
-                    {t(key)}
-                  </span>
-                  {pathname === href && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  )}
-                </Link>
-              ))}
+          {/* FAB منو */}
+          <div className="relative pointer-events-auto">
+            {/* دکمه اصلی */}
+            <button
+              type="button"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+              className={menuFabClass}
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  window.open("https://reymit.ir/yuozarseiph", "_blank");
-                  closeMobile();
-                }}
-                className={`
-                  mt-1 flex items-center justify-center gap-2
-                  rounded-2xl px-4 py-3
-                  text-sm font-semibold
-                  ${theme.primary}
-                  shadow-xl shadow-blue-500/30
-                  active:scale-[0.97] transition-transform
-                `}
-              >
-                <Heart size={18} className="fill-white" />
-                {t("nav.donate")}
-              </button>
+            {/* FABهای بازشده – فقط آیکن، بدون متن، شناور روی محتوا */}
+            <div
+              className={`
+                absolute bottom-14 right-1
+                flex flex-col items-center gap-2
+                transition-all duration-200
+                ${
+                  menuOpen
+                    ? "opacity-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 translate-y-2 pointer-events-none"
+                }
+              `}
+            >
+              {menuItems.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = !item.external && pathname === item.href;
+
+                const itemClass = `
+                  w-11 h-11
+                  rounded-full
+                  border ${theme.border} ${theme.card}
+                  backdrop-blur-xl
+                  shadow-lg shadow-black/30
+                  flex items-center justify-center
+                  text-xs
+                  ${
+                    item.id === "donate"
+                      ? "text-red-400"
+                      : isActive
+                      ? "text-blue-500"
+                      : "text-slate-300 dark:text-slate-200"
+                  }
+                  active:scale-95
+                  transition-transform duration-200
+                `;
+
+                const style = {
+                  transitionDelay: menuOpen ? `${index * 40}ms` : "0ms",
+                };
+
+                if (item.external) {
+                  return (
+                    <a
+                      key={item.id}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMenuOpen(false)}
+                      className={itemClass}
+                      style={style}
+                    >
+                      <Icon
+                        size={18}
+                        className={
+                          item.id === "donate"
+                            ? "text-red-400 fill-red-500/70"
+                            : ""
+                        }
+                      />
+                    </a>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={itemClass}
+                    style={style}
+                  >
+                    <Icon size={18} />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
-      )}
+      </nav>
     </>
   );
 }

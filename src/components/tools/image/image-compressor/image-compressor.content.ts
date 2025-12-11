@@ -26,11 +26,16 @@ export interface ImageCompressorToolContent extends BaseDocsFields {
   ui: {
     upload: {
       dropTitle: string;
+      dropSubtitle: string;
+      urlPlaceholder: string;
+      urlButton: string;
+      urlLoading: string;
+      urlHint: string;
     };
     fileInfo: {
       original: string;
       compressed: string;
-      reductionSuffix: string;
+      reductionSuffix: string; // مثلاً "% کاهش"
     };
     settings: {
       title: string;
@@ -47,8 +52,10 @@ export interface ImageCompressorToolContent extends BaseDocsFields {
 }
 
 // شکل فایل i18n: { fa: ImageCompressorToolContent; en: ImageCompressorToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, ImageCompressorToolContent>;
+const CONTENT_BY_LOCALE = rawContent as Record<
+  Locale,
+  ImageCompressorToolContent
+>;
 
 export function useImageCompressorContent(): ImageCompressorToolContent {
   const { locale } = useLanguage();

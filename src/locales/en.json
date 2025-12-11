@@ -180,16 +180,30 @@
         "description": "Turn your links and text into colorful, downloadable QR codes.",
         "badge": "Free"
       },
-
       "audio-editor": {
         "title": "Audio editor (beta)",
         "description": "Cut, play and edit audio files locally in your browser with no uploads.",
         "badge": "Audio"
+      },
+      "audio-extractor": {
+        "title": "Extract audio from video",
+        "description": "Separate audio from video files and download it in various audio formats (MP3, WAV, OGG, M4A) entirely in the browser, with no upload required.",
+        "badge": "Audio"
+      },
+      "image-to-svg": {
+        "title": "Image to SVG converter",
+        "description": "Convert bitmap images (JPG/PNG/WebP) into editable vector SVG output.",
+        "badge": "Image"
+      },
+      "image-editor": {
+        "title": "Image editor",
+        "description": "Crop, rotate and flip images directly in your browser with no uploads.",
+        "badge": "Image"
       }
     }
   },
   "footer": {
-    "text": "Made with ❤️ in Iran. © 2025 - All rights reserved.",
+    "text": "Made with ❤️ in Heart. © 2025 - All rights reserved.",
     "links": {
       "docs": "Docs",
       "contact": "Contact",
@@ -357,7 +371,7 @@
       "system": "System & network",
       "utility": "Utility tools",
       "audio": "Audio tools",
-      "presentation" : "Presentation"
+      "presentation": "Presentation"
     },
     "section": {
       "featuresTitle": "Key features",

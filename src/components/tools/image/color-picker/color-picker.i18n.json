@@ -13,26 +13,30 @@
     ],
     "ui": {
       "format": {
-        "label": "قالب نمایش رنگ"
+        "label": "فرمت نمایش رنگ"
       },
       "upload": {
-        "dropTitle": "تصویر خود را اینجا رها کنید یا کلیک کنید",
-        "dropSubtitle": "فرمت‌های رایج تصویر مانند JPG، PNG و WebP پشتیبانی می‌شوند.",
-        "loading": "در حال بارگذاری تصویر و آماده‌سازی برای انتخاب رنگ..."
+        "dropTitle": "یک تصویر اینجا رها کن یا کلیک کن تا انتخاب کنی",
+        "dropSubtitle": "فرمت‌های متداول مانند JPG، PNG و WebP پشتیبانی می‌شوند.",
+        "loading": "در حال بارگذاری تصویر و آماده‌سازی برای انتخاب رنگ...",
+        "urlPlaceholder": "آدرس تصویر (URL) را وارد کن",
+        "urlButton": "افزودن از لینک",
+        "urlLoading": "در حال دانلود تصویر از لینک…",
+        "urlHint": "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما پردازش می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود."
       },
       "currentColor": {
-        "title": "رنگ فعلی زیر نشانگر",
+        "title": "رنگ زیر نشانگر",
         "copy": "کپی رنگ",
         "copied": "کپی شد!"
       },
       "palette": {
         "title": "پالت رنگ خودکار",
-        "generateComplementaryTitle": "تولید ترکیب‌های مکمل و مشابه",
+        "generateComplementaryTitle": "تولید رنگ‌های مکمل و مرتبط",
         "downloadCssTitle": "دانلود پالت به صورت CSS"
       },
       "history": {
-        "title": "تاریخچهٔ رنگ‌های انتخاب‌شده",
-        "clearAll": "حذف همهٔ رنگ‌ها"
+        "title": "تاریخچه رنگ‌های انتخاب‌شده",
+        "clearAll": "حذف تمام رنگ‌ها"
       }
     }
   },
@@ -55,7 +59,11 @@
       "upload": {
         "dropTitle": "Drop an image here or click to upload",
         "dropSubtitle": "Common image formats such as JPG, PNG and WebP are supported.",
-        "loading": "Loading image and preparing it for color picking..."
+        "loading": "Loading image and preparing it for color picking...",
+        "urlPlaceholder": "Enter image URL",
+        "urlButton": "Add from URL",
+        "urlLoading": "Downloading image from URL…",
+        "urlHint": "The image is downloaded over your own internet connection and processed only in your browser; no files are uploaded to our servers."
       },
       "currentColor": {
         "title": "Current color under cursor",
@@ -64,7 +72,7 @@
       },
       "palette": {
         "title": "Automatic color palette",
-        "generateComplementaryTitle": "Generate complementary & related colors",
+        "generateComplementaryTitle": "Generate complementary related colors",
         "downloadCssTitle": "Download palette as CSS"
       },
       "history": {

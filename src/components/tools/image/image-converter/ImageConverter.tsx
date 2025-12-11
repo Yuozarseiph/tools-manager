@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import { useDropzone } from "react-dropzone";
 import download from "downloadjs";
 import JSZip from "jszip";
@@ -25,6 +25,7 @@ import {
 
 interface FileWithPreview extends File {
   preview: string;
+  id: string;
 }
 
 export default function ImageConverter() {
@@ -35,6 +36,10 @@ export default function ImageConverter() {
   const [targetFormat, setTargetFormat] = useState<ImageFormat>("image/jpeg");
   const [quality, setQuality] = useState(90);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // برای لود از URL
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -55,6 +60,7 @@ export default function ImageConverter() {
       const filesWithPreview = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
+          id: `${file.name}-${Date.now()}-${Math.random()}`,
         })
       );
       setFiles((prev) => [...prev, ...filesWithPreview]);
@@ -95,9 +101,59 @@ export default function ImageConverter() {
     }
   };
 
-  const removeFile = (index: number) => {
-    URL.revokeObjectURL(files[index].preview);
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  const removeFile = (id: string) => {
+    const file = files.find((f) => f.id === id);
+    if (file) {
+      URL.revokeObjectURL(file.preview);
+    }
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  const clearAllFiles = () => {
+    files.forEach((file) => URL.revokeObjectURL(file.preview));
+    setFiles([]);
+  };
+
+  // افزودن تصویر از URL (با اینترنت کاربر دانلود می‌شود)
+  const handleAddFromUrl = async () => {
+    const url = imageUrlInput.trim();
+    if (!url) return;
+    if (files.length >= 20) return;
+
+    setIsAddingFromUrl(true);
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const blob = await res.blob();
+      if (!blob.type.startsWith("image/")) {
+        throw new Error("Not an image");
+      }
+
+      const urlParts = url.split("/");
+      const lastPart = urlParts[urlParts.length - 1] || "image-from-url";
+      const cleanName = lastPart.split("?")[0] || "image-from-url";
+
+      const file = new File([blob], cleanName, {
+        type: blob.type || "image/*",
+      });
+
+      const fileWithPreview: FileWithPreview = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+        id: `${cleanName}-${Date.now()}-${Math.random()}`,
+      });
+
+      setFiles((prev) => [...prev, fileWithPreview]);
+      setImageUrlInput("");
+    } catch (err) {
+      // می‌تونی برای این مورد یک پیام i18n جدا (errorUrl) بذاری
+      alert(content.ui.alerts.error);
+      console.error(err);
+    } finally {
+      setIsAddingFromUrl(false);
+    }
   };
 
   const formats = [
@@ -137,7 +193,7 @@ export default function ImageConverter() {
     <div
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
-      {/* آپلودر */}
+      {/* آپلودر (دیوایس / درگ‌درآپ) */}
       {files.length === 0 ? (
         <div
           {...getRootProps()}
@@ -170,13 +226,18 @@ export default function ImageConverter() {
         >
           {/* گالری پیش‌نمایش */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-2">
-            <AnimatePresence>
-              {files.map((file, idx) => (
+            <AnimatePresence mode="popLayout">
+              {files.map((file) => (
                 <motion.div
-                  key={idx}
+                  key={file.id}
+                  layout
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.8,
+                    transition: { duration: 0.2 },
+                  }}
                   className={`relative group rounded-xl overflow-hidden border-2 ${theme.border} ${theme.bg} shadow-md hover:shadow-lg transition-all`}
                 >
                   <div className="aspect-square relative bg-gray-100">
@@ -184,12 +245,14 @@ export default function ImageConverter() {
                       src={file.preview}
                       alt={file.name}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
 
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <button
-                        onClick={() => removeFile(idx)}
+                        onClick={() => removeFile(file.id)}
                         className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-full transition-transform hover:scale-110"
+                        type="button"
                       >
                         <Trash2 size={20} />
                       </button>
@@ -207,8 +270,9 @@ export default function ImageConverter() {
                   </div>
 
                   <button
-                    onClick={() => removeFile(idx)}
+                    onClick={() => removeFile(file.id)}
                     className="absolute top-2 left-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg md:hidden"
+                    type="button"
                   >
                     <X size={14} />
                   </button>
@@ -217,9 +281,10 @@ export default function ImageConverter() {
             </AnimatePresence>
           </div>
 
-          {/* دکمه افزودن بیشتر */}
+          {/* دکمه افزودن بیشتر (از دیوایس) */}
           <button
             {...getRootProps()}
+            type="button"
             className={`w-full py-3 rounded-xl border-2 border-dashed font-medium transition ${theme.border} ${theme.text} hover:border-blue-400`}
           >
             <input {...getInputProps()} />
@@ -240,6 +305,7 @@ export default function ImageConverter() {
               {formats.map((fmt) => (
                 <button
                   key={fmt.value}
+                  type="button"
                   onClick={() => setTargetFormat(fmt.value as ImageFormat)}
                   className={`p-3 rounded-xl text-sm font-medium transition-all border text-center
                     ${
@@ -288,6 +354,7 @@ export default function ImageConverter() {
             <button
               onClick={handleConvert}
               disabled={isProcessing}
+              type="button"
               className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] ${theme.primary} disabled:opacity-50`}
             >
               {isProcessing ? (
@@ -308,7 +375,8 @@ export default function ImageConverter() {
             </button>
 
             <button
-              onClick={() => setFiles([])}
+              onClick={clearAllFiles}
+              type="button"
               className={`w-full py-2 rounded-xl text-sm font-medium transition ${theme.textMuted} hover:text-red-500`}
             >
               <Trash2 size={16} className="inline ml-2" />
@@ -317,6 +385,34 @@ export default function ImageConverter() {
           </div>
         </motion.div>
       )}
+
+      {/* لود از URL (پایین کارت، همیشه در دسترس) */}
+      <div className="mt-6 space-y-2">
+        <p className={`text-xs ${theme.textMuted}`}>
+          {content.ui.upload.urlHint}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="url"
+            value={imageUrlInput}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setImageUrlInput(e.target.value)
+            }
+            placeholder={content.ui.upload.urlPlaceholder}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          />
+          <button
+            type="button"
+            onClick={handleAddFromUrl}
+            disabled={isAddingFromUrl}
+            className="px-4 py-2 rounded-xl text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 disabled:opacity-60"
+          >
+            {isAddingFromUrl
+              ? content.ui.upload.urlLoading
+              : content.ui.upload.urlButton}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

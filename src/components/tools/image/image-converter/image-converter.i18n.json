@@ -15,7 +15,11 @@
         "dropTitle": "تصاویر خود را اینجا رها کنید یا کلیک کنید",
         "dropSubtitle": "فرمت‌های رایج تصویر مانند JPG، PNG، WebP، AVIF و GIF پشتیبانی می‌شوند.",
         "addMore": "افزودن تصاویر بیشتر",
-        "counterSuffix": "تصویر"
+        "counterSuffix": "تصویر",
+        "urlPlaceholder": "آدرس تصویر (URL) را وارد کن",
+        "urlButton": "افزودن از لینک",
+        "urlLoading": "در حال دانلود تصویر از لینک…",
+        "urlHint": "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما پردازش می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود."
       },
       "gallery": {
         "sizeUnit": "KB"
@@ -66,7 +70,11 @@
         "dropTitle": "Drop your images here or click to upload",
         "dropSubtitle": "Common formats such as JPG, PNG, WebP, AVIF and GIF are supported.",
         "addMore": "Add more images",
-        "counterSuffix": "images"
+        "counterSuffix": "images",
+        "urlPlaceholder": "Enter image URL",
+        "urlButton": "Add from URL",
+        "urlLoading": "Downloading image from URL…",
+        "urlHint": "The image is downloaded over your own internet connection and processed only in your browser; no files are uploaded to our servers."
       },
       "gallery": {
         "sizeUnit": "KB"

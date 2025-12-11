@@ -31,6 +31,10 @@ export interface ColorPickerToolContent extends BaseDocsFields {
       dropTitle: string;
       dropSubtitle: string;
       loading: string;
+      urlPlaceholder: string;
+      urlButton: string;
+      urlLoading: string;
+      urlHint: string;
     };
     currentColor: {
       title: string;
@@ -48,6 +52,7 @@ export interface ColorPickerToolContent extends BaseDocsFields {
     };
   };
 }
+
 
 // شکل فایل i18n: { fa: ColorPickerToolContent; en: ColorPickerToolContent }
 const CONTENT_BY_LOCALE =

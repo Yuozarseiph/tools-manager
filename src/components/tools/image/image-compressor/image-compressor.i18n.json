@@ -12,7 +12,12 @@
     ],
     "ui": {
       "upload": {
-        "dropTitle": "تصویر خود را اینجا رها کنید یا کلیک کنید"
+        "dropTitle": "یک تصویر اینجا رها کن یا کلیک کن تا انتخاب کنی",
+        "dropSubtitle": "فرمت‌های JPG، PNG و WebP پشتیبانی می‌شوند.",
+        "urlPlaceholder": "آدرس تصویر (URL) را وارد کن",
+        "urlButton": "افزودن از لینک",
+        "urlLoading": "در حال دانلود تصویر از لینک…",
+        "urlHint": "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما فشرده می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود."
       },
       "fileInfo": {
         "original": "حجم اصلی:",
@@ -45,7 +50,12 @@
     ],
     "ui": {
       "upload": {
-        "dropTitle": "Drop an image here or click to upload"
+        "dropTitle": "Drop an image here or click to upload",
+        "dropSubtitle": "JPG, PNG and WebP formats are supported.",
+        "urlPlaceholder": "Enter image URL",
+        "urlButton": "Add from URL",
+        "urlLoading": "Downloading image from URL…",
+        "urlHint": "The image is downloaded over your own internet connection and compressed only in your browser; no files are uploaded to our servers."
       },
       "fileInfo": {
         "original": "Original size:",

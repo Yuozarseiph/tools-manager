@@ -27,6 +27,11 @@ export interface ImageToPdfToolContent extends BaseDocsFields {
     upload: {
       selectText: string;
       dropHint: string;
+      urlPlaceholder: string;
+      urlButton: string;
+      urlLoading: string;
+      urlHint: string;
+      urlError: string;
     };
     list: {
       title: string;
@@ -53,8 +58,7 @@ export interface ImageToPdfToolContent extends BaseDocsFields {
 }
 
 // ساختار فایل i18n: { fa: ImageToPdfToolContent; en: ImageToPdfToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, ImageToPdfToolContent>;
+const CONTENT_BY_LOCALE = rawContent as Record<Locale, ImageToPdfToolContent>;
 
 export function useImageToPdfContent(): ImageToPdfToolContent {
   const { locale } = useLanguage();

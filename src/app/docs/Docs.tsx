@@ -43,26 +43,19 @@ export default function DocsPage() {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
+          background: ${theme.scrollbar.track};
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${theme.text === "text-slate-900"
-            ? "rgba(100, 116, 139, 0.3)"
-            : "rgba(148, 163, 184, 0.3)"};
+          background: ${theme.scrollbar.thumb};
           border-radius: 10px;
           transition: background 0.2s;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${theme.text === "text-slate-900"
-            ? "rgba(59, 130, 246, 0.5)"
-            : "rgba(96, 165, 250, 0.5)"};
+          background: ${theme.scrollbar.thumbHover};
         }
         .custom-scrollbar {
           scrollbar-width: thin;
-          scrollbar-color: ${theme.text === "text-slate-900"
-              ? "rgba(100, 116, 139, 0.3)"
-              : "rgba(148, 163, 184, 0.3)"}
-            transparent;
+          scrollbar-color: ${theme.scrollbar.thumb} ${theme.scrollbar.track};
         }
       `}</style>
 

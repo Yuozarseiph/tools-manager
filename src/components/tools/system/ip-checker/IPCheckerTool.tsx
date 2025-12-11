@@ -29,7 +29,7 @@ interface IPInfo {
   latitude: number;
   longitude: number;
   timezone: string;
-  currency: string;
+  currency?: string;
 }
 
 export default function IPCheckerTool() {
@@ -44,12 +44,94 @@ export default function IPCheckerTool() {
   const fetchIP = async () => {
     setLoading(true);
     setError("");
+    
     try {
-      const res = await fetch("https://ipapi.co/json/");
-      if (!res.ok) throw new Error("IP fetch error");
-      const json = await res.json();
-      setData(json);
-    } catch {
+      // روش 1: ipapi.co (اگه کار کرد)
+      try {
+        const res = await fetch("https://ipapi.co/json/", {
+          signal: AbortSignal.timeout(5000),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ip) {
+            setData(json);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log("ipapi.co failed, trying fallback...");
+      }
+
+      // روش 2: ip-api.com (رایگان و بدون محدودیت کشوری)
+      try {
+        const res = await fetch("http://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone,isp,org,as,query", {
+          signal: AbortSignal.timeout(5000),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.status === "success") {
+            setData({
+              ip: json.query,
+              city: json.city || "Unknown",
+              region: json.regionName || json.region || "Unknown",
+              country_name: json.country || "Unknown",
+              country_code: json.countryCode || "XX",
+              org: json.org || json.isp || "Unknown",
+              asn: json.as || "Unknown",
+              latitude: json.lat || 0,
+              longitude: json.lon || 0,
+              timezone: json.timezone || "Unknown",
+            });
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log("ip-api.com failed, trying next fallback...");
+      }
+
+      // روش 3: ipify + ipwhois (برای کشورهای تحریم‌شده)
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json", {
+          signal: AbortSignal.timeout(5000),
+        });
+        if (ipRes.ok) {
+          const ipJson = await ipRes.json();
+          const ip = ipJson.ip;
+
+          // گرفتن اطلاعات تکمیلی از ipwhois
+          const infoRes = await fetch(`https://ipwhois.app/json/${ip}`, {
+            signal: AbortSignal.timeout(5000),
+          });
+          
+          if (infoRes.ok) {
+            const info = await infoRes.json();
+            setData({
+              ip: ip,
+              city: info.city || "Unknown",
+              region: info.region || "Unknown",
+              country_name: info.country || "Unknown",
+              country_code: info.country_code || "XX",
+              org: info.org || info.isp || "Unknown",
+              asn: info.asn || "Unknown",
+              latitude: parseFloat(info.latitude) || 0,
+              longitude: parseFloat(info.longitude) || 0,
+              timezone: info.timezone || "Unknown",
+              currency: info.currency,
+            });
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log("ipify/ipwhois failed");
+      }
+
+      // اگه همه fail شدن
+      throw new Error("All IP services failed");
+      
+    } catch (err) {
       setError(content.ui.main.error);
     } finally {
       setLoading(false);
@@ -164,8 +246,8 @@ export default function IPCheckerTool() {
           />
           <DetailCard
             title={content.ui.details.coordsTitle}
-            value={`${data.latitude}`}
-            sub={`${data.longitude}`}
+            value={`${data.latitude.toFixed(4)}`}
+            sub={`${data.longitude.toFixed(4)}`}
             theme={theme}
           />
           <DetailCard
@@ -196,11 +278,14 @@ function DetailCard({ title, value, sub, flag, theme }: any) {
     <div className={`p-6 rounded-2xl border ${theme.card} ${theme.border}`}>
       <h4 className={`text-xs font-bold mb-2 ${theme.textMuted}`}>{title}</h4>
       <div className="flex items-center gap-2">
-        {flag && (
+        {flag && sub && (
           <img
             src={`https://flagcdn.com/w40/${String(sub).toLowerCase()}.png`}
             alt="flag"
             className="w-6 h-4 rounded-sm shadow-sm object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
           />
         )}
         <div className={`text-lg font-bold truncate ${theme.text}`}>
