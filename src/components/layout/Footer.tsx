@@ -20,8 +20,7 @@ export default function Footer() {
           max-w-5xl mx-auto
           rounded-3xl
           border ${theme.border} ${theme.card}
-          backdrop-blur-xl
-          shadow-[0_18px_45px_rgba(0,0,0,0.35)]
+          backdrop-blur-sm
           px-4 sm:px-6 py-5 sm:py-7
           flex flex-col gap-4 sm:gap-3
         `}

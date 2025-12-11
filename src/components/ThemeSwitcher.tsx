@@ -62,10 +62,10 @@ export default function ThemeSwitcher() {
       <button
         onClick={() => setIsOpen((v) => !v)}
         className={`
-          rounded-full p-2 flex items-center justify-center
+          rounded-full p-3 flex items-center justify-center
           border ${theme.border}
-          shadow-md shadow-black/10
           duration-300 transition-all
+          backdrop-blur-sm cursor-pointer
           hover:scale-105 active:scale-95
         `}
         aria-haspopup="menu"
@@ -111,7 +111,7 @@ export default function ThemeSwitcher() {
                   className={`
                     w-full flex items-center gap-3 p-2
                     rounded-lg text-sm font-medium
-                    backdrop-blur-sm shadow-md shadow-black/10
+                    backdrop-blur-sm
                     border ${theme.border}
                     transition-colors
                     ${

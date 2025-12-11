@@ -43,22 +43,22 @@ export default function Header() {
       rounded-full
       border ${theme.border}
       backdrop-blur-xl
-      shadow-md shadow-black/15
       transition-all duration-200
       ${
-        pathname === path ? "text-blue-600 dark:text-blue-400" : theme.textMuted
+        pathname === path
+          ? "text-blue-600 dark:text-blue-400"
+          : theme.textMuted
       }
       hover:scale-105 active:scale-95
     `;
 
-  // دکمه‌های دایره‌ای پایین (Docs و FAB منو)
+  // دکمه‌های دایره‌ای پایین (Home و FAB منو)
   const bottomCircleBase = `
     pointer-events-auto
     w-12 h-12
     rounded-full
     border ${theme.border}
     backdrop-blur-sm
-    shadow-lg shadow-black/30
     flex items-center justify-center
     transition-all duration-200
     active:scale-95
@@ -67,9 +67,9 @@ export default function Header() {
   const docsCircleClass = `
     ${bottomCircleBase}
     ${
-      pathname === "/docs"
-        ? "text-blue-500"
-        : "text-slate-300 dark:text-slate-200"
+      pathname === "/"
+        ? "text-blue-600 dark:text-blue-400"
+        : theme.text
     }
   `;
 
@@ -78,9 +78,8 @@ export default function Header() {
     ${theme.text}
   `;
 
-  // آیتم‌های داخل منو (فقط آیکن)
   const menuItems = [
-    { id: "home", icon: Home, href: "/", external: false },
+    { id: "docs", icon: Book, href: "/docs", external: false },
     { id: "contact", icon: Mail, href: "/contact", external: false },
     { id: "about", icon: FileQuestionMark, href: "/about", external: false },
     { id: "changelog", icon: LogsIcon, href: "/changelog", external: false },
@@ -121,8 +120,6 @@ export default function Header() {
               Tools<span className={theme.accent}>Manager</span>
             </span>
           </Link>
-
-          {/* منوی بالایی (دسکتاپ) */}
           <nav className="hidden md:flex items-center gap-3 lg:gap-4">
             {navItems.map(({ href, icon: Icon, key }) => (
               <Link key={href} href={href} className={navLinkClass(href)}>
@@ -131,8 +128,6 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-
-          {/* اکشن‌های سمت راست – شیشه‌ای */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={toggleLocale}
@@ -143,7 +138,6 @@ export default function Header() {
                 ${theme.text}
                 flex items-center justify-center
                 backdrop-blur-sm
-                shadow-md shadow-black/15
                 hover:opacity-90 transition-opacity
               `}
               title={locale === "fa" ? "Switch to English" : "تغییر به فارسی"}
@@ -156,9 +150,6 @@ export default function Header() {
                 inline-flex items-center justify-center
                 w-9 h-9 sm:w-10 sm:h-10
                 rounded-full
-                border ${theme.border}
-                backdrop-blur-sm
-                shadow-md shadow-black/15
               `}
             >
               <ThemeSwitcher />
@@ -173,7 +164,6 @@ export default function Header() {
                 rounded-full border ${theme.border}
                 backdrop-blur-sm
                 px-3 py-2 text-sm font-semibold
-                shadow-md shadow-black/15
                 hover:scale-105 active:scale-95
                 transition-all duration-200
               `}
@@ -185,12 +175,10 @@ export default function Header() {
           </div>
         </div>
       </header>
-
-      {/* نوار پایین – فقط موبایل: Docs + FAB منو (آیکن-only) */}
       <nav
         className="
           md:hidden
-          fixed bottom-4 left-0 right-0 z-[60]
+          fixed bottom-4 left-0 right-0 z-60
           pointer-events-none
         "
       >
@@ -198,14 +186,11 @@ export default function Header() {
           className="relative max-w-md mx-auto flex items-center justify-between px-6"
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
-          {/* Docs سمت چپ/راست (بسته به RTL) فقط آیکن */}
-          <Link href="/docs" className={docsCircleClass}>
-            <Book size={20} />
+          <Link href="/" className={docsCircleClass}>
+            <Home size={20} />
           </Link>
 
-          {/* FAB منو */}
           <div className="relative pointer-events-auto">
-            {/* دکمه اصلی */}
             <button
               type="button"
               onClick={toggleMenu}
@@ -215,7 +200,6 @@ export default function Header() {
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
 
-            {/* FABهای بازشده – فقط آیکن، بدون متن، شناور روی محتوا */}
             <div
               className={`
                 absolute bottom-14 right-1
@@ -237,18 +221,17 @@ export default function Header() {
                   rounded-full
                   border ${theme.border}
                   backdrop-blur-sm
-                  shadow-lg shadow-black/30
                   flex items-center justify-center
                   text-xs
                   ${
                     item.id === "donate"
-                      ? "text-red-400"
+                      ? "text-red-500"
                       : isActive
-                      ? "text-blue-500"
-                      : "text-slate-300 dark:text-slate-200"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : theme.text
                   }
                   active:scale-95
-                  transition-transform duration-200
+                  transition-colors transition-transform duration-200
                 `;
 
                 const style = {
@@ -270,7 +253,7 @@ export default function Header() {
                         size={18}
                         className={
                           item.id === "donate"
-                            ? "text-red-400 fill-red-500/70"
+                            ? "fill-red-500/70"
                             : ""
                         }
                       />

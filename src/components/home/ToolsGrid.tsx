@@ -70,12 +70,10 @@ export default function ToolsGrid() {
   const filteredTools = useMemo(() => {
     let tool = toolsWithText;
 
-    // ۱. فیلتر دسته‌بندی
     if (activeCategory !== "all") {
       tool = tool.filter((t) => t.category === activeCategory);
     }
 
-    // ۲. فیلتر جستجو (روی متن ترجمه‌شده)
     const query = searchQuery.toLowerCase().trim();
     if (query) {
       tool = tool.filter(
@@ -127,22 +125,16 @@ export default function ToolsGrid() {
         {searchQuery && (
           <button
             onClick={() => handleSearchChange("")}
-            className="
-              absolute left-7 top-1/2 -translate-y-1/2
-              p-1.5 rounded-full
-              hover:bg-zinc-200 dark:hover:bg-zinc-700
-              text-zinc-500 transition-colors
-            "
+            className="absolute left-7 top-1/2 -translate-y-1/2 p-1.5 rounded-full transition-colors"
           >
-            <X size={18} />
+            <X size={18} className="text-slate-400 dark:text-slate-300" />
           </button>
         )}
       </div>
 
-      {/* دسته‌بندی‌ها – موبایل: اسکرول افقی، دسکتاپ: wrap */}
-      {/* موبایل */}
+      {/* دسته‌بندی‌ها – موبایل: اسکرول افقی */}
       <div className="md:hidden -mx-4 px-4 overflow-x-auto">
-        <div className="flex gap-2 pb-1">
+        <div className="flex gap-2 pb-3">
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
@@ -152,14 +144,17 @@ export default function ToolsGrid() {
                 onClick={() => handleCategoryChange(cat.id)}
                 className={`
                   flex items-center gap-1.5
-                  px-3.5 py-2
+                  px-3.5 py-2 cursor-pointer
                   rounded-full text-xs font-semibold
-                  flex-shrink-0
+                  shrink-0
                   transition-all duration-200
                   ${
                     isActive
                       ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                      : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
+                      : `
+                        ${theme.card} ${theme.text} border ${theme.border}
+                        hover:shadow-md hover:-translate-y-0.5
+                      `
                   }
                 `}
               >
@@ -173,7 +168,7 @@ export default function ToolsGrid() {
         </div>
       </div>
 
-      {/* دسکتاپ / تبلت */}
+      {/* دسته‌بندی‌ها – دسکتاپ / تبلت */}
       <div className="hidden md:flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4">
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
@@ -182,13 +177,16 @@ export default function ToolsGrid() {
             <button
               key={cat.id}
               onClick={() => handleCategoryChange(cat.id)}
-              className={`
+              className={` cursor-pointer
                 flex items-center gap-2 px-4 py-2.5 rounded-xl
                 text-sm font-bold transition-all duration-200
                 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                    : `${theme.bg} ${theme.text} border ${theme.border} hover:bg-zinc-100 dark:hover:bg-zinc-800`
+                    : `
+                      ${theme.card} ${theme.text} border ${theme.border}
+                      hover:shadow-md hover:-translate-y-0.5
+                    `
                 }
               `}
             >
@@ -200,84 +198,107 @@ export default function ToolsGrid() {
       </div>
 
       {/* گرید ابزارها */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-0">
+      <div className="grid gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-0">
         <AnimatePresence mode="popLayout">
           {visibleTools.length > 0 ? (
             visibleTools.map((tool) => (
               <motion.div
                 key={tool.id}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.15 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.12 }}
               >
                 <Link
                   href={tool.href}
                   className={`
-                    relative group block p-4 md:p-6 rounded-3xl border
-                    transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
-                    h-full flex flex-col
+                    relative group block rounded-3xl border
                     ${theme.card} ${theme.border}
+                    transition-all duration-200
+                    hover:-translate-y-1 hover:shadow-lg
+                    p-3.5 md:p-5 lg:p-6
+                    h-full
                     ${
                       tool.status === "coming-soon"
                         ? "opacity-60 grayscale pointer-events-none"
                         : ""
                     }
+                    flex flex-col md:block
                   `}
                 >
-                  <div
-                    className={`
-                      w-12 h-12 md:w-14 md:h-14 rounded-2xl
-                      flex items-center justify-center mb-4 md:mb-6
-                      shadow-lg transition-colors duration-300
-                      ${theme.secondary}
-                    `}
-                  >
-                    <tool.Icon
-                      className={`w-6 h-6 md:w-7 md:h-7 ${theme.accent}`}
-                    />
-                  </div>
+                  {/* هدر کارت: آیکن + متن (موبایل افقی، دسکتاپ ستونی) */}
+                  <div className="flex md:block gap-3 items-center md:items-stretch">
+                    <div
+                      className={`
+                        shrink-0
+                        w-10 h-10 md:w-12 md:h-12
+                        rounded-2xl
+                        flex items-center justify-center
+                        mb-0 md:mb-4
+                        shadow-md
+                        ${theme.secondary}
+                      `}
+                    >
+                      <tool.Icon
+                        className={`w-5 h-5 md:w-6 md:h-6 ${theme.accent}`}
+                      />
+                    </div>
 
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <h2
-                        className={`text-lg md:text-xl font-bold ${theme.text}`}
-                      >
-                        {tool.title}
-                      </h2>
-                      {tool.badge && (
-                        <span
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h2
                           className={`
-                            text-[10px] font-bold px-2 py-1 rounded-full
-                            border ${theme.border} ${theme.bg} ${theme.textMuted}
+                            text-sm md:text-base lg:text-lg font-bold
+                            ${theme.text}
+                            truncate md:truncate-none
                           `}
                         >
-                          {tool.badge}
-                        </span>
-                      )}
+                          {tool.title}
+                        </h2>
+                        {tool.badge && (
+                          <span
+                            className={`
+                              text-[10px] md:text-[11px] font-bold
+                              px-2 py-0.5 md:py-1 rounded-full
+                              border ${theme.border} ${theme.bg} ${theme.textMuted}
+                              flex-shrink-0
+                            `}
+                          >
+                            {tool.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p
+                        className={`
+                          mt-1 md:mt-2
+                          text-xs md:text-sm leading-relaxed
+                          ${theme.textMuted}
+                          line-clamp-2 md:line-clamp-3
+                        `}
+                      >
+                        {tool.description}
+                      </p>
                     </div>
-                    <p
-                      className={`text-xs md:text-sm leading-relaxed ${theme.textMuted}`}
-                    >
-                      {tool.description}
-                    </p>
                   </div>
 
-                  {/* CTA: روی موبایل همیشه دیده میشه، روی دسکتاپ فقط روی hover */}
+                  {/* خط جداکننده + CTA – بدون badge دوم */}
                   <div
                     className={`
-                      mt-4 md:mt-6 pt-4 md:pt-6 border-t flex items-center
+                      mt-3 md:mt-4 pt-3 border-t ${theme.border}
+                      flex items-center justify-between gap-2
                       text-xs md:text-sm font-semibold
-                      ${theme.border} ${theme.accent}
+                      ${theme.accent}
                       opacity-100 translate-x-0
                       md:opacity-0 md:-translate-x-2
                       md:group-hover:opacity-100 md:group-hover:translate-x-0
                       transition-all duration-300
                     `}
                   >
-                    {t("tool.item.cta")}
-                    <ArrowLeft size={16} className="mr-2" />
+                    <span className="flex items-center gap-1">
+                      {t("tool.item.cta")}
+                      <ArrowLeft size={14} className="mt-0.5" />
+                    </span>
                   </div>
                 </Link>
               </motion.div>
@@ -291,7 +312,7 @@ export default function ToolsGrid() {
                 flex flex-col items-center gap-4
               "
             >
-              <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                 <Search size={32} className={theme.textMuted} />
               </div>
               <p className={`text-lg font-medium ${theme.text}`}>
