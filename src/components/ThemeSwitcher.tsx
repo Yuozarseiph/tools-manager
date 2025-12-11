@@ -63,7 +63,7 @@ export default function ThemeSwitcher() {
         onClick={() => setIsOpen((v) => !v)}
         className={`
           rounded-full p-2 flex items-center justify-center
-          border ${theme.border} ${theme.card}
+          border ${theme.border}
           shadow-md shadow-black/10
           duration-300 transition-all
           hover:scale-105 active:scale-95
@@ -88,7 +88,7 @@ export default function ThemeSwitcher() {
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             className={`
-              absolute top-full mt-2
+              absolute top-full mt-2 
               ${isRTL ? "left-0 origin-top-left" : "right-0 origin-top-right"}
               min-w-[170px]
               p-1.5 z-50 flex flex-col gap-1
@@ -117,7 +117,7 @@ export default function ThemeSwitcher() {
                     ${
                       active
                         ? theme.secondary
-                        : `${theme.card} hover:opacity-90`
+                        : `hover:opacity-90`
                     }
                   `}
                 >

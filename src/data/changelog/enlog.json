@@ -1,5 +1,35 @@
 [
   {
+    "version": "2.7.1 BETA",
+    "date": "—",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Introduced a new floating bottom navigation on mobile with a dedicated Docs shortcut and a compact FAB-style menu for quick access to other pages",
+          "Added glassmorphism-style header and footer containers to better match the overall visual identity of ToolsManager"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Refined the mobile layout of the tools grid: category filters are now shown as a horizontal chip row and call-to-action text stays visible without relying on hover",
+          "Adjusted global spacing and bottom padding on mobile pages so content no longer sits under the floating bottom navigation",
+          "Polished the Theme switcher dropdown positioning so it stays fully visible in both Persian (RTL) and English (LTR) layouts",
+          "Unified scrollbar styling across the app with a subtle, theme-friendly custom scrollbar"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed several minor alignment issues in cards and footer content when switching between light and dark themes",
+          "Resolved a visual glitch where the mobile navigation buttons could overlap page content in very small viewports"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.7.0 BETA",
     "date": "—",
     "type": "update",

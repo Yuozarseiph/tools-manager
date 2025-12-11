@@ -41,7 +41,7 @@ export default function Header() {
       inline-flex items-center gap-1.5
       px-3.5 py-2
       rounded-full
-      border ${theme.border} ${theme.card}
+      border ${theme.border}
       backdrop-blur-xl
       shadow-md shadow-black/15
       transition-all duration-200
@@ -56,8 +56,8 @@ export default function Header() {
     pointer-events-auto
     w-12 h-12
     rounded-full
-    border ${theme.border} ${theme.card}
-    backdrop-blur-xl
+    border ${theme.border}
+    backdrop-blur-sm
     shadow-lg shadow-black/30
     flex items-center justify-center
     transition-all duration-200
@@ -139,10 +139,10 @@ export default function Header() {
               className={`
                 w-9 h-9 sm:w-10 sm:h-10
                 rounded-full text-xs font-bold
-                border ${theme.border} ${theme.card}
+                border ${theme.border}
                 ${theme.text}
                 flex items-center justify-center
-                backdrop-blur-xl
+                backdrop-blur-sm
                 shadow-md shadow-black/15
                 hover:opacity-90 transition-opacity
               `}
@@ -156,8 +156,8 @@ export default function Header() {
                 inline-flex items-center justify-center
                 w-9 h-9 sm:w-10 sm:h-10
                 rounded-full
-                border ${theme.border} ${theme.card}
-                backdrop-blur-xl
+                border ${theme.border}
+                backdrop-blur-sm
                 shadow-md shadow-black/15
               `}
             >
@@ -170,8 +170,8 @@ export default function Header() {
               rel="noopener noreferrer"
               className={`
                 hidden sm:inline-flex items-center gap-1.5
-                rounded-full border ${theme.border} ${theme.card}
-                backdrop-blur-xl
+                rounded-full border ${theme.border}
+                backdrop-blur-sm
                 px-3 py-2 text-sm font-semibold
                 shadow-md shadow-black/15
                 hover:scale-105 active:scale-95
@@ -235,8 +235,8 @@ export default function Header() {
                 const itemClass = `
                   w-11 h-11
                   rounded-full
-                  border ${theme.border} ${theme.card}
-                  backdrop-blur-xl
+                  border ${theme.border}
+                  backdrop-blur-sm
                   shadow-lg shadow-black/30
                   flex items-center justify-center
                   text-xs
