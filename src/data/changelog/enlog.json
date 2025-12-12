@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.7.2 BETA",
+    "date": "Dec 12, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "HTML to PPTX: CSS extraction support from <style> tags and inline style attributes, with fallback defaults when no styles are present",
+          "HTML to PPTX: Basic cascade handling based on selector specificity and rule order for more accurate styling results"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "HTML to PPTX: More stable text rendering by generating rich text runs (bold/italic/underline/color/font size) for headings and paragraphs while keeping list bullets stable",
+          "HTML to PPTX: Better unit parsing for font-size and margins (px, pt, rem, em, %) to reduce style mismatches when converting",
+          "HTML to PPTX: Performance improvements using resolved-style caching to avoid repeated selector matching on large HTML inputs"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed a TypeScript build error caused by dynamic assignment on indexed keys during CSS inheritance merging",
+          "Fixed rare parsing issues when HTML contains unsupported/invalid CSS selectors by safely ignoring invalid selectors during matching"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.7.1 BETA",
     "date": "—",
     "type": "update",

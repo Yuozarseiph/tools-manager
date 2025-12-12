@@ -23,6 +23,9 @@
       "filename": {
         "label": "نام فایل خروجی (PPTX)"
       },
+      "labels": {
+        "themeColor": "رنگ تم اصلی"
+      },
       "buttons": {
         "convertIdle": "تبدیل به پاورپوینت",
         "convertLoading": "در حال ساخت پاورپوینت..."
@@ -37,7 +40,8 @@
         "invalidType": "فقط فایل‌های HTML یا HTM پشتیبانی می‌شوند.",
         "emptyContent": "محتوایی در فایل HTML پیدا نشد. لطفاً فایل را بررسی کنید.",
         "genericPrefix": "در هنگام پردازش HTML خطایی رخ داد:",
-        "unknown": "خطای ناشناخته در فرآیند تبدیل."
+        "unknown": "خطای ناشناخته در فرآیند تبدیل.",
+        "noSlides": "هیچ اسلاید معتبری در HTML پیدا نشد. لطفاً ساختار HTML را بررسی کنید یا از تگ‌های heading، p، ul/li و table استفاده کنید."
       },
       "preview": {
         "title": "پیش‌نمایش متن HTML",
@@ -82,6 +86,9 @@
       "filename": {
         "label": "Output file name (PPTX)"
       },
+      "labels": {
+        "themeColor": "Primary theme color"
+      },
       "buttons": {
         "convertIdle": "Convert to PowerPoint",
         "convertLoading": "Generating PowerPoint..."
@@ -96,7 +103,8 @@
         "invalidType": "Only HTML or HTM files are supported.",
         "emptyContent": "No content was found in the HTML file. Please check the file.",
         "genericPrefix": "An error occurred while processing the HTML:",
-        "unknown": "Unknown error during conversion."
+        "unknown": "Unknown error during conversion.",
+        "noSlides": "No valid slides were found in the HTML. Please review the structure or use headings, paragraphs, lists and tables."
       },
       "preview": {
         "title": "HTML text preview",

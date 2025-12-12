@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Presentation } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import HtmlToPptxTool from "@/components/tools/pdf/html-to-pdf/HtmlToPptx";
+import HtmlToPptxTool from "@/components/tools/presentation/html-to-pptx/HtmlToPptx";
 import { useHtmlToPptxPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 

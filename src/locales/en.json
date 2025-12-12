@@ -15,6 +15,14 @@
     "light": "Light mode",
     "dark": "Dark mode"
   },
+  "pwa": {
+    "install": {
+      "cta": "Install app",
+      "installing": "Installing...",
+      "helper": "Install the app for faster access from your device."
+    }
+  },
+
   "home": {
     "hero": {
       "titleLine1": "Powerful tools,",

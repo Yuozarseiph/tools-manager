@@ -4,7 +4,7 @@ import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 import rawContent from "./html-to-pptx.i18n.json";
 
-type DocCategoryKey = "pdf";
+type DocCategoryKey = "pdf" | "developer";
 
 interface BaseDocsFields {
   id: string;
@@ -50,6 +50,8 @@ export interface HtmlToPptxToolContent extends BaseDocsFields {
       emptyContent: string;
       genericPrefix: string;
       unknown: string;
+      noSlides: string;
+      snapshotFallback: string;
     };
     preview: {
       title: string;
@@ -59,6 +61,9 @@ export interface HtmlToPptxToolContent extends BaseDocsFields {
       title: string;
       items: string[];
     };
+    labels: {
+      themeColor: string;
+    };
     page: {
       title: string;
       description: string;
@@ -67,10 +72,9 @@ export interface HtmlToPptxToolContent extends BaseDocsFields {
 }
 
 // ساختار فایل i18n: { fa: HtmlToPptxToolContent; en: HtmlToPptxToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, HtmlToPptxToolContent>;
+const CONTENT_BY_LOCALE = rawContent as Record<Locale, HtmlToPptxToolContent>;
 
 export function useHtmlToPptxContent(): HtmlToPptxToolContent {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return CONTENT_BY_LOCALE[locale] ?? CONTENT_BY_LOCALE["fa"];
 }
