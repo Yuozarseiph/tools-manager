@@ -9,8 +9,8 @@
       "ویرایش سلول‌ها به صورت جدولی",
       "افزودن و حذف سطرها",
       "جستجوی سریع در داده‌ها",
-      "امکان بازگشت (Undo) به وضعیت قبلی",
-      "دانلود خروجی به صورت فایل Excel جدید"
+      "بازگشت (Undo) به وضعیت قبلی",
+      "دانلود خروجی به صورت Excel یا CSV"
     ],
     "ui": {
       "upload": {
@@ -19,14 +19,67 @@
         "acceptHint": "فرمت‌های مجاز: .xlsx، .xls، .csv"
       },
       "actions": {
-        "exportExcel": "دانلود فایل Excel",
-        "addRow": "افزودن سطر جدید",
+        "exportExcel": "دانلود Excel",
+        "addRow": "افزودن سطر",
         "undoTitle": "بازگشت به تغییر قبلی",
         "closeFileTitle": "بستن فایل و پاک‌کردن داده‌ها",
-        "resetConfirm": "آیا از بستن فایل و پاک‌کردن همه داده‌ها مطمئن هستید؟"
+        "resetConfirm": "آیا از بستن فایل و پاک‌کردن همه داده‌ها مطمئن هستید؟",
+        "fullscreenEnterTitle": "نمایش تمام‌صفحه",
+        "fullscreenExitTitle": "خروج از تمام‌صفحه",
+        "copy": "کپی",
+        "copied": "کپی شد"
       },
-      "search": {
-        "placeholder": "جستجو در تمام ستون‌ها..."
+      "search": { "placeholder": "جستجو در تمام ستون‌ها..." },
+      "filter": {
+        "title": "فیلتر",
+        "noFilter": "بدون فیلتر",
+        "columnPlaceholder": "ستون",
+        "opPlaceholder": "عملگر",
+        "valuePlaceholder": "مقدار",
+        "value2Placeholder": "مقدار دوم",
+        "clear": "پاک کردن",
+        "rowsLabel": "ردیف‌ها",
+        "ofLabel": "از",
+        "sizeLabel": "حجم تقریبی",
+        "typeNumber": "عددی",
+        "typeText": "متنی",
+        "ops": {
+          "contains": "شامل",
+          "equals": "برابر",
+          "startsWith": "شروع با",
+          "gt": "بزرگ‌تر از",
+          "lt": "کوچک‌تر از",
+          "between": "بین"
+        }
+      },
+      "sort": {
+        "title": "مرتب‌سازی",
+        "noSort": "بدون مرتب‌سازی",
+        "directionAsc": "صعودی",
+        "directionDesc": "نزولی",
+        "clear": "پاک کردن"
+      },
+      "sum": {
+        "title": "جمع",
+        "modeColumn": "ستون",
+        "modeRow": "ردیف",
+        "rowNumberLabel": "شماره ردیف",
+        "rowNumberPlaceholder": "مثلاً 1",
+        "rangeRowsTitle": "بازه ردیف‌ها",
+        "rangeColsTitle": "بازه ستون‌ها",
+        "from": "از",
+        "to": "تا",
+        "resultLabel": "نتیجه",
+        "countedLabel": "تعداد سلول‌های عددی",
+        "copyResult": "کپی نتیجه"
+      },
+      "export": {
+        "title": "خروجی CSV",
+        "rangeTitle": "بازه خروجی (بر اساس جدول فیلتر/مرتب‌شده)",
+        "fromRowPlaceholder": "از ردیف",
+        "toRowPlaceholder": "تا ردیف",
+        "filteredButton": "دانلود CSV (فیلتر شده)",
+        "rangeButton": "دانلود CSV (بازه انتخابی)"
       },
       "table": {
         "indexHeader": "ردیف",
@@ -37,7 +90,9 @@
         "summaryPrefix": "نمایش ",
         "summaryFromToSeparator": " تا ",
         "summaryOfWord": " از ",
-        "summarySuffix": " ردیف"
+        "summarySuffix": " ردیف",
+        "rowsPerPageLabel": "تعداد نمایش",
+        "perPageSuffix": "در صفحه"
       },
       "empty": {
         "title": "هیچ فایلی انتخاب نشده است",
@@ -60,7 +115,7 @@
       "Add and remove rows",
       "Quick search across all columns",
       "Undo recent changes",
-      "Download the edited data as a new Excel file"
+      "Download as Excel or CSV"
     ],
     "ui": {
       "upload": {
@@ -70,13 +125,66 @@
       },
       "actions": {
         "exportExcel": "Export to Excel",
-        "addRow": "Add new row",
+        "addRow": "Add row",
         "undoTitle": "Undo last change",
         "closeFileTitle": "Close file and clear data",
-        "resetConfirm": "Are you sure you want to close the file and clear all data?"
+        "resetConfirm": "Are you sure you want to close the file and clear all data?",
+        "fullscreenEnterTitle": "Enter full screen",
+        "fullscreenExitTitle": "Exit full screen",
+        "copy": "Copy",
+        "copied": "Copied"
       },
-      "search": {
-        "placeholder": "Search across all columns..."
+      "search": { "placeholder": "Search across all columns..." },
+      "filter": {
+        "title": "Filter",
+        "noFilter": "No filter",
+        "columnPlaceholder": "Column",
+        "opPlaceholder": "Operator",
+        "valuePlaceholder": "Value",
+        "value2Placeholder": "Value 2",
+        "clear": "Clear",
+        "rowsLabel": "Rows",
+        "ofLabel": "of",
+        "sizeLabel": "Approx size",
+        "typeNumber": "Numeric",
+        "typeText": "Text",
+        "ops": {
+          "contains": "Contains",
+          "equals": "Equals",
+          "startsWith": "Starts with",
+          "gt": "Greater than",
+          "lt": "Less than",
+          "between": "Between"
+        }
+      },
+      "sort": {
+        "title": "Sort",
+        "noSort": "No sort",
+        "directionAsc": "Ascending",
+        "directionDesc": "Descending",
+        "clear": "Clear"
+      },
+      "sum": {
+        "title": "Sum",
+        "modeColumn": "Column",
+        "modeRow": "Row",
+        "rowNumberLabel": "Row number",
+        "rowNumberPlaceholder": "e.g. 1",
+        "rangeRowsTitle": "Row range",
+        "rangeColsTitle": "Column range",
+        "from": "From",
+        "to": "To",
+        "resultLabel": "Result",
+        "countedLabel": "Counted numeric cells",
+        "copyResult": "Copy result"
+      },
+      "export": {
+        "title": "CSV export",
+        "rangeTitle": "Export range (based on filtered/sorted table)",
+        "fromRowPlaceholder": "From row",
+        "toRowPlaceholder": "To row",
+        "filteredButton": "Export CSV (filtered)",
+        "rangeButton": "Export CSV (selected range)"
       },
       "table": {
         "indexHeader": "Row",
@@ -87,7 +195,9 @@
         "summaryPrefix": "Showing ",
         "summaryFromToSeparator": " to ",
         "summaryOfWord": " of ",
-        "summarySuffix": " rows"
+        "summarySuffix": " rows",
+        "rowsPerPageLabel": "Rows",
+        "perPageSuffix": "per page"
       },
       "empty": {
         "title": "No file selected",

@@ -14,7 +14,9 @@
     "ui": {
       "tabs": {
         "trim": "برش صدا (بتا)",
-        "volume": "تنظیم بلندی / نرمال‌سازی"
+        "volume": "تنظیم بلندی / نرمال‌سازی",
+        "equalizer": "اکولایزر (۳۱ باند)",
+        "waveform": "موج صدا / تایم‌لاین"
       },
       "header": {
         "smallTitle": "ابزارهای صوتی",
@@ -100,6 +102,45 @@
           "description": "یک فایل صوتی انتخاب کنید تا بتوانید بلندی آن را تنظیم یا آن را نرمال‌سازی کنید و خروجی WAV بگیرید."
         }
       },
+      "equalizer": {
+        "upload": {
+          "title": "انتخاب فایل صوتی",
+          "description": "فایل صوتی را انتخاب کنید تا اکولایزر ۳۱ باند را روی آن اعمال کنید. پردازش فقط روی مرورگر شما انجام می‌شود.",
+          "button": "انتخاب فایل"
+        },
+        "fileInfo": {
+          "durationLabel": "مدت:",
+          "currentPositionLabel": "موقعیت فعلی:",
+          "noFileTitle": "هنوز فایلی انتخاب نشده است",
+          "noFileDescription": "یک فایل صوتی انتخاب کنید تا بتوانید اکولایزر را اعمال کنید و خروجی WAV بگیرید."
+        },
+        "transport": {
+          "play": "پخش",
+          "pause": "توقف"
+        },
+        "controls": {
+          "title": "اکولایزر ۳۱ باند",
+          "subtitle": "ستون‌ها را بالا/پایین بکشید. خط وسط 0dB است.",
+          "resetLabel": "ریست اکولایزر",
+          "rangeLabel": "بازه: -12dB تا +12dB",
+          "tip": "نکته: با کلیک روی ستون هم مقدار سریع تنظیم می‌شود."
+        },
+        "actions": {
+          "downloadIdle": "دانلود خروجی WAV",
+          "downloadWorking": "در حال ساخت فایل..."
+        },
+        "errors": {
+          "decode": "خطا در پردازش فایل صوتی.",
+          "export": "خطا در ساخت فایل خروجی."
+        },
+        "empty": {
+          "title": "هنوز فایلی انتخاب نشده است",
+          "description": "برای شروع، یک فایل صوتی انتخاب کنید."
+        }
+      },
+      "waveform": {
+        "title": "موج صدا / تایم‌لاین"
+      },
       "page": {
         "title": "ویرایش و پردازش صدا (بتا)",
         "description": "فایل صوتی خود را انتخاب کنید و به صورت محلی روی دستگاه خود آن را برش دهید، تنظیم کنید یا برای پردازش‌های بعدی آماده کنید. هیچ فایلی آپلود نمی‌شود و همه‌چیز فقط در مرورگر شما انجام می‌شود."
@@ -121,7 +162,9 @@
     "ui": {
       "tabs": {
         "trim": "Trim audio (beta)",
-        "volume": "Volume / normalization"
+        "volume": "Volume / normalization",
+        "equalizer": "Equalizer (31-band)",
+        "waveform": "Waveform / timeline"
       },
       "header": {
         "smallTitle": "Audio tools",
@@ -206,6 +249,45 @@
           "title": "No file selected yet",
           "description": "Choose an audio file to adjust its loudness or normalize it and export a WAV file."
         }
+      },
+      "equalizer": {
+        "upload": {
+          "title": "Select audio file",
+          "description": "Choose an audio file to apply a 31-band EQ. Processing is done entirely in your browser.",
+          "button": "Choose file"
+        },
+        "fileInfo": {
+          "durationLabel": "Duration:",
+          "currentPositionLabel": "Current position:",
+          "noFileTitle": "No file selected yet",
+          "noFileDescription": "Choose an audio file to apply EQ and export a WAV file."
+        },
+        "transport": {
+          "play": "Play",
+          "pause": "Pause"
+        },
+        "controls": {
+          "title": "31-band Equalizer",
+          "subtitle": "Drag columns up/down. The middle line is 0dB.",
+          "resetLabel": "Reset EQ",
+          "rangeLabel": "Range: -12dB to +12dB",
+          "tip": "Tip: Clicking a column also sets the value quickly."
+        },
+        "actions": {
+          "downloadIdle": "Download WAV output",
+          "downloadWorking": "Generating file..."
+        },
+        "errors": {
+          "decode": "Error while processing the audio file.",
+          "export": "Error while generating the output file."
+        },
+        "empty": {
+          "title": "No file selected yet",
+          "description": "Choose an audio file to get started."
+        }
+      },
+      "waveform": {
+        "title": "Waveform / timeline"
       },
       "page": {
         "title": "Audio editing (beta)",

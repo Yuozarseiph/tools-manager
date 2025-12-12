@@ -1,5 +1,36 @@
 [
   {
+    "version": "2.8.0 BETA",
+    "date": "Dec 12, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added the new Excel Editor tool (beta) with bilingual UI texts and metadata integration",
+          "Introduced the first Windows desktop (portable) build for offline usage",
+          "Added an internal local HTTP server for the desktop build to serve the static export reliably (instead of loading with file://)"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved desktop routing compatibility with DirectAdmin-style static export output (html/txt route files and __next.*.txt assets)",
+          "Enhanced route resolving in the desktop build to support both /path and /path/ and map them to the correct .html/.txt files",
+          "Reduced runtime dependency risk in the desktop package by removing non-essential server dependencies from production runtime"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed missing CSS/JS assets in the desktop build by serving export output over http://127.0.0.1",
+          "Fixed 'Cannot find module serve-handler' error in the packaged app",
+          "Fixed 404 errors on non-home pages in the desktop build by adding full .html/.txt fallbacks in the internal server"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.7.2 BETA",
     "date": "Dec 12, 2025",
     "type": "update",

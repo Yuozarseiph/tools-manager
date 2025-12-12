@@ -21,17 +21,17 @@ export interface AudioEditorToolContent extends BaseDocsFields {
     tabs: {
       trim: string;
       volume: string;
+      equalizer: string;
+      waveform: string;
     };
+
     header: {
       smallTitle: string;
       subtitle: string;
     };
+
     trim: {
-      upload: {
-        title: string;
-        description: string;
-        button: string;
-      };
+      upload: { title: string; description: string; button: string };
       fileInfo: {
         totalDurationLabel: string;
         currentPositionLabel: string;
@@ -61,21 +61,12 @@ export interface AudioEditorToolContent extends BaseDocsFields {
         fadeInDurationLabel: string;
         fadeOutDurationLabel: string;
       };
-      errors: {
-        decode: string;
-        export: string;
-      };
-      empty: {
-        title: string;
-        description: string;
-      };
+      errors: { decode: string; export: string };
+      empty: { title: string; description: string };
     };
+
     volume: {
-      upload: {
-        title: string;
-        description: string;
-        button: string;
-      };
+      upload: { title: string; description: string; button: string };
       fileInfo: {
         durationLabel: string;
         currentPositionLabel: string;
@@ -97,15 +88,41 @@ export interface AudioEditorToolContent extends BaseDocsFields {
         downloadIdle: string;
         downloadWorking: string;
       };
-      errors: {
-        decode: string;
-        export: string;
-      };
-      empty: {
-        title: string;
-        description: string;
-      };
+      errors: { decode: string; export: string };
+      empty: { title: string; description: string };
     };
+
+    equalizer: {
+      upload: { title: string; description: string; button: string };
+      fileInfo: {
+        durationLabel: string;
+        currentPositionLabel: string;
+        noFileTitle: string;
+        noFileDescription: string;
+      };
+      transport: {
+        play: string;
+        pause: string;
+      };
+      controls: {
+        title: string;
+        subtitle: string;
+        resetLabel: string;
+        rangeLabel: string;
+        tip: string;
+      };
+      actions: {
+        downloadIdle: string;
+        downloadWorking: string;
+      };
+      errors: { decode: string; export: string };
+      empty: { title: string; description: string };
+    };
+
+    waveform: {
+      title: string;
+    };
+
     page: {
       title: string;
       description: string;
@@ -113,7 +130,6 @@ export interface AudioEditorToolContent extends BaseDocsFields {
   };
 }
 
-// شکل فایل i18n: { fa: AudioEditorToolContent; en: AudioEditorToolContent }
 const CONTENT_BY_LOCALE = rawContent as Record<Locale, AudioEditorToolContent>;
 
 export function useAudioEditorContent(): AudioEditorToolContent {

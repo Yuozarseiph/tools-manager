@@ -1,27 +1,31 @@
 // utils/pdf-actions.ts
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from "pdf-lib";
 
-/**
- * دو یا چند فایل PDF را با هم ترکیب می‌کند
- * @param files آرایه‌ای از فایل‌های PDF ورودی
- * @returns فایل نهایی به صورت آرایه بایت (Uint8Array)
- */
-export async function mergePDFs(files: File[]): Promise<Uint8Array> {
-  try {
-    const mergedPdf = await PDFDocument.create();
-
-    for (const file of files) {
-      const fileBuffer = await file.arrayBuffer();
-      
-      const pdf = await PDFDocument.load(fileBuffer);
-      const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-      
-      copiedPages.forEach((page) => mergedPdf.addPage(page));
-    }
-    return await mergedPdf.save();
-    
-  } catch (error) {
-    console.error('Error merging PDFs:', error);
-    throw new Error('خطا در پردازش فایل‌ها. لطفاً مطمئن شوید فایل‌های PDF سالم هستند و رمزگذاری نشده‌اند.');
+export async function mergePDFs(
+  files: File[],
+  opts?: {
+    onProgress?: (info: { index: number; total: number }) => void;
+    yieldEvery?: number;
   }
+): Promise<Uint8Array> {
+  const onProgress = opts?.onProgress;
+  const yieldEvery = opts?.yieldEvery ?? 3;
+
+  const mergedPdf = await PDFDocument.create();
+
+  for (let i = 0; i < files.length; i += 1) {
+    onProgress?.({ index: i + 1, total: files.length });
+
+    const bytes = await files[i].arrayBuffer();
+    const pdf = await PDFDocument.load(bytes);
+
+    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    for (const page of copiedPages) mergedPdf.addPage(page);
+
+    if ((i + 1) % yieldEvery === 0) {
+      await new Promise<void>((r) => setTimeout(r, 0));
+    }
+  }
+
+  return await mergedPdf.save();
 }
