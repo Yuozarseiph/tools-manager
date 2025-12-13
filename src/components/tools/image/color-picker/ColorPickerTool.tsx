@@ -71,7 +71,7 @@ export default function ColorPickerTool() {
     ),
   });
 
-  // تبدیل رنگ‌ها
+  // ----- color helpers -----
   const rgbToHex = (r: number, g: number, b: number) =>
     "#" +
     [r, g, b]
@@ -82,7 +82,8 @@ export default function ColorPickerTool() {
       .join("");
 
   const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result =
+      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? `rgb(${parseInt(result[1], 16)}, ${parseInt(
           result[2],
@@ -92,7 +93,8 @@ export default function ColorPickerTool() {
   };
 
   const hexToHsl = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result =
+      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return hex;
 
     let r = parseInt(result[1], 16) / 255;
@@ -137,7 +139,7 @@ export default function ColorPickerTool() {
     }
   };
 
-  // بارگذاری تصویر و استخراج پالت
+  // ----- image load + palette -----
   const handleImageLoad = useCallback(() => {
     if (!imageRef.current || !canvasRef.current) return;
 
@@ -163,7 +165,7 @@ export default function ColorPickerTool() {
       );
       setPalette(paletteHex);
     } catch (e) {
-      console.error("خطا در استخراج پالت رنگی:", e);
+      console.error("Error extracting color palette:", e);
     }
   }, []);
 
@@ -176,7 +178,8 @@ export default function ColorPickerTool() {
     }
   }, [image, handleImageLoad]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+  // ----- pointer-based sampling (desktop + mobile) -----
+  const sampleAtClientPoint = (clientX: number, clientY: number) => {
     if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
 
     const canvas = canvasRef.current;
@@ -189,12 +192,12 @@ export default function ColorPickerTool() {
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
-    const x = Math.floor((e.clientX - rect.left) * scaleX);
-    const y = Math.floor((e.clientY - rect.top) * scaleY);
+    const x = Math.floor((clientX - rect.left) * scaleX);
+    const y = Math.floor((clientY - rect.top) * scaleY);
 
     if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
 
-    setMagnifierPos({ x: e.clientX, y: e.clientY });
+    setMagnifierPos({ x: clientX, y: clientY });
 
     try {
       const pixel = ctx?.getImageData(x, y, 1, 1).data;
@@ -203,17 +206,35 @@ export default function ColorPickerTool() {
         setHoverColor(hex);
       }
     } catch (e) {
-      console.error("خطا در خواندن رنگ پیکسل:", e);
+      console.error("Error reading pixel color:", e);
     }
   };
 
-  const handleClick = () => {
+  const handlePointerMove: React.PointerEventHandler<HTMLImageElement> = (
+    e
+  ) => {
     if (!imageLoaded) return;
-    if (!pickedColors.includes(hoverColor)) {
-      setPickedColors((prev) => [hoverColor, ...prev].slice(0, 20));
-    }
+    sampleAtClientPoint(e.clientX, e.clientY);
   };
 
+  const handlePointerDown: React.PointerEventHandler<HTMLImageElement> = (
+    e
+  ) => {
+    if (!imageLoaded) return;
+    sampleAtClientPoint(e.clientX, e.clientY);
+    setShowMagnifier(true);
+
+    setPickedColors((prev) => {
+      if (prev.includes(hoverColor)) return prev;
+      return [hoverColor, ...prev].slice(0, 20);
+    });
+  };
+
+  const handlePointerLeave: React.PointerEventHandler<HTMLImageElement> = () => {
+    setShowMagnifier(false);
+  };
+
+  // ----- clipboard & palette ops -----
   const copyToClipboard = (color: string, idx: number) => {
     const formatted = formatColor(color);
     navigator.clipboard.writeText(formatted);
@@ -225,7 +246,8 @@ export default function ColorPickerTool() {
     if (palette.length === 0) return;
 
     const baseColor = palette[0];
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(baseColor);
+    const result =
+      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(baseColor);
     if (!result) return;
 
     const r = parseInt(result[1], 16);
@@ -284,7 +306,7 @@ export default function ColorPickerTool() {
     };
   }, [image]);
 
-  // لود تصویر از URL (دانلود با اینترنت خود کاربر، پردازش فقط در مرورگر)
+  // ----- load from URL (client fetch, still local processing) -----
   const handleAddFromUrl = async () => {
     const url = imageUrlInput.trim();
     if (!url) return;
@@ -314,8 +336,9 @@ export default function ColorPickerTool() {
       setImageUrlInput("");
     } catch (e) {
       console.error("Error loading image from URL:", e);
-      // اگر خواستی، می‌تونی این رو ببری تو i18n (مثلاً ui.upload.urlError)
-      alert("خطا در دانلود تصویر از لینک. لطفاً آدرس را بررسی کن.");
+      alert(
+        "Error loading image from URL. The source site may block CORS. Please download the image and upload it here."
+      );
     } finally {
       setIsAddingFromUrl(false);
     }
@@ -323,7 +346,7 @@ export default function ColorPickerTool() {
 
   return (
     <div className="space-y-6">
-      {/* استایل اسکرول */}
+      {/* custom scrollbar */}
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
@@ -332,19 +355,23 @@ export default function ColorPickerTool() {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${theme.text === "text-slate-900"
-            ? "rgba(100, 116, 139, 0.3)"
-            : "rgba(148, 163, 184, 0.3)"};
+          background: ${
+            theme.text === "text-slate-900"
+              ? "rgba(100, 116, 139, 0.3)"
+              : "rgba(148, 163, 184, 0.3)"
+          };
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${theme.text === "text-slate-900"
-            ? "rgba(59, 130, 246, 0.5)"
-            : "rgba(96, 165, 250, 0.5)"};
+          background: ${
+            theme.text === "text-slate-900"
+              ? "rgba(59, 130, 246, 0.5)"
+              : "rgba(96, 165, 250, 0.5)"
+          };
         }
       `}</style>
 
-      {/* تنظیمات فرمت */}
+      {/* format selector */}
       {image && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -377,7 +404,7 @@ export default function ColorPickerTool() {
       )}
 
       <div className="grid lg:grid-cols-3 gap-6 items-start">
-        {/* بخش تصویر */}
+        {/* image area */}
         <div
           ref={containerRef}
           className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}
@@ -409,8 +436,6 @@ export default function ColorPickerTool() {
           ) : (
             <div
               className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4"
-              onMouseEnter={() => imageLoaded && setShowMagnifier(true)}
-              onMouseLeave={() => setShowMagnifier(false)}
             >
               <img
                 ref={imageRef}
@@ -424,10 +449,12 @@ export default function ColorPickerTool() {
                   }
                 `}
                 onLoad={handleImageLoad}
-                onMouseMove={handleMouseMove}
-                onClick={handleClick}
+                onPointerMove={handlePointerMove}
+                onPointerDown={handlePointerDown}
+                onPointerLeave={handlePointerLeave}
                 crossOrigin="anonymous"
                 draggable={false}
+                style={{ touchAction: "none" }} // important for mobile pointer events
               />
               <canvas ref={canvasRef} className="hidden" />
 
@@ -477,9 +504,9 @@ export default function ColorPickerTool() {
           )}
         </div>
 
-        {/* سایدبار */}
+        {/* sidebar */}
         <div className="space-y-4">
-          {/* رنگ فعلی */}
+          {/* current color */}
           <motion.div
             layout
             className={`p-6 rounded-3xl border text-center ${theme.card} ${theme.border}`}
@@ -515,7 +542,7 @@ export default function ColorPickerTool() {
             </button>
           </motion.div>
 
-          {/* پالت اتوماتیک */}
+          {/* auto palette */}
           {palette.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -575,7 +602,7 @@ export default function ColorPickerTool() {
             </motion.div>
           )}
 
-          {/* تاریخچه */}
+          {/* history */}
           {pickedColors.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -643,7 +670,7 @@ export default function ColorPickerTool() {
         </div>
       </div>
 
-      {/* بخش لود از URL */}
+      {/* load from URL */}
       <div className="space-y-2">
         <p className={`text-xs ${theme.textMuted}`}>
           {content.ui.upload.urlHint}

@@ -19,8 +19,6 @@ export default function DocsPage() {
     () => docs[0]?.id ?? null
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // فقط وقتی زبان / طول لیست عوض شد و selected خالی بود ریست کن
   useEffect(() => {
     if (!selectedTool && docs[0]) {
       setSelectedTool(docs[0].id);

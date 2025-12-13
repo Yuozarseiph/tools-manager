@@ -207,6 +207,11 @@
         "title": "Image editor",
         "description": "Crop, rotate and flip images directly in your browser with no uploads.",
         "badge": "Image"
+      },
+      "pdf-editor": {
+        "title": "PDF Editor",
+        "description": "Edit PDF pages in the browser — remove or keep pages, preview and download the edited PDF. All processing happens locally in your browser, no uploads.",
+        "badge": "PDF"
       }
     }
   },

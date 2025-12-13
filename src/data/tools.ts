@@ -88,6 +88,14 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.text-to-pdf.badge",
   },
   {
+    id: "pdf-editor",
+    Icon: FileStack,
+    href: "/tools/pdf-editor",
+    status: "active",
+    category: "pdf",
+    badgeKey: "tools.items.pdf-editor.badge",
+  },
+  {
     id: "qr-gen",
     Icon: QrCode,
     href: "/tools/qr-generator",
@@ -96,12 +104,12 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.qr-gen.badge",
   },
   {
-    id:"audio-extractor",
+    id: "audio-extractor",
     Icon: AudioLines,
-    href:"/tools/audio-extractor",
-    status:"active",
-    category:"audio",
-    badgeKey:"tools.items.audio-extractor.badge",
+    href: "/tools/audio-extractor",
+    status: "active",
+    category: "audio",
+    badgeKey: "tools.items.audio-extractor.badge",
   },
   {
     id: "image-editor",
@@ -110,8 +118,7 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "image",
     badgeKey: "tools.items.image-editor.badge",
-  }
-  ,
+  },
   {
     id: "word-counter",
     Icon: TextCursorInput,

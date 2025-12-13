@@ -1,0 +1,142 @@
+{
+  "fa": {
+    "id": "pdf-editor",
+    "category": "pdf",
+    "title": "ویرایش صفحات PDF",
+    "description": "فایل PDF را باز کن، صفحات دلخواه را حذف یا نگه‌داری کن و نسخهٔ جدید را در مرورگر دانلود کن.",
+    "features": [
+      "نمایش PDF در مرورگر (با سازگاری موبایل)",
+      "انتخاب چند صفحه برای حذف یا نگه‌داری",
+      "ساخت فایل PDF جدید فقط با صفحات انتخاب‌شده",
+      "پردازش کامل در مرورگر، بدون آپلود فایل"
+    ],
+    "ui": {
+      "upload": {
+        "title": "انتخاب فایل PDF",
+        "subtitle": "فایل PDF خود را انتخاب کن تا صفحات آن برای ویرایش آماده شود."
+      },
+      "file": {
+        "sizeUnit": "مگابایت",
+        "removeTitle": "حذف فایل انتخاب‌شده"
+      },
+      "errors": {
+        "invalidType": "فقط فایل‌های PDF پشتیبانی می‌شوند. لطفاً یک فایل با پسوند ‎.pdf‎ انتخاب کن.",
+        "loadFailed": "امکان بارگذاری یا خواندن صفحات PDF وجود ندارد.",
+        "noPages": "صفحه‌ای در این فایل PDF پیدا نشد.",
+        "noSelection": "هیچ صفحه‌ای انتخاب نشده است.",
+        "process": "در هنگام پردازش PDF خطایی رخ داد.",
+        "unknown": "خطای ناشناخته در پردازش PDF."
+      },
+      "mode": {
+        "keep": "نگه‌داشتن صفحات انتخاب‌شده",
+        "remove": "حذف صفحات انتخاب‌شده"
+      },
+      "progress": {
+        "loading": "در حال بارگذاری PDF...",
+        "generating": "در حال ساخت PDF جدید...",
+        "preparingPreview": "در حال آماده‌سازی پیش‌نمایش..."
+      },
+      "buttons": {
+        "editIdle": "ساخت PDF جدید",
+        "editLoading": "در حال ساخت PDF جدید...",
+        "download": "دانلود PDF ویرایش‌شده",
+        "open": "باز کردن",
+        "openPdf": "باز کردن PDF",
+        "newTab": "تب جدید"
+      },
+      "viewer": {
+        "title": "نمایش PDF",
+        "tabs": {
+          "original": "نسخه اصلی",
+          "edited": "نسخه ویرایش‌شده"
+        },
+        "openInNewTabTitle": "باز کردن در تب جدید",
+        "selectedBadge": "انتخاب شد",
+        "pageLabel": "صفحه {{current}} از {{total}}",
+        "mobile": {
+          "androidInlineNote": "برای سازگاری کامل در اندروید، نمایش PDF در تب جدید باز می‌شود.",
+          "inlineNotSupported": "نمایش داخل صفحه در این دستگاه پشتیبانی نمی‌شود؛ از دکمه «باز کردن» استفاده کن."
+        }
+      },
+      "guide": {
+        "title": "نکات استفاده از ویرایشگر PDF",
+        "items": [
+          "برای حذف صفحات، ابتدا آن‌ها را در لیست صفحات انتخاب کن.",
+          "در حالت «نگه‌داشتن صفحات انتخاب‌شده»، فقط صفحات انتخابی در خروجی باقی می‌مانند.",
+          "فایل‌های بسیار بزرگ ممکن است چند ثانیه برای پردازش زمان ببرند.",
+          "تمام پردازش‌ها در مرورگر انجام می‌شود و فایل‌ها آپلود نمی‌شوند."
+        ]
+      }
+    }
+  },
+  "en": {
+    "id": "pdf-editor",
+    "category": "pdf",
+    "title": "PDF page editor",
+    "description": "Open a PDF, select the pages you want to remove or keep, and download a new cleaned‑up file.",
+    "features": [
+      "View PDFs in-browser (mobile-friendly fallbacks)",
+      "Multi-page selection for removal or keeping",
+      "Generate a new PDF with only the pages you want",
+      "All processing happens in the browser, no uploads"
+    ],
+    "ui": {
+      "upload": {
+        "title": "Select PDF file",
+        "subtitle": "Choose a PDF to edit its pages."
+      },
+      "file": {
+        "sizeUnit": "MB",
+        "removeTitle": "Remove selected file"
+      },
+      "errors": {
+        "invalidType": "Only PDF files are supported. Please select a .pdf file.",
+        "loadFailed": "Unable to load or read pages from this PDF.",
+        "noPages": "No pages were found in this PDF file.",
+        "noSelection": "No pages have been selected.",
+        "process": "An error occurred while processing the PDF.",
+        "unknown": "Unknown error while editing the PDF."
+      },
+      "mode": {
+        "keep": "Keep selected pages",
+        "remove": "Remove selected pages"
+      },
+      "progress": {
+        "loading": "Loading PDF...",
+        "generating": "Generating new PDF...",
+        "preparingPreview": "Preparing preview..."
+      },
+      "buttons": {
+        "editIdle": "Generate new PDF",
+        "editLoading": "Generating new PDF...",
+        "download": "Download edited PDF",
+        "open": "Open",
+        "openPdf": "Open PDF",
+        "newTab": "New tab"
+      },
+      "viewer": {
+        "title": "PDF viewer",
+        "tabs": {
+          "original": "Original",
+          "edited": "Edited"
+        },
+        "openInNewTabTitle": "Open in new tab",
+        "selectedBadge": "Selected",
+        "pageLabel": "Page {{current}} of {{total}}",
+        "mobile": {
+          "androidInlineNote": "For better compatibility on Android, the PDF will be opened in a new tab.",
+          "inlineNotSupported": "Inline preview isn't supported on this device. Use the Open button."
+        }
+      },
+      "guide": {
+        "title": "Tips for using the PDF page editor",
+        "items": [
+          "To delete pages, first select them in the page list.",
+          "In “Keep selected pages” mode, only the selected pages will appear in the output.",
+          "Very large PDFs may take a few seconds to process.",
+          "All processing is done in your browser; files are not uploaded."
+        ]
+      }
+    }
+  }
+}

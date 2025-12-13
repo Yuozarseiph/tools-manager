@@ -54,7 +54,6 @@ const CATEGORY_ICON: Record<string, LucideIcon> = {
   presentation: Presentation,
 };
 
-// فقط وقتی lang عوض شود، آرایه‌ی جدید می‌سازد
 export function useDocsContent(): DocSectionItem[] {
   const { locale } = useLanguage();
   const lang: Lang = locale === "en" ? "en" : "fa";

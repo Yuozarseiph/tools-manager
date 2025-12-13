@@ -1,5 +1,37 @@
 [
   {
+    "version": "2.8.1 BETA",
+    "date": "Dec 13, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "PDF Editor: Added a mobile-first preview strategy with explicit “Open” (new tab) fallback on devices that do not reliably render PDFs inline",
+          "PDF Editor: Added viewer tabs to switch between Original and Edited documents (when an edited output is available)",
+          "PDF Editor: Added clearer selection UX for pages (active page state + selected badge) to speed up multi-page workflows on small screens"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "PDF Editor: Fully extracted remaining hard-coded UI strings into bilingual JSON content and unified button labels across RTL/LTR",
+          "PDF Editor: Improved mobile layout and viewer height behavior using dynamic viewport units to reduce layout jumps on scroll",
+          "PDF Editor: Improved memory management by revoking Blob URLs consistently when switching files or regenerating output"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "PDF Editor: Fixed a TypeScript build error when creating a Blob from pdf-lib output by converting Uint8Array to a real ArrayBuffer before Blob creation",
+          "PDF Editor: Fixed inconsistent preview state when switching between Original/Edited after regenerating the output multiple times",
+          "PDF Editor: Fixed edge cases where page count or selection state could become stale after replacing the uploaded file",
+          "Word to PDF: Fixed Persian text rendering/layout issues caused by font handling/substitution during conversion"
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.8.0 BETA",
     "date": "Dec 12, 2025",
     "type": "update",

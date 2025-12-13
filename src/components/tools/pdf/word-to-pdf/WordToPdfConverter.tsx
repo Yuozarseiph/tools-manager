@@ -26,62 +26,87 @@ type ProgressStep =
   | "generating"
   | "success";
 
-async function renderInChunksToPdf(
-  iframeBody: HTMLElement,
-  pdf: any,
-  pageWidthMm: number,
-  pageHeightMm: number
-) {
+// ---------- helpers ----------
+const A4 = { wMm: 210, hMm: 297 };
+const PX_PER_MM = 96 / 25.4;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function waitForIframeAssets(doc: Document) {
+  // fonts
+  try {
+    // @ts-ignore
+    if (doc.fonts?.ready) {
+      // @ts-ignore
+      await doc.fonts.ready;
+    }
+  } catch {}
+
+  // images
+  const imgs = Array.from(doc.images ?? []);
+  await Promise.all(
+    imgs.map(async (img) => {
+      try {
+        // decode is best when supported
+        // @ts-ignore
+        if (img.decode) await img.decode();
+      } catch {
+        // fallback: wait for load/error
+        await new Promise<void>((resolve) => {
+          if (img.complete) return resolve();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      }
+    })
+  );
+}
+
+async function renderPageByPageToPdf(iframeDoc: Document, pdf: any) {
   const html2canvas = (await import("html2canvas")).default;
 
-  const pxPerMm = 96 / 25.4;
-  const pageWidthPx = pageWidthMm * pxPerMm;
+  const pageWidthPx = Math.round(A4.wMm * PX_PER_MM); // ~794
+  const pageHeightPx = Math.round(A4.hMm * PX_PER_MM); // ~1123
 
-  const totalHeightPx = iframeBody.scrollHeight;
-  const maxChunkHeightPx = 4000;
+  const contentEl = iframeDoc.getElementById("tm-content");
+  const pageEl = iframeDoc.getElementById("tm-page");
 
-  let currentOffsetPx = 0;
-  let isFirstPage = true;
+  if (!contentEl || !pageEl) {
+    throw new Error("PDF renderer: page/content container not found.");
+  }
 
-  while (currentOffsetPx < totalHeightPx) {
-    const remaining = totalHeightPx - currentOffsetPx;
-    const chunkHeight = Math.min(remaining, maxChunkHeightPx);
+  // total pages
+  const contentHeight = contentEl.scrollHeight;
+  const totalPages = Math.max(1, Math.ceil(contentHeight / pageHeightPx));
 
-    const canvas = await html2canvas(iframeBody, {
-      scale: 2,
+  const overlapPx = 24;
+
+  for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+    const offsetY = pageIndex * (pageHeightPx - overlapPx);
+    (contentEl as HTMLElement).style.transform = `translateY(-${offsetY}px)`;
+
+    // Let layout settle
+    await sleep(50);
+
+    const canvas = await html2canvas(pageEl as HTMLElement, {
+      backgroundColor: "#ffffff",
+      scale: 2, // you can make this 1.5 on low-end devices
       useCORS: true,
       logging: false,
-      backgroundColor: "#ffffff",
       width: pageWidthPx,
-      height: chunkHeight,
+      height: pageHeightPx,
       windowWidth: pageWidthPx,
-      windowHeight: chunkHeight,
-      scrollY: -currentOffsetPx,
+      windowHeight: pageHeightPx,
     });
 
     const imgData = canvas.toDataURL("image/jpeg", 0.95);
 
-    const imgWidthMm = pageWidthMm;
-    const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
-
-    let positionMm = 0;
-    let heightLeftMm = imgHeightMm;
-
-    while (heightLeftMm > 0) {
-      if (!isFirstPage) {
-        pdf.addPage();
-      } else {
-        isFirstPage = false;
-      }
-
-      pdf.addImage(imgData, "JPEG", 0, positionMm, imgWidthMm, imgHeightMm);
-
-      heightLeftMm -= pageHeightMm;
-      positionMm -= pageHeightMm;
-    }
-
-    currentOffsetPx += chunkHeight;
+    if (pageIndex > 0) pdf.addPage();
+    pdf.addImage(imgData, "JPEG", 0, 0, A4.wMm, A4.hMm);
   }
+
+  // reset transform
+  (contentEl as HTMLElement).style.transform = "translateY(0)";
 }
 
 export default function WordToPdfConverter() {
@@ -104,9 +129,7 @@ export default function WordToPdfConverter() {
   const fullscreenContentRef = useRef<HTMLDivElement | null>(null);
 
   const resetPdfState = () => {
-    if (pdfBlobUrl) {
-      URL.revokeObjectURL(pdfBlobUrl);
-    }
+    if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
     setPdfBlobUrl(null);
     setPdfFileName("document.pdf");
     setProgressStep("idle");
@@ -145,9 +168,7 @@ export default function WordToPdfConverter() {
       const arrayBuffer = await file.arrayBuffer();
       setProgressStep("converting");
 
-      const result = await mammoth.convertToHtml({
-        arrayBuffer,
-      });
+      const result = await mammoth.convertToHtml({ arrayBuffer });
       const html = result.value;
 
       if (!html || !html.trim()) {
@@ -185,99 +206,103 @@ export default function WordToPdfConverter() {
       iframe.style.position = "fixed";
       iframe.style.left = "-9999px";
       iframe.style.top = "0";
-      iframe.style.width = "794px";
+      iframe.style.width = `${Math.round(A4.wMm * PX_PER_MM)}px`;
+      iframe.style.height = `${Math.round(A4.hMm * PX_PER_MM)}px`;
       iframe.style.border = "none";
       document.body.appendChild(iframe);
 
       const iframeDoc =
         iframe.contentDocument || iframe.contentWindow?.document;
-      if (!iframeDoc) {
-        throw new Error(content.ui.errors.iframeAccess);
-      }
+      if (!iframeDoc) throw new Error(content.ui.errors.iframeAccess);
+
+      const pageWidthPx = Math.round(A4.wMm * PX_PER_MM); // ~794
+      const pageHeightPx = Math.round(A4.hMm * PX_PER_MM); // ~1123
 
       iframeDoc.open();
-      iframeDoc.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <style>
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-            }
-            body {
-              width: 794px;
-              padding: 40px;
-              background: white;
-              color: black;
-              font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
-              font-size: 14px;
-              line-height: 1.8;
-              direction: auto;
-            }
-            p {
-              margin-bottom: 12px;
-              text-align: justify;
-            }
-            h1, h2, h3, h4, h5, h6 {
-              margin: 16px 0 8px 0;
-              font-weight: bold;
-            }
-            ul, ol {
-              margin: 12px 0;
-              padding-right: 20px;
-            }
-            li {
-              margin-bottom: 6px;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 12px 0;
-            }
-            table td, table th {
-              border: 1px solid #ddd;
-              padding: 8px;
-            }
-            img {
-              max-width: 100%;
-              height: auto;
-            }
-            strong {
-              font-weight: bold;
-            }
-            em {
-              font-style: italic;
-            }
-          </style>
-        </head>
-        <body>
-          ${htmlPreview}
-        </body>
-        </html>
-      `);
+      iframeDoc.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: white; color: black; }
+
+    /* Page viewport (A4 in px) */
+    #tm-page{
+      width: ${pageWidthPx}px;
+      height: ${pageHeightPx}px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+#tm-content p,
+#tm-content h1,
+#tm-content h2,
+#tm-content h3,
+#tm-content h4,
+#tm-content h5,
+#tm-content h6,
+#tm-content li,
+#tm-content tr,
+#tm-content img {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+
+
+    /* Actual content */
+    #tm-content{
+      width: ${pageWidthPx}px;
+      padding: 40px;
+      font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #000;
+      direction: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(0);
+      will-change: transform;
+    }
+
+    p { margin: 0 0 12px 0; text-align: justify; }
+    h1,h2,h3,h4,h5,h6 { margin: 16px 0 8px 0; font-weight: 700; }
+    ul,ol { margin: 12px 0; padding-right: 20px; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    td,th { border: 1px solid #ddd; padding: 8px; }
+    img { max-width: 100%; height: auto; }
+
+    /* Optional: keep long words/URLs from breaking layout */
+    #tm-content { overflow-wrap: anywhere; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div id="tm-page">
+    <div id="tm-content">${htmlPreview}</div>
+  </div>
+</body>
+</html>`);
       iframeDoc.close();
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await waitForIframeAssets(iframeDoc);
 
       setProgressStep("generating");
 
       const { jsPDF } = await import("jspdf");
       const pdf = new jsPDF("p", "mm", "a4");
-      const iframeBody = iframeDoc.body;
 
-      await renderInChunksToPdf(iframeBody, pdf, 210, 297);
+      await renderPageByPageToPdf(iframeDoc, pdf);
 
       const pdfBlob = pdf.output("blob") as Blob;
       const url = URL.createObjectURL(pdfBlob);
 
       const baseName = selectedFile.name.replace(/\.docx$/i, "") || "document";
-
       setPdfBlobUrl(url);
       setPdfFileName(`${baseName}.pdf`);
-
       setProgressStep("success");
     } catch (err) {
       console.error("Conversion error:", err);
@@ -288,9 +313,7 @@ export default function WordToPdfConverter() {
       setError(`${content.ui.errors.genericPrefix} ${message}`);
       setProgressStep("idle");
     } finally {
-      if (iframe && iframe.parentNode) {
-        document.body.removeChild(iframe);
-      }
+      if (iframe && iframe.parentNode) document.body.removeChild(iframe);
       setIsConverting(false);
     }
   };
@@ -327,14 +350,10 @@ export default function WordToPdfConverter() {
 
   const showProgress = progressStep !== "idle";
 
-  // کلید Escape برای خروج از حالت تمام‌صفحه
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && previewFullscreen) {
-        setPreviewFullscreen(false);
-      }
+      if (e.key === "Escape" && previewFullscreen) setPreviewFullscreen(false);
     };
-
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [previewFullscreen]);
@@ -349,16 +368,10 @@ export default function WordToPdfConverter() {
   useEffect(() => {
     if (previewFullscreen) {
       document.body.style.overflow = "hidden";
-      // فوکوس بر روی محتوای تمام‌صفحه
-      setTimeout(() => {
-        if (fullscreenContentRef.current) {
-          fullscreenContentRef.current.focus();
-        }
-      }, 100);
+      setTimeout(() => fullscreenContentRef.current?.focus(), 100);
     } else {
       document.body.style.overflow = "";
     }
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -477,15 +490,14 @@ export default function WordToPdfConverter() {
                       className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${theme.primary}`}
                     >
                       <Download size={18} />
-                      {content.ui.buttons.manualDownload ?? "دانلود فایل PDF"}
+                      {content.ui.buttons.manualDownload ?? "Download PDF"}
                     </button>
                     <button
                       onClick={convertToPdf}
                       disabled={isConverting}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium border ${theme.border} ${theme.card} ${theme.text} transition-all disabled:opacity-50`}
                     >
-                      {content.ui.buttons.convertAgain ??
-                        "تبدیل مجدد با تنظیمات فعلی"}
+                      {content.ui.buttons.convertAgain ?? "Convert again"}
                     </button>
                   </div>
                 )}
@@ -506,6 +518,7 @@ export default function WordToPdfConverter() {
             </div>
           </div>
 
+          {/* Preview panel (unchanged) */}
           <div
             ref={previewContainerRef}
             className={`
@@ -519,12 +532,12 @@ export default function WordToPdfConverter() {
           >
             <div className="px-4 py-3 border-b border-slate-200/60 flex items-center justify-between gap-2 bg-white dark:bg-slate-900">
               <span className={`text-sm font-medium ${theme.text}`}>
-                {content.ui.preview?.title ?? "پیش‌نمایش سند Word"}
+                {content.ui.preview?.title ?? "Word preview"}
               </span>
               <div className="flex items-center gap-2">
                 {isPreviewReady && (
                   <span className="hidden sm:inline-flex text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600">
-                    {content.ui.preview?.liveLabel ?? "پیش‌نمایش زنده"}
+                    {content.ui.preview?.liveLabel ?? "Live preview"}
                   </span>
                 )}
                 <button
@@ -562,16 +575,14 @@ export default function WordToPdfConverter() {
                   className={`prose max-w-none rtl:prose-rtl dark:prose-invert ${
                     previewFullscreen ? "prose-lg" : "prose-sm"
                   }`}
-                  dangerouslySetInnerHTML={{
-                    __html: htmlPreview,
-                  }}
+                  dangerouslySetInnerHTML={{ __html: htmlPreview }}
                 />
               ) : (
                 <div
                   className={`h-full flex items-center justify-center text-sm ${theme.textMuted}`}
                 >
                   {content.ui.preview?.empty ??
-                    "پس از انتخاب فایل Word، پیش‌نمایش آن در این بخش نمایش داده می‌شود."}
+                    "After selecting a Word file, its preview will appear here."}
                 </div>
               )}
             </div>

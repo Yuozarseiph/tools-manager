@@ -185,6 +185,31 @@
       }
     },
     {
+      "id": "pdf-editor",
+      "title": "ویرایشگر صفحات PDF",
+      "category": "pdf",
+      "description": "ویرایش صفحات PDF: انتخاب صفحات برای حذف یا نگهداری، پیش‌نمایش و ساخت فایل جدید در مرورگر.",
+      "features": [
+        "نمایش PDF داخلی با پشتیبانی موبایل",
+        "انتخاب چندصفحه‌ای برای حذف یا نگهداری",
+        "تولید PDF جدید تنها با صفحات انتخاب‌شده",
+        "پیش‌نمایش نسخه اصلی و ویرایش‌شده",
+        "دانلود مستقیم فایل خروجی",
+        "پردازش کامل در مرورگر، بدون آپلود"
+      ],
+      "howItWorks": [
+        "فایل PDF با استفاده از FileReader و pdf-lib خوانده می‌شود و تعداد صفحات استخراج می‌گردد.",
+        "لیست صفحات برای انتخاب (تک/چندتایی) به کاربر نمایش داده می‌شود.",
+        "در مرحله تولید، صفحات انتخاب‌شده با استفاده از pdf-lib از فایل اصلی کپی و در یک PDF جدید قرار می‌گیرند.",
+        "فایل خروجی به‌صورت Blob در مرورگر ساخته شده و برای دانلود کاربر آماده می‌شود."
+      ],
+      "technicalNote": {
+        "title": "نکات فنی و محدودیت‌ها",
+        "content": "ابزار از کتابخانه pdf-lib برای خواندن و کپی صفحات PDF استفاده می‌کند. رندر داخل صفحه برای پیش‌نمایش از iframe با #page=... استفاده می‌شود که در برخی دستگاه‌ها به‌ویژه اندروید نیاز به باز کردن در تب جدید دارد. پردازش فایل‌های خیلی بزرگ ممکن است زمان‌بر بوده و مصرف رم/CPU را افزایش دهد."
+      },
+      "privacyNote": "تمام پردازش‌ها به‌صورت محلی در مرورگر انجام می‌شود؛ هیچ فایلی به سرور ارسال یا ذخیره نمی‌گردد."
+    },
+    {
       "id": "word-to-pdf",
       "title": "تبدیل Word به PDF",
       "category": "pdf",
@@ -567,6 +592,31 @@
         "title": "pdf-lib library",
         "content": "Merging works by manipulating the internal PDF structure, without re-rendering pages."
       }
+    },
+    {
+      "id": "pdf-editor",
+      "title": "PDF page editor",
+      "category": "pdf",
+      "description": "Edit PDF pages in the browser — remove or keep pages, preview and download the edited PDF.",
+      "features": [
+        "In-browser PDF viewing with mobile-friendly fallbacks",
+        "Multi-page selection for removal or keeping",
+        "Generate a new PDF containing only the pages you want",
+        "Side-by-side preview of original and edited documents",
+        "Direct download of the final PDF",
+        "All processing happens locally in the browser (no uploads)"
+      ],
+      "howItWorks": [
+        "The uploaded PDF is read (FileReader/arrayBuffer) and parsed to determine page count using pdf-lib.",
+        "The UI lists pages so the user can select single or multiple pages to keep or remove.",
+        "When generating the result, the selected pages are copied into a new PDF document using pdf-lib and serialized to bytes.",
+        "A Blob is created from the result and an object URL is provided for download or preview."
+      ],
+      "technicalNote": {
+        "title": "Technical details & limitations",
+        "content": "This tool uses pdf-lib to read and copy pages between PDF documents. Inline preview uses an iframe with page fragment identifiers; on some Android devices inline preview is limited and the file may be opened in a new tab instead. Very large PDFs may take noticeable time to process and increase CPU/RAM usage."
+      },
+      "privacyNote": "All processing is performed locally in your browser. No files are uploaded or stored on any server."
     },
     {
       "id": "word-to-pdf",
