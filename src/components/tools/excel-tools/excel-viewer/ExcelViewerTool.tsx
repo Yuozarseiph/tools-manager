@@ -1,3 +1,4 @@
+// components/tools/excel/excel-viewer/ExcelViewerTool.tsx
 "use client";
 
 import { useState, ChangeEvent, useRef } from "react";
@@ -20,7 +21,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useExcelViewerContent,
   type ExcelViewerToolContent,
-} from "./excel-viewer.content";
+} from "./excel-viewer.content"; // ✅ مسیر نسبی
 
 type DataRow = { [key: string]: any };
 

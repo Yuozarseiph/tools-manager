@@ -1,44 +1,69 @@
+// app/tools/(pdf)/text-to-pdf/content.ts
 
-import rawContent from "./content.json";
 import { useLanguage } from "@/context/LanguageContext";
 
-type Lang = "fa" | "en";
-
-const content = rawContent as {
-  fa: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
-  en: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
+export type SeoContent = {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  applicationCategory?: string;
+  inLanguage?: string;
 };
 
-// برای استفاده در metadata (سمت سرور / بدون هوک)
-export function getTextToPdfSeo(lang: Lang) {
-  return content[lang].seo;
+export const textToPdfContent = {
+  fa: {
+    page: {
+      title: "تبدیل آنلاین متن به PDF با قالب‌بندی ساده",
+      description:
+        "متن خود را در ویرایشگر وارد کن، اندازه فونت و تراز متن را تنظیم کن و یک فایل PDF تمیز برای چاپ، اشتراک‌گذاری یا آرشیو بساز.",
+    },
+    seo: {
+      title: "ابزار تبدیل متن به PDF آنلاین | Tools Manager",
+      description:
+        "متن فارسی یا انگلیسی را با چند کلیک به PDF تبدیل کن، تعداد کاراکتر و خطوط را ببین و خروجی نهایی را برای استفاده شخصی یا کاری دانلود کن.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/text-to-pdf",
+      ogTitle: "مبدل تحت‌وب متن به PDF",
+      ogDescription:
+        "بدون نیاز به واژه‌پرداز سنگین، متن خود را در مرورگر بنویس و یک فایل PDF مرتب و آماده چاپ یا ارسال بساز.",
+      applicationCategory: "UtilitiesApplication",
+      inLanguage: "fa-IR",
+    } satisfies SeoContent,
+  },
+
+  en: {
+    page: {
+      title: "Convert text to PDF online with simple formatting",
+      description:
+        "Type or paste your text, adjust font size and alignment, then generate a clean PDF ready for printing, sharing or archiving.",
+    },
+    seo: {
+      title: "Text to PDF converter online | Tools Manager",
+      description:
+        "Quickly turn English or Persian text into a PDF, see character and line counts and download the final document for personal or work use.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/text-to-pdf",
+      ogTitle: "In‑browser text to PDF converter",
+      ogDescription:
+        "Create neat, ready‑to‑print PDF documents from plain text directly in your browser, without heavy word processors.",
+      applicationCategory: "UtilitiesApplication",
+      inLanguage: "en-US",
+    } satisfies SeoContent,
+  },
+};
+
+export type TextToPdfContent = typeof textToPdfContent.fa;
+
+export function useTextToPdfContent() {
+  const { locale } = useLanguage();
+  return textToPdfContent[locale];
 }
 
-// برای استفاده در UI صفحه (سمت کلاینت)
 export function useTextToPdfPageContent() {
-  const { locale } = useLanguage(); // از LanguageContext می‌آید.[file:1]
-  const lang: Lang = locale === "en" ? "en" : "fa";
-  return content[lang].page;
+  const content = useTextToPdfContent();
+  return content.page;
+}
+
+export function getTextToPdfSeo(locale: "fa" | "en"): SeoContent {
+  return textToPdfContent[locale].seo;
 }

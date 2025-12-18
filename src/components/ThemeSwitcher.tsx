@@ -7,34 +7,45 @@ import { Palette, Check, Moon, Sun } from "lucide-react";
 import { useTheme, ThemeName } from "@/context/ThemeContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
+import { themeContent } from "@/data/theme.content";
 
 type ThemeOption = {
   id: ThemeName;
   icon: typeof Sun;
-  labelFallback: string;
-  labelKey: string;
+  label: {
+    fa: string;
+    en: string;
+  };
 };
 
 export default function ThemeSwitcher() {
   const { changeTheme, themeName } = useTheme();
   const theme = useThemeColors();
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = themeContent[locale];
 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // 🔥 تعریف گزینه‌ها با لیبل دو زبانه
   const options: ThemeOption[] = [
     {
       id: "royal-blue-light",
       icon: Sun,
-      labelFallback: "روشن",
-      labelKey: "theme.light",
+      label: {
+        fa: themeContent.fa.light,
+        en: themeContent.en.light,
+      },
     },
     {
       id: "royal-blue-dark",
       icon: Moon,
-      labelFallback: "تاریک",
-      labelKey: "theme.dark",
+      label: {
+        fa: themeContent.fa.dark,
+        en: themeContent.en.dark,
+      },
     },
   ];
 
@@ -50,8 +61,6 @@ export default function ThemeSwitcher() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const switchTitle = t("theme.switchTitle") ?? "تغییر حالت روشن / تاریک";
 
   // برای تعیین جهت منو (RTL / LTR)
   const isRTL = locale === "fa";
@@ -70,8 +79,8 @@ export default function ThemeSwitcher() {
         `}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-label={switchTitle}
-        title={switchTitle}
+        aria-label={content.switchTitle}
+        title={content.switchTitle}
       >
         <Palette
           size={18}
@@ -98,7 +107,7 @@ export default function ThemeSwitcher() {
             {options.map((opt) => {
               const Icon = opt.icon;
               const active = themeName === opt.id;
-              const label = t(opt.labelKey) ?? opt.labelFallback;
+              const label = opt.label[locale]; // 🔥 انتخاب لیبل بر اساس زبان
 
               return (
                 <button
@@ -114,26 +123,17 @@ export default function ThemeSwitcher() {
                     backdrop-blur-sm
                     border ${theme.border}
                     transition-colors
-                    ${
-                      active
-                        ? theme.secondary
-                        : `hover:opacity-90`
-                    }
+                    ${active ? theme.secondary : `hover:opacity-90`}
                   `}
                 >
                   <Icon
                     size={16}
-                    className={
-                      active ? theme.accent : theme.textMuted
-                    }
+                    className={active ? theme.accent : theme.textMuted}
                   />
                   <span className={theme.text}>{label}</span>
 
                   {active && (
-                    <Check
-                      size={14}
-                      className={`mr-auto ${theme.accent}`}
-                    />
+                    <Check size={14} className={`mr-auto ${theme.accent}`} />
                   )}
                 </button>
               );

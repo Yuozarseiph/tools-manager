@@ -1,3 +1,4 @@
+// app/tools/(excel-tools)/excel-viewer/ExcelViewer.tsx
 "use client";
 
 import Link from "next/link";
@@ -6,12 +7,16 @@ import { ArrowRight, FileSpreadsheet } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import ExcelViewerTool from "@/components/tools/excel-tools/excel-viewer/ExcelViewerTool";
 import { useExcelViewerContent } from "./content";
+import { HeaderContent } from "@/data/layout/header.content";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function ExcelViewerPage() {
+export default function ExcelViewerClient() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const { page, why } = useExcelViewerContent();
+
+  // 🔥 استفاده از HeaderContent
+  const nav = HeaderContent[locale];
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -20,7 +25,8 @@ export default function ExcelViewerPage() {
           href="/"
           className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {t("docs.back")}
+          <ArrowRight size={16} className="ml-1" />
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-4">
@@ -28,7 +34,9 @@ export default function ExcelViewerPage() {
             <FileSpreadsheet size={32} className="text-white" />
           </div>
           <div>
-            <h1 className={`text-2xl sm:text-4xl font-bold mb-2 ${theme.text}`}>
+            <h1
+              className={`text-2xl sm:text-4xl font-bold mb-2 ${theme.text}`}
+            >
               {page.title}
             </h1>
             <p
@@ -43,7 +51,10 @@ export default function ExcelViewerPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 w-full flex-1 mt-8">
         <ExcelViewerTool />
 
-        <div className={`mt-12 max-w-3xl ${theme.textMuted} text-sm leading-7`}>
+        {/* 🔥 بخش "چرا" */}
+        <div
+          className={`mt-12 max-w-3xl ${theme.textMuted} text-sm leading-7`}
+        >
           <h3 className={`font-bold text-lg mb-2 ${theme.text}`}>
             {why.title}
           </h3>

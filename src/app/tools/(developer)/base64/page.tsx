@@ -3,16 +3,13 @@ import type { Metadata } from "next";
 import Base64Client from "./Base64";
 import { getBase64Seo } from "./content";
 
-// سئوی هر دو زبان
 const fa = getBase64Seo("fa");
 const en = getBase64Seo("en");
 
-// می‌توانی یکی را به‌عنوان اصلی در تایتل/دسکریپشن بگذاری
 const combinedTitle = `${fa.title} / ${en.title}`;
 const combinedDescription = `${fa.description} / ${en.description}`;
 const canonicalUrl = fa.canonical;
 
-// متادیتای Next.js
 export const metadata: Metadata = {
   title: combinedTitle,
   description: combinedDescription,
@@ -25,9 +22,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${
-      fa.ogDescription ?? fa.description
-    } / ${en.ogDescription ?? en.description}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",

@@ -1,54 +1,73 @@
-"use client";
+// app/tools/(calendar)/date-converter/date-converter.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./date-converter.i18n.json";
+export const dateConverterContent = {
+  fa: {
+    id: "date-converter",
+    category: "developer",
+    title: "تبدیل تاریخ شمسی و میلادی",
+    description:
+      "تاریخ را بین تقویم شمسی (جلالی) و میلادی به‌صورت دقیق تبدیل کنید.",
+    features: [
+      "تبدیل سریع تاریخ شمسی به میلادی",
+      "تبدیل تاریخ میلادی به شمسی",
+      "پیشنهاد خودکار سال مناسب برای هر تقویم",
+      "نمایش پیام خطا در صورت وارد کردن تاریخ نامعتبر",
+    ],
+    ui: {
+      modes: {
+        shamsiToGregorian: "تبدیل شمسی به میلادی",
+        gregorianToShamsi: "تبدیل میلادی به شمسی",
+      },
+      inputs: {
+        dayLabel: "روز",
+        monthLabel: "ماه",
+        yearLabel: "سال",
+        placeholderShamsiYear: "مثلاً ۱۴۰۳",
+        placeholderGregorianYear: "مثلاً ۲۰۲۴",
+      },
+      result: {
+        title: "تاریخ تبدیل‌شده",
+        invalid: "تاریخ وارد شده نامعتبر است.",
+      },
+    },
+  },
+  en: {
+    id: "date-converter",
+    category: "developer",
+    title: "Shamsi / Gregorian date converter",
+    description:
+      "Convert dates between the Jalali (Shamsi) and Gregorian calendars accurately.",
+    features: [
+      "Convert a Shamsi date to Gregorian",
+      "Convert a Gregorian date to Shamsi",
+      "Year placeholders tailored to each calendar",
+      "Shows an error message for invalid dates",
+    ],
+    ui: {
+      modes: {
+        shamsiToGregorian: "Shamsi to Gregorian",
+        gregorianToShamsi: "Gregorian to Shamsi",
+      },
+      inputs: {
+        dayLabel: "Day",
+        monthLabel: "Month",
+        yearLabel: "Year",
+        placeholderShamsiYear: "e.g. 1403",
+        placeholderGregorianYear: "e.g. 2024",
+      },
+      result: {
+        title: "Converted date",
+        invalid: "The entered date is not valid.",
+      },
+    },
+  },
+};
 
-type DocCategoryKey = "utility";
+export type DateConverterToolContent = typeof dateConverterContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface DateConverterToolContent extends BaseDocsFields {
-  id: "date-converter";
-  ui: {
-    modes: {
-      shamsiToGregorian: string;
-      gregorianToShamsi: string;
-    };
-    inputs: {
-      dayLabel: string;
-      monthLabel: string;
-      yearLabel: string;
-      placeholderShamsiYear: string;
-      placeholderGregorianYear: string;
-    };
-    result: {
-      title: string;
-      invalid: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: DateConverterToolContent; en: DateConverterToolContent }
-const CONTENT_BY_LOCALE = rawContent as Record<
-  Locale,
-  DateConverterToolContent
->;
-
-export function useDateConverterContent(): DateConverterToolContent {
+export function useDateConverterContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return dateConverterContent[locale];
 }

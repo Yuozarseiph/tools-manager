@@ -1,44 +1,69 @@
+// app/tools/(pdf)/word-to-pdf/content.ts
 
-import rawContent from "./content.json";
 import { useLanguage } from "@/context/LanguageContext";
 
-type Lang = "fa" | "en";
-
-const content = rawContent as {
-  fa: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
-  en: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
+export type SeoContent = {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  applicationCategory?: string;
+  inLanguage?: string;
 };
 
-// برای استفاده در metadata (سمت سرور / بدون هوک)
-export function getWordToPdfSeo(lang: Lang) {
-  return content[lang].seo;
+export const wordToPdfContent = {
+  fa: {
+    page: {
+      title: "تبدیل آنلاین فایل Word به PDF با حفظ قالب",
+      description:
+        "فایل‌های Word خود را بارگذاری کن تا در مرورگر به PDF تبدیل شوند، بدون نیاز به نصب نرم‌افزار و با حفظ حداکثری ساختار و استایل.",
+    },
+    seo: {
+      title: "ابزار تبدیل Word به PDF آنلاین | Tools Manager",
+      description:
+        "فایل‌های DOC و DOCX را به‌صورت امن و سریع به PDF تبدیل کن، محتوای فارسی و انگلیسی را پشتیبانی می‌کند و خروجی آماده چاپ یا ارسال می‌دهد.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/word-to-pdf",
+      ogTitle: "مبدل تحت‌وب Word به PDF",
+      ogDescription:
+        "بدون نصب آفیس یا نرم‌افزار اضافی، فایل‌های Word را مستقیم در مرورگر به PDF تبدیل کن و خروجی نهایی را دانلود کن.",
+      applicationCategory: "UtilitiesApplication",
+      inLanguage: "fa-IR",
+    } satisfies SeoContent,
+  },
+
+  en: {
+    page: {
+      title: "Convert Word documents to PDF online",
+      description:
+        "Upload your Word files to convert them to PDF directly in the browser, keeping the layout and styles as much as possible.",
+    },
+    seo: {
+      title: "Word to PDF converter online | Tools Manager",
+      description:
+        "Securely and quickly turn DOC and DOCX files into PDFs, with support for Persian and English content and print‑ready output.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/word-to-pdf",
+      ogTitle: "In‑browser Word to PDF converter",
+      ogDescription:
+        "Convert Word documents to PDF without installing Office or extra software and download the final result instantly.",
+      applicationCategory: "UtilitiesApplication",
+      inLanguage: "en-US",
+    } satisfies SeoContent,
+  },
+};
+
+export type WordToPdfContent = typeof wordToPdfContent.fa;
+
+export function useWordToPdfContent() {
+  const { locale } = useLanguage();
+  return wordToPdfContent[locale];
 }
 
-// برای استفاده در UI صفحه (سمت کلاینت)
 export function useWordToPdfPageContent() {
-  const { locale } = useLanguage(); // از LanguageContext می‌آید.[file:1]
-  const lang: Lang = locale === "en" ? "en" : "fa";
-  return content[lang].page;
+  const content = useWordToPdfContent();
+  return content.page;
+}
+
+export function getWordToPdfSeo(locale: "fa" | "en"): SeoContent {
+  return wordToPdfContent[locale].seo;
 }

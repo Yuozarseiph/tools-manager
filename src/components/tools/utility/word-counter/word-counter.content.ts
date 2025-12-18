@@ -1,62 +1,96 @@
-"use client";
+// app/tools/(writing)/word-counter/word-counter.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./word-counter.i18n.json";
+export const wordCounterContent = {
+  fa: {
+    id: "word-counter",
+    category: "developer",
+    title: "شمارش کلمات و کاراکترها",
+    description:
+      "متن خود را بنویسید و تعداد کلمات، کاراکترها، جملات، پاراگراف‌ها و زمان تقریبی مطالعه را ببینید.",
+    features: [
+      "شمارش لحظه‌ای کلمات و کاراکترها",
+      "نمایش تعداد جملات و پاراگراف‌ها",
+      "تخمین زمان مطالعه بر اساس سرعت خواندن استاندارد",
+      "امکان پاک کردن و کپی سریع متن",
+    ],
+    ui: {
+      editor: {
+        title: "ویرایشگر متن",
+        placeholder:
+          "متن خود را اینجا بنویسید یا پیست کنید تا آمار آن به‌صورت خودکار محاسبه شود...",
+      },
+      buttons: {
+        clearTitle: "پاک کردن متن",
+        copy: "کپی متن",
+        copied: "کپی شد!",
+      },
+      stats: {
+        title: "آمار متن",
+        words: "تعداد کلمات",
+        chars: "تعداد کاراکترها (با فاصله)",
+        charsNoSpace: "تعداد کاراکترها (بدون فاصله)",
+        sentences: "تعداد جملات",
+        paragraphs: "تعداد پاراگراف‌ها",
+      },
+      readingTime: {
+        label: "زمان تقریبی مطالعه",
+        unit: "دقیقه",
+      },
+      page: {
+        title: "ابزار شمارش کلمات و کاراکترها",
+        description:
+          "برای نگارش محتوا، مقاله، شبکه‌های اجتماعی یا سئو، آمار دقیق متن خود را به‌صورت لحظه‌ای بررسی کنید.",
+      },
+    },
+  },
+  en: {
+    id: "word-counter",
+    category: "developer",
+    title: "Word and character counter",
+    description:
+      "Type or paste your text and see live statistics for words, characters, sentences, paragraphs and reading time.",
+    features: [
+      "Real‑time word and character counting",
+      "Shows number of sentences and paragraphs",
+      "Estimated reading time based on typical reading speed",
+      "Quick clear and copy actions for the text",
+    ],
+    ui: {
+      editor: {
+        title: "Text editor",
+        placeholder: "Write or paste your text here to see live statistics...",
+      },
+      buttons: {
+        clearTitle: "Clear text",
+        copy: "Copy text",
+        copied: "Copied!",
+      },
+      stats: {
+        title: "Text statistics",
+        words: "Words",
+        chars: "Characters (with spaces)",
+        charsNoSpace: "Characters (no spaces)",
+        sentences: "Sentences",
+        paragraphs: "Paragraphs",
+      },
+      readingTime: {
+        label: "Estimated reading time",
+        unit: "minutes",
+      },
+      page: {
+        title: "Word & character counter tool",
+        description:
+          "Check detailed statistics for your content in real time for writing, blogging, social posts or SEO.",
+      },
+    },
+  },
+};
 
-type DocCategoryKey = "utility";
+export type WordCounterToolContent = typeof wordCounterContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface WordCounterToolContent extends BaseDocsFields {
-  id: "word-counter";
-  ui: {
-    editor: {
-      title: string;
-      placeholder: string;
-    };
-    buttons: {
-      clearTitle: string;
-      copy: string;
-      copied: string;
-    };
-    stats: {
-      title: string;
-      words: string;
-      chars: string;
-      charsNoSpace: string;
-      sentences: string;
-      paragraphs: string;
-    };
-    readingTime: {
-      label: string;
-      unit: string;
-    };
-    page: {
-      title: string;
-      description: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: WordCounterToolContent; en: WordCounterToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, WordCounterToolContent>;
-
-export function useWordCounterContent(): WordCounterToolContent {
+export function useWordCounterContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return wordCounterContent[locale];
 }

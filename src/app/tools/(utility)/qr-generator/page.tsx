@@ -1,5 +1,6 @@
+// app/tools/(utility)/qr-generator/page.tsx
 import type { Metadata } from "next";
-import QrGeneratorPage from "./QrGenerator";
+import QrGeneratorClient from "./QrGenerator";
 import { getQrGeneratorSeo } from "./content";
 
 // سئوی هر دو زبان
@@ -23,9 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${
-      fa.ogDescription ?? fa.description
-    } / ${en.ogDescription ?? en.description}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
   },
 };
 
-// JSON-LD دو زبانه برای WebApplication
 function buildJsonLd() {
   const baseProvider = {
     "@type": "Organization",
@@ -48,8 +46,7 @@ function buildJsonLd() {
       name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: fa.description,
       url: fa.canonical,
-      applicationCategory:
-        fa.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: fa.applicationCategory ?? "UtilitiesApplication",
       inLanguage: fa.inLanguage ?? "fa-IR",
       provider: baseProvider,
     },
@@ -59,8 +56,7 @@ function buildJsonLd() {
       name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: en.description,
       url: en.canonical,
-      applicationCategory:
-        en.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: en.applicationCategory ?? "UtilitiesApplication",
       inLanguage: en.inLanguage ?? "en-US",
       provider: baseProvider,
     },
@@ -78,7 +74,7 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <QrGeneratorPage />
+      <QrGeneratorClient />
     </div>
   );
 }

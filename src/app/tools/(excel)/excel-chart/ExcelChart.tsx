@@ -1,3 +1,4 @@
+// app/tools/(excel-tools)/excel-chart/ExcelChart.tsx
 "use client";
 
 import Link from "next/link";
@@ -6,12 +7,16 @@ import { ArrowRight, PieChart } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import ExcelChartTool from "@/components/tools/excel-tools/excel-chart/ExcelChartTool";
 import { useExcelChartPageContent } from "./content";
+import { HeaderContent } from "@/data/layout/header.content";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function ExcelChartPage() {
+export default function ExcelChartClient() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const page = useExcelChartPageContent();
+
+  // 🔥 استفاده از HeaderContent
+  const nav = HeaderContent[locale];
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -21,7 +26,7 @@ export default function ExcelChartPage() {
           className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
           <ArrowRight size={16} className="ml-1" />
-          {t("docs.back")}
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-4">

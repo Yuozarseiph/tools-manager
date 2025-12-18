@@ -60,7 +60,6 @@ export default function UnitConverterTool() {
   const [toUnit, setToUnit] = useState<AnyUnitKey>("km");
   const [result, setResult] = useState<string>("");
 
-  // وقتی کتگوری عوض می‌شود، واحدهای پیش‌فرض را از همان کتگوری تنظیم کن
   useEffect(() => {
     const units = Object.keys(baseCategories[category].units) as AnyUnitKey[];
     setFromUnit(units[0]);
@@ -122,7 +121,6 @@ export default function UnitConverterTool() {
     <div
       className={`max-w-3xl mx-auto rounded-3xl border p-6 md:p-10 shadow-xl ${theme.card} ${theme.border}`}
     >
-      {/* دسته‌بندی‌ها */}
       <div className="flex gap-2 overflow-x-auto pb-6 mb-6 border-b border-dashed custom-scrollbar">
         {(Object.keys(baseCategories) as CategoryKey[]).map((key) => {
           const Icon = baseCategories[key].icon;
@@ -144,9 +142,7 @@ export default function UnitConverterTool() {
         })}
       </div>
 
-      {/* ورودی/خروجی */}
       <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6 items-center">
-        {/* ورودی */}
         <div className="space-y-3">
           <label className={`text-sm font-bold ${theme.textMuted}`}>
             {content.ui.input.amountLabel}
@@ -164,20 +160,18 @@ export default function UnitConverterTool() {
           >
             {unitKeysForCategory(category).map((key) => (
               <option key={key} value={key}>
-                {catContent[category].units[key]}
+                {(catContent[category].units as Record<string, string>)[key]}
               </option>
             ))}
           </select>
         </div>
 
-        {/* آیکن وسط */}
         <div
           className={`flex justify-center p-3 rounded-full ${theme.secondary}`}
         >
           <ArrowLeftRight size={24} className={theme.accent} />
         </div>
 
-        {/* خروجی */}
         <div className="space-y-3">
           <label className={`text-sm font-bold ${theme.textMuted}`}>
             {content.ui.input.resultLabel}
@@ -194,7 +188,7 @@ export default function UnitConverterTool() {
           >
             {unitKeysForCategory(category).map((key) => (
               <option key={key} value={key}>
-                {catContent[category].units[key]}
+                {(catContent[category].units as Record<string, string>)[key]}
               </option>
             ))}
           </select>

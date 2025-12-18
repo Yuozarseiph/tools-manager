@@ -1,63 +1,123 @@
-"use client";
+// app/tools/(graphics)/qr-generator/qr-generator.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
-import rawContent from "./qr-generator.i18n.json";
 
-type DocCategoryKey = "developer" | "utility";
+export const qrGeneratorContent = {
+  fa: {
+    id: "qr-generator",
+    category: "developer",
+    title: "تولید QR Code آنلاین",
+    description:
+      "برای هر متن یا لینک، به‌سرعت QR Code بسازید و آن را به‌صورت فایل PNG دانلود کنید.",
+    features: [
+      "پشتیبانی از متن و لینک دلخواه",
+      "تنظیم رنگ پس‌زمینه و رنگ اصلی QR",
+      "تنظیم اندازه خروجی بین 128 تا 1024 پیکسل",
+      "دانلود مستقیم QR Code به‌صورت تصویر PNG",
+      "افزودن لوگو به مرکز QR Code",
+      "تنظیم استایل گوشه‌ها (مربعی یا گرد)",
+      "کنترل حاشیه داخلی QR",
+    ],
+    ui: {
+      input: {
+        label: "متن یا لینک برای تبدیل به QR",
+        placeholder:
+          "متن، آدرس سایت، شماره تلفن یا هر رشتهٔ دلخواه را اینجا وارد کنید...",
+      },
+      colors: {
+        fgLabel: "رنگ QR (رنگ اصلی)",
+        bgLabel: "رنگ پس‌زمینه",
+      },
+      size: {
+        label: "اندازه QR Code",
+        unit: "px",
+      },
+      margin: {
+        label: "حاشیه داخلی QR",
+        unit: "px",
+      },
+      corners: {
+        label: "استایل گوشه‌ها",
+        square: "مربعی",
+        rounded: "گرد",
+      },
+      logo: {
+        label: "لوگو وسط QR (اختیاری)",
+        selectButton: "انتخاب تصویر",
+        removeButton: "حذف لوگو",
+        sizeLabel: "اندازه لوگو",
+        sizeUnit: "%",
+      },
+      buttons: {
+        downloadPng: "دانلود QR به صورت PNG",
+      },
+    },
+    page: {
+      title: "ابزار تولید QR Code",
+      description:
+        "به‌راحتی برای متن و لینک‌های خود QR Code بسازید و تصویر آن را برای چاپ یا استفاده در وب ذخیره کنید.",
+    },
+  },
+  en: {
+    id: "qr-generator",
+    category: "developer",
+    title: "QR Code generator",
+    description:
+      "Quickly create QR Codes for any text or URL and download them as PNG images.",
+    features: [
+      "Supports arbitrary text and URLs",
+      "Customize foreground and background colors",
+      "Adjust output size between 128 and 1024 pixels",
+      "Download QR Code directly as a PNG image",
+      "Add custom logo to the center of QR Code",
+      "Customize corner style (square or rounded)",
+      "Control internal margin of QR",
+    ],
+    ui: {
+      input: {
+        label: "Text or URL to encode",
+        placeholder:
+          "Enter any text, website address, phone number or other data...",
+      },
+      colors: {
+        fgLabel: "QR color (foreground)",
+        bgLabel: "Background color",
+      },
+      size: {
+        label: "QR Code size",
+        unit: "px",
+      },
+      margin: {
+        label: "QR internal margin",
+        unit: "px",
+      },
+      corners: {
+        label: "Corner style",
+        square: "Square",
+        rounded: "Rounded",
+      },
+      logo: {
+        label: "Center logo (optional)",
+        selectButton: "Select image",
+        removeButton: "Remove logo",
+        sizeLabel: "Logo size",
+        sizeUnit: "%",
+      },
+      buttons: {
+        downloadPng: "Download QR as PNG",
+      },
+    },
+    page: {
+      title: "QR Code generator tool",
+      description:
+        "Generate QR Codes for your content and save them as images for print or web usage.",
+    },
+  },
+};
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-}
+export type QrGeneratorToolContent = typeof qrGeneratorContent.fa;
 
-export interface QrGeneratorToolContent extends BaseDocsFields {
-  id: "qr-generator";
-  ui: {
-    input: {
-      label: string;
-      placeholder: string;
-    };
-    colors: {
-      fgLabel: string;
-      bgLabel: string;
-    };
-    size: {
-      label: string;
-      unit: string;
-    };
-    margin: {
-      label: string;
-      unit: string;
-    };
-    corners: {
-      label: string;
-      square: string;
-      rounded: string;
-    };
-    logo: {
-      label: string;
-      selectButton: string;
-      removeButton: string;
-      sizeLabel: string;
-      sizeUnit: string;
-    };
-    buttons: {
-      downloadPng: string;
-    };
-  };
-  page: {
-    title: string;
-    description: string;
-  };
-}
-
-const content = rawContent as Record<Locale, QrGeneratorToolContent>;
-
-export function useQrGeneratorContent(): QrGeneratorToolContent {
-  const { locale } = useLanguage(); // اینجا رو تغییر دادم
-  return content[locale] || content["en"];
+export function useQrGeneratorContent() {
+  const { locale } = useLanguage();
+  return qrGeneratorContent[locale];
 }

@@ -1,3 +1,4 @@
+// components/tools/developer/base64/Base64Tool.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -5,7 +6,6 @@ import { ArrowLeftRight, Copy, Trash2, Check, AlertCircle } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useBase64Content, type Base64ToolContent } from "./base64.content";
-
 export default function Base64Tool() {
   const theme = useThemeColors();
   const content: Base64ToolContent = useBase64Content();
@@ -15,8 +15,6 @@ export default function Base64Tool() {
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
-  // توابع امن برای تبدیل UTF-8 (چون btoa معمولی فارسی رو ساپورت نمیکنه)
   const utf8_to_b64 = (str: string) => {
     try {
       return window.btoa(unescape(encodeURIComponent(str)));
@@ -87,7 +85,6 @@ export default function Base64Tool() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-6 h-[600px]">
-      {/* بخش ورودی */}
       <div
         className={`flex flex-col rounded-3xl border overflow-hidden shadow-sm ${theme.card} ${theme.border}`}
       >

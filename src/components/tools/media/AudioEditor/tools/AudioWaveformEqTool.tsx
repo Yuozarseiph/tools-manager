@@ -1,10 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { Upload, Play, Pause, Repeat, RotateCcw, Download, Info, SlidersHorizontal } from "lucide-react";
+import {
+  Upload,
+  Play,
+  Pause,
+  Repeat,
+  RotateCcw,
+  Download,
+  Info,
+  SlidersHorizontal,
+} from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useAudioEditorContent, type AudioEditorToolContent } from "../audio-editor.content";
+import {
+  useAudioEditorContent,
+  type AudioEditorToolContent,
+} from "../audio-editor.content";
 import { useAudioWaveformEq, formatTime } from "./useAudioWaveformEq";
 
 function clamp(n: number, min: number, max: number) {
@@ -18,44 +30,54 @@ export default function AudioWaveformEqTool() {
   const content: AudioEditorToolContent = useAudioEditorContent();
   const tool = useAudioWaveformEq();
 
-  const tEq: any = (content.ui as any)?.equalizer ?? {};
-  const tWf: any = (content.ui as any)?.waveform ?? {};
-  const tabsAny = (content.ui as any)?.tabs ?? {};
+  // دسترسی ایمن به بخش‌های محتوا
+  const tEq = content.ui.equalizer;
+  // @ts-ignore
+  const tTrim = content.ui.trim;
 
   const ui = {
-    title: tEq?.controls?.title ?? (tabsAny.equalizer ?? "Equalizer"),
-    subtitle: tEq?.controls?.subtitle ?? "Select a range, then adjust EQ/volume only for that range.",
-    uploadBtn: tEq?.upload?.button ?? (content.ui as any)?.volume?.upload?.button ?? "Choose file",
+    title: tEq.controls.title,
+    subtitle: tEq.controls.subtitle,
+    uploadBtn: tEq.upload.button,
 
-    durationLabel: tEq?.fileInfo?.durationLabel ?? "Duration:",
-    posLabel: tEq?.fileInfo?.currentPositionLabel ?? "Pos:",
-    selectionLabel: (content.ui as any)?.trim?.fileInfo?.selectionLabel ?? "Selection:",
+    durationLabel: tEq.fileInfo.durationLabel,
+    posLabel: tEq.fileInfo.currentPositionLabel,
+    selectionLabel: tTrim?.fileInfo?.selectionLabel ?? "Selection:",
 
-    play: tEq?.transport?.play ?? "Play",
-    pause: tEq?.transport?.pause ?? "Pause",
+    play: tEq.transport.play,
+    pause: tEq.transport.pause,
 
-    loopOn: tWf?.loopOn ?? "Loop: ON",
-    loopOff: tWf?.loopOff ?? "Loop: OFF",
+    loopOn: "Loop: ON", // این کلید در فایل ترجمه نبود، مقدار پیش‌فرض
+    loopOff: "Loop: OFF", // این کلید در فایل ترجمه نبود، مقدار پیش‌فرض
 
-    resetEq: tEq?.controls?.resetLabel ?? "Reset EQ",
-    rangeLabel: tEq?.controls?.rangeLabel ?? "Range: -12dB to +12dB",
+    resetEq: tEq.controls.resetLabel,
+    rangeLabel: tEq.controls.rangeLabel,
 
-    segmentGainTitle: tWf?.segmentGainTitle ?? "Selection volume (dB)",
-    exportSel: tWf?.exportSelection ?? "Download selection (WAV)",
-    exportFull: tWf?.exportFull ?? "Download full (selection processed)",
+    segmentGainTitle: "Selection Volume", // مقدار پیش‌فرض
+    exportSel: tEq.actions.downloadIdle,
+    exportFull: "Download Full (With EQ)", // مقدار پیش‌فرض
 
-    noFileTitle: tEq?.empty?.title ?? (content.ui as any)?.volume?.empty?.title ?? "No file selected yet",
-    noFileDesc: tEq?.empty?.description ?? (content.ui as any)?.volume?.empty?.description ?? "Choose an audio file to start."
+    noFileTitle: tEq.empty.title,
+    noFileDesc: tEq.empty.description,
   };
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const dragState = useRef<{ mode: DragMode; pointerId: number | null }>({ mode: null, pointerId: null });
+  const dragState = useRef<{ mode: DragMode; pointerId: number | null }>({
+    mode: null,
+    pointerId: null,
+  });
 
   const barDragRef = useRef<
     | { active: false }
-    | { active: true; index: number; pointerId: number; startY: number; startGainDb: number }
+    | {
+        active: true;
+        index: number;
+        pointerId: number;
+        startY: number;
+        startGainDb: number;
+      }
   >({ active: false });
 
   const GAIN_MIN = -12;
@@ -64,7 +86,8 @@ export default function AudioWaveformEqTool() {
   const SEG_GAIN_MAX = 12;
   const PX_PER_DB = 6;
 
-  const gainToPercent = (gainDb: number) => ((gainDb - GAIN_MIN) / (GAIN_MAX - GAIN_MIN)) * 100;
+  const gainToPercent = (gainDb: number) =>
+    ((gainDb - GAIN_MIN) / (GAIN_MAX - GAIN_MIN)) * 100;
 
   const yToGain = (y: number, rectTop: number, rectHeight: number) => {
     const rel = clamp((y - rectTop) / rectHeight, 0, 1);
@@ -78,7 +101,7 @@ export default function AudioWaveformEqTool() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect(); // عرض واقعی [web:410]
+    const rect = canvas.getBoundingClientRect();
     const w = Math.max(1, Math.floor(rect.width || 0));
     const h = 160;
     if (w <= 1) return;
@@ -90,7 +113,6 @@ export default function AudioWaveformEqTool() {
 
     ctx.clearRect(0, 0, w, h);
 
-    // waveform (همیشه از hook می‌گیریم، نه state)
     const peaks = tool.getPeaks(w);
     if (peaks) {
       const mid = h / 2;
@@ -149,13 +171,11 @@ export default function AudioWaveformEqTool() {
     }
   };
 
-  // redraw on relevant changes + resize observer
   useEffect(() => {
     const el = canvasRef.current;
     if (!el) return;
 
     const redraw = () => requestAnimationFrame(draw);
-
     redraw();
 
     let ro: ResizeObserver | null = null;
@@ -176,7 +196,13 @@ export default function AudioWaveformEqTool() {
   useEffect(() => {
     requestAnimationFrame(draw);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tool.currentTime, tool.duration, tool.selStart, tool.selEnd, tool.buffer]);
+  }, [
+    tool.currentTime,
+    tool.duration,
+    tool.selStart,
+    tool.selEnd,
+    tool.buffer,
+  ]);
 
   const pickHandle = (x: number, w: number) => {
     if (tool.duration <= 0) return null;
@@ -194,7 +220,7 @@ export default function AudioWaveformEqTool() {
     const canvas = canvasRef.current;
     if (!canvas || tool.duration <= 0) return;
 
-    const rect = canvas.getBoundingClientRect(); // [web:410]
+    const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const w = rect.width;
 
@@ -219,7 +245,7 @@ export default function AudioWaveformEqTool() {
     const canvas = canvasRef.current;
     if (!canvas || tool.duration <= 0) return;
 
-    const rect = canvas.getBoundingClientRect(); // [web:410]
+    const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const w = rect.width;
 
@@ -240,14 +266,23 @@ export default function AudioWaveformEqTool() {
     }
   };
 
-  const onBarPointerDown = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
+  const onBarPointerDown = (
+    e: React.PointerEvent<HTMLDivElement>,
+    index: number
+  ) => {
     if (tool.disableControls) return;
 
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
 
     const startGainDb = tool.bands[index]?.gainDb ?? 0;
-    barDragRef.current = { active: true, index, pointerId: e.pointerId, startY: e.clientY, startGainDb };
+    barDragRef.current = {
+      active: true,
+      index,
+      pointerId: e.pointerId,
+      startY: e.clientY,
+      startGainDb,
+    };
 
     const newGain = yToGain(e.clientY, rect.top, rect.height);
     tool.setBandGain(index, newGain);
@@ -279,14 +314,17 @@ export default function AudioWaveformEqTool() {
 
   const gridChunks = useMemo(() => {
     const perRow = 16;
-    const rows: typeof tool.bands[] = [];
-    for (let i = 0; i < tool.bands.length; i += perRow) rows.push(tool.bands.slice(i, i + perRow));
+    const rows: (typeof tool.bands)[] = [];
+    for (let i = 0; i < tool.bands.length; i += perRow)
+      rows.push(tool.bands.slice(i, i + perRow));
     return rows;
   }, [tool.bands]);
 
   return (
     <div className="space-y-4">
-      <div className={`rounded-xl border p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${theme.bg} ${theme.border}`}>
+      <div
+        className={`rounded-xl border p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${theme.bg} ${theme.border}`}
+      >
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-lg ${theme.secondary}`}>
             <SlidersHorizontal size={18} className={theme.accent} />
@@ -318,37 +356,48 @@ export default function AudioWaveformEqTool() {
               await tool.loadFile(f);
             } catch (err) {
               console.error(err);
-              alert((content.ui as any)?.volume?.errors?.decode ?? "Decode error");
+              alert(content.ui.equalizer.errors.decode);
             }
           }}
         />
       </div>
 
       {!tool.audioUrl ? (
-        <div className={`rounded-xl border border-dashed p-8 text-center ${theme.bg} ${theme.border}`}>
+        <div
+          className={`rounded-xl border border-dashed p-8 text-center ${theme.bg} ${theme.border}`}
+        >
           <p className={`text-sm mb-2 ${theme.text}`}>{ui.noFileTitle}</p>
           <p className={`text-xs ${theme.textMuted}`}>{ui.noFileDesc}</p>
         </div>
       ) : (
         <>
-          <div className={`rounded-xl border p-3 flex flex-wrap items-center justify-between gap-3 ${theme.bg} ${theme.border}`}>
+          <div
+            className={`rounded-xl border p-3 flex flex-wrap items-center justify-between gap-3 ${theme.bg} ${theme.border}`}
+          >
             <div className="truncate max-w-[70%]">
-              <p className={`text-sm font-semibold truncate ${theme.text}`}>{tool.fileName}</p>
+              <p className={`text-sm font-semibold truncate ${theme.text}`}>
+                {tool.fileName}
+              </p>
               <p className={`text-xs ${theme.textMuted}`}>
-                {ui.durationLabel} {formatTime(tool.duration)} | {ui.selectionLabel} {tool.selectionLabel}
+                {ui.durationLabel} {formatTime(tool.duration)} |{" "}
+                {ui.selectionLabel} {tool.selectionLabel}
               </p>
             </div>
 
-            <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${theme.secondary}`}>
+            <div
+              className={`flex items-center gap-1 px-2 py-1 rounded-lg ${theme.secondary}`}
+            >
               <Info size={12} className={theme.accent} />
-              <span className={`text-xs ${theme.text}`}>{ui.posLabel} {formatTime(tool.currentTime)}</span>
+              <span className={`text-xs ${theme.text}`}>
+                {ui.posLabel} {formatTime(tool.currentTime)}
+              </span>
             </div>
           </div>
 
           <div className={`rounded-xl border p-3 ${theme.bg} ${theme.border}`}>
             <canvas
               ref={canvasRef}
-              className="w-full block" // برای اندازه‌گیری درست و جلوگیری از width=0 [web:397]
+              className="w-full block"
               style={{ height: 160 }}
               onPointerDown={onWavePointerDown}
               onPointerMove={onWavePointerMove}
@@ -360,7 +409,9 @@ export default function AudioWaveformEqTool() {
                 onClick={tool.togglePlay}
                 disabled={tool.disableControls}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  tool.disableControls ? "opacity-50 cursor-not-allowed" : theme.primary
+                  tool.disableControls
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
                 }`}
                 type="button"
               >
@@ -372,7 +423,9 @@ export default function AudioWaveformEqTool() {
                 onClick={() => tool.setLoopSelection(!tool.loopSelection)}
                 disabled={tool.disableControls}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  tool.disableControls ? "opacity-50 cursor-not-allowed" : theme.primary
+                  tool.disableControls
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
                 }`}
                 type="button"
               >
@@ -384,7 +437,9 @@ export default function AudioWaveformEqTool() {
                 onClick={tool.resetSelection}
                 disabled={tool.disableControls}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  tool.disableControls ? "opacity-50 cursor-not-allowed" : `${theme.secondary} ${theme.border}`
+                  tool.disableControls
+                    ? "opacity-50 cursor-not-allowed"
+                    : `${theme.secondary} ${theme.border}`
                 }`}
                 type="button"
               >
@@ -396,7 +451,9 @@ export default function AudioWaveformEqTool() {
 
           <div className={`rounded-xl border p-4 ${theme.bg} ${theme.border}`}>
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              <p className={`text-sm font-semibold ${theme.text}`}>{ui.segmentGainTitle}</p>
+              <p className={`text-sm font-semibold ${theme.text}`}>
+                {ui.segmentGainTitle}
+              </p>
               <p className={`text-xs ${theme.textMuted}`}>
                 {tool.segmentGainDb > 0 ? "+" : ""}
                 {tool.segmentGainDb.toFixed(1)} dB
@@ -419,7 +476,9 @@ export default function AudioWaveformEqTool() {
                 onClick={tool.exportSelectionWav}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  tool.disableControls || tool.isExporting ? "opacity-50 cursor-not-allowed" : theme.primary
+                  tool.disableControls || tool.isExporting
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
                 }`}
                 type="button"
               >
@@ -431,7 +490,9 @@ export default function AudioWaveformEqTool() {
                 onClick={tool.exportFullWavSelectionOnly}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  tool.disableControls || tool.isExporting ? "opacity-50 cursor-not-allowed" : theme.primary
+                  tool.disableControls || tool.isExporting
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
                 }`}
                 type="button"
               >
@@ -441,9 +502,13 @@ export default function AudioWaveformEqTool() {
             </div>
           </div>
 
-          <div className={`rounded-xl border p-4 space-y-3 ${theme.bg} ${theme.border}`}>
+          <div
+            className={`rounded-xl border p-4 space-y-3 ${theme.bg} ${theme.border}`}
+          >
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              <p className={`text-sm font-semibold ${theme.text}`}>{ui.rangeLabel}</p>
+              <p className={`text-sm font-semibold ${theme.text}`}>
+                {ui.rangeLabel}
+              </p>
 
               <button
                 onClick={tool.resetEq}
@@ -468,9 +533,13 @@ export default function AudioWaveformEqTool() {
                         <div
                           key={b.id}
                           className={`w-12 shrink-0 rounded-xl border px-2 py-2 flex flex-col items-center gap-2 ${theme.card} ${theme.border}`}
-                          title={`${b.label}: ${b.gainDb > 0 ? "+" : ""}${b.gainDb.toFixed(1)} dB`}
+                          title={`${b.label}: ${
+                            b.gainDb > 0 ? "+" : ""
+                          }${b.gainDb.toFixed(1)} dB`}
                         >
-                          <div className={`text-[11px] font-mono ${theme.text}`}>
+                          <div
+                            className={`text-[11px] font-mono ${theme.text}`}
+                          >
                             {b.gainDb > 0 ? "+" : ""}
                             {b.gainDb.toFixed(0)}
                           </div>
@@ -482,14 +551,23 @@ export default function AudioWaveformEqTool() {
                             onPointerUp={onBarPointerUp}
                           >
                             <div className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-white/35" />
-                            <div className="absolute left-0 right-0 bottom-0 bg-blue-500/80" style={{ height: `${pct}%` }} />
+                            <div
+                              className="absolute left-0 right-0 bottom-0 bg-blue-500/80"
+                              style={{ height: `${pct}%` }}
+                            />
                             <div
                               className="absolute left-0 right-0 bg-white/60"
-                              style={{ height: "2px", bottom: `${pct}%`, transform: "translateY(1px)" }}
+                              style={{
+                                height: "2px",
+                                bottom: `${pct}%`,
+                                transform: "translateY(1px)",
+                              }}
                             />
                           </div>
 
-                          <div className={`text-[10px] leading-none ${theme.textMuted}`}>
+                          <div
+                            className={`text-[10px] leading-none ${theme.textMuted}`}
+                          >
                             {b.label.replace("Hz", "")}
                           </div>
                         </div>
@@ -500,7 +578,9 @@ export default function AudioWaveformEqTool() {
               </div>
             </div>
 
-            <p className={`text-[11px] ${theme.textMuted}`}>EQ و Volume فقط روی بازه‌ی انتخاب‌شده اعمال می‌شود.</p>
+            <p className={`text-[11px] ${theme.textMuted}`}>
+              EQ and Volume only apply to the exported file.
+            </p>
           </div>
         </>
       )}

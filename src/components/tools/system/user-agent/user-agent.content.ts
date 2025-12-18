@@ -1,80 +1,131 @@
-"use client";
+// app/tools/(browser)/user-agent/user-agent.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./user-agent.i18n.json";
+export const userAgentContent = {
+  fa: {
+    id: "user-agent",
+    category: "developer",
+    title: "نمایش User Agent و اطلاعات سیستم",
+    description:
+      "مرورگر، سیستم‌عامل، نوع دستگاه و تنظیمات محیط فعلی خود را مشاهده و User Agent خام را کپی کنید.",
+    features: [
+      "نمایش رشته کامل User Agent و امکان کپی",
+      "تشخیص مرورگر، موتور رندر و نسخه سیستم‌عامل",
+      "نمایش نوع دستگاه، معماری CPU و تعداد هسته‌ها",
+      "نمایش زبان، وضعیت اتصال، کوکی‌ها و اطلاعات صفحه‌نمایش",
+    ],
+    ui: {
+      raw: {
+        title: "رشته کامل User Agent",
+        copy: "کپی User Agent",
+        copied: "کپی شد!",
+      },
+      cards: {
+        browser: {
+          title: "مرورگر",
+          enginePrefix: "موتور رندر:",
+        },
+        os: {
+          title: "سیستم‌عامل",
+          archPrefix: "معماری:",
+        },
+        device: {
+          title: "دستگاه",
+          fallback: "رایانه / دستگاه ناشناخته",
+          desktopLabel: "رایانه رومیزی / لپ‌تاپ",
+        },
+        cpu: {
+          title: "پردازنده",
+          fallback: "معماری نامشخص",
+          coresSuffix: "هسته منطقی",
+        },
+      },
+      details: {
+        title: "جزئیات محیط مرورگر",
+        language: "زبان مرورگر",
+        online: "وضعیت اتصال",
+        onlineYes: "آنلاین",
+        onlineNo: "آفلاین",
+        cookies: "کوکی‌ها فعال هستند؟",
+        cookiesYes: "بله، کوکی‌ها فعال هستند",
+        cookiesNo: "خیر، کوکی‌ها غیرفعال هستند",
+        screenSize: "ابعاد صفحه‌نمایش",
+        colorDepth: "عمق رنگ",
+        colorDepthSuffix: "بیت",
+        platform: "پلتفرم",
+      },
+      page: {
+        title: "نمایش User Agent و مشخصات مرورگر",
+        description:
+          "به‌سرعت User Agent فعلی و مشخصات سیستم و مرورگر خود را مشاهده و برای دیباگ یا گزارش باگ کپی کنید.",
+      },
+    },
+  },
+  en: {
+    id: "user-agent",
+    category: "developer",
+    title: "User Agent & environment info",
+    description:
+      "Inspect your current User Agent string, browser, OS, device and environment details.",
+    features: [
+      "Show full User Agent string with copy button",
+      "Detect browser, rendering engine and OS version",
+      "Display device type, CPU architecture and core count",
+      "Show language, online status, cookies and screen info",
+    ],
+    ui: {
+      raw: {
+        title: "Full User Agent string",
+        copy: "Copy User Agent",
+        copied: "Copied!",
+      },
+      cards: {
+        browser: {
+          title: "Browser",
+          enginePrefix: "Engine:",
+        },
+        os: {
+          title: "Operating system",
+          archPrefix: "Architecture:",
+        },
+        device: {
+          title: "Device",
+          fallback: "Desktop / unknown device",
+          desktopLabel: "Desktop / laptop",
+        },
+        cpu: {
+          title: "CPU",
+          fallback: "Unknown architecture",
+          coresSuffix: "logical cores",
+        },
+      },
+      details: {
+        title: "Browser environment details",
+        language: "Browser language",
+        online: "Connection status",
+        onlineYes: "Online",
+        onlineNo: "Offline",
+        cookies: "Cookies enabled?",
+        cookiesYes: "Yes, cookies are enabled",
+        cookiesNo: "No, cookies are disabled",
+        screenSize: "Screen size",
+        colorDepth: "Color depth",
+        colorDepthSuffix: "bit",
+        platform: "Platform",
+      },
+      page: {
+        title: "User Agent & browser info",
+        description:
+          "Quickly inspect your current User Agent and environment for debugging or bug reports.",
+      },
+    },
+  },
+};
 
-type DocCategoryKey = "system";
+export type UserAgentToolContent = typeof userAgentContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface UserAgentToolContent extends BaseDocsFields {
-  id: "user-agent";
-  ui: {
-    raw: {
-      title: string;
-      copy: string;
-      copied: string;
-    };
-    cards: {
-      browser: {
-        title: string;
-        enginePrefix: string;
-      };
-      os: {
-        title: string;
-        archPrefix: string;
-      };
-      device: {
-        title: string;
-        fallback: string;
-        desktopLabel: string;
-      };
-      cpu: {
-        title: string;
-        fallback: string;
-        coresSuffix: string;
-      };
-    };
-    details: {
-      title: string;
-      language: string;
-      online: string;
-      onlineYes: string;
-      onlineNo: string;
-      cookies: string;
-      cookiesYes: string;
-      cookiesNo: string;
-      screenSize: string;
-      colorDepth: string;
-      colorDepthSuffix: string;
-      platform: string;
-    };
-    page: {
-      title: string;
-      description: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: UserAgentToolContent; en: UserAgentToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, UserAgentToolContent>;
-
-export function useUserAgentContent(): UserAgentToolContent {
+export function useUserAgentContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return userAgentContent[locale];
 }

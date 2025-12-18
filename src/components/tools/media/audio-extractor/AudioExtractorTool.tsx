@@ -1,8 +1,9 @@
+// components/tools/media/audio-extractor/AudioExtractorTool.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import download from "downloadjs";
 
@@ -52,14 +53,14 @@ export default function AudioExtractorTool() {
     if (typeof window === "undefined") return;
 
     try {
-      const { FFmpeg } = await import("@ffmpeg/ffmpeg");
+      // @ts-ignore
       const ffmpeg = new FFmpeg();
 
-      ffmpeg.on("log", ({ message }) => {
+      ffmpeg.on("log", ({ message }: { message: string }) => {
         console.log(message);
       });
 
-      ffmpeg.on("progress", ({ progress: prog }) => {
+      ffmpeg.on("progress", ({ progress: prog }: { progress: number }) => {
         setProgress(Math.round(prog * 100));
       });
 
@@ -118,52 +119,53 @@ export default function AudioExtractorTool() {
     return bitrates[format][quality];
   };
 
-const handleExtract = async () => {
-  if (!file || !isFFmpegLoaded || !ffmpegRef.current) return;
+  const handleExtract = async () => {
+    if (!file || !isFFmpegLoaded || !ffmpegRef.current) return;
 
-  setIsProcessing(true);
-  setProgress(0);
-  setError("");
-  setExtractedAudio(null);
-
-  const ffmpeg = ffmpegRef.current;
-
-  try {
-    const inputName = "input.mp4";
-    const outputName = `output.${format}`;
-
-    await ffmpeg.writeFile(inputName, await fetchFile(file));
-
-    const bitrate = getBitrate();
-    const args = ["-i", inputName];
-
-    if (format === "mp3") {
-      args.push("-vn", "-acodec", "libmp3lame", "-ab", bitrate, outputName);
-    } else if (format === "wav") {
-      args.push("-vn", "-acodec", "pcm_s16le", outputName);
-    } else if (format === "ogg") {
-      args.push("-vn", "-acodec", "libvorbis", "-ab", bitrate, outputName);
-    } else if (format === "m4a") {
-      args.push("-vn", "-acodec", "aac", "-ab", bitrate, outputName);
-    }
-
-    await ffmpeg.exec(args);
-
-    const data = await ffmpeg.readFile(outputName);
-    // کپی کردن به یک Uint8Array استاندارد جدید
-    const uint8 = new Uint8Array(data.length);
-    uint8.set(data as Uint8Array);
-    const blob = new Blob([uint8], { type: `audio/${format}` });
-    setExtractedAudio(blob);
-  } catch (err) {
-    console.error("Extraction error:", err);
-    setError(content.ui.status.error);
-  } finally {
-    setIsProcessing(false);
+    setIsProcessing(true);
     setProgress(0);
-  }
-};
+    setError("");
+    setExtractedAudio(null);
 
+    const ffmpeg = ffmpegRef.current;
+
+    try {
+      const inputName = "input.mp4";
+      const outputName = `output.${format}`;
+
+      await ffmpeg.writeFile(inputName, await fetchFile(file));
+
+      const bitrate = getBitrate();
+      const args = ["-i", inputName];
+
+      if (format === "mp3") {
+        args.push("-vn", "-acodec", "libmp3lame", "-ab", bitrate, outputName);
+      } else if (format === "wav") {
+        args.push("-vn", "-acodec", "pcm_s16le", outputName);
+      } else if (format === "ogg") {
+        args.push("-vn", "-acodec", "libvorbis", "-ab", bitrate, outputName);
+      } else if (format === "m4a") {
+        args.push("-vn", "-acodec", "aac", "-ab", bitrate, outputName);
+      }
+
+      await ffmpeg.exec(args);
+
+      const data = await ffmpeg.readFile(outputName);
+      // کپی کردن به یک Uint8Array استاندارد جدید
+      // @ts-ignore
+      const uint8 = new Uint8Array(data.length);
+      // @ts-ignore
+      uint8.set(data as Uint8Array);
+      const blob = new Blob([uint8], { type: `audio/${format}` });
+      setExtractedAudio(blob);
+    } catch (err) {
+      console.error("Extraction error:", err);
+      setError(content.ui.status.error);
+    } finally {
+      setIsProcessing(false);
+      setProgress(0);
+    }
+  };
 
   const handleDownload = () => {
     if (!extractedAudio || !file) return;

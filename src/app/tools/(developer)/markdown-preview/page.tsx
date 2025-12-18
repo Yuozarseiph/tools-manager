@@ -1,5 +1,6 @@
+// app/tools/(developer)/markdown/page.tsx
 import type { Metadata } from "next";
-import MarkdownPage from "./Markdown";
+import MarkdownClient from "./Markdown";
 import { getMarkdownSeo } from "./content";
 
 // سئوی هر دو زبان
@@ -23,9 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${fa.ogDescription ?? fa.description} / ${
-      en.ogDescription ?? en.description
-    }`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",
@@ -76,7 +75,7 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <MarkdownPage />
+      <MarkdownClient />
     </div>
   );
 }

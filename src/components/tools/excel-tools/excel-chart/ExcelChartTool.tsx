@@ -1,3 +1,4 @@
+// components/tools/excel/excel-chart/ExcelChartTool.tsx
 "use client";
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
@@ -45,8 +46,6 @@ export default function ExcelChartTool() {
   const [endIndex, setEndIndex] = useState(100);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [hasPersianNumbers, setHasPersianNumbers] = useState(false);
-
-  // محدودیت خودکار برای Pie Chart
   useEffect(() => {
     if (chartType === "pie" && endIndex - startIndex > 20) {
       setEndIndex(startIndex + 20);

@@ -1,5 +1,6 @@
+// app/tools/(image)/image-editor/page.tsx
 import type { Metadata } from "next";
-import ImageEditorPage from "./ImageEditor";
+import ImageEditorClient from "./ImageEditor";
 import { getImageEditorSeo } from "./content";
 
 const fa = getImageEditorSeo("fa");
@@ -68,7 +69,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ImageEditorPage />
+      <ImageEditorClient />
     </>
   );
 }

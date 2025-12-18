@@ -1,25 +1,75 @@
+// app/tools/(pdf)/pdf-editor/page.tsx
 import type { Metadata } from "next";
-import PdfEditor from "./PdfEditor";
+import PdfEditorClient from "./PdfEditor";
 import { getPdfEditorSeo } from "./content";
 
-export const dynamic = "force-static";
+const fa = getPdfEditorSeo("fa");
+const en = getPdfEditorSeo("en");
 
-const faSeo = getPdfEditorSeo("fa");
+const combinedTitle = `${fa.title} / ${en.title}`;
+const combinedDescription = `${fa.description} / ${en.description}`;
+const canonicalUrl = fa.canonical;
 
 export const metadata: Metadata = {
-  title: faSeo.title,
-  description: faSeo.description,
+  title: combinedTitle,
+  description: combinedDescription,
   alternates: {
-    canonical: faSeo.canonical
+    canonical: canonicalUrl,
+    languages: {
+      "fa-IR": fa.canonical,
+      "en-US": en.canonical,
+    },
   },
   openGraph: {
-    title: faSeo.ogTitle ?? faSeo.title,
-    description: faSeo.ogDescription ?? faSeo.description,
-    url: faSeo.canonical,
-    type: "website"
-  }
+    title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
+    url: canonicalUrl,
+    type: "website",
+    locale: "fa_IR",
+    alternateLocale: ["en_US"],
+  },
 };
 
+function buildJsonLd() {
+  const baseProvider = {
+    "@type": "Organization",
+    name: "Tools Manager",
+    url: "https://toolsmanager.yuozarseip.top",
+  };
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: fa.description,
+      url: fa.canonical,
+      applicationCategory: fa.applicationCategory ?? "UtilitiesApplication",
+      inLanguage: fa.inLanguage ?? "fa-IR",
+      provider: baseProvider,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      description: en.description,
+      url: en.canonical,
+      applicationCategory: en.applicationCategory ?? "UtilitiesApplication",
+      inLanguage: en.inLanguage ?? "en-US",
+      provider: baseProvider,
+    },
+  ];
+}
+
 export default function Page() {
-  return <PdfEditor />;
+  const jsonLd = buildJsonLd();
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PdfEditorClient />
+    </>
+  );
 }

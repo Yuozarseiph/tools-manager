@@ -25,9 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${
-      fa.ogDescription ?? fa.description
-    } / ${en.ogDescription ?? en.description}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",

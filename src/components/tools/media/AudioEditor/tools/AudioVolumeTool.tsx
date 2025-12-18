@@ -9,6 +9,8 @@ import {
   applyGainDb,
   normalizeAudioBuffer,
   cloneAudioBuffer,
+  computePeakApprox,
+  audioBufferToWavBlobSafe,
 } from "@/utils/audio-actions";
 
 import {
@@ -19,97 +21,6 @@ import {
 /** dB -> linear gain */
 function dbToLinear(db: number) {
   return Math.pow(10, db / 20);
-}
-
-/** approximate peak to avoid freezing on huge files */
-function computePeakApprox(buffer: AudioBuffer, maxSamples = 2_000_000) {
-  const channels = buffer.numberOfChannels;
-  const len = buffer.length;
-  if (!len) return 0;
-
-  const stride = Math.max(1, Math.floor(len / maxSamples));
-  let peak = 0;
-
-  for (let ch = 0; ch < channels; ch++) {
-    const data = buffer.getChannelData(ch);
-    for (let i = 0; i < len; i += stride) {
-      const v = Math.abs(data[i] || 0);
-      if (v > peak) peak = v;
-      if (peak >= 0.999999) return peak;
-    }
-  }
-  return peak;
-}
-
-/** safer WAV encoder: no extra Float32Array allocation */
-function audioBufferToWavBlobSafe(buffer: AudioBuffer) {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const numFrames = buffer.length;
-
-  const bytesPerSample = 2; // PCM16
-  const blockAlign = numChannels * bytesPerSample;
-  const byteRate = sampleRate * blockAlign;
-  const dataSize = numFrames * blockAlign;
-  const totalSize = 44 + dataSize;
-
-  // Guard: if total is crazy large, likely to crash anyway
-  // (حدود 1GB رو محافظه‌کارانه می‌گیریم)
-  const ONE_GB = 1024 * 1024 * 1024;
-  if (totalSize > ONE_GB) {
-    throw new Error("Audio is too large to export as WAV in browser memory.");
-  }
-
-  const ab = new ArrayBuffer(totalSize);
-  const view = new DataView(ab);
-
-  let offset = 0;
-  const writeString = (s: string) => {
-    for (let i = 0; i < s.length; i++) view.setUint8(offset++, s.charCodeAt(i));
-  };
-  const writeU32 = (v: number) => {
-    view.setUint32(offset, v, true);
-    offset += 4;
-  };
-  const writeU16 = (v: number) => {
-    view.setUint16(offset, v, true);
-    offset += 2;
-  };
-
-  // RIFF header
-  writeString("RIFF");
-  writeU32(36 + dataSize);
-  writeString("WAVE");
-
-  // fmt chunk
-  writeString("fmt ");
-  writeU32(16); // PCM
-  writeU16(1); // audio format = PCM
-  writeU16(numChannels);
-  writeU32(sampleRate);
-  writeU32(byteRate);
-  writeU16(blockAlign);
-  writeU16(16); // bits per sample
-
-  // data chunk
-  writeString("data");
-  writeU32(dataSize);
-
-  // interleave samples (PCM16)
-  const channelData: Float32Array[] = [];
-  for (let ch = 0; ch < numChannels; ch++) channelData.push(buffer.getChannelData(ch));
-
-  for (let i = 0; i < numFrames; i++) {
-    for (let ch = 0; ch < numChannels; ch++) {
-      let s = channelData[ch][i] ?? 0;
-      s = Math.max(-1, Math.min(1, s));
-      const int16 = s < 0 ? s * 0x8000 : s * 0x7fff;
-      view.setInt16(offset, int16, true);
-      offset += 2;
-    }
-  }
-
-  return new Blob([ab], { type: "audio/wav" });
 }
 
 export default function AudioVolumeTool() {
@@ -130,7 +41,9 @@ export default function AudioVolumeTool() {
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [originalBuffer, setOriginalBuffer] = useState<AudioBuffer | null>(null);
+  const [originalBuffer, setOriginalBuffer] = useState<AudioBuffer | null>(
+    null
+  );
 
   const [volumeDb, setVolumeDb] = useState(0);
   const [normalize, setNormalize] = useState(false);
@@ -168,7 +81,8 @@ export default function AudioVolumeTool() {
     if (!el) return;
 
     if (!audioCtxRef.current) {
-      const Ctx = (window.AudioContext || (window as any).webkitAudioContext) as any;
+      const Ctx =
+        (window.AudioContext || (window as any).webkitAudioContext) as any;
       audioCtxRef.current = new Ctx();
     }
 
@@ -209,7 +123,11 @@ export default function AudioVolumeTool() {
     const g = effectiveGainLinear;
 
     try {
-      gainNodeRef.current.gain.setTargetAtTime(g, ctx?.currentTime ?? 0, 0.01);
+      gainNodeRef.current.gain.setTargetAtTime(
+        g,
+        ctx?.currentTime ?? 0,
+        0.01
+      );
     } catch {
       gainNodeRef.current.gain.value = g;
     }
@@ -307,7 +225,9 @@ export default function AudioVolumeTool() {
   const formatTime = (t: number) => {
     if (!Number.isFinite(t)) return "0:00";
     const minutes = Math.floor(t / 60);
-    const seconds = Math.floor(t % 60).toString().padStart(2, "0");
+    const seconds = Math.floor(t % 60)
+      .toString()
+      .padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
 
@@ -324,7 +244,8 @@ export default function AudioVolumeTool() {
         (window as any).webkitAudioContext;
 
       const ctx =
-        CtxConstructor === (window.AudioContext || (window as any).webkitAudioContext)
+        CtxConstructor ===
+        (window.AudioContext || (window as any).webkitAudioContext)
           ? new CtxConstructor()
           : new CtxConstructor(
               originalBuffer.numberOfChannels,
@@ -409,15 +330,19 @@ export default function AudioVolumeTool() {
                 {fileName}
               </p>
               <p className={`text-xs ${theme.textMuted}`}>
-                {content.ui.volume.fileInfo.durationLabel} {formatTime(duration)}
+                {content.ui.volume.fileInfo.durationLabel}{" "}
+                {formatTime(duration)}
               </p>
             </div>
 
             <div className="flex flex-col items-end gap-1 text-xs">
-              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${theme.secondary}`}>
+              <div
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg ${theme.secondary}`}
+              >
                 <Info size={12} className={theme.accent} />
                 <span className={theme.text}>
-                  {content.ui.volume.fileInfo.currentPositionLabel} {formatTime(currentTime)}
+                  {content.ui.volume.fileInfo.currentPositionLabel}{" "}
+                  {formatTime(currentTime)}
                 </span>
               </div>
             </div>
@@ -445,11 +370,15 @@ export default function AudioVolumeTool() {
                 onClick={togglePlay}
                 disabled={disableControls}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  disableControls ? "opacity-50 cursor-not-allowed" : theme.primary
+                  disableControls
+                    ? "opacity-50 cursor-not-allowed"
+                    : theme.primary
                 }`}
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {isPlaying ? content.ui.volume.transport.stop : content.ui.volume.transport.play}
+                {isPlaying
+                  ? content.ui.volume.transport.stop
+                  : content.ui.volume.transport.play}
               </button>
 
               <p className={`text-xs ${theme.textMuted}`}>
@@ -459,7 +388,9 @@ export default function AudioVolumeTool() {
           </div>
 
           {/* Volume controls */}
-          <div className={`rounded-xl border p-4 space-y-4 ${theme.bg} ${theme.border}`}>
+          <div
+            className={`rounded-xl border p-4 space-y-4 ${theme.bg} ${theme.border}`}
+          >
             <div className="flex items-center gap-2 mb-1">
               <Volume2 size={16} className={theme.accent} />
               <p className={`text-sm font-semibold ${theme.text}`}>
@@ -515,7 +446,9 @@ export default function AudioVolumeTool() {
               onClick={handleDownloadProcessed}
               disabled={disableControls || isExporting}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                disableControls || isExporting ? "opacity-50 cursor-not-allowed" : theme.primary
+                disableControls || isExporting
+                  ? "opacity-50 cursor-not-allowed"
+                  : theme.primary
               }`}
             >
               <Download size={16} />
@@ -526,7 +459,9 @@ export default function AudioVolumeTool() {
           </div>
         </div>
       ) : (
-        <div className={`mt-4 rounded-xl border border-dashed p-8 text-center ${theme.bg} ${theme.border}`}>
+        <div
+          className={`mt-4 rounded-xl border border-dashed p-8 text-center ${theme.bg} ${theme.border}`}
+        >
           <p className={`text-sm mb-2 ${theme.text}`}>
             {content.ui.volume.empty.title}
           </p>

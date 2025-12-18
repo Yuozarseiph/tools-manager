@@ -1,64 +1,107 @@
-"use client";
+// app/tools/(developer)/json-formatter/json-formatter.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./json-formatter.i18n.json";
+export const jsonFormatterContent = {
+  fa: {
+    id: "json-formatter",
+    category: "developer",
+    title: "فرمت و مصورسازی JSON",
+    description: "JSON خود را مرتب، فشرده و به صورت گراف درختی مشاهده کنید.",
+    features: [
+      "زیباسازی (Prettify) ساختار JSON با تورفتگی مناسب",
+      "فشرده‌سازی (Minify) برای کاهش حجم",
+      "آپلود و دانلود راحت فایل JSON",
+      "نمایش گراف درختی ساختار JSON"
+    ],
+    ui: {
+      upload: {
+        button: "آپلود فایل JSON",
+        sizeHintPrefix: "حجم ورودی:"
+      },
+      toolbar: {
+        minify: "فشرده‌سازی JSON",
+        prettify: "زیباسازی JSON",
+        clear: "حذف ورودی"
+      },
+      input: {
+        placeholder: "کد JSON را اینجا پیست یا تایپ کنید..."
+      },
+      error: {
+        prefix: "خطا در پردازش JSON: "
+      },
+      tabs: {
+        code: "کد",
+        graph: "گراف"
+      },
+      output: {
+        copyTitle: "کپی خروجی JSON",
+        downloadTitle: "دانلود JSON قالب‌بندی‌شده"
+      },
+      codeView: {
+        placeholder: "{\n  \"مثال\": \"خروجی JSON شما اینجا نمایش داده می‌شود\"\n}"
+      },
+      graphView: {
+        emptyText: "برای مشاهده گراف، یک JSON معتبر وارد کنید."
+      },
+      page: {
+        title: "فرمت و مصورسازی JSON",
+        description: "با این ابزار می‌توانید JSON را مرتب، فشرده و به صورت گراف درختی مشاهده کنید."
+      }
+    }
+  },
+  en: {
+    id: "json-formatter",
+    category: "developer",
+    title: "JSON formatter & visualizer",
+    description: "Prettify, minify and visualize your JSON as a tree graph.",
+    features: [
+      "Prettify JSON with proper indentation",
+      "Minify JSON to reduce size",
+      "Upload and download JSON files easily",
+      "Visualize JSON structure as a graph"
+    ],
+    ui: {
+      upload: {
+        button: "Upload JSON file",
+        sizeHintPrefix: "Input size:"
+      },
+      toolbar: {
+        minify: "Minify JSON",
+        prettify: "Prettify JSON",
+        clear: "Clear input"
+      },
+      input: {
+        placeholder: "Paste or type your JSON here..."
+      },
+      error: {
+        prefix: "Error while parsing JSON: "
+      },
+      tabs: {
+        code: "Code",
+        graph: "Graph"
+      },
+      output: {
+        copyTitle: "Copy formatted JSON",
+        downloadTitle: "Download formatted JSON"
+      },
+      codeView: {
+        placeholder: "{\n  \"example\": \"Your formatted JSON will appear here\"\n}"
+      },
+      graphView: {
+        emptyText: "Enter a valid JSON to see the graph visualization."
+      },
+      page: {
+        title: "JSON formatter & visualizer",
+        description: "Format, compress and visualize JSON in your browser."
+      }
+    }
+  }
+};
 
-type DocCategoryKey = "developer";
+export type JsonFormatterToolContent = typeof jsonFormatterContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-}
-
-export interface JsonFormatterToolContent extends BaseDocsFields {
-  id: "json-formatter";
-  ui: {
-    upload: {
-      button: string;
-      sizeHintPrefix: string;
-    };
-    toolbar: {
-      minify: string;
-      prettify: string;
-      clear: string;
-    };
-    input: {
-      placeholder: string;
-    };
-    error: {
-      prefix: string;
-    };
-    tabs: {
-      code: string;
-      graph: string;
-    };
-    output: {
-      copyTitle: string;
-      downloadTitle: string;
-    };
-    codeView: {
-      placeholder: string;
-    };
-    graphView: {
-      emptyText: string;
-    };
-    page: {
-      title: string;
-      description: string;
-    };
-  };
-}
-
-// شکل فایل i18n: { fa: JsonFormatterToolContent; en: JsonFormatterToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, JsonFormatterToolContent>;
-
-export function useJsonFormatterContent(): JsonFormatterToolContent {
+export function useJsonFormatterContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return jsonFormatterContent[locale];
 }

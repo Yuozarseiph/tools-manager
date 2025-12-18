@@ -1,3 +1,4 @@
+// components/tools/developer/markdown/MarkdownTool.tsx
 "use client";
 
 import { useState } from "react";
@@ -79,6 +80,7 @@ export default function MarkdownTool() {
         <div
           className={`flex-1 w-full p-8 overflow-auto markdown-body ${theme.text}`}
         >
+          {/* استایل‌های اختصاصی برای پیش‌نمایش */}
           <style jsx global>{`
             .markdown-body h1 {
               font-size: 2em;

@@ -21,6 +21,7 @@ import {
   applyFadeOut,
 } from "@/utils/audio-actions";
 
+// ✅ مسیر اصلاح شده برای دسترسی به فایل محتوا
 import {
   useAudioEditorContent,
   type AudioEditorToolContent,

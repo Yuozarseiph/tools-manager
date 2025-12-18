@@ -1,54 +1,81 @@
-"use client";
+// app/tools/(network)/ip-checker/ip-checker.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./ip-checker.i18n.json";
+export const ipCheckerContent = {
+  fa: {
+    id: "ip-checker",
+    category: "developer",
+    title: "نمایش IP و اطلاعات شبکه",
+    description:
+      "آی‌پی عمومی، موقعیت تقریبی، سرویس‌دهنده اینترنت و سایر اطلاعات شبکه خود را ببینید.",
+    features: [
+      "تشخیص خودکار آدرس IP عمومی شما",
+      "نمایش شهر، کشور و محدودهٔ جغرافیایی",
+      "نمایش ISP، ASN و منطقهٔ زمانی",
+      "امکان رفرش و کپی سریع آدرس IP",
+    ],
+    ui: {
+      main: {
+        loading: "در حال شناسایی آدرس IP و اطلاعات شبکه...",
+        error:
+          "در دریافت اطلاعات IP مشکلی پیش آمد. لطفاً اتصال اینترنت خود را بررسی و دوباره تلاش کنید.",
+        retry: "تلاش مجدد",
+        refreshTitle: "دریافت مجدد اطلاعات IP",
+        publicIpLabel: "آی‌پی عمومی شما",
+      },
+      details: {
+        countryTitle: "کشور",
+        regionTitle: "استان / شهر",
+        coordsTitle: "مختصات جغرافیایی",
+        ispTitle: "سرویس‌دهنده اینترنت (ISP)",
+      },
+      page: {
+        title: "ابزار نمایش IP و اطلاعات شبکه",
+        description:
+          "آی‌پی عمومی و اطلاعات پایه شبکه خود را به‌صورت سریع و بدون نیاز به نصب نرم‌افزار مشاهده کنید.",
+      },
+    },
+  },
+  en: {
+    id: "ip-checker",
+    category: "developer",
+    title: "IP & network info",
+    description:
+      "View your public IP address, approximate location, ISP and other basic network information.",
+    features: [
+      "Automatically detects your public IP address",
+      "Shows city, country and approximate location",
+      "Displays ISP, ASN and timezone",
+      "Refresh and copy IP address with one click",
+    ],
+    ui: {
+      main: {
+        loading: "Detecting your IP address and network information...",
+        error:
+          "Something went wrong while fetching IP details. Please check your connection and try again.",
+        retry: "Try again",
+        refreshTitle: "Refresh IP information",
+        publicIpLabel: "Your public IP",
+      },
+      details: {
+        countryTitle: "Country",
+        regionTitle: "Region / City",
+        coordsTitle: "Geo coordinates",
+        ispTitle: "Internet service provider (ISP)",
+      },
+      page: {
+        title: "IP & network info tool",
+        description:
+          "Quickly see your public IP and basic network information directly in your browser.",
+      },
+    },
+  },
+};
 
-type DocCategoryKey = "system";
+export type IPCheckerToolContent = typeof ipCheckerContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface IPCheckerToolContent extends BaseDocsFields {
-  id: "ip-checker";
-  ui: {
-    main: {
-      loading: string;
-      error: string;
-      retry: string;
-      refreshTitle: string;
-      publicIpLabel: string;
-    };
-    details: {
-      countryTitle: string;
-      regionTitle: string;
-      coordsTitle: string;
-      ispTitle: string;
-    };
-    page: {
-      title: string;
-      description: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: IPCheckerToolContent; en: IPCheckerToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, IPCheckerToolContent>;
-
-export function useIPCheckerContent(): IPCheckerToolContent {
+export function useIPCheckerContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return ipCheckerContent[locale];
 }

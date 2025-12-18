@@ -46,7 +46,6 @@ export default function ImageEditorTool() {
     const trimmed = imageUrlInput.trim();
     if (!trimmed) return;
 
-    // می‌توانی اینجا ولیدیشن ساده هم اضافه کنی (مثلاً startsWith("http"))
     revokeIfFile();
 
     setImageFile(null);

@@ -1,3 +1,4 @@
+// components/tools/developer/color-picker/ColorPickerTool.tsx
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -15,13 +16,14 @@ import {
 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
-const ColorThief = require("colorthief").default;
+// @ts-ignore
+import ColorThief from "colorthief";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useColorPickerContent,
   type ColorPickerToolContent,
-} from "./color-picker.content";
+} from "./color-picker.content"; // ✅ مسیر نسبی اصلاح شد
 
 type ColorFormat = "hex" | "rgb" | "hsl";
 type DataUrl = string | null;
@@ -159,13 +161,20 @@ export default function ColorPickerTool() {
       setImageLoaded(true);
 
       const colorThief = new ColorThief();
-      const paletteRGB = colorThief.getPalette(img, 8);
-      const paletteHex = paletteRGB.map((rgb: number[]) =>
-        rgbToHex(rgb[0], rgb[1], rgb[2])
-      );
-      setPalette(paletteHex);
+      // Using try-catch for color extraction as it might fail for some images
+      try {
+        const paletteRGB = colorThief.getPalette(img, 8);
+        if (paletteRGB) {
+            const paletteHex = paletteRGB.map((rgb: number[]) =>
+                rgbToHex(rgb[0], rgb[1], rgb[2])
+            );
+            setPalette(paletteHex);
+        }
+      } catch (e) {
+          console.warn("ColorThief failed to extract palette", e);
+      }
     } catch (e) {
-      console.error("Error extracting color palette:", e);
+      console.error("Error drawing image to canvas:", e);
     }
   }, []);
 

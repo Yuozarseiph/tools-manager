@@ -1,13 +1,17 @@
 // components/home/HeroSection.tsx
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useThemeColors } from '@/hooks/useThemeColors';
-import { useLanguage } from '@/context/LanguageContext';
+import { motion } from "framer-motion";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import { useLanguage } from "@/context/LanguageContext";
+import { homeContent } from "@/data/home.content";
 
 export default function HeroSection() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = homeContent[locale];
 
   return (
     <div className="text-center mb-20 space-y-6 pt-20">
@@ -16,12 +20,12 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         className={`text-4xl md:text-6xl font-black tracking-tight leading-tight ${theme.text}`}
       >
-        {t('home.hero.titleLine1')}
+        {content.hero.titleLine1}
         <br className="hidden md:block" />
         <span
           className={`bg-clip-text text-transparent bg-gradient-to-r ${theme.gradient}`}
         >
-          {t('home.hero.titleHighlight')}
+          {content.hero.titleHighlight}
         </span>
       </motion.h1>
 
@@ -31,7 +35,7 @@ export default function HeroSection() {
         transition={{ delay: 0.2 }}
         className={`text-lg md:text-xl max-w-2xl mx-auto leading-relaxed transition-colors duration-300 ${theme.textMuted}`}
       >
-        {t('home.hero.subtitle')}
+        {content.hero.subtitle}
       </motion.p>
     </div>
   );

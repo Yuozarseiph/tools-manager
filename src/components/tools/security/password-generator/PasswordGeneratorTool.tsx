@@ -1,3 +1,4 @@
+// components/tools/security/password-generator/PasswordGeneratorTool.tsx
 "use client";
 
 import { useState, useEffect } from "react";

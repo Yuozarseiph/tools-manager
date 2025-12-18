@@ -1,13 +1,17 @@
-// app/tools/audio-editor/page.tsx
+// app/tools/(media)/audio-editor/page.tsx
 import type { Metadata } from "next";
-import AudioEditor from "./AudioEditor";
+import AudioEditorClient from "./AudioEditor";
 import { getAudioEditorSeo } from "./content";
+
 const fa = getAudioEditorSeo("fa");
 const en = getAudioEditorSeo("en");
 
+const combinedTitle = `${fa.title} / ${en.title}`;
+const combinedDescription = `${fa.description} / ${en.description}`;
+
 export const metadata: Metadata = {
-  title: fa.title,
-  description: fa.description,
+  title: combinedTitle,
+  description: combinedDescription,
   alternates: {
     canonical: fa.canonical,
     languages: {
@@ -16,14 +20,15 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: fa.ogTitle ?? fa.title,
-    description: fa.ogDescription ?? fa.description,
+    title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: fa.canonical,
     type: "website",
     locale: "fa_IR",
     alternateLocale: ["en_US"],
   },
 };
+
 function buildJsonLd() {
   const baseProvider = {
     "@type": "Organization",
@@ -38,7 +43,7 @@ function buildJsonLd() {
       name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: fa.description,
       url: fa.canonical,
-      applicationCategory: fa.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: fa.applicationCategory ?? "MultimediaApplication",
       inLanguage: fa.inLanguage ?? "fa-IR",
       provider: baseProvider,
     },
@@ -48,7 +53,7 @@ function buildJsonLd() {
       name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: en.description,
       url: en.canonical,
-      applicationCategory: en.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: en.applicationCategory ?? "MultimediaApplication",
       inLanguage: en.inLanguage ?? "en-US",
       provider: baseProvider,
     },
@@ -66,8 +71,7 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-
-      <AudioEditor />
+      <AudioEditorClient />
     </div>
   );
 }

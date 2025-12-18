@@ -1,44 +1,69 @@
+// app/tools/(security)/password-generator/content.ts
 
-import rawContent from "./content.json";
 import { useLanguage } from "@/context/LanguageContext";
 
-type Lang = "fa" | "en";
-
-const content = rawContent as {
-  fa: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
-  en: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
+export type SeoContent = {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  applicationCategory?: string;
+  inLanguage?: string;
 };
 
-// برای استفاده در metadata (سمت سرور / بدون هوک)
-export function getPasswordGeneratorSeo(lang: Lang) {
-  return content[lang].seo;
+export const passwordGeneratorContent = {
+  fa: {
+    page: {
+      title: "ساخت آنلاین پسورد قوی و تحلیل قدرت رمز",
+      description:
+        "رمزهای عبور تصادفی و قدرتمند بساز یا رمز فعلی‌ات را وارد کن تا سطح امنیت آن را تحلیل کنیم و پیشنهادهای بهبود را ببینی.",
+    },
+    seo: {
+      title: "ابزار تولید و تحلیل رمز عبور آنلاین | Tools Manager",
+      description:
+        "پسوردهای امن با حروف بزرگ و کوچک، اعداد و نمادها تولید کن، قدرت آن‌ها را بسنج و برای حساب‌های مهمت از رمزهای منحصربه‌فرد استفاده کن.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/password-generator",
+      ogTitle: "تولیدکننده و آنالیزر تحت‌وب رمز عبور",
+      ogDescription:
+        "در مرورگر خود پسوردهای قوی بساز، آن‌ها را ارزیابی کن و بدون ذخیره‌سازی روی سرور، برای اکانت‌هایت استفاده کن.",
+      applicationCategory: "SecurityApplication",
+      inLanguage: "fa-IR",
+    } satisfies SeoContent,
+  },
+
+  en: {
+    page: {
+      title: "Online strong password generator & strength checker",
+      description:
+        "Generate random, secure passwords or analyze an existing one to see its strength and get suggestions for improvement.",
+    },
+    seo: {
+      title: "Password generator and strength analyzer | Tools Manager",
+      description:
+        "Create secure passwords with uppercase, lowercase, numbers and symbols, check their strength and keep unique credentials for important accounts.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/password-generator",
+      ogTitle: "In‑browser password generator & analyzer",
+      ogDescription:
+        "Generate and evaluate strong passwords directly in your browser, with no server storage of your secrets.",
+      applicationCategory: "SecurityApplication",
+      inLanguage: "en-US",
+    } satisfies SeoContent,
+  },
+};
+
+export type PasswordGeneratorContent = typeof passwordGeneratorContent.fa;
+
+export function usePasswordGeneratorContent() {
+  const { locale } = useLanguage();
+  return passwordGeneratorContent[locale];
 }
 
-// برای استفاده در UI صفحه (سمت کلاینت)
 export function usePasswordGeneratorPageContent() {
-  const { locale } = useLanguage(); // از LanguageContext می‌آید.[file:1]
-  const lang: Lang = locale === "en" ? "en" : "fa";
-  return content[lang].page;
+  const content = usePasswordGeneratorContent();
+  return content.page;
+}
+
+export function getPasswordGeneratorSeo(locale: "fa" | "en"): SeoContent {
+  return passwordGeneratorContent[locale].seo;
 }

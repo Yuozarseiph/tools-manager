@@ -1,3 +1,4 @@
+// components/tools/browser/user-agent/UserAgentTool.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -16,8 +17,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useUserAgentContent,
   type UserAgentToolContent,
-} from "./user-agent.content";
-
+} from "./user-agent.content"; 
 interface ParsedInfo {
   browser: { name?: string; version?: string };
   os: { name?: string; version?: string };
@@ -39,13 +39,12 @@ export default function UserAgentTool() {
     const parser = new UAParser();
     const result = parser.getResult();
     setInfo(result);
-    
+
     if (typeof navigator !== "undefined") {
       setUaString(navigator.userAgent);
 
-      // استفاده از User-Agent Client Hints API برای اطلاعات دقیق‌تر
       const uaData = (navigator as any).userAgentData;
-      
+
       if (uaData && uaData.getHighEntropyValues) {
         uaData
           .getHighEntropyValues([
@@ -59,8 +58,7 @@ export default function UserAgentTool() {
           ])
           .then((ua: any) => {
             setDetailedInfo(ua);
-            
-            // تشخیص دقیق‌تر ویندوز 11
+
             if (ua.platform === "Windows") {
               const majorPlatformVersion = parseInt(
                 ua.platformVersion?.split(".")[0] || "0"
@@ -94,7 +92,6 @@ export default function UserAgentTool() {
               }
             }
 
-            // تشخیص دقیق‌تر مدل دستگاه
             if (ua.model) {
               setInfo((prev) =>
                 prev
@@ -109,7 +106,6 @@ export default function UserAgentTool() {
               );
             }
 
-            // تشخیص دقیق‌تر معماری پردازنده
             if (ua.architecture || ua.bitness) {
               setInfo((prev) =>
                 prev
@@ -117,14 +113,16 @@ export default function UserAgentTool() {
                       ...prev,
                       cpu: {
                         ...prev.cpu,
-                        architecture: ua.architecture || `${ua.bitness}-bit` || prev.cpu.architecture,
+                        architecture:
+                          ua.architecture ||
+                          `${ua.bitness}-bit` ||
+                          prev.cpu.architecture,
                       },
                     }
                   : prev
               );
             }
 
-            // ورژن دقیق مرورگر
             if (ua.uaFullVersion) {
               setInfo((prev) =>
                 prev
@@ -144,7 +142,6 @@ export default function UserAgentTool() {
           });
       }
 
-      // تشخیص اندروید از user agent
       const androidMatch = navigator.userAgent.match(/Android\s+([\d.]+)/i);
       if (androidMatch) {
         setInfo((prev) =>
@@ -161,7 +158,6 @@ export default function UserAgentTool() {
         );
       }
 
-      // تشخیص iOS
       const iosMatch = navigator.userAgent.match(/OS\s+([\d_]+)/i);
       if (iosMatch && navigator.userAgent.includes("iPhone")) {
         setInfo((prev) =>
@@ -199,14 +195,14 @@ export default function UserAgentTool() {
   const colorDepth =
     typeof window !== "undefined" ? window.screen.colorDepth : 0;
 
-  // اطلاعات بهتر از پردازنده
-  const cpuInfo = detailedInfo?.architecture 
-    ? `${detailedInfo.architecture}${detailedInfo.bitness ? ` (${detailedInfo.bitness}-bit)` : ''}`
+  const cpuInfo = detailedInfo?.architecture
+    ? `${detailedInfo.architecture}${
+        detailedInfo.bitness ? ` (${detailedInfo.bitness}-bit)` : ""
+      }`
     : info.cpu.architecture || content.ui.cards.cpu.fallback;
 
   return (
     <div className="grid gap-8">
-      {/* User Agent خام */}
       <div
         className={`p-6 rounded-3xl border shadow-sm relative overflow-hidden group ${theme.card} ${theme.border}`}
       >
@@ -234,7 +230,6 @@ export default function UserAgentTool() {
         </code>
       </div>
 
-      {/* کارت‌های اصلی */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         <InfoCard
           icon={Chrome}
@@ -294,7 +289,6 @@ export default function UserAgentTool() {
         />
       </div>
 
-      {/* اطلاعات تکمیلی */}
       <div className={`p-6 rounded-3xl border ${theme.card} ${theme.border}`}>
         <h3 className={`font-bold mb-4 flex items-center gap-2 ${theme.text}`}>
           <Globe size={20} /> {content.ui.details.title}

@@ -1,98 +1,223 @@
-"use client";
+// app/tools/(excel)/excel-editor/excel-editor.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./excel-editor.i18n.json";
+export const excelEditorContent = {
+  fa: {
+    id: "excel-editor",
+    category: "excel",
+    title: "ویرایشگر آنلاین اکسل",
+    description: "فایل‌های Excel یا CSV را در مرورگر خود ویرایش کنید و خروجی جدید بگیرید.",
+    features: [
+      "آپلود مستقیم فایل Excel یا CSV",
+      "ویرایش سلول‌ها به صورت جدولی",
+      "افزودن و حذف سطرها",
+      "جستجوی سریع در داده‌ها",
+      "بازگشت (Undo) به وضعیت قبلی",
+      "دانلود خروجی به صورت Excel یا CSV"
+    ],
+    ui: {
+      upload: {
+        buttonInitial: "انتخاب فایل Excel / CSV",
+        buttonChange: "تغییر فایل داده",
+        acceptHint: "فرمت‌های مجاز: .xlsx، .xls، .csv"
+      },
+      actions: {
+        exportExcel: "دانلود Excel",
+        addRow: "افزودن سطر",
+        undoTitle: "بازگشت به تغییر قبلی",
+        closeFileTitle: "بستن فایل و پاک‌کردن داده‌ها",
+        resetConfirm: "آیا از بستن فایل و پاک‌کردن همه داده‌ها مطمئن هستید؟",
+        fullscreenEnterTitle: "نمایش تمام‌صفحه",
+        fullscreenExitTitle: "خروج از تمام‌صفحه",
+        copy: "کپی",
+        copied: "کپی شد"
+      },
+      search: { placeholder: "جستجو در تمام ستون‌ها..." },
+      filter: {
+        title: "فیلتر",
+        noFilter: "بدون فیلتر",
+        columnPlaceholder: "ستون",
+        opPlaceholder: "عملگر",
+        valuePlaceholder: "مقدار",
+        value2Placeholder: "مقدار دوم",
+        clear: "پاک کردن",
+        rowsLabel: "ردیف‌ها",
+        ofLabel: "از",
+        sizeLabel: "حجم تقریبی",
+        typeNumber: "عددی",
+        typeText: "متنی",
+        ops: {
+          contains: "شامل",
+          equals: "برابر",
+          startsWith: "شروع با",
+          gt: "بزرگ‌تر از",
+          lt: "کوچک‌تر از",
+          between: "بین"
+        }
+      },
+      sort: {
+        title: "مرتب‌سازی",
+        noSort: "بدون مرتب‌سازی",
+        directionAsc: "صعودی",
+        directionDesc: "نزولی",
+        clear: "پاک کردن"
+      },
+      sum: {
+        title: "جمع",
+        modeColumn: "ستون",
+        modeRow: "ردیف",
+        rowNumberLabel: "شماره ردیف",
+        rowNumberPlaceholder: "مثلاً 1",
+        rangeRowsTitle: "بازه ردیف‌ها",
+        rangeColsTitle: "بازه ستون‌ها",
+        from: "از",
+        to: "تا",
+        resultLabel: "نتیجه",
+        countedLabel: "تعداد سلول‌های عددی",
+        copyResult: "کپی نتیجه"
+      },
+      export: {
+        title: "خروجی CSV",
+        rangeTitle: "بازه خروجی (بر اساس جدول فیلتر/مرتب‌شده)",
+        fromRowPlaceholder: "از ردیف",
+        toRowPlaceholder: "تا ردیف",
+        filteredButton: "دانلود CSV (فیلتر شده)",
+        rangeButton: "دانلود CSV (بازه انتخابی)"
+      },
+      table: {
+        indexHeader: "ردیف",
+        deleteHeader: "حذف",
+        deleteTooltip: "حذف این سطر"
+      },
+      pagination: {
+        summaryPrefix: "نمایش ",
+        summaryFromToSeparator: " تا ",
+        summaryOfWord: " از ",
+        summarySuffix: " ردیف",
+        rowsPerPageLabel: "تعداد نمایش",
+        perPageSuffix: "در صفحه"
+      },
+      empty: {
+        title: "هیچ فایلی انتخاب نشده است",
+        description: "برای شروع، یک فایل Excel یا CSV انتخاب کنید تا داده‌ها در اینجا قابل ویرایش باشند."
+      },
+      page: {
+        title: "ویرایشگر آنلاین اکسل",
+        description: "بدون نیاز به نصب نرم‌افزار، فایل‌های Excel یا CSV را در مرورگر خود ویرایش و ذخیره کنید."
+      }
+    }
+  },
+  en: {
+    id: "excel-editor",
+    category: "excel",
+    title: "Online Excel editor",
+    description: "Edit Excel or CSV files directly in your browser and export the result.",
+    features: [
+      "Upload Excel or CSV files",
+      "Edit cells in a spreadsheet-like table",
+      "Add and remove rows",
+      "Quick search across all columns",
+      "Undo recent changes",
+      "Download as Excel or CSV"
+    ],
+    ui: {
+      upload: {
+        buttonInitial: "Choose Excel / CSV file",
+        buttonChange: "Change data file",
+        acceptHint: "Supported formats: .xlsx, .xls, .csv"
+      },
+      actions: {
+        exportExcel: "Export to Excel",
+        addRow: "Add row",
+        undoTitle: "Undo last change",
+        closeFileTitle: "Close file and clear data",
+        resetConfirm: "Are you sure you want to close the file and clear all data?",
+        fullscreenEnterTitle: "Enter full screen",
+        fullscreenExitTitle: "Exit full screen",
+        copy: "Copy",
+        copied: "Copied"
+      },
+      search: { placeholder: "Search across all columns..." },
+      filter: {
+        title: "Filter",
+        noFilter: "No filter",
+        columnPlaceholder: "Column",
+        opPlaceholder: "Operator",
+        valuePlaceholder: "Value",
+        value2Placeholder: "Value 2",
+        clear: "Clear",
+        rowsLabel: "Rows",
+        ofLabel: "of",
+        sizeLabel: "Approx size",
+        typeNumber: "Numeric",
+        typeText: "Text",
+        ops: {
+          contains: "Contains",
+          equals: "Equals",
+          startsWith: "Starts with",
+          gt: "Greater than",
+          lt: "Less than",
+          between: "Between"
+        }
+      },
+      sort: {
+        title: "Sort",
+        noSort: "No sort",
+        directionAsc: "Ascending",
+        directionDesc: "Descending",
+        clear: "Clear"
+      },
+      sum: {
+        title: "Sum",
+        modeColumn: "Column",
+        modeRow: "Row",
+        rowNumberLabel: "Row number",
+        rowNumberPlaceholder: "e.g. 1",
+        rangeRowsTitle: "Row range",
+        rangeColsTitle: "Column range",
+        from: "From",
+        to: "To",
+        resultLabel: "Result",
+        countedLabel: "Counted numeric cells",
+        copyResult: "Copy result"
+      },
+      export: {
+        title: "CSV export",
+        rangeTitle: "Export range (based on filtered/sorted table)",
+        fromRowPlaceholder: "From row",
+        toRowPlaceholder: "To row",
+        filteredButton: "Export CSV (filtered)",
+        rangeButton: "Export CSV (selected range)"
+      },
+      table: {
+        indexHeader: "Row",
+        deleteHeader: "Delete",
+        deleteTooltip: "Delete this row"
+      },
+      pagination: {
+        summaryPrefix: "Showing ",
+        summaryFromToSeparator: " to ",
+        summaryOfWord: " of ",
+        summarySuffix: " rows",
+        rowsPerPageLabel: "Rows",
+        perPageSuffix: "per page"
+      },
+      empty: {
+        title: "No file selected",
+        description: "Upload an Excel or CSV file to start editing its data in this table."
+      },
+      page: {
+        title: "Online Excel editor",
+        description: "Edit Excel or CSV files in your browser and export the updated sheet as a new file."
+      }
+    }
+  }
+};
 
-type DocCategoryKey = "excel";
-type FilterOpKey = "contains" | "equals" | "startsWith" | "gt" | "lt" | "between";
+export type ExcelEditorToolContent = typeof excelEditorContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-}
-
-export interface ExcelEditorToolContent extends BaseDocsFields {
-  id: "excel-editor";
-  ui: {
-    upload: { buttonInitial: string; buttonChange: string; acceptHint: string };
-    actions: {
-      exportExcel: string;
-      addRow: string;
-      undoTitle: string;
-      closeFileTitle: string;
-      resetConfirm: string;
-      fullscreenEnterTitle: string;
-      fullscreenExitTitle: string;
-      copy: string;
-      copied: string;
-    };
-    search: { placeholder: string };
-    filter: {
-      title: string;
-      noFilter: string;
-      columnPlaceholder: string;
-      opPlaceholder: string;
-      valuePlaceholder: string;
-      value2Placeholder: string;
-      clear: string;
-      rowsLabel: string;
-      ofLabel: string;
-      sizeLabel: string;
-      typeNumber: string;
-      typeText: string;
-      ops: Record<FilterOpKey, string>;
-    };
-    sort: {
-      title: string;
-      noSort: string;
-      directionAsc: string;
-      directionDesc: string;
-      clear: string;
-    };
-    sum: {
-      title: string;
-      modeColumn: string;
-      modeRow: string;
-      rowNumberLabel: string;
-      rowNumberPlaceholder: string;
-      rangeRowsTitle: string;
-      rangeColsTitle: string;
-      from: string;
-      to: string;
-      resultLabel: string;
-      countedLabel: string;
-      copyResult: string;
-    };
-    export: {
-      title: string;
-      rangeTitle: string;
-      fromRowPlaceholder: string;
-      toRowPlaceholder: string;
-      filteredButton: string;
-      rangeButton: string;
-    };
-    table: { indexHeader: string; deleteHeader: string; deleteTooltip: string };
-    pagination: {
-      summaryPrefix: string;
-      summaryFromToSeparator: string;
-      summaryOfWord: string;
-      summarySuffix: string;
-      rowsPerPageLabel: string;
-      perPageSuffix: string;
-    };
-    empty: { title: string; description: string };
-    page: { title: string; description: string };
-  };
-}
-
-const CONTENT_BY_LOCALE = rawContent as Record<Locale, ExcelEditorToolContent>;
-
-export function useExcelEditorContent(): ExcelEditorToolContent {
+export function useExcelEditorContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return excelEditorContent[locale];
 }

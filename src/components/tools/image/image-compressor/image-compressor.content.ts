@@ -1,63 +1,89 @@
-"use client";
+// app/tools/(developer)/image-compressor/image-compressor.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./image-compressor.i18n.json";
+export const imageCompressorContent = {
+  fa: {
+    id: "image-compressor",
+    category: "developer",
+    title: "فشرده‌ساز آنلاین تصویر",
+    description: "حجم تصاویر خود را بدون افت محسوس کیفیت کاهش دهید و خروجی جدید دانلود کنید.",
+    features: [
+      "پشتیبانی از فرمت‌های JPG، PNG، JPEG و WebP",
+      "تنظیم دستی کیفیت فشرده‌سازی",
+      "نمایش حجم قبل و بعد از فشرده‌سازی",
+      "دانلود سریع نسخهٔ فشرده شده"
+    ],
+    ui: {
+      upload: {
+        dropTitle: "یک تصویر اینجا رها کن یا کلیک کن تا انتخاب کنی",
+        dropSubtitle: "فرمت‌های JPG، PNG و WebP پشتیبانی می‌شوند.",
+        urlPlaceholder: "آدرس تصویر (URL) را وارد کن",
+        urlButton: "افزودن از لینک",
+        urlLoading: "در حال دانلود تصویر از لینک…",
+        urlHint: "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما فشرده می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود."
+      },
+      fileInfo: {
+        original: "حجم اصلی:",
+        compressed: "حجم پس از فشرده‌سازی:",
+        reductionSuffix: "٪ کاهش حجم"
+      },
+      settings: {
+        title: "تنظیمات فشرده‌سازی",
+        qualityLabel: "کیفیت تصویر خروجی"
+      },
+      buttons: {
+        start: "شروع فشرده‌سازی",
+        download: "دانلود تصویر فشرده‌شده"
+      },
+      alerts: {
+        error: "در هنگام فشرده‌سازی تصویر خطایی رخ داد. لطفاً دوباره تلاش کنید."
+      }
+    }
+  },
+  en: {
+    id: "image-compressor",
+    category: "developer",
+    title: "Online image compressor",
+    description: "Reduce your image size without noticeable quality loss and download the optimized file.",
+    features: [
+      "Supports JPG, PNG, JPEG and WebP formats",
+      "Manually adjust compression quality",
+      "See original vs compressed file size",
+      "Quickly download the compressed image"
+    ],
+    ui: {
+      upload: {
+        dropTitle: "Drop an image here or click to upload",
+        dropSubtitle: "JPG, PNG and WebP formats are supported.",
+        urlPlaceholder: "Enter image URL",
+        urlButton: "Add from URL",
+        urlLoading: "Downloading image from URL…",
+        urlHint: "The image is downloaded over your own internet connection and compressed only in your browser; no files are uploaded to our servers."
+      },
+      fileInfo: {
+        original: "Original size:",
+        compressed: "Compressed size:",
+        reductionSuffix: "% size reduction"
+      },
+      settings: {
+        title: "Compression settings",
+        qualityLabel: "Output image quality"
+      },
+      buttons: {
+        start: "Start compression",
+        download: "Download compressed image"
+      },
+      alerts: {
+        error: "An error occurred while compressing the image. Please try again."
+      }
+    }
+  }
+};
 
-type DocCategoryKey = "image";
+export type ImageCompressorToolContent = typeof imageCompressorContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface ImageCompressorToolContent extends BaseDocsFields {
-  id: "image-compressor";
-  ui: {
-    upload: {
-      dropTitle: string;
-      dropSubtitle: string;
-      urlPlaceholder: string;
-      urlButton: string;
-      urlLoading: string;
-      urlHint: string;
-    };
-    fileInfo: {
-      original: string;
-      compressed: string;
-      reductionSuffix: string; // مثلاً "% کاهش"
-    };
-    settings: {
-      title: string;
-      qualityLabel: string;
-    };
-    buttons: {
-      start: string;
-      download: string;
-    };
-    alerts: {
-      error: string;
-    };
-  };
-}
-
-// شکل فایل i18n: { fa: ImageCompressorToolContent; en: ImageCompressorToolContent }
-const CONTENT_BY_LOCALE = rawContent as Record<
-  Locale,
-  ImageCompressorToolContent
->;
-
-export function useImageCompressorContent(): ImageCompressorToolContent {
+export function useImageCompressorContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return imageCompressorContent[locale];
 }

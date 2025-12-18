@@ -1,45 +1,73 @@
+// app/tools/(excel-tools)/excel-editor/content.ts
 
-
-import rawContent from "./content.json";
 import { useLanguage } from "@/context/LanguageContext";
 
-type Lang = "fa" | "en";
-
-const content = rawContent as {
-  fa: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
-  en: {
-    page: { title: string; description: string };
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      applicationCategory?: string;
-      inLanguage?: string;
-    };
-  };
+// 🔥 Type مشترک برای SEO
+export type SeoContent = {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  applicationCategory?: string;
+  inLanguage?: string;
 };
 
-// برای استفاده در metadata (سمت سرور / بدون هوک)
-export function getExcelEditorSeo(lang: Lang) {
-  return content[lang].seo;
+export const excelEditorContent = {
+  fa: {
+    page: {
+      title: "ویرایش آنلاین فایل‌های Excel و CSV",
+      description:
+        "فایل‌های Excel یا CSV را در مرورگر باز کن، ردیف‌ها را ویرایش و اضافه یا حذف کن و در نهایت خروجی به‌روز را دوباره به‌صورت Excel دانلود کن.",
+    },
+    seo: {
+      title: "ویرایشگر Excel و CSV آنلاین | Tools Manager",
+      description:
+        "جدول‌های Excel و CSV را مستقیماً در مرورگر ویرایش کن، ردیف‌ها را مدیریت کن و بدون نصب نرم‌افزار، نسخهٔ جدید فایل را ذخیره کن.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-editor",
+      ogTitle: "ویرایشگر تحت‌وب برای فایل‌های Excel و CSV",
+      ogDescription:
+        "فایل‌های جدولی را آپلود کن، داده‌ها را اصلاح کن و خروجی را برای استفاده در گزارش‌ها و سیستم‌های دیگر به‌سرعت دریافت کن.",
+      applicationCategory: "BusinessApplication",
+      inLanguage: "fa-IR",
+    } satisfies SeoContent,
+  },
+
+  en: {
+    page: {
+      title: "Online Excel & CSV editor",
+      description:
+        "Open Excel or CSV files in your browser, edit rows and cells, then download an updated Excel file without installing any software.",
+    },
+    seo: {
+      title: "Excel and CSV editor online | Tools Manager",
+      description:
+        "Edit Excel and CSV tables directly in the browser, manage rows and values, and save a fresh file for use in reports and systems.",
+      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-editor",
+      ogTitle: "Web-based editor for Excel and CSV files",
+      ogDescription:
+        "Upload tabular data, fix and adjust values, then export a clean Excel file ready for reporting or further processing.",
+      applicationCategory: "BusinessApplication",
+      inLanguage: "en-US",
+    } satisfies SeoContent,
+  },
+};
+
+export type ExcelEditorContent = typeof excelEditorContent.fa;
+
+// 🔥 Hook برای استفاده در کامپوننت Client
+export function useExcelEditorContent() {
+  const { locale } = useLanguage();
+  return excelEditorContent[locale];
 }
 
-// برای استفاده در UI صفحه (سمت کلاینت)
+// 🔥 Hook مخصوص page content
 export function useExcelEditorPageContent() {
-  const { locale } = useLanguage(); // از LanguageContext می‌آید.[file:10]
-  const lang: Lang = locale === "en" ? "en" : "fa";
-  return content[lang].page;
+  const content = useExcelEditorContent();
+  return content.page;
+}
+
+// 🔥 تابع برای دریافت SEO (برای page.tsx)
+export function getExcelEditorSeo(locale: "fa" | "en"): SeoContent {
+  return excelEditorContent[locale].seo;
 }

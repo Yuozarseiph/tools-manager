@@ -1,3 +1,4 @@
+// components/tools/graphics/qr-generator/QrGeneratorTool.tsx
 "use client";
 
 import { useState, useRef, ChangeEvent } from "react";
@@ -13,7 +14,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useQrGeneratorContent,
   type QrGeneratorToolContent,
-} from "./qr-generator.content";
+} from "./qr-generator.content"; // ✅ مسیر اصلاح شده
 
 type CornerStyle = "square" | "rounded";
 
@@ -25,14 +26,11 @@ export default function QrGeneratorTool() {
   const [size, setSize] = useState(256);
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
-
   const [cornerStyle, setCornerStyle] = useState<CornerStyle>("square");
   const [qrMargin, setQrMargin] = useState(4);
-
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
   const [logoScale, setLogoScale] = useState(0.2);
 
-  // تغییر نوع ref
   const qrContainerRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogoUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,11 +48,9 @@ export default function QrGeneratorTool() {
   };
 
   const downloadQr = async () => {
-    // پیدا کردن SVG از داخل container
     const svgElement = qrContainerRef.current?.querySelector("svg");
     if (!svgElement) return;
 
-    // تبدیل به canvas با سایز واقعی
     const canvas = document.createElement("canvas");
     const finalSize = size + qrMargin * 2;
     canvas.width = finalSize;
@@ -67,14 +63,10 @@ export default function QrGeneratorTool() {
 
     const img = new Image();
     img.onload = async () => {
-      // پس‌زمینه
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, finalSize, finalSize);
-
-      // رسم QR
       ctx.drawImage(img, qrMargin, qrMargin, size, size);
 
-      // اگه لوگو داریم
       if (logoDataUrl) {
         const logoImg = new Image();
         logoImg.onload = () => {
@@ -82,7 +74,6 @@ export default function QrGeneratorTool() {
           const logoX = (finalSize - logoSize) / 2;
           const logoY = (finalSize - logoSize) / 2;
 
-          // پس‌زمینه لوگو
           ctx.fillStyle = bgColor;
           const padding = 8;
           ctx.beginPath();
@@ -95,10 +86,8 @@ export default function QrGeneratorTool() {
           );
           ctx.fill();
 
-          // رسم لوگو
           ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
 
-          // دانلود
           const pngUrl = canvas.toDataURL("image/png");
           const a = document.createElement("a");
           a.href = pngUrl;
@@ -107,7 +96,6 @@ export default function QrGeneratorTool() {
         };
         logoImg.src = logoDataUrl;
       } else {
-        // دانلود بدون لوگو
         const pngUrl = canvas.toDataURL("image/png");
         const a = document.createElement("a");
         a.href = pngUrl;
@@ -127,11 +115,9 @@ export default function QrGeneratorTool() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-8">
-      {/* تنظیمات */}
       <div
         className={`space-y-6 p-6 rounded-3xl border ${theme.card} ${theme.border}`}
       >
-        {/* متن / URL */}
         <div className="space-y-2">
           <label className="font-bold flex items-center gap-2">
             <LinkIcon size={18} /> {content.ui.input.label}
@@ -144,7 +130,6 @@ export default function QrGeneratorTool() {
           />
         </div>
 
-        {/* رنگ‌ها */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-sm font-bold">
@@ -180,7 +165,6 @@ export default function QrGeneratorTool() {
           </div>
         </div>
 
-        {/* سایز و مارجین */}
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -224,7 +208,6 @@ export default function QrGeneratorTool() {
           </div>
         </div>
 
-        {/* استایل گوشه‌ها */}
         <div className="space-y-2">
           <label className="text-sm font-bold">
             {content.ui.corners.label}
@@ -255,7 +238,6 @@ export default function QrGeneratorTool() {
           </div>
         </div>
 
-        {/* لوگو */}
         <div className="space-y-3">
           <label className="text-sm font-bold flex items-center gap-2">
             <ImageIcon size={16} />
@@ -308,7 +290,6 @@ export default function QrGeneratorTool() {
         </div>
       </div>
 
-      {/* پیش‌نمایش */}
       <div
         className={`flex flex-col items-center justify-center p-8 rounded-3xl border ${theme.bg} ${theme.border}`}
       >

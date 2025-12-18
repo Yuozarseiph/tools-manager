@@ -1,6 +1,6 @@
 {
   "name": "tools-manager",
-  "version": "2.8.1 BETA",
+  "version": "2.9.1 BETA",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",

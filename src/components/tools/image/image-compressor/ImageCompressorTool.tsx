@@ -1,7 +1,9 @@
+// components/tools/developer/image-compressor/ImageCompressorTool.tsx
 "use client";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+// @ts-ignore
 import imageCompression from "browser-image-compression";
 import download from "downloadjs";
 import {
@@ -18,7 +20,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useImageCompressorContent,
   type ImageCompressorToolContent,
-} from "./image-compressor.content";
+} from "./image-compressor.content"; // ✅ مسیر نسبی اصلاح شد
 
 export default function ImageCompressorTool() {
   const theme = useThemeColors();

@@ -1,3 +1,4 @@
+// components/tools/image/image-resizer/ImageResizerTool.tsx
 "use client";
 
 import { useState } from "react";
@@ -19,7 +20,8 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useImageResizerContent,
   type ImageResizerToolContent,
-} from "./image-resizer.content";
+} from "./image-resizer.content"; // ✅ مسیر نسبی اصلاح شد
+
 const getSafeImageMime = (mime: string | undefined | null): string => {
   if (!mime) return "image/png";
   if (!mime.startsWith("image/")) return "image/png";
@@ -118,50 +120,49 @@ export default function ImageResizerTool() {
     setHeight(originalDims.h);
   };
 
-const handleResize = () => {
-  if (!file || !width || !height || !preview) return;
+  const handleResize = () => {
+    if (!file || !width || !height || !preview) return;
 
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const img = new Image();
+    const img = new Image();
 
-  img.onload = () => {
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(img, 0, 0, width, height);
+    img.onload = () => {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, width, height);
 
-    const safeMime = getSafeImageMime(file.type);
-    const extFromName =
-      file.name.includes(".") ? file.name.split(".").pop()!.toLowerCase() : "";
-    const knownExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "avif"];
-    const finalExt = knownExts.includes(extFromName)
-      ? extFromName
-      : getExtFromMime(safeMime);
+      const safeMime = getSafeImageMime(file.type);
+      const extFromName =
+        file.name.includes(".") ? file.name.split(".").pop()!.toLowerCase() : "";
+      const knownExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "avif"];
+      const finalExt = knownExts.includes(extFromName)
+        ? extFromName
+        : getExtFromMime(safeMime);
 
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          alert(content.ui.alerts.error); // اگر چنین کلیدی داری، یا یک پیام ساده بگذار
-          return;
-        }
-        download(
-          blob,
-          `resized-${width}x${height}.${finalExt}`,
-          safeMime
-        );
-      },
-      safeMime,
-      0.95
-    );
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            alert(content.ui.alerts.error);
+            return;
+          }
+          download(
+            blob,
+            `resized-${width}x${height}.${finalExt}`,
+            safeMime
+          );
+        },
+        safeMime,
+        0.95
+      );
+    };
+
+    img.src = preview;
   };
-
-  img.src = preview;
-};
-
 
   const handleClear = () => {
     setFile(null);

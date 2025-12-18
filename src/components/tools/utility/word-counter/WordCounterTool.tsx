@@ -1,3 +1,4 @@
+// components/tools/writing/word-counter/WordCounterTool.tsx
 "use client";
 
 import { useState, useMemo } from "react";
@@ -58,7 +59,6 @@ export default function WordCounterTool() {
 
   return (
     <div className="grid lg:grid-cols-3 gap-8">
-      {/* ادیتور متن */}
       <div
         className={`lg:col-span-2 flex flex-col rounded-3xl border shadow-sm overflow-hidden h-[500px] ${theme.card} ${theme.border}`}
       >
@@ -95,7 +95,6 @@ export default function WordCounterTool() {
         />
       </div>
 
-      {/* آمار */}
       <div className="space-y-4">
         <div
           className={`p-6 rounded-3xl border space-y-6 ${theme.card} ${theme.border}`}

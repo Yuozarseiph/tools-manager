@@ -28,10 +28,7 @@ export function trimAudioBuffer(
   const channels = buffer.numberOfChannels;
 
   const startSample = Math.max(0, Math.floor(startTime * sampleRate));
-  const endSample = Math.min(
-    buffer.length,
-    Math.floor(endTime * sampleRate)
-  );
+  const endSample = Math.min(buffer.length, Math.floor(endTime * sampleRate));
   const frameCount = Math.max(0, endSample - startSample);
 
   const ctx = getAudioContext();
@@ -46,6 +43,21 @@ export function trimAudioBuffer(
   }
 
   return trimmed;
+}
+// utils/audio-actions.ts
+
+export function cloneAudioBuffer(ctx: AudioContext, buffer: AudioBuffer): AudioBuffer {
+  const cloned = ctx.createBuffer(
+    buffer.numberOfChannels,
+    buffer.length,
+    buffer.sampleRate
+  );
+
+  for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+    cloned.copyToChannel(buffer.getChannelData(ch), ch);
+  }
+
+  return cloned;
 }
 
 // تبدیل AudioBuffer به Blob فرمت WAV (16-bit PCM)
@@ -123,10 +135,7 @@ export function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   return new Blob([arrayBuffer], { type: "audio/wav" });
 }
 
-export function applyFadeIn(
-  buffer: AudioBuffer,
-  fadeDuration: number
-): void {
+export function applyFadeIn(buffer: AudioBuffer, fadeDuration: number): void {
   const sampleRate = buffer.sampleRate;
   const fadeSamples = Math.min(
     buffer.length,
@@ -143,10 +152,7 @@ export function applyFadeIn(
   }
 }
 
-export function applyFadeOut(
-  buffer: AudioBuffer,
-  fadeDuration: number
-): void {
+export function applyFadeOut(buffer: AudioBuffer, fadeDuration: number): void {
   const sampleRate = buffer.sampleRate;
   const fadeSamples = Math.min(
     buffer.length,
@@ -202,19 +208,90 @@ export function normalizeAudioBuffer(
   }
 }
 
-export function cloneAudioBuffer(
-  context: BaseAudioContext,
-  buffer: AudioBuffer
-): AudioBuffer {
-  const clone = context.createBuffer(
-    buffer.numberOfChannels,
-    buffer.length,
-    buffer.sampleRate
-  );
+export function computePeakApprox(buffer: AudioBuffer, maxSamples = 2_000_000) {
+  const channels = buffer.numberOfChannels;
+  const len = buffer.length;
+  if (!len) return 0;
 
-  for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
-    clone.getChannelData(ch).set(buffer.getChannelData(ch));
+  const stride = Math.max(1, Math.floor(len / maxSamples));
+  let peak = 0;
+
+  for (let ch = 0; ch < channels; ch++) {
+    const data = buffer.getChannelData(ch);
+    for (let i = 0; i < len; i += stride) {
+      const v = Math.abs(data[i] || 0);
+      if (v > peak) peak = v;
+      if (peak >= 0.999999) return peak;
+    }
+  }
+  return peak;
+}
+
+export function audioBufferToWavBlobSafe(buffer: AudioBuffer) {
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const numFrames = buffer.length;
+
+  const bytesPerSample = 2; // PCM16
+  const blockAlign = numChannels * bytesPerSample;
+  const byteRate = sampleRate * blockAlign;
+  const dataSize = numFrames * blockAlign;
+  const totalSize = 44 + dataSize;
+
+  const ONE_GB = 1024 * 1024 * 1024;
+  if (totalSize > ONE_GB) {
+    throw new Error("Audio is too large to export as WAV in browser memory.");
   }
 
-  return clone;
+  const ab = new ArrayBuffer(totalSize);
+  const view = new DataView(ab);
+
+  let offset = 0;
+  const writeString = (s: string) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(offset++, s.charCodeAt(i));
+  };
+  const writeU32 = (v: number) => {
+    view.setUint32(offset, v, true);
+    offset += 4;
+  };
+  const writeU16 = (v: number) => {
+    view.setUint16(offset, v, true);
+    offset += 2;
+  };
+
+  // RIFF header
+  writeString("RIFF");
+  writeU32(36 + dataSize);
+  writeString("WAVE");
+
+  // fmt chunk
+  writeString("fmt ");
+  writeU32(16); // PCM
+  writeU16(1); // audio format = PCM
+  writeU16(numChannels);
+  writeU32(sampleRate);
+  writeU32(byteRate);
+  writeU16(blockAlign);
+  writeU16(16); // bits per sample
+
+  // data chunk
+  writeString("data");
+  writeU32(dataSize);
+
+  // interleave samples (PCM16)
+  const channelData: Float32Array[] = [];
+  for (let ch = 0; ch < numChannels; ch++)
+    channelData.push(buffer.getChannelData(ch));
+
+  for (let i = 0; i < numFrames; i++) {
+    for (let ch = 0; ch < numChannels; ch++) {
+      let s = channelData[ch][i] ?? 0;
+      s = Math.max(-1, Math.min(1, s));
+      const int16 = s < 0 ? s * 0x8000 : s * 0x7fff;
+      view.setInt16(offset, int16, true);
+      offset += 2;
+    }
+  }
+
+  return new Blob([ab], { type: "audio/wav" });
 }

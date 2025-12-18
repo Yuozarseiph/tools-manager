@@ -1,3 +1,4 @@
+// app/docs/Docs.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,25 +8,35 @@ import { Menu, X, ArrowRight, BookOpen } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import DocSection from "@/components/docs/DocSection";
 import { useLanguage } from "@/context/LanguageContext";
-import { useDocsContent, type DocSectionItem } from "@/data/docs/docs.content";
+import {
+  useDocsContent as useDocsData,
+  type DocSectionItem,
+} from "@/data/docs/docs.content";
 
-export default function DocsPage() {
+import { useMemo } from "react";
+import { useDocsPageContent, type DocsCategory } from "./content";
+
+export default function DocsClient() {
   const theme = useThemeColors();
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
 
-  const docs: DocSectionItem[] = useDocsContent();
+  const pageContent = useDocsPageContent();
+  const docs: DocSectionItem[] = useDocsData();
 
   const [selectedTool, setSelectedTool] = useState<string | null>(
     () => docs[0]?.id ?? null
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  useEffect(() => {
-    if (!selectedTool && docs[0]) {
-      setSelectedTool(docs[0].id);
-    }
-  }, [locale, docs.length, selectedTool, docs]);
 
-  const categories = Array.from(new Set(docs.map((doc) => doc.category)));
+  useEffect(() => {
+    if (!selectedTool && docs[0]) setSelectedTool(docs[0].id);
+  }, [locale, docs, selectedTool]);
+
+  const categories = useMemo(() => {
+    const set = new Set<DocsCategory>();
+    docs.forEach((d) => set.add(d.category as DocsCategory));
+    return Array.from(set);
+  }, [docs]);
   const currentDoc = docs.find((d) => d.id === selectedTool) ?? docs[0];
 
   const handleToolClick = (id: string) => {
@@ -81,7 +92,7 @@ export default function DocsPage() {
             className={`inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
           >
             <ArrowRight size={16} />
-            {t("docs.back")}
+            {pageContent.ui.back}
           </Link>
 
           <div
@@ -93,15 +104,16 @@ export default function DocsPage() {
                   <BookOpen size={28} className={theme.accent} />
                 </div>
                 <h1 className={`text-3xl md:text-4xl font-bold ${theme.text}`}>
-                  {t("docs.hero.title")}
+                  {pageContent.ui.hero.title}
                 </h1>
               </div>
+
               <p
                 className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}
               >
-                {t("docs.hero.subtitle")}
+                {pageContent.ui.hero.subtitle}
                 <span className="block mt-2 text-sm opacity-70">
-                  {t("docs.hero.badge")}
+                  {pageContent.ui.hero.badge}
                 </span>
               </p>
             </div>
@@ -116,26 +128,19 @@ export default function DocsPage() {
         </div>
 
         <div className="flex gap-8 items-start">
-          {/* Sidebar */}
           <aside
-            className={`
-            custom-scrollbar
-            fixed inset-y-0 right-0 z-40 w-80 transform transition-transform duration-300 
-            lg:translate-x-0 lg:static lg:w-72 xl:w-80 lg:sticky lg:top-24 
-            ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}
-            ${
+            className={`custom-scrollbar fixed inset-y-0 right-0 z-40 w-80 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:w-72 xl:w-80 lg:sticky lg:top-24 ${
+              isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            } ${
               theme.card
             } lg:bg-transparent shadow-2xl lg:shadow-none border-l lg:border-0 ${
               theme.border
-            }
-            overflow-y-auto
-            max-h-screen lg:max-h-[calc(100vh-120px)]
-          `}
+            } overflow-y-auto max-h-screen lg:max-h-[calc(100vh-120px)]`}
           >
             <div className="p-6 space-y-6">
               <div className="lg:hidden flex items-center justify-between mb-4">
                 <h2 className={`text-lg font-bold ${theme.text}`}>
-                  {t("docs.sidebar.mobileTitle")}
+                  {pageContent.ui.sidebar.mobileTitle}
                 </h2>
                 <button onClick={() => setIsMobileMenuOpen(false)}>
                   <X size={24} className={theme.text} />
@@ -147,8 +152,9 @@ export default function DocsPage() {
                   <h3
                     className={`font-bold text-xs uppercase tracking-wider mb-3 px-2 ${theme.textMuted}`}
                   >
-                    {t(`docs.categories.${cat}`)}
+                    {pageContent.ui.categories[cat] ?? cat}
                   </h3>
+
                   <ul className="space-y-1">
                     {docs
                       .filter((d) => d.category === cat)
@@ -160,13 +166,11 @@ export default function DocsPage() {
                           <li key={doc.id}>
                             <button
                               onClick={() => handleToolClick(doc.id)}
-                              className={`w-full text-right flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium
-                                ${
-                                  isActive
-                                    ? `${theme.primary} shadow-md`
-                                    : `${theme.bg} ${theme.text} hover:${theme.secondary}`
-                                }
-                              `}
+                              className={`w-full text-right flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium ${
+                                isActive
+                                  ? `${theme.primary} shadow-md`
+                                  : `${theme.bg} ${theme.text} hover:${theme.secondary}`
+                              }`}
                             >
                               <Icon
                                 size={18}
@@ -198,7 +202,6 @@ export default function DocsPage() {
             />
           )}
 
-          {/* Main */}
           <main className="flex-1 min-w-0">
             {currentDoc && (
               <DocSection data={currentDoc} theme={theme} index={0} />
@@ -228,7 +231,7 @@ export default function DocsPage() {
                         <ArrowRight size={16} />
                         <div className="text-right">
                           <div className={`text-xs ${theme.textMuted}`}>
-                            {t("docs.nav.prev")}
+                            {pageContent.ui.nav.prev}
                           </div>
                           <div className="text-sm font-bold">
                             {prevDoc.title}
@@ -246,7 +249,7 @@ export default function DocsPage() {
                       >
                         <div className="text-left">
                           <div className={`text-xs ${theme.textMuted}`}>
-                            {t("docs.nav.next")}
+                            {pageContent.ui.nav.next}
                           </div>
                           <div className="text-sm font-bold">
                             {nextDoc.title}
@@ -264,12 +267,12 @@ export default function DocsPage() {
 
             <div className={`mt-8 text-center py-6 ${theme.textMuted}`}>
               <p className="text-sm">
-                {t("docs.footer.question")}{" "}
+                {pageContent.ui.footer.question}{" "}
                 <Link
                   href="/contact"
                   className={`font-bold hover:underline ${theme.accent}`}
                 >
-                  {t("nav.contact")}
+                  {pageContent.ui.footer.contactCta}
                 </Link>
               </p>
             </div>

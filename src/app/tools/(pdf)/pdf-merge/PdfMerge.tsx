@@ -1,3 +1,4 @@
+// app/tools/(pdf)/pdf-merge/PdfMerge.tsx
 "use client";
 
 import { FileStack, ArrowRight } from "lucide-react";
@@ -8,9 +9,9 @@ import PdfMerger from "@/components/tools/pdf/pdf-merge/PdfMerger";
 import { usePdfMergePageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function PdfMergePage() {
+export default function PdfMergeClient() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const page = usePdfMergePageContent();
 
   return (
@@ -20,16 +21,15 @@ export default function PdfMergePage() {
           href="/"
           className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {t("docs.back")}
+          <ArrowRight size={16} className="ml-1" />
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex items-center gap-4 mb-2">
           <div className={`p-3 rounded-xl ${theme.primary}`}>
             <FileStack size={24} className="text-white" />
           </div>
-          <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {page.title}
-          </h1>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>{page.title}</h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed ${theme.textMuted}`}>

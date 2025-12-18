@@ -1,3 +1,4 @@
+// app/tools/(media)/audio-extractor/AudioExtractor.tsx
 "use client";
 
 import Link from "next/link";
@@ -8,9 +9,9 @@ import AudioExtractorTool from "@/components/tools/media/audio-extractor/AudioEx
 import { useAudioExtractorPageContent } from "./content";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function AudioExtractor() {
+export default function AudioExtractorClient() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const page = useAudioExtractorPageContent();
 
   return (
@@ -21,16 +22,14 @@ export default function AudioExtractor() {
           className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
           <ArrowRight size={16} className="ml-1" />
-          {t("docs.back")}
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex items-center gap-4 mb-2">
           <div className={`p-3 rounded-xl ${theme.primary}`}>
             <Music size={24} className="text-white" />
           </div>
-          <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {page.title}
-          </h1>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>{page.title}</h1>
         </div>
 
         <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>

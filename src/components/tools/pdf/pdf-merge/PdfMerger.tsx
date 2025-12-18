@@ -1,3 +1,4 @@
+// components/tools/pdf/pdf-merge/PdfMerger.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -7,7 +8,10 @@ import { FileUp, Trash2, FileText, Loader2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { usePdfMergeContent, type PdfMergeToolContent } from "./pdf-merge.content";
+import {
+  usePdfMergeContent,
+  type PdfMergeToolContent,
+} from "./pdf-merge.content";
 
 type WorkerOut =
   | { type: "progress"; index: number; total: number }
@@ -20,16 +24,27 @@ export default function PdfMerger() {
 
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState<{ index: number; total: number } | null>(null);
+  const [progress, setProgress] = useState<{
+    index: number;
+    total: number;
+  } | null>(null);
   const [error, setError] = useState("");
 
   const workerRef = useRef<Worker | null>(null);
 
-  const totalBytes = useMemo(() => files.reduce((s, f) => s + f.size, 0), [files]);
+  const totalBytes = useMemo(
+    () => files.reduce((s, f) => s + f.size, 0),
+    [files]
+  );
   const totalMB = useMemo(() => totalBytes / 1024 / 1024, [totalBytes]);
 
   useEffect(() => {
-    workerRef.current = new Worker(new URL("./pdf-merge.worker.ts", import.meta.url), { type: "module" });
+    // نکته: آدرس ایمپورت وب‌ورکر در Next.js/Webpack ممکن است نیاز به تنظیمات خاص داشته باشد.
+    // روش استاندارد Next.js (app router) معمولاً استفاده از new Worker(new URL(..., import.meta.url)) است.
+    workerRef.current = new Worker(
+      new URL("./pdf-merge.worker.ts", import.meta.url),
+      { type: "module" }
+    );
     return () => workerRef.current?.terminate();
   }, []);
 
@@ -48,10 +63,14 @@ export default function PdfMerger() {
 
   const handleCancel = () => {
     workerRef.current?.terminate();
-    workerRef.current = new Worker(new URL("./pdf-merge.worker.ts", import.meta.url), { type: "module" });
+    // بازسازی ورکر برای استفاده مجدد
+    workerRef.current = new Worker(
+      new URL("./pdf-merge.worker.ts", import.meta.url),
+      { type: "module" }
+    );
     setIsProcessing(false);
     setProgress(null);
-    setError(content.ui.alerts.error);
+    setError(content.ui.alerts.error); // یا پیام 'لغو شد'
   };
 
   const handleMerge = async () => {
@@ -66,10 +85,16 @@ export default function PdfMerger() {
     const onMessage = (ev: MessageEvent<WorkerOut>) => {
       const msg = ev.data;
 
-      if (msg.type === "progress") setProgress({ index: msg.index, total: msg.total });
+      if (msg.type === "progress") {
+        setProgress({ index: msg.index, total: msg.total });
+      }
 
       if (msg.type === "done") {
-        download(new Uint8Array(msg.buffer), `merged-toolsmanager-${Date.now()}.pdf`, "application/pdf");
+        download(
+          new Uint8Array(msg.buffer),
+          `merged-toolsmanager-${Date.now()}.pdf`,
+          "application/pdf"
+        );
         cleanup();
       }
 
@@ -89,14 +114,21 @@ export default function PdfMerger() {
     worker.postMessage({ type: "merge", files });
   };
 
-  const formatSize = (size: number) => `${(size / 1024 / 1024).toFixed(2)} ${content.ui.list.sizeUnit}`;
+  const formatSize = (size: number) =>
+    `${(size / 1024 / 1024).toFixed(2)} ${content.ui.list.sizeUnit}`;
 
   return (
-    <div className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}>
+    <div
+      className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
+    >
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
-        ${isDragActive ? "border-blue-500 scale-[0.99]" : `${theme.border} hover:border-blue-400`}
+        ${
+          isDragActive
+            ? "border-blue-500 scale-[0.99]"
+            : `${theme.border} hover:border-blue-400`
+        }
         ${theme.bg}
         ${isProcessing ? "opacity-60 pointer-events-none" : ""}`}
       >
@@ -106,9 +138,17 @@ export default function PdfMerger() {
             <FileUp size={32} className={theme.accent} />
           </div>
           <div>
-            <p className={`text-lg font-bold ${theme.text}`}>{content.ui.dropzone.title}</p>
-            <p className={`text-sm mt-2 ${theme.textMuted}`}>{content.ui.dropzone.subtitle}</p>
-            <p className={`text-xs mt-3 ${theme.textMuted}`}>{files.length} فایل • {totalMB.toFixed(0)}MB</p>
+            <p className={`text-lg font-bold ${theme.text}`}>
+              {content.ui.dropzone.title}
+            </p>
+            <p className={`text-sm mt-2 ${theme.textMuted}`}>
+              {content.ui.dropzone.subtitle}
+            </p>
+            <p className={`text-xs mt-3 ${theme.textMuted}`}>
+              {files.length} {content.ui.list.countSuffix} •{" "}
+              {totalMB.toFixed(0)}
+              {content.ui.list.sizeUnit}
+            </p>
           </div>
         </div>
       </div>
@@ -117,12 +157,21 @@ export default function PdfMerger() {
 
       <AnimatePresence>
         {files.length > 0 && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-8 space-y-3">
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="mt-8 space-y-3"
+          >
             <div className="flex items-center justify-between px-2">
               <h3 className={`text-sm font-semibold ${theme.textMuted}`}>
-                {content.ui.list.title} ({files.length} {content.ui.list.countSuffix})
+                {content.ui.list.title} ({files.length}{" "}
+                {content.ui.list.countSuffix})
               </h3>
-              <button onClick={() => setFiles([])} disabled={isProcessing} className="text-xs text-red-500 hover:underline disabled:opacity-40">
+              <button
+                onClick={() => setFiles([])}
+                disabled={isProcessing}
+                className="text-xs text-red-500 hover:underline disabled:opacity-40"
+              >
                 {content.ui.list.clearAll}
               </button>
             </div>
@@ -141,8 +190,14 @@ export default function PdfMerger() {
                       <FileText size={18} className={theme.accent} />
                     </div>
                     <div className="flex flex-col">
-                      <span className={`text-sm font-medium truncate max-w-[200px] md:max-w-xs ${theme.text}`}>{file.name}</span>
-                      <span className={`text-xs ${theme.textMuted}`}>{formatSize(file.size)}</span>
+                      <span
+                        className={`text-sm font-medium truncate max-w-[200px] md:max-w-xs ${theme.text}`}
+                      >
+                        {file.name}
+                      </span>
+                      <span className={`text-xs ${theme.textMuted}`}>
+                        {formatSize(file.size)}
+                      </span>
                     </div>
                   </div>
 
@@ -180,7 +235,11 @@ export default function PdfMerger() {
           onClick={handleMerge}
           disabled={files.length < 2 || isProcessing}
           className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98]
-          ${files.length < 2 ? "bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-800" : theme.primary}`}
+          ${
+            files.length < 2
+              ? "bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-800"
+              : theme.primary
+          }`}
         >
           {isProcessing ? (
             <>

@@ -1,5 +1,6 @@
+// app/tools/(excel-tools)/excel-viewer/page.tsx
 import type { Metadata } from "next";
-import ExcelViewerPage from "./ExcelViewer";
+import ExcelViewerClient from "./ExcelViewer";
 import { getExcelViewerSeo } from "./content";
 
 // سئوی هر دو زبان
@@ -23,9 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${fa.ogDescription ?? fa.description} / ${
-      en.ogDescription ?? en.description
-    }`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",
@@ -76,7 +75,7 @@ export default function Page() {
         }}
       />
 
-      <ExcelViewerPage />
+      <ExcelViewerClient />
     </div>
   );
 }

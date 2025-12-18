@@ -1,4 +1,3 @@
-// app/changelog/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -11,15 +10,14 @@ import {
   Bug,
   Sparkles,
 } from "lucide-react";
-import {
-  CHANGELOG_BY_LOCALE,
-  type ChangelogEntry,
-} from "@/data/changelog";
+import { CHANGELOG_BY_LOCALE, type ChangelogEntry } from "@/data/changelog";
 import { useLanguage } from "@/context/LanguageContext";
+import { useChangelogContent } from "@/data/changelog/changelog.content";
 
 export default function ChangelogPage() {
   const theme = useThemeColors();
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
+  const content = useChangelogContent();
 
   const data: ChangelogEntry[] = CHANGELOG_BY_LOCALE[locale];
 
@@ -37,7 +35,7 @@ export default function ChangelogPage() {
   };
 
   const getCategoryTitle = (category: string) =>
-    t(`changelog.categories.${category}`);
+    content.categories[category as keyof typeof content.categories] ?? category;
 
   const isLatest = (_entry: ChangelogEntry, index: number) => index === 0;
 
@@ -50,7 +48,7 @@ export default function ChangelogPage() {
             className={`inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
           >
             <ArrowRight size={16} />
-            {t("changelog.back")}
+            {content.back}
           </Link>
 
           <div
@@ -61,16 +59,14 @@ export default function ChangelogPage() {
                 <div className={`p-3 rounded-xl ${theme.secondary}`}>
                   <Rocket size={28} className={theme.accent} />
                 </div>
-                <h1
-                  className={`text-3xl md:text-4xl font-bold ${theme.text}`}
-                >
-                  {t("changelog.hero.title")}
+                <h1 className={`text-3xl md:text-4xl font-bold ${theme.text}`}>
+                  {content.hero.title}
                 </h1>
               </div>
               <p
                 className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}
               >
-                {t("changelog.hero.subtitle")}
+                {content.hero.subtitle}
               </p>
             </div>
 
@@ -93,13 +89,13 @@ export default function ChangelogPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className={`text-2xl font-bold ${theme.text}`}>
-                      {t("changelog.versionLabel")} {entry.version}
+                      {content.versionLabel} {entry.version}
                     </h2>
                     {isLatest(entry, index) && (
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${theme.primary}`}
                       >
-                        {t("changelog.currentLabel")}
+                        {content.currentLabel}
                       </span>
                     )}
                   </div>
@@ -116,10 +112,10 @@ export default function ChangelogPage() {
                 >
                   <span className={`text-xs font-bold ${theme.accent}`}>
                     {entry.type === "release"
-                      ? t("changelog.type.release")
+                      ? content.type.release
                       : entry.type === "fix"
-                      ? t("changelog.type.fix")
-                      : t("changelog.type.update")}
+                      ? content.type.fix
+                      : content.type.update}
                   </span>
                 </div>
               </div>
@@ -156,19 +152,17 @@ export default function ChangelogPage() {
           <div
             className={`rounded-2xl border p-6 text-center ${theme.card} ${theme.border}`}
           >
-            <p className={`text-sm ${theme.textMuted}`}>
-              {t("changelog.note")}
-            </p>
+            <p className={`text-sm ${theme.textMuted}`}>{content.note}</p>
           </div>
 
           <div className={`text-center py-6 ${theme.textMuted}`}>
             <p className="text-sm">
-              {t("changelog.contact.question")}{" "}
+              {content.contact.question}{" "}
               <Link
                 href="/contact"
                 className={`font-bold hover:underline ${theme.accent}`}
               >
-                {t("nav.contact")}
+                {content.contact.contact}
               </Link>
             </p>
           </div>

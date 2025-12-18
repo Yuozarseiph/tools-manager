@@ -1,16 +1,12 @@
+// app/docs/page.tsx
 import type { Metadata } from "next";
-import DocsPage from "./Docs";
+import DocsClient from "./Docs";
 import { getDocsSeo } from "./content";
-
-// سئوی هر دو زبان
 const fa = getDocsSeo("fa");
 const en = getDocsSeo("en");
-
-// ترکیب فارسی + انگلیسی برای Meta
 const combinedTitle = `${fa.title} / ${en.title}`;
 const combinedDescription = `${fa.description} / ${en.description}`;
 const canonicalUrl = fa.canonical;
-
 export const metadata: Metadata = {
   title: combinedTitle,
   description: combinedDescription,
@@ -23,9 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
-    description: `${
-      fa.ogDescription ?? fa.description
-    } / ${en.ogDescription ?? en.description}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: canonicalUrl,
     type: "website",
     locale: "fa_IR",
@@ -75,7 +69,7 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <DocsPage />
+      <DocsClient />
     </div>
   );
 }

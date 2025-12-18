@@ -1,78 +1,123 @@
-"use client";
+// app/tools/(developer)/image-converter/image-converter.content.ts
 
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./image-converter.i18n.json";
+export const imageConverterContent = {
+  fa: {
+    id: "image-converter",
+    category: "developer",
+    title: "تبدیل آنلاین فرمت تصویر",
+    description: "چندین تصویر را همزمان آپلود کنید و آن‌ها را به فرمت‌های مختلف مثل JPG، PNG، WebP و AVIF تبدیل کنید.",
+    features: [
+      "آپلود چندین تصویر به صورت همزمان",
+      "پشتیبانی از فرمت‌های رایج: JPG, PNG, WebP, AVIF, GIF, BMP",
+      "امکان تنظیم کیفیت برای فرمت‌های فشرده",
+      "دانلود تکی یا به صورت فایل ZIP برای چند تصویر"
+    ],
+    ui: {
+      upload: {
+        dropTitle: "تصاویر خود را اینجا رها کنید یا کلیک کنید",
+        dropSubtitle: "فرمت‌های رایج تصویر مانند JPG، PNG، WebP، AVIF و GIF پشتیبانی می‌شوند.",
+        addMore: "افزودن تصاویر بیشتر",
+        counterSuffix: "تصویر",
+        urlPlaceholder: "آدرس تصویر (URL) را وارد کن",
+        urlButton: "افزودن از لینک",
+        urlLoading: "در حال دانلود تصویر از لینک…",
+        urlHint: "تصویر با اینترنت خودتان دانلود می‌شود و فقط داخل مرورگر شما پردازش می‌شود؛ هیچ فایلی به سرور ما ارسال نمی‌شود."
+      },
+      gallery: {
+        sizeUnit: "KB"
+      },
+      formats: {
+        title: "انتخاب فرمت خروجی",
+        jpegDesc: "JPG؛ مناسب برای عکس‌ها با حجم کمتر",
+        pngDesc: "PNG؛ حفظ شفافیت و کیفیت بالا",
+        webpDesc: "WebP؛ ترکیب کیفیت خوب و حجم کم (مخصوص وب)",
+        avifDesc: "AVIF؛ نسل جدید با فشرده‌سازی بسیار بالا",
+        gifDesc: "GIF؛ مناسب برای تصاویر متحرک ساده",
+        bmpDesc: "BMP؛ فرمت خام با حجم بالا"
+      },
+      quality: {
+        label: "کیفیت تصویر خروجی",
+        low: "حجم کمتر، کیفیت پایین‌تر",
+        high: "حجم بیشتر، کیفیت بالاتر"
+      },
+      buttons: {
+        convertSingle: "تبدیل و دانلود تصویر",
+        convertMulti: "تبدیل و دانلود همه تصاویر",
+        processing: "در حال تبدیل تصاویر...",
+        clearAll: "حذف همه تصاویر"
+      },
+      alerts: {
+        error: "در هنگام تبدیل تصاویر خطایی رخ داد. لطفاً دوباره تلاش کنید."
+      },
+      page: {
+        title: "تبدیل فرمت تصویر",
+        description: "به‌راحتی فرمت چندین تصویر را به صورت همزمان تغییر دهید و خروجی را دانلود کنید.",
+        subtitle: "ابزاری سریع برای تبدیل دسته‌ای تصاویر در مرورگر"
+      }
+    }
+  },
+  en: {
+    id: "image-converter",
+    category: "developer",
+    title: "Image format converter",
+    description: "Upload multiple images at once and convert them to formats like JPG, PNG, WebP or AVIF.",
+    features: [
+      "Upload and convert multiple images in one go",
+      "Supports popular formats: JPG, PNG, WebP, AVIF, GIF, BMP",
+      "Adjust quality for compressed formats",
+      "Download a single file or all as a ZIP archive"
+    ],
+    ui: {
+      upload: {
+        dropTitle: "Drop your images here or click to upload",
+        dropSubtitle: "Common formats such as JPG, PNG, WebP, AVIF and GIF are supported.",
+        addMore: "Add more images",
+        counterSuffix: "images",
+        urlPlaceholder: "Enter image URL",
+        urlButton: "Add from URL",
+        urlLoading: "Downloading image from URL…",
+        urlHint: "The image is downloaded over your own internet connection and processed only in your browser; no files are uploaded to our servers."
+      },
+      gallery: {
+        sizeUnit: "KB"
+      },
+      formats: {
+        title: "Output format",
+        jpegDesc: "JPG – good for photos with smaller size",
+        pngDesc: "PNG – preserves transparency and high quality",
+        webpDesc: "WebP – great balance between quality and size (for web)",
+        avifDesc: "AVIF – next‑gen format with very high compression",
+        gifDesc: "GIF – suitable for simple animations",
+        bmpDesc: "BMP – raw bitmap format with large size"
+      },
+      quality: {
+        label: "Output image quality",
+        low: "Smaller size, lower quality",
+        high: "Larger size, higher quality"
+      },
+      buttons: {
+        convertSingle: "Convert & download image",
+        convertMulti: "Convert & download all images",
+        processing: "Converting images...",
+        clearAll: "Clear all images"
+      },
+      alerts: {
+        error: "An error occurred while converting the images. Please try again."
+      },
+      page: {
+        title: "Image format converter",
+        description: "Quickly change the format of multiple images directly in your browser.",
+        subtitle: "A fast batch image conversion tool in the browser"
+      }
+    }
+  }
+};
 
-type DocCategoryKey = "image";
+export type ImageConverterToolContent = typeof imageConverterContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface ImageConverterToolContent extends BaseDocsFields {
-  id: "image-converter";
-  ui: {
-    upload: {
-      dropTitle: string;
-      dropSubtitle: string;
-      addMore: string;
-      counterSuffix: string;
-      urlPlaceholder: string;
-      urlButton: string;
-      urlLoading: string;
-      urlHint: string;
-    };
-    gallery: {
-      sizeUnit: string;
-    };
-    formats: {
-      title: string;
-      jpegDesc: string;
-      pngDesc: string;
-      webpDesc: string;
-      avifDesc: string;
-      gifDesc: string;
-      bmpDesc: string;
-    };
-    quality: {
-      label: string;
-      low: string;
-      high: string;
-    };
-    buttons: {
-      convertSingle: string;
-      convertMulti: string;
-      processing: string;
-      clearAll: string;
-    };
-    alerts: {
-      error: string;
-    };
-    page: {
-      title: string;
-      description: string;
-      subtitle: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: ImageConverterToolContent; en: ImageConverterToolContent }
-const CONTENT_BY_LOCALE =
-  rawContent as Record<Locale, ImageConverterToolContent>;
-
-export function useImageConverterContent(): ImageConverterToolContent {
+export function useImageConverterContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return imageConverterContent[locale];
 }

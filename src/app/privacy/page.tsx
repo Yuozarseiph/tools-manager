@@ -15,10 +15,14 @@ import {
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
+import { privacyContent } from "@/data/pages/privacy.content";
 
 export default function PrivacyPage() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = privacyContent[locale];
 
   return (
     <div
@@ -30,7 +34,7 @@ export default function PrivacyPage() {
           href="/"
           className={`inline-flex items-center text-sm font-medium mb-12 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {t("privacy.back")}
+          <ArrowRight size={16} className="ml-1" /> {content.back}
         </Link>
 
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -44,17 +48,17 @@ export default function PrivacyPage() {
             <h1
               className={`text-3xl md:text-5xl font-black mb-6 tracking-tight ${theme.text}`}
             >
-              {t("privacy.hero.title")}
+              {content.hero.title}
             </h1>
             <p
               className={`text-lg leading-relaxed max-w-3xl mx-auto ${theme.textMuted}`}
             >
-              {t("privacy.hero.lead")}
+              {content.hero.lead}
             </p>
             <div
               className={`inline-block mt-6 px-4 py-1.5 rounded-full text-xs font-bold border ${theme.border} ${theme.secondary} ${theme.textMuted}`}
             >
-              {t("privacy.hero.lastUpdated")}
+              {content.hero.lastUpdated}
             </div>
           </div>
 
@@ -71,30 +75,30 @@ export default function PrivacyPage() {
               <div className={`p-2 rounded-lg ${theme.secondary}`}>
                 <ServerOff size={24} className={theme.accent} />
               </div>
-              {t("privacy.principle1.title")}
+              {content.principle1.title}
             </h2>
 
             <p
               className={`text-lg leading-loose mb-8 relative z-10 ${theme.textMuted}`}
             >
-              {t("privacy.principle1.intro")}
+              {content.principle1.intro}
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 relative z-10">
               <CheckItem
-                text={t("privacy.principle1.points.noUpload")}
+                text={content.principle1.points.noUpload}
                 theme={theme}
               />
               <CheckItem
-                text={t("privacy.principle1.points.noLeaveDevice")}
+                text={content.principle1.points.noLeaveDevice}
                 theme={theme}
               />
               <CheckItem
-                text={t("privacy.principle1.points.allInBrowser")}
+                text={content.principle1.points.allInBrowser}
                 theme={theme}
               />
               <CheckItem
-                text={t("privacy.principle1.points.onlyCpuRam")}
+                text={content.principle1.points.onlyCpuRam}
                 theme={theme}
               />
             </div>
@@ -104,38 +108,34 @@ export default function PrivacyPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <PrivacyCard
               icon={Database}
-              title={t("privacy.noData.files.title")}
+              title={content.noData.files.title}
               theme={theme}
             >
-              {t("privacy.noData.files.body")}
+              {content.noData.files.body}
             </PrivacyCard>
 
             <PrivacyCard
               icon={UserX}
-              title={t("privacy.noData.account.title")}
+              title={content.noData.account.title}
               theme={theme}
             >
               <div className="space-y-3">
                 <p className={theme.textMuted}>
-                  {t("privacy.noData.account.intro")}
+                  {content.noData.account.intro}
                 </p>
-                <ul
-                  className={`space-y-2 text-sm ${theme.textMuted}`}
-                >
+                <ul className={`space-y-2 text-sm ${theme.textMuted}`}>
                   <li className="flex items-center gap-2 opacity-80">
-                    • {t("privacy.noData.account.bullets.noSignup")}
+                    • {content.noData.account.bullets.noSignup}
                   </li>
                   <li className="flex items-center gap-2 opacity-80">
-                    • {t("privacy.noData.account.bullets.noEmail")}
+                    • {content.noData.account.bullets.noEmail}
                   </li>
                   <li className="flex items-center gap-2 opacity-80">
-                    • {t("privacy.noData.account.bullets.noPassword")}
+                    • {content.noData.account.bullets.noPassword}
                   </li>
                 </ul>
-                <p
-                  className={`pt-2 text-sm font-bold ${theme.accent}`}
-                >
-                  {t("privacy.noData.account.anonymous")}
+                <p className={`pt-2 text-sm font-bold ${theme.accent}`}>
+                  {content.noData.account.anonymous}
                 </p>
               </div>
             </PrivacyCard>
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
               className={`text-2xl font-bold mb-8 flex items-center gap-3 ${theme.text}`}
             >
               <Cookie size={26} className={theme.textMuted} />{" "}
-              {t("privacy.cookies.title")}
+              {content.cookies.title}
             </h2>
 
             <div className="space-y-8 divide-y divide-dashed dark:divide-zinc-800 divide-zinc-200">
@@ -157,12 +157,10 @@ export default function PrivacyPage() {
                 <h3
                   className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme.text}`}
                 >
-                  {t("privacy.cookies.noTrackingTitle")}
+                  {content.cookies.noTrackingTitle}
                 </h3>
-                <p
-                  className={`leading-relaxed ${theme.textMuted}`}
-                >
-                  {t("privacy.cookies.noTrackingBody")}
+                <p className={`leading-relaxed ${theme.textMuted}`}>
+                  {content.cookies.noTrackingBody}
                 </p>
               </div>
 
@@ -170,12 +168,10 @@ export default function PrivacyPage() {
                 <h3
                   className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme.text}`}
                 >
-                  {t("privacy.cookies.localTitle")}
+                  {content.cookies.localTitle}
                 </h3>
-                <p
-                  className={`leading-relaxed mb-4 ${theme.textMuted}`}
-                >
-                  {t("privacy.cookies.localIntro")}
+                <p className={`leading-relaxed mb-4 ${theme.textMuted}`}>
+                  {content.cookies.localIntro}
                 </p>
 
                 <div
@@ -186,15 +182,13 @@ export default function PrivacyPage() {
                       <History size={20} className={theme.text} />
                     </div>
                     <div>
-                      <strong
-                        className={`block text-base mb-1 ${theme.text}`}
-                      >
-                        {t("privacy.cookies.themeTitle")}
+                      <strong className={`block text-base mb-1 ${theme.text}`}>
+                        {content.cookies.themeTitle}
                       </strong>
                       <p
                         className={`text-sm opacity-80 leading-relaxed ${theme.textMuted}`}
                       >
-                        {t("privacy.cookies.themeBody")}
+                        {content.cookies.themeBody}
                       </p>
                     </div>
                   </div>
@@ -214,28 +208,28 @@ export default function PrivacyPage() {
               className={`text-2xl font-bold mb-6 flex items-center gap-3 relative z-10 ${theme.text}`}
             >
               <Lock size={26} className={theme.accent} />{" "}
-              {t("privacy.security.title")}
+              {content.security.title}
             </h2>
 
             <p
               className={`leading-loose mb-8 relative z-10 ${theme.textMuted}`}
             >
-              {t("privacy.security.intro")}
+              {content.security.intro}
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4 relative z-10">
               <SecurityStat
-                label={t("privacy.security.stats.db")}
+                label={content.security.stats.db}
                 value="0"
                 theme={theme}
               />
               <SecurityStat
-                label={t("privacy.security.stats.info")}
+                label={content.security.stats.info}
                 value="0"
                 theme={theme}
               />
               <SecurityStat
-                label={t("privacy.security.stats.sale")}
+                label={content.security.stats.sale}
                 value="0"
                 theme={theme}
               />
@@ -244,7 +238,7 @@ export default function PrivacyPage() {
             <p
               className={`mt-8 text-center font-bold text-lg relative z-10 ${theme.accent}`}
             >
-              {t("privacy.security.quote")}
+              {content.security.quote}
             </p>
           </div>
 
@@ -254,28 +248,24 @@ export default function PrivacyPage() {
           >
             <div>
               <h3 className={`font-bold mb-3 ${theme.text}`}>
-                {t("privacy.footer.changesTitle")}
+                {content.footer.changesTitle}
               </h3>
-              <p
-                className={`text-sm leading-relaxed ${theme.textMuted}`}
-              >
-                {t("privacy.footer.changesBody")}
+              <p className={`text-sm leading-relaxed ${theme.textMuted}`}>
+                {content.footer.changesBody}
               </p>
             </div>
             <div>
               <h3 className={`font-bold mb-3 ${theme.text}`}>
-                {t("privacy.footer.contactTitle")}
+                {content.footer.contactTitle}
               </h3>
-              <p
-                className={`text-sm leading-relaxed mb-4 ${theme.textMuted}`}
-              >
-                {t("privacy.footer.contactBody")}
+              <p className={`text-sm leading-relaxed mb-4 ${theme.textMuted}`}>
+                {content.footer.contactBody}
               </p>
               <Link
                 href="/contact"
                 className={`inline-flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all ${theme.primary} hover:brightness-110`}
               >
-                <Mail size={16} /> {t("privacy.footer.contactButton")}
+                <Mail size={16} /> {content.footer.contactButton}
               </Link>
             </div>
           </div>
@@ -285,7 +275,7 @@ export default function PrivacyPage() {
   );
 }
 
-// --- کامپوننت‌های داخلی همان قبلی، فقط متن را از props می‌گیرند ---
+// --- Sub Components ---
 
 function CheckItem({ text, theme }: { text: string; theme: any }) {
   return (
@@ -309,9 +299,7 @@ function PrivacyCard({ icon: Icon, title, children, theme }: any) {
         <Icon size={24} className={theme.accent} />
       </div>
       <h3 className={`text-xl font-bold mb-4 ${theme.text}`}>{title}</h3>
-      <div
-        className={`text-sm leading-loose flex-1 ${theme.textMuted}`}
-      >
+      <div className={`text-sm leading-loose flex-1 ${theme.textMuted}`}>
         {children}
       </div>
     </div>
@@ -323,12 +311,8 @@ function SecurityStat({ label, value, theme }: any) {
     <div
       className={`p-4 rounded-2xl text-center border ${theme.border} ${theme.bg}`}
     >
-      <div className={`font-black text-3xl mb-1 ${theme.text}`}>
-        {value}
-      </div>
-      <div
-        className={`text-xs font-medium opacity-70 ${theme.textMuted}`}
-      >
+      <div className={`font-black text-3xl mb-1 ${theme.text}`}>{value}</div>
+      <div className={`text-xs font-medium opacity-70 ${theme.textMuted}`}>
         {label}
       </div>
     </div>

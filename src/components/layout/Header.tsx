@@ -17,18 +17,22 @@ import {
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/data/layout/header.content";
 
 const navItems = [
-  { href: "/docs", icon: Book, key: "nav.docs" },
-  { href: "/contact", icon: Mail, key: "nav.contact" },
-  { href: "/about", icon: FileQuestionMark, key: "nav.about" },
-  { href: "/changelog", icon: LogsIcon, key: "nav.changelog" },
+  { href: "/docs", icon: Book, key: "docs" as const },
+  { href: "/contact", icon: Mail, key: "contact" as const },
+  { href: "/about", icon: FileQuestionMark, key: "about" as const },
+  { href: "/changelog", icon: LogsIcon, key: "changelog" as const },
 ];
 
 export default function Header() {
   const theme = useThemeColors();
   const pathname = usePathname();
-  const { t, locale, setLocale } = useLanguage();
+  const { locale, setLocale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = HeaderContent[locale];
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -66,11 +70,7 @@ export default function Header() {
 
   const docsCircleClass = `
     ${bottomCircleBase}
-    ${
-      pathname === "/"
-        ? "text-blue-600 dark:text-blue-400"
-        : theme.text
-    }
+    ${pathname === "/" ? "text-blue-600 dark:text-blue-400" : theme.text}
   `;
 
   const menuFabClass = `
@@ -117,14 +117,15 @@ export default function Header() {
                 ${theme.text}
               `}
             >
-              Tools<span className={theme.accent}>Manager</span>
+              {content.brand.nameMain}
+              <span className={theme.accent}>{content.brand.nameAccent}</span>
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-3 lg:gap-4">
             {navItems.map(({ href, icon: Icon, key }) => (
               <Link key={href} href={href} className={navLinkClass(href)}>
                 <Icon size={16} />
-                {t(key)}
+                {content[key]}
               </Link>
             ))}
           </nav>
@@ -170,7 +171,7 @@ export default function Header() {
               title="حمایت مالی"
             >
               <Heart size={16} className="text-red-500 fill-red-500" />
-              <span className={theme.textMuted}>{t("nav.donate")}</span>
+              <span className={theme.textMuted}>{content.donate}</span>
             </a>
           </div>
         </div>
@@ -252,9 +253,7 @@ export default function Header() {
                       <Icon
                         size={18}
                         className={
-                          item.id === "donate"
-                            ? "fill-red-500/70"
-                            : ""
+                          item.id === "donate" ? "fill-red-500/70" : ""
                         }
                       />
                     </a>

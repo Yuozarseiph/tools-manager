@@ -1,3 +1,4 @@
+// components/tools/developer/image-converter/ImageConverter.tsx
 "use client";
 
 import { useState, useEffect, type ChangeEvent } from "react";
@@ -16,12 +17,13 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// مطمئن شوید فایل image-actions.ts را در مسیر utils ساخته‌اید
 import { convertImages, ImageFormat } from "@/utils/image-actions";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useImageConverterContent,
   type ImageConverterToolContent,
-} from "./image-converter.content";
+} from "./image-converter.content"; // ✅ مسیر اصلاح شده
 
 interface FileWithPreview extends File {
   preview: string;
@@ -148,7 +150,6 @@ export default function ImageConverter() {
       setFiles((prev) => [...prev, fileWithPreview]);
       setImageUrlInput("");
     } catch (err) {
-      // می‌تونی برای این مورد یک پیام i18n جدا (errorUrl) بذاری
       alert(content.ui.alerts.error);
       console.error(err);
     } finally {

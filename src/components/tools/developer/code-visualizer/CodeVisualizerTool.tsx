@@ -1,3 +1,4 @@
+// components/tools/developer/code-visualizer/CodeVisualizerTool.tsx
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -184,7 +185,7 @@ export default function CodeVisualizerTool() {
         return;
       }
 
-      const maxDepth = rawNodes.reduce((max: number, node) => {
+      const maxDepth = rawNodes.reduce((max: number, node: Node) => {
         const depth = (node.data?.depth as number) || 0;
         return Math.max(max, depth);
       }, 0);
@@ -766,7 +767,7 @@ export default function CodeVisualizerTool() {
                 />
                 <span className={theme.text}>
                   {nodes.length > 0
-                    ? `${content.ui.graph.statusWithNodesPrefix}${nodes} ${content.ui.graph.statusNodesSuffix}`
+                    ? `${content.ui.graph.statusWithNodesPrefix}${nodes.length} ${content.ui.graph.statusNodesSuffix}`
                     : content.ui.graph.statusEmpty}
                 </span>
                 {!isMobile && nodes.length > 0 && (
@@ -840,8 +841,6 @@ export default function CodeVisualizerTool() {
           </div>
         </div>
       )}
-
-      {/* Mobile Tips */}
       {isMobile && !fullscreen && (
         <div
           className={`md:hidden p-3 rounded-xl border ${theme.card} ${theme.border} text-center`}

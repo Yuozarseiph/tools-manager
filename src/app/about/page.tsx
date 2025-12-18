@@ -17,12 +17,13 @@ import {
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
+import { aboutContent } from "@/data/pages/about.content";
 
 const FEATURE_ITEMS = [
   { id: "free", icon: Gift, color: "bg-green-500" },
   { id: "privacy", icon: ShieldCheck, color: "bg-blue-500" },
   { id: "fast", icon: Zap, color: "bg-amber-500" },
-  { id: "product", icon: Layers, color: "bg-purple-500" }
+  { id: "product", icon: Layers, color: "bg-purple-500" },
 ] as const;
 
 const FAQ_ITEMS = [
@@ -37,7 +38,10 @@ const FAQ_ITEMS = [
 
 export default function AboutPage() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = aboutContent[locale];
 
   return (
     <div className={`min-h-screen ${theme.bg}`}>
@@ -47,17 +51,17 @@ export default function AboutPage() {
           className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
           <ArrowRight size={16} className="ml-1" />
-          {t("about.back")}
+          {content.back}
         </Link>
 
         {/* --- Hero Section --- */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 bg-blue-500/10 text-blue-600 dark:text-blue-400">
             <ShieldCheck size={16} />
-            <span>{t("about.hero.badge")}</span>
+            <span>{content.hero.badge}</span>
           </div>
           <h1 className={`text-4xl md:text-6xl font-black mb-6 ${theme.text}`}>
-            {t("about.hero.titlePrefix")}{" "}
+            {content.hero.titlePrefix}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               Tools Manager
             </span>
@@ -65,7 +69,7 @@ export default function AboutPage() {
           <p
             className={`text-lg md:text-xl leading-loose max-w-3xl mx-auto ${theme.textMuted}`}
           >
-            {t("about.hero.description")}
+            {content.hero.description}
           </p>
         </div>
 
@@ -75,8 +79,8 @@ export default function AboutPage() {
             <FeatureCard
               key={item.id}
               icon={item.icon}
-              title={t(`about.features.${item.id}.title`)}
-              desc={t(`about.features.${item.id}.desc`)}
+              title={content.features[item.id].title}
+              desc={content.features[item.id].desc}
               theme={theme}
               color={item.color}
             />
@@ -89,13 +93,13 @@ export default function AboutPage() {
         >
           <div className="relative z-10">
             <h2 className={`text-3xl font-black mb-6 ${theme.text}`}>
-              {t("about.story.title")}
+              {content.story.title}
             </h2>
             <div
               className={`space-y-6 text-lg leading-loose ${theme.textMuted}`}
             >
-              <p>{t("about.story.p1")}</p>
-              <p>{t("about.story.p2")}</p>
+              <p>{content.story.p1}</p>
+              <p>{content.story.p2}</p>
             </div>
 
             <div
@@ -105,10 +109,10 @@ export default function AboutPage() {
                 className={`font-bold text-xl mb-2 flex items-center gap-2 ${theme.text}`}
               >
                 <Heart className="text-red-500 fill-red-500 animate-pulse" />
-                {t("about.story.support.title")}
+                {content.story.support.title}
               </h3>
               <p className={`text-base ${theme.textMuted}`}>
-                {t("about.story.support.description")}
+                {content.story.support.description}
               </p>
               <a
                 href="https://reymit.ir/yuozarseiph"
@@ -116,7 +120,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="inline-block mt-4 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all shadow-lg shadow-red-500/30"
               >
-                {t("about.story.support.button")}
+                {content.story.support.button}
               </a>
             </div>
           </div>
@@ -131,10 +135,10 @@ export default function AboutPage() {
               <HelpCircle size={24} />
             </div>
             <h2 className={`text-3xl font-black ${theme.text}`}>
-              {t("about.faq.title")}
+              {content.faq.title}
             </h2>
             <p className={`mt-2 ${theme.textMuted}`}>
-              {t("about.faq.subtitle")}
+              {content.faq.subtitle}
             </p>
           </div>
 
@@ -142,8 +146,8 @@ export default function AboutPage() {
             {FAQ_ITEMS.map((id) => (
               <FAQItem
                 key={id}
-                question={t(`about.faq.items.${id}.q`)}
-                answer={t(`about.faq.items.${id}.a`)}
+                question={content.faq.items[id].q}
+                answer={content.faq.items[id].a}
                 theme={theme}
               />
             ))}

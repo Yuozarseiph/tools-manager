@@ -1,3 +1,4 @@
+// components/tools/network/ip-checker/IPCheckerTool.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -44,9 +45,9 @@ export default function IPCheckerTool() {
   const fetchIP = async () => {
     setLoading(true);
     setError("");
-    
+
     try {
-      // روش 1: ipapi.co (اگه کار کرد)
+      // روش 1: ipapi.co
       try {
         const res = await fetch("https://ipapi.co/json/", {
           signal: AbortSignal.timeout(5000),
@@ -63,11 +64,14 @@ export default function IPCheckerTool() {
         console.log("ipapi.co failed, trying fallback...");
       }
 
-      // روش 2: ip-api.com (رایگان و بدون محدودیت کشوری)
+      // روش 2: ip-api.com
       try {
-        const res = await fetch("http://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone,isp,org,as,query", {
-          signal: AbortSignal.timeout(5000),
-        });
+        const res = await fetch(
+          "http://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone,isp,org,as,query",
+          {
+            signal: AbortSignal.timeout(5000),
+          }
+        );
         if (res.ok) {
           const json = await res.json();
           if (json.status === "success") {
@@ -91,7 +95,7 @@ export default function IPCheckerTool() {
         console.log("ip-api.com failed, trying next fallback...");
       }
 
-      // روش 3: ipify + ipwhois (برای کشورهای تحریم‌شده)
+      // روش 3: ipify + ipwhois
       try {
         const ipRes = await fetch("https://api.ipify.org?format=json", {
           signal: AbortSignal.timeout(5000),
@@ -100,11 +104,10 @@ export default function IPCheckerTool() {
           const ipJson = await ipRes.json();
           const ip = ipJson.ip;
 
-          // گرفتن اطلاعات تکمیلی از ipwhois
           const infoRes = await fetch(`https://ipwhois.app/json/${ip}`, {
             signal: AbortSignal.timeout(5000),
           });
-          
+
           if (infoRes.ok) {
             const info = await infoRes.json();
             setData({
@@ -128,9 +131,7 @@ export default function IPCheckerTool() {
         console.log("ipify/ipwhois failed");
       }
 
-      // اگه همه fail شدن
       throw new Error("All IP services failed");
-      
     } catch (err) {
       setError(content.ui.main.error);
     } finally {
@@ -153,11 +154,9 @@ export default function IPCheckerTool() {
 
   return (
     <div className="grid gap-8">
-      {/* باکس اصلی IP */}
       <div
         className={`relative overflow-hidden p-8 rounded-3xl border shadow-lg text-center ${theme.card} ${theme.border}`}
       >
-        {/* دکمه رفرش */}
         <button
           onClick={fetchIP}
           disabled={loading}
@@ -228,7 +227,6 @@ export default function IPCheckerTool() {
         ) : null}
       </div>
 
-      {/* جزئیات بیشتر */}
       {data && !loading && (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           <DetailCard

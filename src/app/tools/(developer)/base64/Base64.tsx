@@ -1,3 +1,4 @@
+// app/tools/(developer)/base64/Base64.tsx
 "use client";
 
 import Link from "next/link";
@@ -6,12 +7,14 @@ import { ArrowRight, Binary } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import Base64Tool from "@/components/tools/developer/base64/Base64Tool";
 import { useBase64PageContent } from "./content";
+import { HeaderContent } from "@/data/layout/header.content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Base64Client() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const page = useBase64PageContent();
+  const nav = HeaderContent[locale];
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -21,21 +24,17 @@ export default function Base64Client() {
           className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
           <ArrowRight size={16} className="ml-1" />
-          {t("docs.back")}
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex items-center gap-4 mb-2">
           <div className={`p-3 rounded-xl ${theme.primary}`}>
             <Binary size={24} className="text-white" />
           </div>
-          <h1 className={`text-3xl font-bold ${theme.text}`}>
-            {page.title}
-          </h1>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>{page.title}</h1>
         </div>
 
-        <p
-          className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}
-        >
+        <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
           {page.description}
         </p>
       </div>

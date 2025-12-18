@@ -1,3 +1,4 @@
+// components/tools/pdf/text-to-pdf/TextToPdfTool.tsx
 "use client";
 
 import { useState } from "react";
@@ -36,7 +37,6 @@ export default function TextToPdfTool() {
       const pdfMakeModule = await import("pdfmake/build/pdfmake");
       const pdfMake: any = pdfMakeModule.default || pdfMakeModule;
 
-      // فونت سفارشی از public/fonts
       const fontResponse = await fetch("/fonts/Vazirmatn-Regular.ttf");
       const fontBuffer = await fontResponse.arrayBuffer();
       const fontBase64 = btoa(
@@ -109,7 +109,6 @@ export default function TextToPdfTool() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
-      {/* نوار ابزار بالا */}
       <div
         className={`p-4 rounded-xl border flex flex-wrap gap-4 items-center justify-between ${theme.card} ${theme.border}`}
       >
@@ -190,7 +189,6 @@ export default function TextToPdfTool() {
         </button>
       </div>
 
-      {/* ویرایشگر متن */}
       <div className="relative">
         <textarea
           dir="auto"
@@ -214,7 +212,6 @@ export default function TextToPdfTool() {
         </div>
       </div>
 
-      {/* راهنما */}
       <div className={`p-4 rounded-xl border ${theme.card} ${theme.border}`}>
         <h3 className={`font-bold mb-2 flex items-center gap-2 ${theme.text}`}>
           <FileText size={16} />

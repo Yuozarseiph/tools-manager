@@ -1,3 +1,4 @@
+// app/tools/(image)/image-to-svg/ImageToSvg.tsx
 "use client";
 
 import Link from "next/link";
@@ -7,11 +8,15 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
 import { useImageToSvgPageContent } from "./content";
 import ImageToSvgConverter from "@/components/tools/image/image-to-svg/image-to-svg";
+import { HeaderContent } from "@/data/layout/header.content";
 
 export default function ImageToSvgClient() {
   const theme = useThemeColors();
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const page = useImageToSvgPageContent();
+
+  // 🔥 استفاده از HeaderContent
+  const nav = HeaderContent[locale];
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.bg}`}>
@@ -21,7 +26,7 @@ export default function ImageToSvgClient() {
           className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
         >
           <ArrowRight size={16} className="ml-1" />
-          {t("docs.back")}
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
         </Link>
 
         <div className="flex items-center gap-4 mb-2">

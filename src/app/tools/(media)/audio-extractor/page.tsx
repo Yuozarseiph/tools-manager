@@ -1,14 +1,17 @@
 // app/tools/(media)/audio-extractor/page.tsx
 import type { Metadata } from "next";
-import AudioExtractor from "./AudioExtractor";
+import AudioExtractorClient from "./AudioExtractor";
 import { getAudioExtractorSeo } from "./content";
 
 const fa = getAudioExtractorSeo("fa");
 const en = getAudioExtractorSeo("en");
 
+const combinedTitle = `${fa.title} / ${en.title}`;
+const combinedDescription = `${fa.description} / ${en.description}`;
+
 export const metadata: Metadata = {
-  title: fa.title,
-  description: fa.description,
+  title: combinedTitle,
+  description: combinedDescription,
   alternates: {
     canonical: fa.canonical,
     languages: {
@@ -17,8 +20,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: fa.ogTitle ?? fa.title,
-    description: fa.ogDescription ?? fa.description,
+    title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,
+    description: `${fa.ogDescription ?? fa.description} / ${en.ogDescription ?? en.description}`,
     url: fa.canonical,
     type: "website",
     locale: "fa_IR",
@@ -40,7 +43,7 @@ function buildJsonLd() {
       name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: fa.description,
       url: fa.canonical,
-      applicationCategory: fa.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: fa.applicationCategory ?? "MultimediaApplication",
       inLanguage: fa.inLanguage ?? "fa-IR",
       provider: baseProvider,
     },
@@ -50,7 +53,7 @@ function buildJsonLd() {
       name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
       description: en.description,
       url: en.canonical,
-      applicationCategory: en.applicationCategory ?? "UtilitiesApplication",
+      applicationCategory: en.applicationCategory ?? "MultimediaApplication",
       inLanguage: en.inLanguage ?? "en-US",
       provider: baseProvider,
     },
@@ -68,8 +71,7 @@ export default function Page() {
           __html: JSON.stringify(jsonLd),
         }}
       />
-
-      <AudioExtractor />
+      <AudioExtractorClient />
     </div>
   );
 }

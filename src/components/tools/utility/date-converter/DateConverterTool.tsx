@@ -1,3 +1,4 @@
+// components/tools/calendar/date-converter/DateConverterTool.tsx
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
@@ -52,7 +53,6 @@ function normalizeDigits(input: string) {
   };
   s = s.replace(/[٠-٩]/g, (d) => arabicIndicMap[d] ?? d);
 
-  // keep only digits
   s = s.replace(/[^0-9]/g, "");
   return s;
 }
@@ -63,7 +63,6 @@ function clampInt(n: number, min: number, max: number) {
 }
 
 function isValidGregorianDate(y: number, m: number, d: number) {
-  // months are 1..12; Date month is 0..11
   const dt = new Date(y, m - 1, d);
   return (
     dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d
@@ -116,7 +115,6 @@ export default function DateConverterTool() {
   const [result, setResult] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
-  // Labels with locale fallback (بدون تغییر i18n)
   const uiText = useMemo(() => {
     const isFa = locale === "fa";
     return {
@@ -142,7 +140,6 @@ export default function DateConverterTool() {
       setMonth(String(now.getMonth() + 1));
       setDay(String(now.getDate()));
     } else {
-      // jalaali.toJalaali(Date) supported
       const j = jalaali.toJalaali(now);
       setYear(String(j.jy));
       setMonth(String(j.jm));
@@ -150,13 +147,11 @@ export default function DateConverterTool() {
     }
   };
 
-  // Initialize inputs on mode change (keeps your previous behavior)
   useEffect(() => {
     setTodayByMode();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
-  // Convert
   useEffect(() => {
     const y = parseInt(normalizeDigits(year), 10);
     const m = parseInt(normalizeDigits(month), 10);
@@ -183,7 +178,6 @@ export default function DateConverterTool() {
         return;
       }
 
-      // Gregorian to Shamsi: validate Gregorian first
       if (!isValidGregorianDate(y, m, d)) {
         setResult(invalidText);
         return;
@@ -212,12 +206,10 @@ export default function DateConverterTool() {
   };
 
   const handleSwapModeKeepDate = () => {
-    // اگر ورودی معتبر است، همان لحظه تبدیل کن و ورودی‌ها را به مود جدید ببَر
     const y = parseInt(normalizeDigits(year), 10);
     const m = parseInt(normalizeDigits(month), 10);
     const d = parseInt(normalizeDigits(day), 10);
 
-    // اگر ناقص بود، فقط مود را تغییر بده (و useEffect امروز را ست می‌کند)
     if (!y || !m || !d) {
       setMode((p) =>
         p === "shamsi-to-gregorian"
@@ -269,7 +261,6 @@ export default function DateConverterTool() {
     <div
       className={`max-w-2xl mx-auto rounded-3xl border p-5 sm:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      {/* Mode switch + quick actions */}
       <div className="flex flex-col gap-3 mb-6 sm:mb-8">
         <div
           className={`grid grid-cols-2 p-1 rounded-2xl ${theme.bg} border ${theme.border}`}
@@ -320,7 +311,6 @@ export default function DateConverterTool() {
         </div>
       </div>
 
-      {/* Inputs */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6">
         <InputGroup
           label={content.ui.inputs.dayLabel}
@@ -358,7 +348,6 @@ export default function DateConverterTool() {
         </div>
       </div>
 
-      {/* Result */}
       <div
         className={[
           "relative p-5 sm:p-6 rounded-2xl border-2 text-center transition-colors",

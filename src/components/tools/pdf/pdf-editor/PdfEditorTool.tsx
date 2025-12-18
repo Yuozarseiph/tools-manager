@@ -1,3 +1,4 @@
+// components/tools/pdf/pdf-editor/PdfEditorTool.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -18,7 +19,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   usePdfEditorContent,
   type PdfEditorToolContent,
-} from "./pdf-editor.content";
+} from "./pdf-editor.content"; // ✅ مسیر اصلاح شده
 
 type EditorMode = "keep" | "remove";
 type ViewerDoc = "original" | "edited";

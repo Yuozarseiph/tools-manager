@@ -14,7 +14,6 @@ import {
   Save,
   Plus,
   Trash2,
-  FileSpreadsheet,
   Undo,
   Search,
   ChevronLeft,
@@ -32,142 +31,26 @@ import {
   type ExcelEditorToolContent,
 } from "./excel-editor.content";
 
-type CellValue = string | number | boolean | null;
-type DataRow = { __id: string } & Record<string, CellValue>;
+import type {
+  CellValue,
+  DataRow,
+  SortDir,
+  SortState,
+  FilterOp,
+  FilterState,
+  ColumnType,
+} from "./types";
 
-type SortDir = "asc" | "desc";
-type SortState = { column: string; dir: SortDir } | null;
-
-type FilterOp = "contains" | "equals" | "startsWith" | "gt" | "lt" | "between";
-type FilterState = {
-  column: string;
-  op: FilterOp;
-  value: string;
-  value2?: string;
-} | null;
-
-type ColumnType = "number" | "text";
-
-function makeId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto)
-    return crypto.randomUUID();
-  return `r_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-}
-
-function cloneRowsSafe(rows: DataRow[]): DataRow[] {
-  if (typeof structuredClone === "function") return structuredClone(rows);
-  return JSON.parse(JSON.stringify(rows)) as DataRow[];
-}
-
-function normalizeStr(v: unknown) {
-  return String(v ?? "")
-    .trim()
-    .toLowerCase();
-}
-
-function normalizeNumberString(input: string): string {
-  let s = String(input ?? "").trim();
-  if (!s) return "";
-
-  const persianMap: Record<string, string> = {
-    "۰": "0",
-    "۱": "1",
-    "۲": "2",
-    "۳": "3",
-    "۴": "4",
-    "۵": "5",
-    "۶": "6",
-    "۷": "7",
-    "۸": "8",
-    "۹": "9",
-  };
-  s = s.replace(/[۰-۹]/g, (d) => persianMap[d] ?? d);
-
-  const arabicIndicMap: Record<string, string> = {
-    "٠": "0",
-    "١": "1",
-    "٢": "2",
-    "٣": "3",
-    "٤": "4",
-    "٥": "5",
-    "٦": "6",
-    "٧": "7",
-    "٨": "8",
-    "٩": "9",
-  };
-  s = s.replace(/[٠-٩]/g, (d) => arabicIndicMap[d] ?? d);
-
-  s = s.replace(/[−–—]/g, "-");
-  s = s.replace(/\u066B/g, "."); // Arabic decimal separator
-  s = s.replace(/[,\u066C\u060C\s\u00A0_]/g, ""); // thousands + spaces
-
-  s = s.replace(/[^0-9.\-]/g, "");
-
-  const firstDot = s.indexOf(".");
-  if (firstDot !== -1) {
-    s = s.slice(0, firstDot + 1) + s.slice(firstDot + 1).replace(/\./g, "");
-  }
-
-  s = s.replace(/(?!^)-/g, "");
-  return s;
-}
-
-function parseNumberMaybe(v: unknown): number | undefined {
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-
-  let raw = String(v ?? "").trim();
-  if (!raw) return undefined;
-
-  let parenNegative = false;
-  if (/^\(.*\)$/.test(raw)) {
-    parenNegative = true;
-    raw = raw.slice(1, -1).trim();
-  }
-
-  const cleaned = normalizeNumberString(raw);
-  if (!cleaned || cleaned === "-" || cleaned === "." || cleaned === "-.")
-    return undefined;
-
-  const n = Number(cleaned);
-  if (!Number.isFinite(n)) return undefined;
-
-  return parenNegative ? (n === 0 ? -0 : -Math.abs(n)) : n;
-}
-
-function detectColumnType(rows: DataRow[], column: string): ColumnType {
-  let checked = 0;
-  let numeric = 0;
-  for (let i = 0; i < rows.length && checked < 200; i += 1) {
-    const v = rows[i]?.[column];
-    if (v === null || v === undefined || v === "") continue;
-    checked += 1;
-    if (parseNumberMaybe(v) !== undefined) numeric += 1;
-  }
-  if (checked === 0) return "text";
-  return numeric / checked >= 0.7 ? "number" : "text";
-}
-
-function stripInternal(row: DataRow): Record<string, CellValue> {
-  const { __id, ...rest } = row;
-  return rest;
-}
-
-function clampInt(v: number, min: number, max: number) {
-  const n = Number.isFinite(v) ? Math.trunc(v) : min;
-  return Math.min(max, Math.max(min, n));
-}
-
-function downloadTextFile(name: string, text: string, mime: string) {
-  const blob = new Blob([text], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
+import {
+  makeId,
+  cloneRowsSafe,
+  normalizeStr,
+  parseNumberMaybe,
+  detectColumnType,
+  stripInternal,
+  clampInt,
+  downloadTextFile,
+} from "./utils";
 
 export default function ExcelEditorTool() {
   const theme = useThemeColors();
@@ -181,6 +64,7 @@ export default function ExcelEditorTool() {
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<DataRow[]>([]);
   const [fileName, setFileName] = useState<string>("edited-file.xlsx");
+
   const [history, setHistory] = useState<DataRow[][]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -258,6 +142,7 @@ export default function ExcelEditorTool() {
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
     setFileName(file.name);
 
     const reader = new FileReader();
@@ -433,18 +318,19 @@ export default function ExcelEditorTool() {
     [filteredSortedRows.length, safeRowsPerPage]
   );
 
-  const paginatedRows = useMemo(
-    () =>
-      filteredSortedRows.slice(
-        (currentPage - 1) * safeRowsPerPage,
-        currentPage * safeRowsPerPage
-      ),
-    [filteredSortedRows, currentPage, safeRowsPerPage]
-  );
-
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filter, sort, safeRowsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage((p) => clampInt(p, 1, Math.max(1, totalPages)));
+  }, [totalPages]);
+
+  const paginatedRows = useMemo(() => {
+    const start = (currentPage - 1) * safeRowsPerPage;
+    const end = start + safeRowsPerPage;
+    return filteredSortedRows.slice(start, end);
+  }, [filteredSortedRows, currentPage, safeRowsPerPage]);
 
   useEffect(() => {
     const max = Math.max(1, filteredSortedRows.length);
@@ -458,10 +344,6 @@ export default function ExcelEditorTool() {
     setRangeFromCol((p) => clampInt(p, 1, maxCol));
     setRangeToCol((p) => clampInt(p, 1, maxCol));
   }, [filteredSortedRows.length, headers.length]);
-
-  useEffect(() => {
-    setCurrentPage((p) => clampInt(p, 1, Math.max(1, totalPages)));
-  }, [totalPages]);
 
   const sumResult = useMemo(() => {
     if (filteredSortedRows.length === 0) return { sum: 0, count: 0 };
@@ -575,13 +457,13 @@ export default function ExcelEditorTool() {
     return bytes / 1024 / 1024;
   }, [rows]);
 
-  // ✅ Fix موبایل: خود ریشه اسکرول‌پذیر، تا کاربر حتماً به جدول برسد
+  // اسکرول درست: ریشه overflow-hidden، فقط جدول overflow-auto
   const rootClass = useMemo(() => {
-    const base = `border transition-all duration-300 ${theme.card} ${theme.border} shadow-sm flex flex-col rounded-2xl w-full`;
+    const base = `border transition-all duration-300 ${theme.card} ${theme.border} shadow-sm flex flex-col w-full`;
     if (isPseudoFullscreen) {
-      return `${base} fixed inset-0 z-[60] rounded-none w-screen h-[100dvh] max-h-[100dvh] overflow-y-auto overflow-x-hidden`;
+      return `${base} fixed inset-0 z-[60] rounded-none w-screen h-[100dvh] overflow-hidden`;
     }
-    return `${base} max-h-[calc(100dvh-16px)] overflow-y-auto overflow-x-hidden sm:max-h-none sm:h-[650px] sm:overflow-hidden`;
+    return `${base} rounded-2xl h-[650px] max-h-[calc(100dvh-16px)] overflow-hidden`;
   }, [theme.card, theme.border, isPseudoFullscreen]);
 
   const inputClass = `w-full px-3 py-2 text-sm rounded-xl border outline-none focus:ring-2 ${theme.ring} ${theme.card} ${theme.border} ${theme.text}`;
@@ -607,7 +489,6 @@ export default function ExcelEditorTool() {
       ? content.ui.actions.fullscreenExitTitle
       : content.ui.actions.fullscreenEnterTitle;
 
-  // Dropdown options
   const rowsPerPageOptions = useMemo(
     () =>
       Array.from({ length: 100 }, (_, i) => i + 1).map((n) => ({
@@ -648,6 +529,14 @@ export default function ExcelEditorTool() {
     ],
     [content.ui.sum.modeColumn, content.ui.sum.modeRow]
   );
+
+  const paginationFrom = filteredSortedRows.length
+    ? (currentPage - 1) * safeRowsPerPage + 1
+    : 0;
+
+  const paginationTo = filteredSortedRows.length
+    ? Math.min(currentPage * safeRowsPerPage, filteredSortedRows.length)
+    : 0;
 
   return (
     <div ref={containerRef} className={rootClass}>
@@ -1048,12 +937,12 @@ export default function ExcelEditorTool() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className={`flex-1 relative flex flex-col ${theme.bg}`}>
+      {/* Table (scroll container) */}
+      <div className={`flex-1 min-h-0 flex flex-col ${theme.bg}`}>
         {rows.length > 0 ? (
           <>
-            {/* ✅ فقط روی دسکتاپ اسکرول داخلی جدول؛ روی موبایل اسکرول از ریشه انجام می‌شود */}
-            <div className="flex-1 sm:overflow-auto">
+            {/* این div اسکرول اصلی جدول است */}
+            <div className="flex-1 min-h-0 overflow-auto">
               <table className="w-full min-w-max text-sm text-left border-collapse relative">
                 <thead
                   className={`sticky top-0 z-10 shadow-sm ${theme.secondary} text-xs uppercase tracking-wider`}
@@ -1138,10 +1027,10 @@ export default function ExcelEditorTool() {
                           </td>
                         ))}
 
-                        <td className="p-1 text-center">
+                        <td className={`p-2 text-center ${theme.border}`}>
                           <button
                             onClick={() => deleteRow(row.__id)}
-                            className={`p-1.5 rounded-md transition-colors opacity-0 group-hover:opacity-100 border ${theme.note.errorBorder} ${theme.note.errorBg} ${theme.note.errorText} hover:opacity-90`}
+                            className={`p-1.5 rounded-md transition-colors border ${theme.note.errorBorder} ${theme.note.errorBg} ${theme.note.errorText} hover:opacity-90`}
                             title={content.ui.table.deleteTooltip}
                           >
                             <Trash2 size={16} />
@@ -1160,20 +1049,15 @@ export default function ExcelEditorTool() {
             >
               <span className={`text-xs ${theme.textMuted}`}>
                 {content.ui.pagination.summaryPrefix}
-                {filteredSortedRows.length === 0
-                  ? 0
-                  : (currentPage - 1) * safeRowsPerPage + 1}
+                {paginationFrom}
                 {content.ui.pagination.summaryFromToSeparator}
-                {Math.min(
-                  currentPage * safeRowsPerPage,
-                  filteredSortedRows.length
-                )}
+                {paginationTo}
                 {content.ui.pagination.summaryOfWord}
                 {filteredSortedRows.length}
                 {content.ui.pagination.summarySuffix}
               </span>
 
-              <div className="flex items-center justify-between sm:justify-end gap-2">
+              <div className="flex items-center justify-end gap-2">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
@@ -1190,7 +1074,7 @@ export default function ExcelEditorTool() {
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages || 1, p + 1))
                   }
-                  disabled={currentPage === totalPages || totalPages === 0}
+                  disabled={currentPage >= (totalPages || 1)}
                   className={`p-2 rounded-xl border disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
                 >
                   <ChevronLeft size={18} />
@@ -1200,20 +1084,12 @@ export default function ExcelEditorTool() {
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div
-              className={`w-24 h-24 rounded-3xl flex items-center justify-center mb-6 border ${theme.border} ${theme.secondary}`}
-            >
-              <FileSpreadsheet size={48} className={theme.accent} />
-            </div>
-            <h4 className={`font-black text-2xl mb-3 ${theme.text}`}>
+            <div className={`text-lg font-extrabold ${theme.text}`}>
               {content.ui.empty.title}
-            </h4>
-
-            <p
-              className={`text-sm max-w-md leading-relaxed opacity-70 ${theme.textMuted}`}
-            >
+            </div>
+            <div className={`mt-2 text-sm opacity-70 ${theme.textMuted}`}>
               {content.ui.empty.description}
-            </p>
+            </div>
           </div>
         )}
       </div>

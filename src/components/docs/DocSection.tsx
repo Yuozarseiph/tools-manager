@@ -3,7 +3,8 @@
 import { ThemePalette } from "@/constants/themes";
 import type { DocSectionItem } from "@/data/docs/docs.content";
 import { ShieldCheck, Info, Cpu, CheckCircle2 } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+
+import { useDocSectionContent } from "./docSection.content";
 
 interface Props {
   data: DocSectionItem;
@@ -12,7 +13,9 @@ interface Props {
 }
 
 export default function DocSection({ data, theme, index }: Props) {
-  const { t } = useLanguage();
+  const content = useDocSectionContent();
+
+  const categoryLabel = content.categories[data.category] ?? data.category;
 
   return (
     <div id={data.id} className="scroll-mt-24 mb-20">
@@ -23,12 +26,14 @@ export default function DocSection({ data, theme, index }: Props) {
         >
           {index + 1}
         </span>
+
         <div>
           <span
             className={`text-xs font-bold px-2 py-1 rounded-md mb-2 inline-block ${theme.bg} border ${theme.border} ${theme.textMuted}`}
           >
-            {t(`docs.categories.${data.category}`)}
+            {categoryLabel}
           </span>
+
           <h2 className={`text-3xl font-bold ${theme.text}`}>{data.title}</h2>
         </div>
       </div>
@@ -40,7 +45,7 @@ export default function DocSection({ data, theme, index }: Props) {
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        {/* Features List (در صورت وجود) */}
+        {/* Features List */}
         {data.features && data.features.length > 0 && (
           <div
             className={`p-6 rounded-2xl border ${theme.border} ${theme.card}`}
@@ -49,8 +54,9 @@ export default function DocSection({ data, theme, index }: Props) {
               className={`font-bold mb-4 text-lg flex items-center gap-2 ${theme.text}`}
             >
               <CheckCircle2 size={18} className="text-green-500" />
-              {t("docs.section.featuresTitle")}
+              {content.section.featuresTitle}
             </h4>
+
             <ul className={`space-y-3 ${theme.textMuted}`}>
               {data.features.map((feat, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm">
@@ -62,15 +68,16 @@ export default function DocSection({ data, theme, index }: Props) {
           </div>
         )}
 
-        {/* How it works (if exists) */}
+        {/* How it works */}
         {data.howItWorks && data.howItWorks.length > 0 && (
           <div className={`p-6 rounded-2xl border ${theme.border} ${theme.bg}`}>
             <h4
               className={`font-bold mb-4 text-lg flex items-center gap-2 ${theme.text}`}
             >
               <Cpu size={18} className="text-blue-500" />
-              {t("docs.section.howItWorksTitle")}
+              {content.section.howItWorksTitle}
             </h4>
+
             <ol
               className={`space-y-3 list-decimal list-inside text-sm ${theme.textMuted}`}
             >
@@ -87,8 +94,8 @@ export default function DocSection({ data, theme, index }: Props) {
         )}
       </div>
 
-      {/* Technical / Privacy Notes */}
       <div className="space-y-4">
+        {/* Technical note */}
         {data.technicalNote && (
           <div
             className={`
@@ -108,6 +115,7 @@ export default function DocSection({ data, theme, index }: Props) {
           </div>
         )}
 
+        {/* Privacy note */}
         {data.privacyNote && (
           <div
             className={`
@@ -119,7 +127,7 @@ export default function DocSection({ data, theme, index }: Props) {
           >
             <h5 className="font-bold mb-2 flex items-center gap-2">
               <ShieldCheck size={18} />
-              {t("docs.section.privacyTitle")}
+              {content.section.privacyTitle}
             </h5>
             <p className="text-sm leading-relaxed opacity-90">
               {data.privacyNote}

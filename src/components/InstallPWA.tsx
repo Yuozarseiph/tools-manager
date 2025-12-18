@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Download } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
+import { pwaContent } from "@/data/pwa.content";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -13,7 +14,10 @@ type BeforeInstallPromptEvent = Event & {
 
 export default function InstallPWA() {
   const theme = useThemeColors();
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
+
+  // 🔥 انتخاب محتوا بر اساس زبان
+  const content = pwaContent[locale];
 
   const [supportsPWA, setSupportsPWA] = useState(false);
   const [deferredPrompt, setDeferredPrompt] =
@@ -54,17 +58,9 @@ export default function InstallPWA() {
 
   if (!supportsPWA || !deferredPrompt) return null;
 
-  const label = installing
-    ? t("pwa.install.installing") ||
-      (locale === "fa" ? "در حال نصب..." : "Installing...")
-    : t("pwa.install.cta") ||
-      (locale === "fa" ? "نصب اپلیکیشن" : "Install app");
-
-  const helper =
-    t("pwa.install.helper") ||
-    (locale === "fa"
-      ? "برای دسترسی سریع‌تر، اپ را روی دستگاه خود نصب کنید."
-      : "Install the app for faster access from your device.");
+  // 🔥 استفاده مستقیم از content
+  const label = installing ? content.install.installing : content.install.cta;
+  const helper = content.install.helper;
 
   return (
     <button

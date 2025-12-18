@@ -1,61 +1,124 @@
-"use client";
-
-import type { Locale } from "@/context/LanguageContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-import rawContent from "./unit-converter.i18n.json";
+export const unitConverterContent = {
+  fa: {
+    id: "unit-converter",
+    category: "developer",
+    title: "مبدل واحدها (طول، جرم، دما)",
+    description: "بین واحدهای مختلف طول، جرم و دما به‌سرعت تبدیل انجام دهید.",
+    features: [
+      "تبدیل طول بین متر، کیلومتر، سانتی‌متر، میلی‌متر و واحدهای رایج دیگر",
+      "تبدیل جرم بین کیلوگرم، گرم، میلی‌گرم، پوند و اونس",
+      "تبدیل دما بین سانتی‌گراد، فارنهایت و کلوین با فرمول دقیق",
+      "رابط کاربری ساده با انتخاب دسته‌بندی، واحد مبدأ و مقصد",
+    ],
+    ui: {
+      categories: {
+        length: {
+          label: "طول",
+          units: {
+            m: "متر (m)",
+            km: "کیلومتر (km)",
+            cm: "سانتی‌متر (cm)",
+            mm: "میلی‌متر (mm)",
+            in: "اینچ (in)",
+            ft: "فوت (ft)",
+            yd: "یارد (yd)",
+            mi: "مایل (mi)",
+          },
+        },
+        mass: {
+          label: "جرم / وزن",
+          units: {
+            kg: "کیلوگرم (kg)",
+            g: "گرم (g)",
+            mg: "میلی‌گرم (mg)",
+            lb: "پوند (lb)",
+            oz: "اونس (oz)",
+          },
+        },
+        temperature: {
+          label: "دما",
+          units: {
+            c: "سانتی‌گراد (°C)",
+            f: "فارنهایت (°F)",
+            k: "کلوین (K)",
+          },
+        },
+      },
+      input: {
+        amountLabel: "مقدار ورودی",
+        resultLabel: "نتیجه تبدیل",
+      },
+      page: {
+        title: "ابزار مبدل واحدها",
+        description:
+          "مقدار مورد نظر را وارد کنید، واحدها را انتخاب کنید و نتیجه تبدیل را همان لحظه ببینید.",
+      },
+    },
+  },
+  en: {
+    id: "unit-converter",
+    category: "developer",
+    title: "Unit converter (length, mass, temperature)",
+    description:
+      "Convert between common units of length, mass and temperature instantly.",
+    features: [
+      "Convert length between meters, kilometers, centimeters, inches, feet and more",
+      "Convert mass between kilograms, grams, milligrams, pounds and ounces",
+      "Convert temperature between Celsius, Fahrenheit and Kelvin using correct formulas",
+      "Simple UI: pick a category, source unit and target unit",
+    ],
+    ui: {
+      categories: {
+        length: {
+          label: "Length",
+          units: {
+            m: "Meter (m)",
+            km: "Kilometer (km)",
+            cm: "Centimeter (cm)",
+            mm: "Millimeter (mm)",
+            in: "Inch (in)",
+            ft: "Foot (ft)",
+            yd: "Yard (yd)",
+            mi: "Mile (mi)",
+          },
+        },
+        mass: {
+          label: "Mass / weight",
+          units: {
+            kg: "Kilogram (kg)",
+            g: "Gram (g)",
+            mg: "Milligram (mg)",
+            lb: "Pound (lb)",
+            oz: "Ounce (oz)",
+          },
+        },
+        temperature: {
+          label: "Temperature",
+          units: {
+            c: "Celsius (°C)",
+            f: "Fahrenheit (°F)",
+            k: "Kelvin (K)",
+          },
+        },
+      },
+      input: {
+        amountLabel: "Input amount",
+        resultLabel: "Converted result",
+      },
+      page: {
+        title: "Unit converter tool",
+        description:
+          "Enter a value, choose units and instantly see the converted result.",
+      },
+    },
+  },
+};
 
-type DocCategoryKey = "utility";
+export type UnitConverterToolContent = typeof unitConverterContent.fa;
 
-interface BaseDocsFields {
-  id: string;
-  category: DocCategoryKey;
-  title: string;
-  description: string;
-  features: string[];
-  howItWorks?: string[];
-  privacyNote?: string;
-  technicalNote?: {
-    title: string;
-    content: string;
-  };
-}
-
-export interface UnitConverterToolContent extends BaseDocsFields {
-  id: "unit-converter";
-  ui: {
-    categories: {
-      length: {
-        label: string;
-        units: Record<string, string>;
-      };
-      mass: {
-        label: string;
-        units: Record<string, string>;
-      };
-      temperature: {
-        label: string;
-        units: Record<string, string>;
-      };
-    };
-    input: {
-      amountLabel: string;
-      resultLabel: string;
-    };
-    page: {
-      title: string;
-      description: string;
-    };
-  };
-}
-
-// ساختار فایل i18n: { fa: UnitConverterToolContent; en: UnitConverterToolContent }
-const CONTENT_BY_LOCALE = rawContent as Record<
-  Locale,
-  UnitConverterToolContent
->;
-
-export function useUnitConverterContent(): UnitConverterToolContent {
+export function useUnitConverterContent() {
   const { locale } = useLanguage();
-  return CONTENT_BY_LOCALE[locale];
+  return unitConverterContent[locale];
 }

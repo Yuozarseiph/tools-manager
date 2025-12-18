@@ -1,11 +1,21 @@
-// components/tools/HtmlToPptx/HtmlToPptx.tsx
+// components/tools/presentation/html-to-pptx/HtmlToPptxTool.tsx
 "use client";
 
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { Upload, FileCode2, Download, AlertCircle, FileText, Palette } from "lucide-react";
+import {
+  Upload,
+  FileCode2,
+  Download,
+  AlertCircle,
+  FileText,
+  Palette,
+} from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useHtmlToPptxContent, type HtmlToPptxToolContent } from "./html-to-pptx.content";
+import {
+  useHtmlToPptxContent,
+  type HtmlToPptxToolContent,
+} from "./html-to-pptx.content";
 import {
   parseHtmlToSlides,
   type SlideModel,
@@ -15,14 +25,11 @@ import {
 
 type ProgressStep = "idle" | "preparing" | "exporting" | "success";
 
-// Slide geometry (inches) - 16:9
 const SLIDE_WIDTH = 10;
 const SLIDE_HEIGHT = 5.625;
 const TOP_MARGIN = 0.7;
 const BOTTOM_MARGIN = 0.7;
 const SIDE_MARGIN = 0.7;
-
-// -------------------- helpers --------------------
 
 function pxToPt(px?: number): number | undefined {
   if (!px) return undefined;
@@ -59,14 +66,12 @@ function cssColorToHex(color?: string): string | undefined {
 function cssToTextOptions(css: CssSubset): any {
   const fontSize = pxToPt(css.fontSize) ?? 18;
   const color = cssColorToHex(css.color) ?? "444444";
-
   const align =
     css.textAlign === "center"
       ? "center"
       : css.textAlign === "left"
       ? "left"
       : "right";
-
   const bold = css.fontWeight ? css.fontWeight >= 600 : false;
 
   return { fontSize, color, bold, align };
@@ -102,13 +107,19 @@ function normaliseRuns(runs: TextRun[] | undefined): TextRun[] | undefined {
   return out.length ? out : undefined;
 }
 
-// -------------------- PPTX render --------------------
-
-async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: string): Promise<void> {
+async function renderSlide(
+  pptx: any,
+  slideModel: SlideModel,
+  themeColorHex: string
+): Promise<void> {
   const createSlide = () => {
     const slide = pptx.addSlide();
 
-    if (slideModel.type === "title" || slideModel.type === "end" || slideModel.type === "section") {
+    if (
+      slideModel.type === "title" ||
+      slideModel.type === "end" ||
+      slideModel.type === "section"
+    ) {
       slide.background = { color: themeColorHex };
     } else {
       slide.background = { color: "FFFFFF" };
@@ -131,7 +142,6 @@ async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: str
   };
 
   for (const block of slideModel.blocks) {
-    // --- Table ---
     if (block.kind === "table" && block.rows && block.rows.length) {
       const estimatedHeight = Math.min(3.8, 0.42 * block.rows.length + 0.5);
       ensureSpace(estimatedHeight);
@@ -159,7 +169,6 @@ async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: str
       continue;
     }
 
-    // --- Text blocks ---
     const baseOpts = cssToTextOptions(block.css);
 
     let height = 0.55;
@@ -169,7 +178,6 @@ async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: str
 
     ensureSpace(height);
 
-    // Bullets: keep it stable with plain text
     if (block.kind === "listItem" && block.text) {
       const level = block.listLevel ?? 1;
       const indent = SIDE_MARGIN + (level - 1) * 0.4;
@@ -190,11 +198,12 @@ async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: str
     }
 
     const runs = normaliseRuns(block.runs);
-    const textValue = runs?.length ? (runs as any) : (block.text ?? "");
+    const textValue = runs?.length ? (runs as any) : block.text ?? "";
 
     if (block.kind === "heading" && (block.text || runs?.length)) {
       const level = block.headingLevel ?? 1;
-      const fontSize = level === 1 ? 32 : level === 2 ? 26 : level === 3 ? 22 : 20;
+      const fontSize =
+        level === 1 ? 32 : level === 2 ? 26 : level === 3 ? 22 : 20;
 
       slide.addText(textValue, {
         x: SIDE_MARGIN,
@@ -222,8 +231,6 @@ async function renderSlide(pptx: any, slideModel: SlideModel, themeColorHex: str
     cursorY += height + 0.1;
   }
 }
-
-// -------------------- Component --------------------
 
 export default function HtmlToPptxTool() {
   const theme = useThemeColors();
@@ -255,8 +262,10 @@ export default function HtmlToPptxTool() {
     }
   })();
 
-  const themeColorLabel: string | undefined = (content.ui as any)?.labels?.themeColor;
-  const noSlidesMessage: string | undefined = (content.ui.errors as any)?.noSlides;
+  const themeColorLabel: string | undefined = (content.ui as any)?.labels
+    ?.themeColor;
+  const noSlidesMessage: string | undefined = (content.ui.errors as any)
+    ?.noSlides;
 
   const primaryBg = useMemo(() => {
     return (
@@ -285,7 +294,9 @@ export default function HtmlToPptxTool() {
     setError("");
     setProgressStep("preparing");
 
-    setFileName((file.name.replace(/\.(html?|txt)$/i, "") || "slides") + ".pptx");
+    setFileName(
+      (file.name.replace(/\.(html?|txt)$/i, "") || "slides") + ".pptx"
+    );
 
     try {
       const text = await file.text();
@@ -304,7 +315,9 @@ export default function HtmlToPptxTool() {
       setProgressStep("idle");
     } catch (err) {
       const message =
-        err instanceof Error ? `${err.name}: ${err.message}` : content.ui.errors.unknown;
+        err instanceof Error
+          ? `${err.name}: ${err.message}`
+          : content.ui.errors.unknown;
       setError(`${content.ui.errors.genericPrefix} ${message}`);
       setProgressStep("idle");
     }
@@ -318,15 +331,15 @@ export default function HtmlToPptxTool() {
     setProgressStep("preparing");
 
     try {
-      const PptxGenJS = await import("pptxgenjs").then((mod: any) => mod.default ?? mod);
-
+      const PptxGenJS = await import("pptxgenjs").then(
+        (mod: any) => mod.default ?? mod
+      );
       const pptx = new PptxGenJS();
       pptx.layout = "LAYOUT_16x9";
 
       const slideModels: SlideModel[] = parseHtmlToSlides(htmlSource);
 
       if (!slideModels.length) {
-        // بدون اضافه کردن متن جدید: اگر noSlides در i18n بود همان را استفاده کن، وگرنه unknown
         throw new Error(noSlidesMessage ?? content.ui.errors.unknown);
       }
 
@@ -343,11 +356,13 @@ export default function HtmlToPptxTool() {
       setProgressStep("success");
     } catch (err) {
       const raw =
-        err instanceof Error ? err.message || err.toString() : content.ui.errors.unknown;
+        err instanceof Error
+          ? err.message || err.toString()
+          : content.ui.errors.unknown;
 
       const msg =
         raw === (noSlidesMessage ?? raw)
-          ? (noSlidesMessage ?? raw)
+          ? noSlidesMessage ?? raw
           : `${content.ui.errors.genericPrefix} ${raw}`;
 
       setError(msg);
@@ -366,7 +381,9 @@ export default function HtmlToPptxTool() {
 
   return (
     <div className="space-y-4">
-      <div className={`rounded-xl border p-4 sm:p-5 shadow-sm ${theme.card} ${theme.border}`}>
+      <div
+        className={`rounded-xl border p-4 sm:p-5 shadow-sm ${theme.card} ${theme.border}`}
+      >
         <div className="flex items-center gap-2 mb-4">
           <FileCode2 className="w-5 h-5" />
           <h2 className={`text-sm sm:text-base font-semibold ${theme.text}`}>
@@ -421,7 +438,9 @@ export default function HtmlToPptxTool() {
 
             {themeColorLabel ? (
               <div className="flex items-center gap-2">
-                <span className="text-[11px] sm:text-xs">{themeColorLabel}:</span>
+                <span className="text-[11px] sm:text-xs">
+                  {themeColorLabel}:
+                </span>
                 <input
                   type="color"
                   value={themeColor}
@@ -463,12 +482,18 @@ export default function HtmlToPptxTool() {
             className={`
               inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-md text-xs sm:text-sm font-medium
               ${theme.primary}
-              ${(!hasContent || isConverting) ? "opacity-50 cursor-not-allowed" : ""}
+              ${
+                !hasContent || isConverting
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }
             `}
           >
             <Download className="w-4 h-4" />
             <span>
-              {isConverting ? content.ui.buttons.convertLoading : content.ui.buttons.convertIdle}
+              {isConverting
+                ? content.ui.buttons.convertLoading
+                : content.ui.buttons.convertIdle}
             </span>
           </button>
         </div>
@@ -503,10 +528,14 @@ export default function HtmlToPptxTool() {
         )}
       </div>
 
-      <div className={`rounded-xl border p-4 sm:p-5 text-xs sm:text-sm ${theme.card} ${theme.border}`}>
+      <div
+        className={`rounded-xl border p-4 sm:p-5 text-xs sm:text-sm ${theme.card} ${theme.border}`}
+      >
         <div className="flex items-center gap-2 mb-3">
           <AlertCircle className="w-4 h-4" />
-          <h3 className={`font-semibold ${theme.text}`}>{content.ui.guide.title}</h3>
+          <h3 className={`font-semibold ${theme.text}`}>
+            {content.ui.guide.title}
+          </h3>
         </div>
 
         <ul className="list-disc ps-5 space-y-1.5">
