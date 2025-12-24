@@ -44,7 +44,6 @@ export default function ToolsGrid() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
   
-  // 🔥 اینجا content رو بر اساس زبان انتخاب می‌کنیم
   const t = toolsContent[locale];
 
   const [searchQuery, setSearchQuery] = useState("");

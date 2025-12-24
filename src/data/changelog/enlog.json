@@ -1,5 +1,37 @@
 [
   {
+    "version": "3.0.0",
+    "date": "December 24, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added support for background removal tool in Docs page with real-time preview and offline processing.",
+          "Added support for EXIF removal tool in Docs page with real-time preview and offline processing.",
+          "Added new background removal and EXIF removal content files for both Persian and English locales to manage UI texts without relying on t() keys.",
+          "Added locale-based hooks to read background removal and EXIF removal UI content consistently for Persian/English."
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved background removal and EXIF removal architecture by separating UI strings from components and aligning them with the bilingual content structure.",
+          "Improved maintainability of the background removal and EXIF removal codebase to speed up future iterations.",
+          "Improved rendering of background removal and EXIF removal badges and sidebar entries using a maintainable category map."
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed mismatches between background removal and EXIF removal t() keys and actual language content by moving UI strings into content files.",
+          "Fixed background removal and EXIF removal category label rendering in bilingual mode.",
+          "Fixed minor background removal and EXIF removal navigation text inconsistencies by using centralized content strings."
+        ]
+      }
+    ]
+  },
+  {
     "version": "2.9.2 BETA",
     "date": "December 18, 2025",
     "type": "update",

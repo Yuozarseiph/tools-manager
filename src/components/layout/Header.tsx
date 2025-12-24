@@ -13,6 +13,7 @@ import {
   Home,
   Menu,
   X,
+  Download,
 } from "lucide-react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/contact", icon: Mail, key: "contact" as const },
   { href: "/about", icon: FileQuestionMark, key: "about" as const },
   { href: "/changelog", icon: LogsIcon, key: "changelog" as const },
+  { href: "/download", icon: Download, key: "download" as const },
 ];
 
 export default function Header() {
@@ -31,7 +33,6 @@ export default function Header() {
   const pathname = usePathname();
   const { locale, setLocale } = useLanguage();
 
-  // 🔥 انتخاب محتوا بر اساس زبان
   const content = HeaderContent[locale];
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -49,9 +50,7 @@ export default function Header() {
       backdrop-blur-xl
       transition-all duration-200
       ${
-        pathname === path
-          ? "text-blue-600 dark:text-blue-400"
-          : theme.textMuted
+        pathname === path ? "text-blue-600 dark:text-blue-400" : theme.textMuted
       }
       hover:scale-105 active:scale-95
     `;
@@ -83,6 +82,7 @@ export default function Header() {
     { id: "contact", icon: Mail, href: "/contact", external: false },
     { id: "about", icon: FileQuestionMark, href: "/about", external: false },
     { id: "changelog", icon: LogsIcon, href: "/changelog", external: false },
+    { id: "download", icon: Download, href: "/download", external: false },
     {
       id: "donate",
       icon: Heart,
@@ -93,7 +93,6 @@ export default function Header() {
 
   return (
     <>
-      {/* هدر بالای صفحه – شیشه‌ای */}
       <header className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
           <Link

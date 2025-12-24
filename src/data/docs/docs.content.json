@@ -1,6 +1,44 @@
 {
   "fa": [
     {
+      "id": "background-remover",
+      "title": "حذف پس‌زمینه تصویر",
+      "category": "image",
+      "description": "تصویر را آپلود کن تا پس‌زمینه به‌صورت خودکار حذف شود و خروجی PNG با پس‌زمینه شفاف بگیری.",
+      "features": [
+        "حذف خودکار پس‌زمینه از تصاویر",
+        "پیش‌نمایش تصویر ورودی و خروجی",
+        "دانلود نسخه پاک‌سازی‌شده با پس‌زمینه شفاف",
+        "پردازش کاملاً آفلاین و محلی در مرورگر",
+        "افزودن تصویر از لینک (در صورت اجازه CORS)"
+      ],
+      "howItWorks": [
+        "تصویر ورودی (از دستگاه یا لینک) در مرورگر خوانده می‌شود.",
+        "پس‌زمینه تصویر با استفاده از مدل‌های هوش مصنوعی تشخیص و حذف می‌شود.",
+        "خروجی به صورت PNG با پس‌زمینه شفاف تولید و برای دانلود آماده می‌شود."
+      ],
+      "privacyNote": "تمام عملیات حذف پس‌زمینه کاملاً در مرورگر شما انجام می‌شود. هیچ فایلی به سرور ارسال یا ذخیره نمی‌شود و پس از بستن صفحه، همه داده‌ها پاک می‌شوند."
+    },
+    {
+      "id": "exif-remover",
+      "title": "حذف EXIF",
+      "category": "security",
+      "description": "حذف اطلاعات متادیتا (EXIF) از تصاویر، شامل موقعیت جغرافیایی، زمان عکس‌برداری و جزئیات دستگاه.",
+      "features": [
+        "حذف تمام اطلاعات EXIF از تصاویر",
+        "پیش‌نمایش تصویر ورودی و خروجی",
+        "دانلود تصویر بدون EXIF",
+        "پردازش کاملاً آفلاین و محلی در مرورگر",
+        "افزودن تصویر از لینک (در صورت اجازه CORS)"
+      ],
+      "howItWorks": [
+        "تصویر ورودی (از دستگاه یا لینک) در مرورگر خوانده می‌شود.",
+        "اطلاعات EXIF از تصویر خوانده و حذف می‌شود.",
+        "خروجی به صورت تصویر جدید بدون EXIF تولید و برای دانلود آماده می‌شود."
+      ],
+      "privacyNote": "تمام عملیات حذف EXIF کاملاً در مرورگر شما انجام می‌شود. هیچ فایلی به سرور ارسال یا ذخیره نمی‌شود و پس از بستن صفحه، همه داده‌ها پاک می‌شوند."
+    },
+    {
       "id": "base64",
       "title": "مبدل Base64",
       "category": "developer",
@@ -409,6 +447,44 @@
     }
   ],
   "en": [
+    {
+      "id": "background-remover",
+      "title": "Background remover",
+      "category": "image",
+      "description": "Upload an image to automatically remove the background and download a transparent PNG.",
+      "features": [
+        "Automatically remove background from images",
+        "Preview input and output images",
+        "Download the cleaned version with transparent background",
+        "Fully offline and local processing in the browser",
+        "Add image from URL (if CORS allows)"
+      ],
+      "howItWorks": [
+        "The input image (from device or URL) is loaded in the browser.",
+        "The background is detected and removed using AI models.",
+        "Output is generated as a PNG with transparent background and is ready for download."
+      ],
+      "privacyNote": "All background removal operations are performed entirely in your browser. No files are uploaded or stored on any server, and all data is cleared after closing the page."
+    },
+    {
+      "id": "exif-remover",
+      "title": "EXIF remover",
+      "category": "security",
+      "description": "Remove EXIF metadata from images, including geolocation, capture time, and device details.",
+      "features": [
+        "Remove all EXIF information from images",
+        "Preview input and output images",
+        "Download image without EXIF",
+        "Fully offline and local processing in the browser",
+        "Add image from URL (if CORS allows)"
+      ],
+      "howItWorks": [
+        "The input image (from device or URL) is loaded in the browser.",
+        "EXIF metadata is read and removed from the image.",
+        "Output is generated as a new image without EXIF and is ready for download."
+      ],
+      "privacyNote": "All EXIF removal operations are performed entirely in your browser. No files are uploaded or stored on any server, and all data is cleared after closing the page."
+    },
     {
       "id": "base64",
       "title": "Base64 converter",

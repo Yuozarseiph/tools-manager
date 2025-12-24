@@ -251,6 +251,14 @@ export const TOOLS: Tool[] = [
     category: "security",
     badgeKey: "tools.items.hash-generator.badge",
   },
+  {
+    id: "exif-remover",
+    Icon: ShieldCheck,
+    href: "/tools/exif-remover",
+    status: "active",
+    category: "security",
+    badgeKey: "tools.items.exif-remover.badge",
+  },
 
   // --- Developer Tools (Specialized users) ---
 

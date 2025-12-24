@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/docs",
     "/changelog",
     "/privacy",
+    "/download"
   ];
 
   const toolsRoutes = [
@@ -39,6 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools/image-to-pdf",
     "/tools/image-to-svg",
     "/tools/image-editor",
+    "/tools/background-remover",
 
     //Peresentation
     "/tools/html-to-pptx",
@@ -51,6 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Security
     "/tools/hash-generator",
     "/tools/password-generator",
+    "/tools/exif-remover",
 
     // System
     "/tools/ip-checker",
