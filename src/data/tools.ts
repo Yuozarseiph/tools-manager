@@ -72,6 +72,14 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.pdf-merge.badge",
   },
   {
+    id: "background-remover",
+    Icon: FileStack,
+    href: "/tools/background-remover",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.background-remover.badge",
+  },
+  {
     id: "word-to-pdf",
     Icon: FileType,
     href: "/tools/word-to-pdf",

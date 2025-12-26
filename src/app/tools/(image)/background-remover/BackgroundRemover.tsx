@@ -36,7 +36,7 @@ export default function BackgroundRemoverClient() {
         </div>
 
         <Link
-          href="/tools"
+          href="/"
           className={`shrink-0 inline-flex items-center gap-2 text-sm font-medium ${theme.textMuted} hover:${theme.accent}`}
         >
           <ArrowRight className={isFa ? "" : "rotate-180"} size={18} />

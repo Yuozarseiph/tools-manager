@@ -5,7 +5,7 @@ export const downloadContent = {
     hero: {
       title: "دانلود Tools Manager",
       lead: "نسخه مناسب سیستم‌عامل خود را انتخاب کنید. نسخه‌های Android و Linux به‌زودی اضافه می‌شوند.",
-      badge: "آخرین نسخه: 2.9.2-Beta.0",
+      badge: "آخرین نسخه: 3.0.0-Beta.0",
     },
 
     cards: {
@@ -49,7 +49,7 @@ export const downloadContent = {
     hero: {
       title: "Download Tools Manager",
       lead: "Choose the right build for your platform. Android and Linux builds are coming soon.",
-      badge: "Latest: 2.9.2-Beta.0",
+      badge: "Latest: 3.0.0-Beta.0",
     },
 
     cards: {
