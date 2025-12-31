@@ -1,5 +1,23 @@
 [
   {
+    "version": "3.0.1",
+    "date": "December 31, 2025",
+    "type": "update",
+    "changes": [
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed occasional crashes during offline processing of large images in background removal and EXIF removal tools.",
+          "Fixed real-time preview not refreshing correctly after EXIF removal until re-upload in some cases.",
+          "Fixed incorrect output when removing background from PNG images with transparency (alpha channel edge cases).",
+          "Fixed bilingual mode content resolution where locale-based hooks could pick the wrong content file as fallback.",
+          "Fixed sidebar/category label rendering for background removal and EXIF removal in bilingual mode on some routes.",
+          "Fixed minor navigation text inconsistencies for background removal and EXIF removal by relying on centralized content strings."
+        ]
+      }
+    ]
+  },
+  {
     "version": "3.0.0",
     "date": "December 24, 2025",
     "type": "update",

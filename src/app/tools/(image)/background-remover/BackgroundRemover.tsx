@@ -40,7 +40,7 @@ export default function BackgroundRemoverClient() {
           className={`shrink-0 inline-flex items-center gap-2 text-sm font-medium ${theme.textMuted} hover:${theme.accent}`}
         >
           <ArrowRight className={isFa ? "" : "rotate-180"} size={18} />
-          {isFa ? "بازگشت" : "Back"}
+          {isFa ? "بازگشت به خانه" : "Back to Home"}
         </Link>
       </div>
 
