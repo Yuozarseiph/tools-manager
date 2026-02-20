@@ -21,6 +21,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools/audio-editor",
     "/tools/audio-extractor",
 
+    // calculators
+    "/tools/bank",
+    "/tools/math-tools",
+
+    // Security
+    "/tools/security-tools",
+
     // Developer
     "/tools/base64",
     "/tools/code-visualizer",

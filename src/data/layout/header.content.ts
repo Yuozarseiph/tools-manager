@@ -8,6 +8,7 @@ export const HeaderContent = {
     changelog: "تاریخچه تغییرات",
     donate: "حمایت",
     download: "دانلود",
+    home: "خانه",
     brand: {
       nameMain: "Tools",
       nameAccent: "Manager",
@@ -20,7 +21,8 @@ export const HeaderContent = {
     about: "About",
     changelog: "Changelog",
     donate: "Donate",
-    download: "download",
+    download: "Download",
+    home: "Home",
     brand: {
       nameMain: "Tools",
       nameAccent: "Manager",

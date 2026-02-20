@@ -15,6 +15,11 @@ import {
   MonitorSmartphone,
   Wrench,
   Presentation,
+  Music,
+  Table,
+  Calculator,
+  Palette,
+  Landmark,
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { TOOLS, type Tool } from "@/data/tools";
@@ -29,9 +34,12 @@ const CATEGORIES = [
   { id: "security", icon: ShieldCheck },
   { id: "system", icon: MonitorSmartphone },
   { id: "utility", icon: Wrench },
-  { id: "excel", icon: FileText },
-  { id: "audio", icon: FileText },
+  { id: "excel", icon: Table },
+  { id: "audio", icon: Music },
   { id: "powerpoint", icon: Presentation },
+  { id: "calculator", icon: Calculator },
+  { id: "graphics", icon: Palette },
+  { id: "banking", icon: Landmark },
 ] as const;
 
 type ToolWithText = Tool & {
@@ -43,17 +51,29 @@ type ToolWithText = Tool & {
 export default function ToolsGrid() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
-  
+
   const t = toolsContent[locale];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(6);
 
-  // تزریق ترجمه به TOOLS
+  // تزریق ترجمه به TOOLS با چک کردن وجود داده
   const toolsWithText = useMemo<ToolWithText[]>(() => {
     return TOOLS.map((tool) => {
       const toolData = t.items[tool.id as keyof typeof t.items];
+
+      // ✅ چک می‌کنیم که toolData وجود داره یا نه
+      if (!toolData) {
+        console.warn(`⚠️ Tool "${tool.id}" not found in tools.content.ts`);
+        return {
+          ...tool,
+          title: tool.id, // fallback
+          description: "",
+          badge: undefined,
+        };
+      }
+
       return {
         ...tool,
         title: toolData.title,
@@ -102,7 +122,9 @@ export default function ToolsGrid() {
     <div className="pb-28 pt-2 space-y-8 md:space-y-10">
       {/* سرچ */}
       <div className="max-w-lg mx-auto relative z-20 px-4 sm:px-0">
-        <div className={`absolute right-7 top-1/2 -translate-y-1/2 ${theme.textMuted}`}>
+        <div
+          className={`absolute right-7 top-1/2 -translate-y-1/2 ${theme.textMuted}`}
+        >
           <Search size={20} />
         </div>
         <input
@@ -204,33 +226,49 @@ export default function ToolsGrid() {
                     transition-all duration-200
                     hover:-translate-y-1 hover:shadow-lg
                     p-3.5 md:p-5 lg:p-6 h-full
-                    ${tool.status === "coming-soon" ? "opacity-60 grayscale pointer-events-none" : ""}
+                    ${
+                      tool.status === "coming-soon"
+                        ? "opacity-60 grayscale pointer-events-none"
+                        : ""
+                    }
                     flex flex-col md:block
                   `}
                 >
                   <div className="flex md:block gap-3 items-center md:items-stretch">
-                    <div className={`shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center mb-0 md:mb-4 shadow-md ${theme.secondary}`}>
-                      <tool.Icon className={`w-5 h-5 md:w-6 md:h-6 ${theme.accent}`} />
+                    <div
+                      className={`shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center mb-0 md:mb-4 shadow-md ${theme.secondary}`}
+                    >
+                      <tool.Icon
+                        className={`w-5 h-5 md:w-6 md:h-6 ${theme.accent}`}
+                      />
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <h2 className={`text-sm md:text-base lg:text-lg font-bold ${theme.text} truncate md:truncate-none`}>
+                        <h2
+                          className={`text-sm md:text-base lg:text-lg font-bold ${theme.text} truncate md:truncate-none`}
+                        >
                           {tool.title}
                         </h2>
                         {tool.badge && (
-                          <span className={`text-[10px] md:text-[11px] font-bold px-2 py-0.5 md:py-1 rounded-full border ${theme.border} ${theme.bg} ${theme.textMuted} flex-shrink-0`}>
+                          <span
+                            className={`text-[10px] md:text-[11px] font-bold px-2 py-0.5 md:py-1 rounded-full border ${theme.border} ${theme.bg} ${theme.textMuted} flex-shrink-0`}
+                          >
                             {tool.badge}
                           </span>
                         )}
                       </div>
-                      <p className={`mt-1 md:mt-2 text-xs md:text-sm leading-relaxed ${theme.textMuted} line-clamp-2 md:line-clamp-3`}>
+                      <p
+                        className={`mt-1 md:mt-2 text-xs md:text-sm leading-relaxed ${theme.textMuted} line-clamp-2 md:line-clamp-3`}
+                      >
                         {tool.description}
                       </p>
                     </div>
                   </div>
 
-                  <div className={`mt-3 md:mt-4 pt-3 border-t ${theme.border} flex items-center justify-between gap-2 text-xs md:text-sm font-semibold ${theme.accent} opacity-100 translate-x-0 md:opacity-0 md:-translate-x-2 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300`}>
+                  <div
+                    className={`mt-3 md:mt-4 pt-3 border-t ${theme.border} flex items-center justify-between gap-2 text-xs md:text-sm font-semibold ${theme.accent} opacity-100 translate-x-0 md:opacity-0 md:-translate-x-2 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300`}
+                  >
                     <span className="flex items-center gap-1">
                       {t.item.cta}
                       <ArrowLeft size={14} className="mt-0.5" />
@@ -248,7 +286,9 @@ export default function ToolsGrid() {
               <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                 <Search size={32} className={theme.textMuted} />
               </div>
-              <p className={`text-lg font-medium ${theme.text}`}>{t.empty.title}</p>
+              <p className={`text-lg font-medium ${theme.text}`}>
+                {t.empty.title}
+              </p>
               <button
                 onClick={() => {
                   setActiveCategory("all");

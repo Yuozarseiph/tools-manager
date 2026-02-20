@@ -13,6 +13,9 @@ export const toolsContent = {
       excel: "اکسل",
       audio: "صدا",
       powerpoint: "پاورپوینت",
+      calculator: "ماشین‌حساب",
+      graphics: "گرافیک",
+      banking: "بانکی",
     },
     search: {
       placeholder: "جستجو در ابزارها...",
@@ -207,6 +210,24 @@ export const toolsContent = {
           "حذف اطلاعات پنهان عکس مثل موقعیت مکانی (GPS)، مدل گوشی و تاریخ ثبت قبل از انتشار. پردازش کاملاً محلی و بدون آپلود.",
         badge: "امنیت",
       },
+      "math-tools": {
+        title: "ابزارهای ریاضی",
+        description:
+          "ماشین‌حساب پیشرفته، محاسبات آماری، هندسی، جبری و تبدیل اعداد — همه در یک مکان.",
+        badge: "جدید",
+      },
+      "bank-tools": {
+        title: "ابزارهای بانکی",
+        description:
+          "محاسبه وام، سود سپرده، خرید اقساطی، پس‌انداز و مدیریت هزینه‌های شخصی.",
+        badge: "مالی",
+      },
+      "security-tools": {
+        title: "ابزارهای امنیتی",
+        description:
+          "اسکن QR Code، ساخت بارکد، رمزنگاری AES، تبدیل متن به مورس، باینری و هگز.",
+        badge: "امنیت",
+      },
     },
   } as const,
 
@@ -222,6 +243,9 @@ export const toolsContent = {
       excel: "Excel",
       audio: "Audio",
       powerpoint: "PowerPoint",
+      calculator: "Calculator",
+      graphics: "Graphics",
+      banking: "Banking",
     },
     search: {
       placeholder: "Search tools...",
@@ -416,7 +440,26 @@ export const toolsContent = {
           "Remove hidden image metadata like GPS location, device model and timestamps before sharing. Fully local processing with no uploads.",
         badge: "Security",
       },
+      "math-tools": {
+        title: "Math Tools",
+        description:
+          "Advanced calculator, statistical calculations, geometry, algebra and number conversions — all in one place.",
+        badge: "New",
+      },
+      "bank-tools": {
+        title: "Banking Tools",
+        description:
+          "Calculate loans, deposit interest, installment purchases, savings and manage personal expenses.",
+        badge: "Finance",
+      },
+      "security-tools": {
+        title: "Security Tools",
+        description:
+          "QR Code scanner, barcode generator, AES encryption, text to morse, binary and hex converters.",
+        badge: "Security",
+      },
     },
   } as const,
 };
+
 export type ToolsContent = typeof toolsContent.fa;

@@ -91,9 +91,9 @@ export default function DownloadPage() {
   const links = {
     pwa: "/",
     windowsSetup:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/Beta3.0.0/ToolsManager.Setup.3.0.0-beta.0.exe",
+      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.0.0-Release/Tools.Manager-Setup-26.0.0.exe",
     windowsPortable:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/Beta3.0.0/ToolsManager.3.0.0-beta.0-Portable.exe",
+      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.0.0-Release/Tools.Manager-Portable-26.0.0.exe",
   };
 
   return (

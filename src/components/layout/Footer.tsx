@@ -82,7 +82,7 @@ export default function Footer() {
               {content.links.privacy}
             </Link>
             <a
-              href="https://YUOZARSEIPH.TOP"
+              href="https://XenonQode.ir"
               target="_blank"
               rel="noopener noreferrer"
               className={`

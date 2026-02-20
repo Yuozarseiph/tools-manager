@@ -24,6 +24,9 @@ import {
   Sparkles,
   AudioLines,
   Presentation,
+  Calculator,
+  Palette,
+  Landmark,
 } from "lucide-react";
 
 export interface Tool {
@@ -40,7 +43,10 @@ export interface Tool {
     | "system"
     | "excel"
     | "audio"
-    | "powerpoint";
+    | "powerpoint"
+    | "calculator"
+    | "graphics"
+    | "banking";
   badgeKey?: string;
 }
 
@@ -312,5 +318,40 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "audio",
     badgeKey: "tools.items.audio-editor.badge",
+  },
+
+  // 🔥 --- NEW TOOLS: Math, Banking, Security ---
+
+  {
+    id: "math-tools",
+    Icon: Calculator,
+    href: "/tools/math-tools",
+    status: "active",
+    category: "calculator",
+    badgeKey: "tools.items.math-tools.badge",
+  },
+  {
+    id: "bank-tools",
+    Icon: Landmark,
+    href: "/tools/bank",
+    status: "active",
+    category: "banking",
+    badgeKey: "tools.items.bank-tools.badge",
+  },
+  {
+    id: "security-tools",
+    Icon: ShieldCheck,
+    href: "/tools/security-tools",
+    status: "active",
+    category: "security",
+    badgeKey: "tools.items.security-tools.badge",
+  },
+  {
+    id: "qr-gen",
+    Icon: Palette,
+    href: "/tools/qr-generator",
+    status: "active",
+    category: "graphics",
+    badgeKey: "tools.items.qr-generator.badge",
   },
 ];

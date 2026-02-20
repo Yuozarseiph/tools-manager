@@ -2,31 +2,31 @@
 
 export const footerContent = {
   fa: {
-    text: "ساخته شده با ❤️ در قلب. © 1404 - تمام حقوق محفوظ است.",
+    text: "توسعه‌یافته توسط تیم XenonQode.",
     year: "© {year} ToolsManager.",
-    madeBy: "ساخته‌شده با عشق توسط تیم YUOZARSEIPH.",
+    madeBy: "ساخته‌شده توسط تیم XenonQode.",
     links: {
       docs: "مستندات",
       contact: "تماس",
       privacy: "حریم خصوصی",
-      team: "تیم YUOZARSEIPH",
+      team: "XenonQode",
     },
     description:
-      "ToolsManager مجموعه‌ای از ابزارهای تحت وب برای کارهای روزمره توسعه‌دهندگان، تولیدکنندگان محتوا و کاربران عادی است؛ همه‌چیز به‌صورت رایگان و در مرورگر شما.",
+      "ToolsManager مجموعه‌ای از ابزارهای تحت وب است که برای انجام سریع و ساده‌ی کارهای روزمره طراحی شده‌اند و مستقیماً در مرورگر اجرا می‌شوند.",
   } as const,
 
   en: {
-    text: "Made with ❤️ in Heart. © 2025 - All rights reserved.",
+    text: "Developed by the XenonQode team.",
     year: "© {year} ToolsManager.",
-    madeBy: "Built with care by the YUOZARSEIPH team.",
+    madeBy: "Built by the XenonQode team.",
     links: {
       docs: "Docs",
       contact: "Contact",
       privacy: "Privacy",
-      team: "YUOZARSEIPH Team",
+      team: "XenonQode",
     },
     description:
-      "ToolsManager is a collection of browser-based tools for developers, content creators, and everyday users — fast, free, and privacy‑friendly.",
+      "ToolsManager is a collection of browser‑based tools designed to handle everyday tasks quickly and efficiently.",
   } as const,
 };
 

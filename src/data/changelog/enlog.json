@@ -1,5 +1,56 @@
 [
   {
+    "version": "26.0.0",
+    "date": "January 7, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added comprehensive Math Tools with advanced calculator, statistical calculations (mean, median, variance, standard deviation), geometric shape calculations (perimeter, area, radius, diameter), 3D shape calculations (volume, surface area), power and root operations, factor calculations, random number generator, prime number detection, first and second degree equation solver, logarithm calculations, decimal to fraction converter, base converter (binary, octal, hexadecimal), Fibonacci sequence generator, and factorial calculator.",
+          "Added Banking Tools suite including loan calculator with installment breakdown, deposit interest calculator with compound interest support, installment purchase calculator, savings goal planner, and personal expense and income management tracker.",
+          "Added Security Tools collection featuring QR Code scanner with camera support, barcode generator for multiple formats, AES encryption/decryption tool, one-time secure note sharing, text to Morse code converter, binary converter, hexadecimal converter, and HTML entity encoder/decoder.",
+          "Added professional QR Code Generator with advanced styling options including link, text, WiFi credentials, and email support, customizable dot styles (square, dots, rounded, classy, extra-rounded), corner styles (square, dot, extra-rounded), foreground and background color picker, quiet zone adjustment, output size control (256px-2048px), logo upload with size adjustment, and high-quality PNG/SVG export.",
+          "Added three new tool categories: 'Calculator' for mathematical tools, 'Graphics' for design and QR tools, and 'Banking' for financial calculators.",
+          "Added complete bilingual content structure for all new tools with dedicated content files (math-tools.content.ts, bank-tools.content.ts, security-tools.content.ts, qr-generator.content.ts) supporting Persian and English without hardcoded strings.",
+          "Added custom hooks (useMathToolsContent, useBankToolsContent, useSecurityToolsContent, useQrGeneratorContent) for consistent locale-based content management across all new tools.",
+          "Added QR Code styling library 'qrcode.react' to replace 'react-qr-code' for full support of dot and corner style customization.",
+          "Added new Lucide icons: Calculator, Palette, Landmark, Music, and Table for better visual representation of tool categories."
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved tools.content.ts structure by adding all new tool entries (math-tools, bank-tools, security-tools, qr-generator) with complete descriptions and badges for both Persian and English locales.",
+          "Improved tools.ts data structure by adding 4 new tool definitions with proper category assignments, icons, routes, and badge keys.",
+          "Improved ToolsGrid component by adding support for 3 new categories (calculator, graphics, banking) with appropriate icons and translations.",
+          "Improved category filtering system to handle 13 total categories: all, pdf, image, developer, security, system, utility, excel, audio, powerpoint, calculator, graphics, and banking.",
+          "Improved QR Code generation architecture by migrating from 'react-qr-code' to 'qrcode.react' for advanced customization capabilities.",
+          "Improved QR Code download functionality with proper canvas-to-PNG conversion and SVG export with embedded logo support.",
+          "Improved error handling in ToolsGrid by adding fallback mechanism for tools missing translation data with console warnings.",
+          "Improved mobile responsiveness of new tool interfaces with optimized layouts for small screens.",
+          "Improved code maintainability by separating all UI strings from components into dedicated content files following the project's bilingual architecture.",
+          "Improved type safety across all new tools with proper TypeScript interfaces and type definitions."
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed runtime TypeError in ToolsGrid caused by undefined tool data by implementing proper existence checks before accessing translation properties.",
+          "Fixed QR Code dot style and corner style not applying by replacing incompatible library with 'qrcode.react' that supports full styling options.",
+          "Fixed QR Code logo positioning and background padding in both preview and download modes.",
+          "Fixed missing category translations in both Persian and English for calculator, graphics, and banking categories.",
+          "Fixed tool badge rendering issues by ensuring all new tools have proper badge definitions in content files.",
+          "Fixed inconsistent icon usage across categories by standardizing icon imports and mappings.",
+          "Fixed QR Code download functionality that was failing due to improper canvas manipulation and blob creation.",
+          "Fixed missing Tool interface category types by adding calculator, graphics, and banking to the union type definition.",
+          "Fixed hardcoded text issues in QR Generator by moving all strings to qr-generator.content.ts with complete Persian and English support.",
+          "Fixed search functionality to properly filter new tools by title and description in both languages."
+        ]
+      }
+    ]
+  },
+  {
     "version": "3.0.1",
     "date": "December 31, 2025",
     "type": "update",
