@@ -103,7 +103,8 @@ export default function AboutPage() {
             </div>
 
             <div
-              className={`mt-8 p-6 rounded-2xl border ${theme.border} bg-white/50 dark:bg-black/20 backdrop-blur-sm`}
+              className={`mt-8 p-6 rounded-2xl border ${theme.border} 
+  ${theme.card} backdrop-blur-sm`}
             >
               <h3
                 className={`font-bold text-xl mb-2 flex items-center gap-2 ${theme.text}`}
@@ -131,15 +132,15 @@ export default function AboutPage() {
         {/* --- FAQ Section --- */}
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-              <HelpCircle size={24} />
+            <div
+              className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4 ${theme.secondary}`}
+            >
+              <HelpCircle size={24} className={theme.accent} />
             </div>
             <h2 className={`text-3xl font-black ${theme.text}`}>
               {content.faq.title}
             </h2>
-            <p className={`mt-2 ${theme.textMuted}`}>
-              {content.faq.subtitle}
-            </p>
+            <p className={`mt-2 ${theme.textMuted}`}>{content.faq.subtitle}</p>
           </div>
 
           <div className="space-y-4">

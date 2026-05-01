@@ -1,5 +1,10 @@
 // data/changelog.ts
-export type ChangelogCategory = "added" | "improved" | "fixed";
+export type ChangelogCategory =
+  | "added"
+  | "improved"
+  | "fixed"
+  | "beta"
+  | "note";
 export type ChangelogType = "release" | "update" | "fix";
 
 export type ChangelogEntry = {

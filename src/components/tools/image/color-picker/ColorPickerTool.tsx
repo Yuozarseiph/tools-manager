@@ -1,4 +1,4 @@
-// components/tools/developer/color-picker/ColorPickerTool.tsx
+// components/tools/image/color-picker/ColorPickerTool.tsx
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -16,14 +16,12 @@ import {
 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
-// @ts-ignore
-import ColorThief from "colorthief";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useColorPickerContent,
   type ColorPickerToolContent,
-} from "./color-picker.content"; // ✅ مسیر نسبی اصلاح شد
+} from "./color-picker.content";
 
 type ColorFormat = "hex" | "rgb" | "hsl";
 type DataUrl = string | null;
@@ -42,7 +40,6 @@ export default function ColorPickerTool() {
   const [magnifierPos, setMagnifierPos] = useState({ x: 0, y: 0 });
   const [showMagnifier, setShowMagnifier] = useState(false);
 
-  // URL state
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
 
@@ -56,10 +53,7 @@ export default function ColorPickerTool() {
     onDrop: useCallback(
       (acceptedFiles: File[]) => {
         if (acceptedFiles?.[0]) {
-          if (image) {
-            URL.revokeObjectURL(image);
-          }
-
+          if (image) URL.revokeObjectURL(image);
           const url = URL.createObjectURL(acceptedFiles[0]);
           setImage(url);
           setImageLoaded(false);
@@ -69,34 +63,23 @@ export default function ColorPickerTool() {
           setImageUrlInput("");
         }
       },
-      [image]
+      [image],
     ),
   });
 
   // ----- color helpers -----
   const rgbToHex = (r: number, g: number, b: number) =>
-    "#" +
-    [r, g, b]
-      .map((x) => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      })
-      .join("");
+    "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
 
   const hexToRgb = (hex: string) => {
-    const result =
-      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
-      ? `rgb(${parseInt(result[1], 16)}, ${parseInt(
-          result[2],
-          16
-        )}, ${parseInt(result[3], 16)})`
+      ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})`
       : hex;
   };
 
   const hexToHsl = (hex: string) => {
-    const result =
-      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return hex;
 
     let r = parseInt(result[1], 16) / 255;
@@ -125,9 +108,7 @@ export default function ColorPickerTool() {
       }
     }
 
-    return `hsl(${Math.round(h * 360)}, ${Math.round(
-      s * 100
-    )}%, ${Math.round(l * 100)}%)`;
+    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
   };
 
   const formatColor = (hex: string) => {
@@ -142,14 +123,42 @@ export default function ColorPickerTool() {
   };
 
   // ----- image load + palette -----
-  const handleImageLoad = useCallback(() => {
+  const extractPalette = async (img: HTMLImageElement): Promise<string[]> => {
+    try {
+      // روش قطعی برای colorthief در Next.js
+      const colorThiefModule = await import("colorthief");
+      const ColorThiefClass =
+        (colorThiefModule as any).default || colorThiefModule;
+
+      let colorThief;
+      try {
+        colorThief = new ColorThiefClass();
+      } catch {
+        // اگه constructor کار نکرد، خود module رو استفاده کن
+        colorThief = ColorThiefClass;
+      }
+
+      const paletteRGB = colorThief.getPalette
+        ? colorThief.getPalette(img, 8)
+        : colorThief(img, 8);
+
+      if (paletteRGB) {
+        return paletteRGB.map((rgb: number[]) =>
+          rgbToHex(rgb[0], rgb[1], rgb[2]),
+        );
+      }
+    } catch (e) {
+      console.warn("ColorThief failed:", e);
+    }
+    return [];
+  };
+
+  const handleImageLoad = useCallback(async () => {
     if (!imageRef.current || !canvasRef.current) return;
 
     const img = imageRef.current;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d", {
-      willReadFrequently: true,
-    });
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
     if (!ctx) return;
 
@@ -160,41 +169,31 @@ export default function ColorPickerTool() {
       ctx.drawImage(img, 0, 0);
       setImageLoaded(true);
 
-      const colorThief = new ColorThief();
-      // Using try-catch for color extraction as it might fail for some images
-      try {
-        const paletteRGB = colorThief.getPalette(img, 8);
-        if (paletteRGB) {
-            const paletteHex = paletteRGB.map((rgb: number[]) =>
-                rgbToHex(rgb[0], rgb[1], rgb[2])
-            );
-            setPalette(paletteHex);
-        }
-      } catch (e) {
-          console.warn("ColorThief failed to extract palette", e);
+      // Extract palette after image is drawn
+      const paletteHex = await extractPalette(img);
+      if (paletteHex.length > 0) {
+        setPalette(paletteHex);
       }
     } catch (e) {
-      console.error("Error drawing image to canvas:", e);
+      console.error("Error processing image:", e);
+      setImageLoaded(true);
     }
   }, []);
 
   useEffect(() => {
     const img = imageRef.current;
     if (!img || !image) return;
-
     if (img.complete) {
       handleImageLoad();
     }
   }, [image, handleImageLoad]);
 
-  // ----- pointer-based sampling (desktop + mobile) -----
+  // ----- pointer-based sampling -----
   const sampleAtClientPoint = (clientX: number, clientY: number) => {
     if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d", {
-      willReadFrequently: true,
-    });
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     const img = imageRef.current;
     const rect = img.getBoundingClientRect();
 
@@ -220,26 +219,25 @@ export default function ColorPickerTool() {
   };
 
   const handlePointerMove: React.PointerEventHandler<HTMLImageElement> = (
-    e
+    e,
   ) => {
     if (!imageLoaded) return;
     sampleAtClientPoint(e.clientX, e.clientY);
   };
 
   const handlePointerDown: React.PointerEventHandler<HTMLImageElement> = (
-    e
+    e,
   ) => {
     if (!imageLoaded) return;
     sampleAtClientPoint(e.clientX, e.clientY);
     setShowMagnifier(true);
-
     setPickedColors((prev) => {
       if (prev.includes(hoverColor)) return prev;
       return [hoverColor, ...prev].slice(0, 20);
     });
   };
 
-  const handlePointerLeave: React.PointerEventHandler<HTMLImageElement> = () => {
+  const handlePointerLeave = () => {
     setShowMagnifier(false);
   };
 
@@ -253,10 +251,8 @@ export default function ColorPickerTool() {
 
   const generateComplementary = () => {
     if (palette.length === 0) return;
-
     const baseColor = palette[0];
-    const result =
-      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(baseColor);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(baseColor);
     if (!result) return;
 
     const r = parseInt(result[1], 16);
@@ -284,7 +280,6 @@ export default function ColorPickerTool() {
     const css = palette
       .map((color, idx) => `  --color-${idx + 1}: ${color};`)
       .join("\n");
-
     const fullCss = `:root {\n${css}\n}`;
     const blob = new Blob([fullCss], { type: "text/css" });
     const url = URL.createObjectURL(blob);
@@ -296,9 +291,7 @@ export default function ColorPickerTool() {
   };
 
   const resetImage = () => {
-    if (image) {
-      URL.revokeObjectURL(image);
-    }
+    if (image) URL.revokeObjectURL(image);
     setImage(null);
     setImageLoaded(false);
     setPickedColors([]);
@@ -309,13 +302,10 @@ export default function ColorPickerTool() {
 
   useEffect(() => {
     return () => {
-      if (image) {
-        URL.revokeObjectURL(image);
-      }
+      if (image) URL.revokeObjectURL(image);
     };
   }, [image]);
 
-  // ----- load from URL (client fetch, still local processing) -----
   const handleAddFromUrl = async () => {
     const url = imageUrlInput.trim();
     if (!url) return;
@@ -323,19 +313,10 @@ export default function ColorPickerTool() {
     setIsAddingFromUrl(true);
     try {
       const res = await fetch(url, { mode: "cors" });
-      if (!res.ok) {
-        throw new Error("Failed to fetch image");
-      }
-
+      if (!res.ok) throw new Error("Failed to fetch image");
       const blob = await res.blob();
-      if (!blob.type.startsWith("image/")) {
-        throw new Error("Not an image");
-      }
-
-      if (image) {
-        URL.revokeObjectURL(image);
-      }
-
+      if (!blob.type.startsWith("image/")) throw new Error("Not an image");
+      if (image) URL.revokeObjectURL(image);
       const objectUrl = URL.createObjectURL(blob);
       setImage(objectUrl);
       setImageLoaded(false);
@@ -346,7 +327,7 @@ export default function ColorPickerTool() {
     } catch (e) {
       console.error("Error loading image from URL:", e);
       alert(
-        "Error loading image from URL. The source site may block CORS. Please download the image and upload it here."
+        "Error loading image from URL. The source site may block CORS. Please download the image and upload it here.",
       );
     } finally {
       setIsAddingFromUrl(false);
@@ -355,31 +336,6 @@ export default function ColorPickerTool() {
 
   return (
     <div className="space-y-6">
-      {/* custom scrollbar */}
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${
-            theme.text === "text-slate-900"
-              ? "rgba(100, 116, 139, 0.3)"
-              : "rgba(148, 163, 184, 0.3)"
-          };
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${
-            theme.text === "text-slate-900"
-              ? "rgba(59, 130, 246, 0.5)"
-              : "rgba(96, 165, 250, 0.5)"
-          };
-        }
-      `}</style>
-
       {/* format selector */}
       {image && (
         <motion.div
@@ -398,12 +354,11 @@ export default function ColorPickerTool() {
               <button
                 key={format}
                 onClick={() => setColorFormat(format)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all
-                  ${
-                    colorFormat === format
-                      ? `${theme.primary} shadow-md`
-                      : `${theme.bg} ${theme.text} ${theme.border} border hover:${theme.secondary}`
-                  }`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  colorFormat === format
+                    ? `${theme.primary} shadow-md`
+                    : `${theme.bg} ${theme.text} ${theme.border} border hover:${theme.secondary}`
+                }`}
               >
                 {format.toUpperCase()}
               </button>
@@ -415,15 +370,12 @@ export default function ColorPickerTool() {
       <div className="grid lg:grid-cols-3 gap-6 items-start">
         {/* image area */}
         <div
-          ref={containerRef}
           className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}
         >
           {!image ? (
             <div
               {...getRootProps()}
-              className={`text-center cursor-pointer p-10 w-full h-full flex items-center justify-center transition-all duration-200 min-h-[400px]
-                ${isDragActive ? "scale-95" : ""}
-              `}
+              className={`text-center cursor-pointer p-10 w-full h-full flex items-center justify-center transition-all duration-200 min-h-[400px] ${isDragActive ? "scale-95" : ""}`}
             >
               <input {...getInputProps()} />
               <motion.div
@@ -443,31 +395,26 @@ export default function ColorPickerTool() {
               </motion.div>
             </div>
           ) : (
-            <div
-              className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4"
-            >
+            <div className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4">
               <img
                 ref={imageRef}
                 src={image}
                 alt="Target"
-                className={`max-w-full max-h-[600px] w-auto h-auto object-contain rounded-xl select-none transition-opacity duration-300
-                  ${
-                    imageLoaded
-                      ? "opacity-100 cursor-crosshair"
-                      : "opacity-50 cursor-wait"
-                  }
-                `}
+                className={`max-w-full max-h-[600px] w-auto h-auto object-contain rounded-xl select-none transition-opacity duration-300 ${
+                  imageLoaded
+                    ? "opacity-100 cursor-crosshair"
+                    : "opacity-50 cursor-wait"
+                }`}
                 onLoad={handleImageLoad}
                 onPointerMove={handlePointerMove}
                 onPointerDown={handlePointerDown}
                 onPointerLeave={handlePointerLeave}
                 crossOrigin="anonymous"
                 draggable={false}
-                style={{ touchAction: "none" }} // important for mobile pointer events
+                style={{ touchAction: "none" }}
               />
               <canvas ref={canvasRef} className="hidden" />
 
-              {/* Magnifier */}
               {showMagnifier && imageLoaded && (
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
@@ -535,14 +482,11 @@ export default function ColorPickerTool() {
             <button
               onClick={() => copyToClipboard(hoverColor, -1)}
               disabled={!imageLoaded}
-              className={`mt-3 px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 mx-auto
-                ${
-                  copiedIndex === -1
-                    ? "bg-green-500 text-white"
-                    : `${theme.secondary} ${theme.accent}`
-                }
-                ${!imageLoaded ? "opacity-50 cursor-not-allowed" : ""}
-              `}
+              className={`mt-3 px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 mx-auto ${
+                copiedIndex === -1
+                  ? "bg-green-500 text-white"
+                  : `${theme.secondary} ${theme.accent}`
+              } ${!imageLoaded ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {copiedIndex === -1 ? <Check size={16} /> : <Copy size={16} />}
               {copiedIndex === -1
@@ -591,10 +535,7 @@ export default function ColorPickerTool() {
                       exit={{ scale: 0 }}
                       onClick={() => copyToClipboard(color, idx + 100)}
                       className="relative group h-14 rounded-xl border-2 shadow-sm transition-transform active:scale-95 hover:scale-105"
-                      style={{
-                        backgroundColor: color,
-                        borderColor: color,
-                      }}
+                      style={{ backgroundColor: color, borderColor: color }}
                       title={formatColor(color)}
                     >
                       <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/30 text-white rounded-xl transition-opacity">
@@ -631,7 +572,7 @@ export default function ColorPickerTool() {
                   {content.ui.history.clearAll}
                 </button>
               </div>
-              <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                 <AnimatePresence>
                   {pickedColors.map((color, idx) => (
                     <motion.div
@@ -644,10 +585,7 @@ export default function ColorPickerTool() {
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-lg shadow-sm border-2"
-                          style={{
-                            backgroundColor: color,
-                            borderColor: color,
-                          }}
+                          style={{ backgroundColor: color, borderColor: color }}
                         />
                         <span
                           className={`font-mono text-sm font-bold ${theme.text}`}
@@ -657,12 +595,11 @@ export default function ColorPickerTool() {
                       </div>
                       <button
                         onClick={() => copyToClipboard(color, idx)}
-                        className={`p-2 rounded-lg transition-all
-                          ${
-                            copiedIndex === idx
-                              ? "bg-green-100 dark:bg-green-900 text-green-600"
-                              : `hover:${theme.secondary} ${theme.textMuted}`
-                          }`}
+                        className={`p-2 rounded-lg transition-all ${
+                          copiedIndex === idx
+                            ? "bg-green-100 dark:bg-green-900 text-green-600"
+                            : `hover:${theme.secondary} ${theme.textMuted}`
+                        }`}
                       >
                         {copiedIndex === idx ? (
                           <Check size={16} />

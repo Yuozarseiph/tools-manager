@@ -27,6 +27,7 @@ import {
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { parseCodeToGraph } from "./utils/ast-parser";
 import { parseCSharpToGraph } from "./utils/csharp-parser";
+import { parseJavaToGraph } from "./utils/java-parser";
 import { getLayoutedElements, getTreeLayout } from "./utils/graph-layout";
 import CustomGraphNode from "./CustomGraphNode";
 
@@ -118,14 +119,46 @@ namespace ECommerce
     }
 }`;
 
+const sampleJavaCode = `package com.example;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ShoppingCart {
+    private List<Item> items;
+    
+    public ShoppingCart() {
+        items = new ArrayList<>();
+    }
+    
+    public void addItem(Item item) {
+        if (item != null) {
+            items.add(item);
+        }
+    }
+    
+    public double calculateTotal() {
+        double total = 0;
+        for (Item item : items) {
+            total += item.getPrice();
+        }
+        return total;
+    }
+    
+    public synchronized void clearCart() {
+        items.clear();
+    }
+}`;
+
 type LayoutMode = "hierarchical" | "tree";
+type Language = "js" | "csharp" | "java";
 
 export default function CodeVisualizerTool() {
   const theme = useThemeColors();
   const content: CodeVisualizerToolContent = useCodeVisualizerContent();
 
   const [code, setCode] = useState(sampleJavaScriptCode);
-  const [language, setLanguage] = useState<"js" | "csharp">("js");
+  const [language, setLanguage] = useState<Language>("js");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState({
@@ -145,7 +178,6 @@ export default function CodeVisualizerTool() {
 
   const nodeTypes = useMemo(() => ({ custom: CustomGraphNode }), []);
 
-  // تشخیص موبایل
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 768;
@@ -171,8 +203,10 @@ export default function CodeVisualizerTool() {
 
       if (language === "js") {
         result = parseCodeToGraph(code);
-      } else {
+      } else if (language === "csharp") {
         result = parseCSharpToGraph(code);
+      } else {
+        result = parseJavaToGraph(code);
       }
 
       const { nodes: rawNodes, edges: rawEdges } = result;
@@ -200,7 +234,7 @@ export default function CodeVisualizerTool() {
             rawEdges,
             undefined,
             isDark ? "dark" : "light",
-            compactMode || isMobile
+            compactMode || isMobile,
           ));
           break;
         case "hierarchical":
@@ -212,7 +246,7 @@ export default function CodeVisualizerTool() {
               theme: isDark ? "dark" : "light",
               direction: "TB",
               compactMode: compactMode || isMobile,
-            }
+            },
           ));
           break;
       }
@@ -252,9 +286,15 @@ export default function CodeVisualizerTool() {
     return () => clearTimeout(timer);
   }, [code, language, processGraph]);
 
-  const handleLanguageChange = (newLanguage: "js" | "csharp") => {
+  const handleLanguageChange = (newLanguage: Language) => {
     setLanguage(newLanguage);
-    setCode(newLanguage === "js" ? sampleJavaScriptCode : sampleCSharpCode);
+    if (newLanguage === "js") {
+      setCode(sampleJavaScriptCode);
+    } else if (newLanguage === "csharp") {
+      setCode(sampleCSharpCode);
+    } else {
+      setCode(sampleJavaCode);
+    }
     setError(null);
   };
 
@@ -268,7 +308,6 @@ export default function CodeVisualizerTool() {
     }
   };
 
-  // Listen for fullscreen change
   useEffect(() => {
     const handleFullscreenChange = () => {
       setFullscreen(!!document.fullscreenElement);
@@ -295,22 +334,41 @@ export default function CodeVisualizerTool() {
     }
   };
 
-  const subtitle =
-    language === "js"
-      ? content.ui.header.subtitleJs
-      : content.ui.header.subtitleCsharp;
+  const getSubtitle = () => {
+    if (language === "js") return content.ui.header.subtitleJs;
+    if (language === "csharp") return content.ui.header.subtitleCsharp;
+    return content.ui.header.subtitleJava;
+  };
+
+  const getPlaceholder = () => {
+    if (language === "js") return content.ui.editor.placeholderJs;
+    if (language === "csharp") return content.ui.editor.placeholderCsharp;
+    return content.ui.editor.placeholderJava;
+  };
+
+  const getModeBadge = () => {
+    if (language === "js") return content.ui.editor.modeBadgeJs;
+    if (language === "csharp") return content.ui.editor.modeBadgeCsharp;
+    return content.ui.editor.modeBadgeJava;
+  };
+
+  const getHint = () => {
+    if (language === "js") return content.ui.editor.hintJs;
+    if (language === "csharp") return content.ui.editor.hintCsharp;
+    return content.ui.editor.hintJava;
+  };
 
   const statusLabelDesktop = isProcessing
     ? content.ui.stats.statusProcessing
     : stats.nodes > 0
-    ? content.ui.stats.statusReady
-    : content.ui.stats.statusEmpty;
+      ? content.ui.stats.statusReady
+      : content.ui.stats.statusEmpty;
 
   const statusLabelMobile = isProcessing
     ? content.ui.stats.statusProcessing
     : stats.nodes > 0
-    ? `${content.ui.stats.summaryPrefix}${stats.nodes} ${content.ui.stats.summaryNodesSuffix}، ${stats.edges} ${content.ui.stats.summaryEdgesSuffix}`
-    : content.ui.stats.statusPromptMobile;
+      ? `${content.ui.stats.summaryPrefix}${stats.nodes} ${content.ui.stats.summaryNodesSuffix}، ${stats.edges} ${content.ui.stats.summaryEdgesSuffix}`
+      : content.ui.stats.statusPromptMobile;
 
   return (
     <div
@@ -320,13 +378,11 @@ export default function CodeVisualizerTool() {
           : "gap-4 md:gap-6 min-h-[calc(100vh-120px)]"
       }`}
     >
-      {/* نوار کنترل بالا */}
       <div
         className={`rounded-xl border mb-2 md:mb-4 ${theme.card} ${
           theme.border
         } ${fullscreen ? "p-2 md:p-3" : "p-3 md:p-6"}`}
       >
-        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4">
           <div className="w-full md:w-auto">
             <div className="flex justify-between items-center md:block">
@@ -344,8 +400,8 @@ export default function CodeVisualizerTool() {
                     showEditor && !showGraph
                       ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                       : !showEditor && showGraph
-                      ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                        ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                        : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                   }`}
                 >
                   {showEditor && !showGraph ? (
@@ -363,16 +419,13 @@ export default function CodeVisualizerTool() {
                 fullscreen ? "text-xs" : "text-xs md:text-sm"
               } ${theme.textMuted}`}
             >
-              {subtitle}
+              {getSubtitle()}
             </p>
           </div>
 
-          {/* Controls Container */}
           <div className="w-full md:w-auto">
             <div className="flex flex-col md:flex-row gap-2">
-              {/* Language + Layout */}
               <div className="flex flex-wrap gap-2">
-                {/* Language Selector */}
                 <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
                   <button
                     onClick={() => handleLanguageChange("js")}
@@ -394,9 +447,18 @@ export default function CodeVisualizerTool() {
                   >
                     {content.ui.languageToggle.csharp}
                   </button>
+                  <button
+                    onClick={() => handleLanguageChange("java")}
+                    className={`px-2 md:px-3 py-1.5 rounded-md transition-all text-xs md:text-sm ${
+                      language === "java"
+                        ? `${theme.card} shadow-sm ${theme.accent}`
+                        : `${theme.textMuted} hover:${theme.text}`
+                    }`}
+                  >
+                    {content.ui.languageToggle.java}
+                  </button>
                 </div>
 
-                {/* Layout Controls */}
                 {(showGraph || !isMobile) && (
                   <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <button
@@ -436,16 +498,13 @@ export default function CodeVisualizerTool() {
                 )}
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    setCode(
-                      language === "js"
-                        ? sampleJavaScriptCode
-                        : sampleCSharpCode
-                    )
-                  }
+                  onClick={() => {
+                    if (language === "js") setCode(sampleJavaScriptCode);
+                    else if (language === "csharp") setCode(sampleCSharpCode);
+                    else setCode(sampleJavaCode);
+                  }}
                   className={`p-1.5 md:p-2 rounded-lg border ${theme.border} ${theme.card} ${theme.text} text-xs md:text-sm`}
                   title={content.ui.actions.loadExample}
                 >
@@ -489,7 +548,6 @@ export default function CodeVisualizerTool() {
           </div>
         </div>
 
-        {/* Stats Bar */}
         <div
           className={`mt-3 md:mt-4 grid ${
             isMobile ? "grid-cols-2" : "grid-cols-4"
@@ -560,13 +618,11 @@ export default function CodeVisualizerTool() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div
         className={`flex flex-col lg:flex-row gap-3 md:gap-4 flex-1 ${
           fullscreen ? "" : "min-h-[500px] md:min-h-[600px]"
         }`}
       >
-        {/* Code Editor */}
         {(showEditor || !isMobile) && (
           <div
             className={`${
@@ -586,9 +642,7 @@ export default function CodeVisualizerTool() {
                 <div
                   className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded ${theme.secondary}`}
                 >
-                  {language === "js"
-                    ? content.ui.editor.modeBadgeJs
-                    : content.ui.editor.modeBadgeCsharp}
+                  {getModeBadge()}
                 </div>
                 <div className="text-xs text-gray-500">
                   {code.split("\n").length} {content.ui.editor.linesSuffix}
@@ -618,11 +672,7 @@ export default function CodeVisualizerTool() {
                 }}
                 className={`w-full h-full p-3 md:p-4 font-mono text-xs md:text-sm resize-none outline-none bg-transparent ${theme.text} leading-relaxed`}
                 spellCheck={false}
-                placeholder={
-                  language === "js"
-                    ? content.ui.editor.placeholderJs
-                    : content.ui.editor.placeholderCsharp
-                }
+                placeholder={getPlaceholder()}
                 rows={isMobile ? 10 : undefined}
               />
 
@@ -648,9 +698,7 @@ export default function CodeVisualizerTool() {
                   <span className="font-medium">
                     {content.ui.editor.hintTitle}
                   </span>{" "}
-                  {language === "js"
-                    ? content.ui.editor.hintJs
-                    : content.ui.editor.hintCsharp}
+                  {getHint()}
                 </div>
                 <div className={theme.textMuted}>
                   {isMobile
@@ -662,7 +710,6 @@ export default function CodeVisualizerTool() {
           </div>
         )}
 
-        {/* Graph Visualization */}
         {(showGraph || !isMobile) && (
           <div
             className={`${
@@ -751,7 +798,6 @@ export default function CodeVisualizerTool() {
               />
             </ReactFlow>
 
-            {/* Graph Status */}
             <div
               className={`absolute ${
                 isMobile ? "top-2 left-2" : "bottom-3 left-3"
@@ -780,7 +826,6 @@ export default function CodeVisualizerTool() {
               </div>
             </div>
 
-            {/* View Toggle Button برای موبایل */}
             {isMobile && showGraph && (
               <button
                 onClick={() => {
@@ -795,7 +840,6 @@ export default function CodeVisualizerTool() {
           </div>
         )}
 
-        {/* Mobile View Toggle Bar */}
         {isMobile && showEditor && showGraph && (
           <div className="md:hidden flex justify-center gap-4">
             <button
@@ -824,7 +868,6 @@ export default function CodeVisualizerTool() {
         )}
       </div>
 
-      {/* Tips Section - دسکتاپ */}
       {!fullscreen && !isMobile && (
         <div className={`p-4 rounded-xl border ${theme.card} ${theme.border}`}>
           <h4

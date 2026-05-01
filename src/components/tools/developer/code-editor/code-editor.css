@@ -1,0 +1,232 @@
+/* components/tools/developer/code-editor/code-editor.css */
+
+/* ============================================ */
+/* CodeMirror Editor - Base Styles              */
+/* ============================================ */
+
+.cm-editor {
+  height: 100% !important;
+  direction: ltr !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
+  font-size: 14px !important;
+}
+
+.cm-editor .cm-scroller {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
+  overflow: auto !important;
+}
+
+.cm-editor .cm-content {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
+  padding: 8px 0 !important;
+}
+
+/* ============================================ */
+/* Cursor                                       */
+/* ============================================ */
+
+.cm-editor .cm-cursor {
+  border-left-width: 2px !important;
+  animation: cm-cursor-blink 1.2s step-end infinite !important;
+}
+
+@keyframes cm-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ============================================ */
+/* Light Theme                                  */
+/* ============================================ */
+
+.cm-editor.cm-light,
+:root:not(.dark) .cm-editor,
+.cm-editor {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+:root:not(.dark) .cm-editor .cm-scroller,
+:root:not(.dark) .cm-scroller {
+  background-color: #ffffff !important;
+}
+
+/* Gutters - Light */
+:root:not(.dark) .cm-editor .cm-gutters,
+:root:not(.dark) .cm-gutters {
+  background-color: #f5f5f5 !important;
+  color: #999999 !important;
+  border-right: 1px solid #e0e0e0 !important;
+}
+
+:root:not(.dark) .cm-editor .cm-gutterElement,
+:root:not(.dark) .cm-gutterElement {
+  color: #999999 !important;
+}
+
+/* Active Line - Light */
+:root:not(.dark) .cm-editor .cm-activeLine {
+  background-color: #f0f0f0 !important;
+}
+
+:root:not(.dark) .cm-editor .cm-activeLineGutter {
+  background-color: #e8e8e8 !important;
+  color: #333333 !important;
+}
+
+/* Cursor - Light */
+:root:not(.dark) .cm-editor .cm-cursor {
+  border-left-color: #000000 !important;
+}
+
+/* Selection - Light */
+:root:not(.dark) .cm-editor .cm-selectionBackground,
+:root:not(.dark) .cm-editor.cm-focused .cm-selectionBackground,
+:root:not(.dark) .cm-editor .cm-selectionLayer .cm-selectionBackground {
+  background-color: #add6ff !important;
+}
+
+/* Selection Match - Light */
+:root:not(.dark) .cm-editor .cm-selectionMatch {
+  background-color: #d4d4d4 !important;
+}
+
+/* Matching Bracket - Light */
+:root:not(.dark) .cm-editor .cm-matchingBracket {
+  background-color: #d4d4d4 !important;
+  outline: 1px solid #888888 !important;
+}
+
+/* Fold Placeholder - Light */
+:root:not(.dark) .cm-editor .cm-foldPlaceholder {
+  background-color: #e0e0e0 !important;
+  color: #666666 !important;
+  border: none !important;
+}
+
+/* ============================================ */
+/* Dark Theme                                   */
+/* ============================================ */
+
+:root.dark .cm-editor {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+:root.dark .cm-editor .cm-scroller,
+:root.dark .cm-scroller {
+  background-color: #1e1e1e !important;
+}
+
+/* Gutters - Dark */
+:root.dark .cm-editor .cm-gutters,
+:root.dark .cm-gutters {
+  background-color: #1e1e1e !important;
+  color: #858585 !important;
+  border-right: 1px solid #333333 !important;
+}
+
+:root.dark .cm-editor .cm-gutterElement,
+:root.dark .cm-gutterElement {
+  color: #858585 !important;
+}
+
+/* Active Line - Dark */
+:root.dark .cm-editor .cm-activeLine {
+  background-color: #2a2a2a !important;
+}
+
+:root.dark .cm-editor .cm-activeLineGutter {
+  background-color: #2a2a2a !important;
+  color: #c6c6c6 !important;
+}
+
+/* Cursor - Dark */
+:root.dark .cm-editor .cm-cursor {
+  border-left-color: #ffffff !important;
+}
+
+/* Selection - Dark */
+:root.dark .cm-editor .cm-selectionBackground,
+:root.dark .cm-editor.cm-focused .cm-selectionBackground,
+:root.dark .cm-editor .cm-selectionLayer .cm-selectionBackground {
+  background-color: #264f78 !important;
+}
+
+/* Selection Match - Dark */
+:root.dark .cm-editor .cm-selectionMatch {
+  background-color: #3a3a3a !important;
+}
+
+/* Matching Bracket - Dark */
+:root.dark .cm-editor .cm-matchingBracket {
+  background-color: #3a3a3a !important;
+  outline: 1px solid #888888 !important;
+}
+
+/* Fold Placeholder - Dark */
+:root.dark .cm-editor .cm-foldPlaceholder {
+  background-color: #333333 !important;
+  color: #cccccc !important;
+  border: none !important;
+}
+
+/* ============================================ */
+/* Tooltips & Autocomplete                      */
+/* ============================================ */
+
+:root:not(.dark) .cm-editor .cm-tooltip {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+  border: 1px solid #d0d0d0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+:root.dark .cm-editor .cm-tooltip {
+  background-color: #252525 !important;
+  color: #cccccc !important;
+  border: 1px solid #404040 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Autocomplete selected item */
+:root:not(.dark) .cm-editor .cm-tooltip .cm-completionInfo {
+  background-color: #e8e8e8 !important;
+}
+
+:root.dark .cm-editor .cm-tooltip .cm-completionInfo {
+  background-color: #2a2a2a !important;
+}
+
+/* ============================================ */
+/* Scrollbar                                    */
+/* ============================================ */
+
+.cm-editor .cm-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+:root:not(.dark) .cm-editor .cm-scroller::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+:root:not(.dark) .cm-editor .cm-scroller::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 4px;
+}
+
+:root.dark .cm-editor .cm-scroller::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+:root.dark .cm-editor .cm-scroller::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}

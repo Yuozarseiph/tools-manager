@@ -1,6 +1,5 @@
 // data/changelog/changelog.content.ts
 import { useLanguage } from "@/context/LanguageContext";
-// data/changelog/changelog.content.ts
 
 export const changelogContent = {
   fa: {
@@ -21,6 +20,8 @@ export const changelogContent = {
       added: "اضافه شده",
       improved: "بهبود یافته",
       fixed: "رفع خطا",
+      beta: "نسخه آزمایشی",
+      note: "یادداشت",
     },
     note: "تغییرات بیشتر در مستندات و مخزن کد ما قابل مشاهده است.",
     contact: {
@@ -46,6 +47,8 @@ export const changelogContent = {
       added: "Added",
       improved: "Improved",
       fixed: "Fixed",
+      beta: "Beta",
+      note: "Note",
     },
     note: "More detailed changes are available in our docs and source repo.",
     contact: {
@@ -56,7 +59,6 @@ export const changelogContent = {
 };
 
 export type ChangelogContent = (typeof changelogContent)["fa"];
-
 
 export function useChangelogContent() {
   const { locale } = useLanguage();

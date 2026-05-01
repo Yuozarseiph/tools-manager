@@ -27,6 +27,8 @@ import {
   Calculator,
   Palette,
   Landmark,
+  Gamepad,
+  Code2,
 } from "lucide-react";
 
 export interface Tool {
@@ -46,13 +48,30 @@ export interface Tool {
     | "powerpoint"
     | "calculator"
     | "graphics"
-    | "banking";
+    | "banking"
+    | "game";
   badgeKey?: string;
 }
 
 export const TOOLS: Tool[] = [
+  // data/tools.ts - اضافه کردن به آرایه TOOLS
+  {
+    id: "code-editor",
+    Icon: Code2,
+    href: "/tools/code-editor",
+    status: "active",
+    category: "developer",
+    badgeKey: "tools.items.code-editor.badge",
+  },
+  {
+    id: "emerald-forge",
+    Icon: Gamepad,
+    href: "https://minigame.yuozarseiph.top/",
+    status: "active",
+    category: "game",
+    badgeKey: "tools.items.image-compressor.badge",
+  },
   // --- Most Used / Daily Tools ---
-
   {
     id: "image-compressor",
     Icon: Minimize2,
@@ -345,13 +364,5 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "security",
     badgeKey: "tools.items.security-tools.badge",
-  },
-  {
-    id: "qr-gen",
-    Icon: Palette,
-    href: "/tools/qr-generator",
-    status: "active",
-    category: "graphics",
-    badgeKey: "tools.items.qr-generator.badge",
   },
 ];

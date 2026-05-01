@@ -17,7 +17,6 @@ import emailjs from "@emailjs/browser";
 import { useLanguage } from "@/context/LanguageContext";
 import { contactContent } from "@/data/pages/contact.content";
 
-// آیکون تلگرام کاستوم
 const TelegramIcon = ({
   size,
   className,
@@ -35,8 +34,6 @@ const TelegramIcon = ({
 export default function ContactPage() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
-
-  // 🔥 انتخاب محتوا بر اساس زبان
   const content = contactContent[locale];
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -66,7 +63,7 @@ export default function ContactPage() {
         (error) => {
           console.error(error);
           setStatus("error");
-        }
+        },
       );
     }
   };
@@ -106,13 +103,13 @@ export default function ContactPage() {
 
             {/* توضیحات همکاری و گزارش */}
             <div
-              className={`p-6 rounded-2xl border ${theme.border} bg-gray-50/50 dark:bg-white/5 space-y-4`}
+              className={`p-6 rounded-2xl border ${theme.border} ${theme.card}`}
             >
               <h3 className={`font-bold text-lg ${theme.text}`}>
                 {content.helpBox.title}
               </h3>
 
-              <div className="space-y-3">
+              <div className="space-y-3 mt-4">
                 <FeatureItem
                   icon={Handshake}
                   text={content.helpBox.items.cooperation}
@@ -169,8 +166,8 @@ export default function ContactPage() {
             className={`p-8 rounded-3xl border shadow-xl ${theme.card} ${theme.border}`}
           >
             {status === "success" ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-20 animate-in fade-in zoom-in duration-500">
-                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-green-500/20">
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-20">
+                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-green-500/20">
                   <Send size={40} />
                 </div>
                 <h3 className={`text-2xl font-bold ${theme.text}`}>
@@ -179,7 +176,7 @@ export default function ContactPage() {
                 <p className={theme.textMuted}>{content.form.successBody}</p>
                 <button
                   onClick={() => setStatus("idle")}
-                  className="mt-6 text-blue-500 font-bold hover:underline"
+                  className="mt-6 text-blue-600 dark:text-blue-400 font-bold hover:underline"
                 >
                   {content.form.newMessage}
                 </button>
@@ -253,7 +250,7 @@ export default function ContactPage() {
                   className={`w-full py-4 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 ${
                     status === "sending"
                       ? "bg-zinc-400 cursor-wait"
-                      : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30"
+                      : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 shadow-lg shadow-blue-500/30"
                   }`}
                 >
                   {status === "sending" ? (
@@ -297,7 +294,7 @@ function ContactItem({ icon: Icon, title, value, theme }: any) {
 function FeatureItem({ icon: Icon, text, theme }: any) {
   return (
     <div className="flex items-center gap-3">
-      <Icon size={18} className="text-blue-500" />
+      <Icon size={18} className={theme.accent} />
       <span className={`text-sm font-medium ${theme.text}`}>{text}</span>
     </div>
   );
@@ -309,7 +306,14 @@ function SocialBtn({ icon: Icon, href, theme, label }: any) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`p-3 rounded-xl border transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:-translate-y-1 hover:shadow-lg ${theme.border} ${theme.textMuted} hover:text-blue-500`}
+      className={`
+        p-3 rounded-xl border transition-all
+        hover:-translate-y-1 hover:shadow-lg
+        ${theme.border}
+        text-slate-500 dark:text-slate-400
+        [&:hover]:text-blue-600 dark:[&:hover]:text-blue-400
+        [&:hover]:bg-slate-100 dark:[&:hover]:bg-slate-800
+      `}
       title={label}
     >
       <Icon size={24} />

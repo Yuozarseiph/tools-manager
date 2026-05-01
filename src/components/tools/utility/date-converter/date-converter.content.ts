@@ -5,20 +5,28 @@ import { useLanguage } from "@/context/LanguageContext";
 export const dateConverterContent = {
   fa: {
     id: "date-converter",
-    category: "developer",
-    title: "تبدیل تاریخ شمسی و میلادی",
+    category: "calendar",
+    title: "تبدیل تاریخ شمسی، میلادی و قمری",
     description:
-      "تاریخ را بین تقویم شمسی (جلالی) و میلادی به‌صورت دقیق تبدیل کنید.",
+      "تاریخ را بین تقویم شمسی (جلالی)، میلادی و قمری (هجری) به‌صورت دقیق تبدیل کنید.",
     features: [
-      "تبدیل سریع تاریخ شمسی به میلادی",
-      "تبدیل تاریخ میلادی به شمسی",
-      "پیشنهاد خودکار سال مناسب برای هر تقویم",
-      "نمایش پیام خطا در صورت وارد کردن تاریخ نامعتبر",
+      "تبدیل شمسی به میلادی و قمری",
+      "تبدیل میلادی به شمسی و قمری",
+      "تبدیل قمری به شمسی و میلادی",
+      "پشتیبانی از اعداد فارسی و عربی",
+      "دکمه امروز برای تقویم مبدأ",
     ],
     ui: {
-      modes: {
-        shamsiToGregorian: "تبدیل شمسی به میلادی",
-        gregorianToShamsi: "تبدیل میلادی به شمسی",
+      labels: {
+        conversionType: "نوع تبدیل",
+      },
+      conversions: {
+        shamsiToGregorian: "شمسی به میلادی",
+        gregorianToShamsi: "میلادی به شمسی",
+        shamsiToHijri: "شمسی به قمری",
+        hijriToShamsi: "قمری به شمسی",
+        gregorianToHijri: "میلادی به قمری",
+        hijriToGregorian: "قمری به میلادی",
       },
       inputs: {
         dayLabel: "روز",
@@ -26,6 +34,7 @@ export const dateConverterContent = {
         yearLabel: "سال",
         placeholderShamsiYear: "مثلاً ۱۴۰۳",
         placeholderGregorianYear: "مثلاً ۲۰۲۴",
+        placeholderHijriYear: "مثلاً ۱۴۴۵",
       },
       result: {
         title: "تاریخ تبدیل‌شده",
@@ -35,20 +44,28 @@ export const dateConverterContent = {
   },
   en: {
     id: "date-converter",
-    category: "developer",
-    title: "Shamsi / Gregorian date converter",
+    category: "calendar",
+    title: "Shamsi / Gregorian / Hijri Date Converter",
     description:
-      "Convert dates between the Jalali (Shamsi) and Gregorian calendars accurately.",
+      "Accurately convert dates between Jalali (Shamsi), Gregorian, and Hijri calendars.",
     features: [
-      "Convert a Shamsi date to Gregorian",
-      "Convert a Gregorian date to Shamsi",
-      "Year placeholders tailored to each calendar",
-      "Shows an error message for invalid dates",
+      "Convert Shamsi to Gregorian and Hijri",
+      "Convert Gregorian to Shamsi and Hijri",
+      "Convert Hijri to Shamsi and Gregorian",
+      "Supports Persian and Arabic numerals",
+      "Today button for the source calendar",
     ],
     ui: {
-      modes: {
+      labels: {
+        conversionType: "Conversion type",
+      },
+      conversions: {
         shamsiToGregorian: "Shamsi to Gregorian",
         gregorianToShamsi: "Gregorian to Shamsi",
+        shamsiToHijri: "Shamsi to Hijri",
+        hijriToShamsi: "Hijri to Shamsi",
+        gregorianToHijri: "Gregorian to Hijri",
+        hijriToGregorian: "Hijri to Gregorian",
       },
       inputs: {
         dayLabel: "Day",
@@ -56,6 +73,7 @@ export const dateConverterContent = {
         yearLabel: "Year",
         placeholderShamsiYear: "e.g. 1403",
         placeholderGregorianYear: "e.g. 2024",
+        placeholderHijriYear: "e.g. 1445",
       },
       result: {
         title: "Converted date",

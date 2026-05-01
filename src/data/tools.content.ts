@@ -29,11 +29,22 @@ export const toolsContent = {
     },
     loadMore: "نمایش ابزارهای بیشتر",
     items: {
+      "code-editor": {
+        title: "ویرایشگر کد آنلاین",
+        description:
+          "ویرایشگر کد حرفه‌ای با پشتیبانی از ۲۳ زبان برنامه‌نویسی، File System API، پوشه‌بندی، ذخیره و بازیابی پروژه.",
+        badge: "آزمایشی",
+      },
+      "emerald-forge": {
+        title: "مینی گیم سازنده زمرد",
+        description: "برای زمان هایی که حوصله نداری",
+        badge: "گیم",
+      },
       "pdf-merge": {
         title: "ادغام فایل‌های PDF",
         description:
           "چندین فایل PDF را به سادگی بکشید و رها کنید تا به یک فایل واحد تبدیل شوند.",
-        badge: "رایگان",
+        badge: "حرفه ای",
       },
       "text-to-pdf": {
         title: "متن به PDF",
@@ -259,6 +270,17 @@ export const toolsContent = {
     },
     loadMore: "Show more tools",
     items: {
+      "code-editor": {
+        title: "Online Code Editor",
+        description:
+          "Professional code editor supporting 23 programming languages, File System API, folder management, save and restore projects.",
+        badge: "Beta",
+      },
+      "emerald-forge": {
+        title: "Emerald Forge Minigame",
+        description: "For when you don't feel like doing anything else",
+        badge: "game",
+      },
       "pdf-merge": {
         title: "Merge PDF files",
         description:

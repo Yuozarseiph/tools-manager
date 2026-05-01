@@ -12,6 +12,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jalaali: any = require("jalaali-js");
+import { gregorianToHijri, hijriToGregorian } from "@tabby_ai/hijri-converter";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -19,8 +20,15 @@ import {
   useDateConverterContent,
   type DateConverterToolContent,
 } from "./date-converter.content";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
-type Mode = "shamsi-to-gregorian" | "gregorian-to-shamsi";
+type ConversionType =
+  | "shamsi-to-gregorian"
+  | "gregorian-to-shamsi"
+  | "shamsi-to-hijri"
+  | "hijri-to-shamsi"
+  | "gregorian-to-hijri"
+  | "hijri-to-gregorian";
 
 function normalizeDigits(input: string) {
   let s = String(input ?? "");
@@ -57,16 +65,20 @@ function normalizeDigits(input: string) {
   return s;
 }
 
-function clampInt(n: number, min: number, max: number) {
-  if (!Number.isFinite(n)) return min;
-  return Math.min(max, Math.max(min, Math.trunc(n)));
-}
-
 function isValidGregorianDate(y: number, m: number, d: number) {
   const dt = new Date(y, m - 1, d);
   return (
     dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d
   );
+}
+
+function isValidHijriDate(y: number, m: number, d: number) {
+  try {
+    const gDate = hijriToGregorian({ year: y, month: m, day: d });
+    return !!gDate;
+  } catch {
+    return false;
+  }
 }
 
 function pad2(s: string) {
@@ -106,7 +118,9 @@ export default function DateConverterTool() {
   const { locale } = useLanguage();
   const content: DateConverterToolContent = useDateConverterContent();
 
-  const [mode, setMode] = useState<Mode>("shamsi-to-gregorian");
+  const [conversion, setConversion] = useState<ConversionType>(
+    "shamsi-to-gregorian",
+  );
 
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
@@ -115,6 +129,10 @@ export default function DateConverterTool() {
   const [result, setResult] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
+  const [dayError, setDayError] = useState<string>("");
+  const [monthError, setMonthError] = useState<string>("");
+  const [yearError, setYearError] = useState<string>("");
+
   const uiText = useMemo(() => {
     const isFa = locale === "fa";
     return {
@@ -122,193 +140,226 @@ export default function DateConverterTool() {
       swap: isFa ? "جابجایی" : "Swap",
       copy: isFa ? "کپی" : "Copy",
       copied: isFa ? "کپی شد" : "Copied",
+      invalidDay: isFa ? "روز نامعتبر" : "Invalid day",
+      invalidMonth: isFa ? "ماه نامعتبر" : "Invalid month",
+      invalidYear: isFa ? "سال نامعتبر" : "Invalid year",
     };
   }, [locale]);
 
   const invalidText = content.ui.result.invalid;
   const isInvalid = result === invalidText;
 
-  const yearPlaceholder =
-    mode === "shamsi-to-gregorian"
-      ? content.ui.inputs.placeholderShamsiYear
-      : content.ui.inputs.placeholderGregorianYear;
+  const sourceCalendar = conversion.split("-")[0] as
+    | "shamsi"
+    | "gregorian"
+    | "hijri";
+  const targetCalendar = conversion.split("-")[2] as
+    | "shamsi"
+    | "gregorian"
+    | "hijri";
 
-  const setTodayByMode = () => {
+  const yearPlaceholder = (() => {
+    if (sourceCalendar === "shamsi")
+      return content.ui.inputs.placeholderShamsiYear;
+    if (sourceCalendar === "gregorian")
+      return content.ui.inputs.placeholderGregorianYear;
+    return content.ui.inputs.placeholderHijriYear;
+  })();
+
+  const conversionOptions = useMemo(() => {
+    const c = content.ui.conversions;
+    return [
+      { value: "shamsi-to-gregorian", label: c.shamsiToGregorian },
+      { value: "gregorian-to-shamsi", label: c.gregorianToShamsi },
+      { value: "shamsi-to-hijri", label: c.shamsiToHijri },
+      { value: "hijri-to-shamsi", label: c.hijriToShamsi },
+      { value: "gregorian-to-hijri", label: c.gregorianToHijri },
+      { value: "hijri-to-gregorian", label: c.hijriToGregorian },
+    ];
+  }, [content]);
+
+  const setTodayBySource = () => {
     const now = new Date();
-    if (mode === "gregorian-to-shamsi") {
+    if (sourceCalendar === "gregorian") {
       setYear(String(now.getFullYear()));
       setMonth(String(now.getMonth() + 1));
       setDay(String(now.getDate()));
-    } else {
+    } else if (sourceCalendar === "shamsi") {
       const j = jalaali.toJalaali(now);
       setYear(String(j.jy));
       setMonth(String(j.jm));
       setDay(String(j.jd));
+    } else {
+      const todayHijri = gregorianToHijri({
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+      });
+      setYear(String(todayHijri.year));
+      setMonth(String(todayHijri.month));
+      setDay(String(todayHijri.day));
     }
+    setDayError("");
+    setMonthError("");
+    setYearError("");
   };
 
   useEffect(() => {
-    setTodayByMode();
+    setTodayBySource();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [sourceCalendar]);
 
   useEffect(() => {
-    const y = parseInt(normalizeDigits(year), 10);
-    const m = parseInt(normalizeDigits(month), 10);
-    const d = parseInt(normalizeDigits(day), 10);
-
-    if (!y || !m || !d) {
+    if (!day || !month || !year) {
+      setDayError("");
+      setMonthError("");
+      setYearError("");
       setResult("");
       return;
     }
 
-    try {
-      if (mode === "shamsi-to-gregorian") {
-        if (!jalaali.isValidJalaaliDate(y, m, d)) {
-          setResult(invalidText);
-          return;
-        }
-        const g = jalaali.toGregorian(y, m, d);
-        setResult(
-          `${g.gy}-${String(g.gm).padStart(2, "0")}-${String(g.gd).padStart(
-            2,
-            "0"
-          )}`
-        );
-        return;
-      }
-
-      if (!isValidGregorianDate(y, m, d)) {
-        setResult(invalidText);
-        return;
-      }
-
-      const j = jalaali.toJalaali(y, m, d);
-      setResult(
-        `${j.jy}/${String(j.jm).padStart(2, "0")}/${String(j.jd).padStart(
-          2,
-          "0"
-        )}`
-      );
-    } catch {
-      setResult(invalidText);
-    }
-  }, [day, month, year, mode, invalidText]);
-
-  const handleCopy = async () => {
-    if (!result || isInvalid) return;
-
-    const ok = await safeWriteClipboard(result);
-    if (!ok) return;
-
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSwapModeKeepDate = () => {
     const y = parseInt(normalizeDigits(year), 10);
     const m = parseInt(normalizeDigits(month), 10);
     const d = parseInt(normalizeDigits(day), 10);
 
-    if (!y || !m || !d) {
-      setMode((p) =>
-        p === "shamsi-to-gregorian"
-          ? "gregorian-to-shamsi"
-          : "shamsi-to-gregorian"
-      );
+    let newDayError = "";
+    let newMonthError = "";
+    let newYearError = "";
+
+    if (d < 1 || d > 31) newDayError = uiText.invalidDay;
+    if (m < 1 || m > 12) newMonthError = uiText.invalidMonth;
+    if (y < 1000 || y > 2100) newYearError = uiText.invalidYear;
+
+    if (newDayError || newMonthError || newYearError) {
+      setDayError(newDayError);
+      setMonthError(newMonthError);
+      setYearError(newYearError);
+      setResult("");
       return;
     }
 
-    try {
-      if (mode === "shamsi-to-gregorian") {
-        if (!jalaali.isValidJalaaliDate(y, m, d)) {
-          setMode("gregorian-to-shamsi");
-          return;
-        }
-        const g = jalaali.toGregorian(y, m, d);
-        setMode("gregorian-to-shamsi");
-        setYear(String(g.gy));
-        setMonth(String(g.gm));
-        setDay(String(g.gd));
-        return;
-      }
+    let calendarValid = true;
 
-      if (!isValidGregorianDate(y, m, d)) {
-        setMode("shamsi-to-gregorian");
-        return;
-      }
-
-      const j = jalaali.toJalaali(y, m, d);
-      setMode("shamsi-to-gregorian");
-      setYear(String(j.jy));
-      setMonth(String(j.jm));
-      setDay(String(j.jd));
-    } catch {
-      setMode((p) =>
-        p === "shamsi-to-gregorian"
-          ? "gregorian-to-shamsi"
-          : "shamsi-to-gregorian"
-      );
+    if (sourceCalendar === "shamsi") {
+      calendarValid = jalaali.isValidJalaaliDate(y, m, d);
+    } else if (sourceCalendar === "gregorian") {
+      calendarValid = isValidGregorianDate(y, m, d);
+    } else {
+      calendarValid = isValidHijriDate(y, m, d);
     }
+
+    if (!calendarValid) {
+      setDayError(uiText.invalidDay);
+      setMonthError(uiText.invalidMonth);
+      setYearError(uiText.invalidYear);
+      setResult("");
+      return;
+    }
+
+    setDayError("");
+    setMonthError("");
+    setYearError("");
+
+    try {
+      let gregorianDate: Date;
+
+      if (sourceCalendar === "shamsi") {
+        const g = jalaali.toGregorian(y, m, d);
+        gregorianDate = new Date(g.gy, g.gm - 1, g.gd);
+      } else if (sourceCalendar === "gregorian") {
+        gregorianDate = new Date(y, m - 1, d);
+      } else {
+        const gDate = hijriToGregorian({ year: y, month: m, day: d });
+        gregorianDate = new Date(gDate.year, gDate.month - 1, gDate.day);
+      }
+
+      if (targetCalendar === "gregorian") {
+        setResult(
+          `${gregorianDate.getFullYear()}-${String(gregorianDate.getMonth() + 1).padStart(2, "0")}-${String(gregorianDate.getDate()).padStart(2, "0")}`,
+        );
+      } else if (targetCalendar === "shamsi") {
+        const j = jalaali.toJalaali(gregorianDate);
+        setResult(
+          `${j.jy}/${String(j.jm).padStart(2, "0")}/${String(j.jd).padStart(2, "0")}`,
+        );
+      } else {
+        const hijriDate = gregorianToHijri({
+          year: gregorianDate.getFullYear(),
+          month: gregorianDate.getMonth() + 1,
+          day: gregorianDate.getDate(),
+        });
+        setResult(
+          `${hijriDate.year}/${String(hijriDate.month).padStart(2, "0")}/${String(hijriDate.day).padStart(2, "0")}`,
+        );
+      }
+    } catch {
+      setResult(invalidText);
+    }
+  }, [day, month, year, sourceCalendar, targetCalendar, invalidText, uiText]);
+
+  const handleCopy = async () => {
+    if (!result || isInvalid) return;
+    const ok = await safeWriteClipboard(result);
+    if (!ok) return;
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const modeButtonBase =
-    "py-3 rounded-xl text-sm font-bold transition-all duration-200 w-full";
-  const activeModeClass = `${theme.primary}`;
-  const inactiveModeClass = `border ${theme.border} ${theme.text} opacity-70 hover:opacity-90`;
+  const handleSwap = () => {
+    const reverseMap: Record<ConversionType, ConversionType> = {
+      "shamsi-to-gregorian": "gregorian-to-shamsi",
+      "gregorian-to-shamsi": "shamsi-to-gregorian",
+      "shamsi-to-hijri": "hijri-to-shamsi",
+      "hijri-to-shamsi": "shamsi-to-hijri",
+      "gregorian-to-hijri": "hijri-to-gregorian",
+      "hijri-to-gregorian": "gregorian-to-hijri",
+    };
+    setConversion(reverseMap[conversion]);
+
+    if (result && !isInvalid) {
+      const parts = result.split(/[-\/]/).map((p) => parseInt(p, 10));
+      if (parts.length === 3) {
+        setYear(String(parts[0]));
+        setMonth(String(parts[1]));
+        setDay(String(parts[2]));
+      }
+    }
+  };
 
   return (
     <div
       className={`max-w-2xl mx-auto rounded-3xl border p-5 sm:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <div className="flex flex-col gap-3 mb-6 sm:mb-8">
-        <div
-          className={`grid grid-cols-2 p-1 rounded-2xl ${theme.bg} border ${theme.border}`}
+      <div className="mb-6">
+        <label className={`block text-sm font-bold mb-2 ${theme.textMuted}`}>
+          {content.ui.labels.conversionType}
+        </label>
+        <CustomDropdown
+          options={conversionOptions}
+          value={conversion}
+          onChange={(val) => setConversion(val as ConversionType)}
+          className="w-full"
+        />
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-2 mb-6">
+        <button
+          type="button"
+          onClick={setTodayBySource}
+          className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
         >
-          <button
-            type="button"
-            onClick={() => setMode("shamsi-to-gregorian")}
-            className={`${modeButtonBase} ${
-              mode === "shamsi-to-gregorian"
-                ? activeModeClass
-                : inactiveModeClass
-            }`}
-          >
-            {content.ui.modes.shamsiToGregorian}
-          </button>
+          <CalendarDays size={18} className={theme.textMuted} />
+          <span className="text-sm font-bold">{uiText.today}</span>
+        </button>
 
-          <button
-            type="button"
-            onClick={() => setMode("gregorian-to-shamsi")}
-            className={`${modeButtonBase} ${
-              mode === "gregorian-to-shamsi"
-                ? activeModeClass
-                : inactiveModeClass
-            }`}
-          >
-            {content.ui.modes.gregorianToShamsi}
-          </button>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-2">
-          <button
-            type="button"
-            onClick={setTodayByMode}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
-          >
-            <CalendarDays size={18} className={theme.textMuted} />
-            <span className="text-sm font-bold">{uiText.today}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleSwapModeKeepDate}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
-          >
-            <ArrowLeftRight size={18} className={theme.textMuted} />
-            <span className="text-sm font-bold">{uiText.swap}</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleSwap}
+          className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
+        >
+          <ArrowLeftRight size={18} className={theme.textMuted} />
+          <span className="text-sm font-bold">{uiText.swap}</span>
+        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6">
@@ -319,6 +370,7 @@ export default function DateConverterTool() {
           placeholder="01"
           theme={theme}
           maxLen={2}
+          error={dayError}
           onBlurPad2
         />
         <InputGroup
@@ -328,6 +380,7 @@ export default function DateConverterTool() {
           placeholder="01"
           theme={theme}
           maxLen={2}
+          error={monthError}
           onBlurPad2
         />
         <InputGroup
@@ -337,6 +390,7 @@ export default function DateConverterTool() {
           placeholder={yearPlaceholder}
           theme={theme}
           maxLen={4}
+          error={yearError}
         />
       </div>
 
@@ -398,6 +452,7 @@ function InputGroup({
   placeholder,
   theme,
   maxLen,
+  error,
   onBlurPad2,
 }: {
   label: string;
@@ -406,34 +461,47 @@ function InputGroup({
   placeholder: string;
   theme: any;
   maxLen: number;
+  error?: string;
   onBlurPad2?: boolean;
 }) {
-  return (
-    <div className="space-y-2">
-      <label className={`text-xs font-bold ${theme.textMuted}`}>{label}</label>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    let clean = normalizeDigits(raw);
+    clean = clean.slice(0, maxLen);
+    setValue(clean);
+  };
 
+  const handleBlur = () => {
+    if (!value) return;
+    let num = parseInt(value, 10);
+    if (isNaN(num)) return;
+
+    let newVal = String(num);
+    if (onBlurPad2) {
+      newVal = newVal.padStart(2, "0");
+    }
+    setValue(newVal);
+  };
+
+  return (
+    <div className="space-y-1">
+      <label className={`text-xs font-bold ${theme.textMuted}`}>{label}</label>
       <input
         inputMode="numeric"
         type="text"
         value={value}
-        onChange={(e) => {
-          const raw = e.target.value;
-          const clean = normalizeDigits(raw);
-          setValue(clean.slice(0, maxLen));
-        }}
-        onBlur={() => {
-          if (!onBlurPad2) return;
-          setValue((prev) => pad2(prev));
-        }}
+        onChange={handleChange}
+        onBlur={handleBlur}
         placeholder={placeholder}
         className={[
           "w-full p-4 text-center text-xl font-bold rounded-2xl border outline-none focus:ring-2 transition-colors",
           theme.bg,
-          theme.border,
+          error ? "border-red-500 focus:ring-red-500" : theme.border,
           theme.text,
           theme.ring,
         ].join(" ")}
       />
+      {error && <p className="text-xs text-red-500 mt-1 text-right">{error}</p>}
     </div>
   );
 }

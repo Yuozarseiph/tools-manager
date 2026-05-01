@@ -1,5 +1,222 @@
 [
   {
+    "version": "26.2.1",
+    "date": "May 1, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Improved mobile code editor UX: sidebar close button moved inside sidebar header to prevent overlap with action buttons",
+          "Improved mobile toolbar: added compact dropdown menu for secondary actions to fit all controls on small screens",
+          "Improved mobile file management: sidebar auto-closes after selecting a file or creating/renaming",
+          "Improved responsive design: Pro Mode now available for all devices with proper UI adaptation",
+          "Improved sidebar behavior: automatically opens when creating new files or renaming on mobile",
+          "Improved desktop experience: tabs only visible in Pro Mode to reduce clutter",
+          "Improved changelog page design: added visual timeline, color-coded category indicators, and type badges for better readability",
+          "Added beta and note categories support in changelog with dedicated icons and styling"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed mobile sidebar close button overlapping with file creation button (+) on mobile devices",
+          "Fixed keyboard dismiss on mobile when creating or renaming files with sidebar open",
+          "Fixed desktop sidebar disappearance issue when switching between mobile and desktop views",
+          "Fixed toolbar layout overflow on mobile by introducing collapsible action menu",
+          "Fixed ColorThief import compatibility in Next.js build for Color Picker tool"
+        ]
+      },
+      {
+        "category": "beta",
+        "items": [
+          "Code Editor Pro Mode is now available on mobile - users can toggle advanced features with syntax highlighting and multi-tab support",
+          "Pro Mode on mobile may have reduced performance with large files due to memory constraints"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.2.0",
+    "date": "May 1, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added Online Code Editor (BETA) with support for 23 programming languages",
+          "Added File System API support for direct folder opening, editing, and saving to disk",
+          "Added Simple Mode (default) and Pro Mode (CodeMirror 6) with toggle button",
+          "Added file explorer with folder management, drag & drop file organization",
+          "Added import file functionality (up to 5MB) and export project as JSON",
+          "Added download folder contents as markdown document",
+          "Added keyboard shortcuts: Ctrl+S (save), Ctrl+B (toggle sidebar), F11 (fullscreen)",
+          "Added mobile-optimized Simple Editor with touch support",
+          "Added 23 language syntax highlighting: JS, TS, JSX, TSX, HTML, CSS, SCSS, JSON, MD, Python, PHP, Java, C++, C, C#, Go, Rust, SQL, XML, YAML, Shell, Dockerfile, Plain Text"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved dark mode consistency across all components using standard Tailwind dark: classes",
+          "Improved code editor UI with separate Simple and Pro modes for better performance on mobile",
+          "Improved file management with recursive folder operations and auto-expand",
+          "Improved error handling with graceful fallback to Simple Editor when Pro Mode fails to load",
+          "Improved mobile experience with optimized sidebar and editor layouts"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed QuotaExceededError when opening large folders by not storing disk files in localStorage",
+          "Fixed hydration errors in Toolbar by using useEffect for mounted state",
+          "Fixed ColorThief import compatibility issue in Next.js build",
+          "Fixed Monaco Editor loading failure by replacing with CodeMirror 6 for Pro Mode",
+          "Fixed auto-save not saving to localStorage correctly after content changes"
+        ]
+      },
+      {
+        "category": "beta",
+        "items": [
+          "Code Editor is currently in BETA - Pro Mode language imports are lazy-loaded for performance",
+          "File System API requires Chrome or Edge browser for full functionality",
+          "Some language syntax highlighting may have limited support in Pro Mode"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.1.3",
+    "date": "April 25, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "fixed",
+        "items": [
+          "Completely fixed hover and background color issues in dark mode across all components",
+          "Replaced theme.mode with document.documentElement.classList.contains('dark') in all components for accurate theme detection",
+          "Rewritten and synchronized all hover styles in ToolsGrid, LayoutControls, PinnedSection, HelpModal, and CustomDropdown using standard dark: classes"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved code structure by extracting HelpModal content into a separate HelpContent.ts file for easier maintenance and better readability"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.1.2",
+    "date": "April 22, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added Delete Mode for pinned tools with a dedicated toggle button to prevent accidental removal",
+          "Added interactive Help Modal for Pinned section, Export, and Import with a '?' icon",
+          "Added category dropdown with built-in search functionality for desktop",
+          "Added Bottom Sheet for category selection on mobile with integrated search"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved pin removal UX: activate Delete Mode via trash icon with clear text hint",
+          "Improved help accessibility: '?' icon consistently placed in Export, Import, and Pinned sections",
+          "Improved mobile UI: replaced horizontal category scroll with a searchable Bottom Sheet for easier selection",
+          "Improved CustomDropdown component with search support and full theme compatibility"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed hover and background color inconsistencies across all themes (light/dark)",
+          "Fixed non-scrolling category bar on mobile by completely replacing the mechanism",
+          "Fixed Rules of Hooks violation in BottomSheet component",
+          "Fixed 'locale is not defined' error in PinnedCard component"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.1.1",
+    "date": "April 4, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added advanced layout system with 6 modes for tools (compact list, detailed list, 1-4 column grid) and 5 modes for pinned items (horizontal scroll, small/medium/large grid, ultra compact)",
+          "Added independent layout controls for tools and pinned items on homepage",
+          "Added layout settings persistence in localStorage",
+          "Added Bottom Sheet menu for layout selection on mobile",
+          "Added text hint for how to remove pinned items on mobile"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved mobile UX with separate layout for search bar and layout controls",
+          "Improved support for all light and dark themes (9 themes) in pinned and layout sections",
+          "Improved category display with horizontal scroll only on mobile",
+          "Improved layout option naming to prevent user confusion",
+          "Improved performance with memo and useCallback to prevent unnecessary re-renders"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed layout menus not opening on mobile (replaced hover with click)",
+          "Fixed menus overflowing screen on mobile by using Bottom Sheet",
+          "Fixed hover and shadow color inconsistencies across different themes",
+          "Fixed 'locale is not defined' error in PinnedCard component"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.1.0",
+    "date": "21 April 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added Java language support to Code Visualizer tool with analysis of classes, interfaces, enums, annotations, methods, and control structures.",
+          "Added dedicated icons for Java-specific types including package, import, annotation, and synchronized in the visualization graph.",
+          "Added Hijri (Islamic) calendar to Date Converter tool with support for 6 conversion modes: Shamsi↔Gregorian, Shamsi↔Hijri, Gregorian↔Hijri.",
+          "Added pinning capability for tools on the homepage with localStorage persistence for quick access to frequently used tools.",
+          "Added a dedicated pinned tools bar above the tools grid displaying icons and names of pinned tools.",
+          "Added Export/Import system for pinned settings with three methods: JSON file download, text copy, and QR Code display for easy transfer between devices.",
+          "Added qr-code-styling library for generating stylish and customizable QR Codes in settings export."
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Improved graph display in Code Visualizer with additional Java metadata (modifiers, access level, parameters, and return types).",
+          "Improved input validation in Date Converter with numeric constraints (day 1-31, month 1-12, year 1000-2100) and red error messages below invalid fields.",
+          "Improved homepage user experience with automatic sorting (pinned tools appear first).",
+          "Improved mobile responsive design for pinned bar with 3-column grid and horizontal scroll capability.",
+          "Improved error handling in ToolsGrid with fallback mechanism for tools missing translation data.",
+          "Improved java-parser code structure by fixing the statement variable issue and optimizing nested block processing."
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed 'statement is not defined' error in Java parser that caused Code Visualizer to crash when analyzing conditional blocks and loops.",
+          "Fixed incorrect Hijri date recognition in Date Converter by replacing hijri-date library with moment-hijri.",
+          "Fixed duplicate key error in pinned tools list by using Set to remove duplicate items.",
+          "Fixed validation errors not displaying correctly in day and month fields of Date Converter.",
+          "Fixed Java icon rendering inconsistencies in light and dark themes."
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.0.0",
     "date": "January 7, 2026",
     "type": "release",
