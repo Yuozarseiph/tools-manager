@@ -438,6 +438,10 @@ export function useFileSystem() {
   }, []);
 
   const updateContent = useCallback((fileId: string, content: string) => {
+    setHasUnsavedChanges(true);
+    setTabs((prev) =>
+      prev.map((t) => (t.fileId === fileId ? { ...t, isDirty: true } : t)),
+    );
     setFiles((prev) => {
       const updated = prev.map((f) =>
         f.id === fileId
@@ -451,13 +455,13 @@ export function useFileSystem() {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
         }
         setHasUnsavedChanges(false);
+        setTabs((prev2) =>
+          prev2.map((t) => (t.fileId === fileId ? { ...t, isDirty: false } : t)),
+        );
         window.dispatchEvent(new CustomEvent("files-saved"));
       }, AUTO_SAVE_DELAY);
       return updated;
     });
-    setTabs((prev) =>
-      prev.map((t) => (t.fileId === fileId ? { ...t, isDirty: false } : t)),
-    );
   }, []);
 
   const openTab = useCallback(

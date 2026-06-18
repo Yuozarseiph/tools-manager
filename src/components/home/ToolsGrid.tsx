@@ -28,7 +28,9 @@ import {
   Upload,
   Download,
   HelpCircle,
+  Gamepad2,
   ChevronDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { TOOLS } from "@/data/tools";
@@ -45,8 +47,6 @@ import {
   ToolWithText,
 } from "./types";
 import HelpModal from "./HelpModal";
-import CustomDropdown from "../ui/CustomDropdown";
-import { createPortal } from "react-dom";
 
 const CATEGORIES = [
   { id: "all", icon: Grid },
@@ -54,14 +54,15 @@ const CATEGORIES = [
   { id: "image", icon: ImageIcon },
   { id: "developer", icon: Code2 },
   { id: "security", icon: ShieldCheck },
-  { id: "system", icon: MonitorSmartphone },
   { id: "utility", icon: Wrench },
   { id: "excel", icon: Table },
   { id: "audio", icon: Music },
   { id: "powerpoint", icon: Presentation },
   { id: "calculator", icon: Calculator },
-  { id: "graphics", icon: Palette },
   { id: "banking", icon: Landmark },
+  { id: "system", icon: MonitorSmartphone },
+  { id: "graphics", icon: Palette },
+  { id: "game", icon: Gamepad2 },
 ] as const;
 
 type ExportData = {
@@ -125,7 +126,7 @@ const ToolCard = memo(
       >
         <Link
           href={tool.href}
-          className={`relative group h-full flex rounded-xl sm:rounded-2xl border transition-all duration-150 hover:-translate-y-0.5 ${theme.card} ${theme.border} ${isList ? "p-2.5 sm:p-3" : "p-3 sm:p-3.5"} ${tool.status === "coming-soon" ? "opacity-60 grayscale pointer-events-none" : ""} ${isList ? "flex-row items-start gap-3" : "flex-col"}`}
+          className={`relative group h-full flex overflow-hidden rounded-xl sm:rounded-2xl border transition-all duration-150 hover:-translate-y-0.5 ${theme.card} ${theme.border} ${isList ? "p-2.5 sm:p-3" : "p-3 sm:p-3.5"} ${tool.status === "coming-soon" ? "opacity-60 grayscale pointer-events-none" : ""} ${isList ? "flex-row items-start gap-3" : "flex-col"}`}
         >
           <button
             onClick={(e) => onTogglePin(tool.id, e)}
@@ -158,7 +159,7 @@ const ToolCard = memo(
                 </h2>
                 {tool.badge && (
                   <span
-                    className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border flex-shrink-0 ${theme.border} ${theme.secondary}`}
+                    className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${theme.border} ${theme.secondary}`}
                   >
                     {tool.badge}
                   </span>
@@ -166,7 +167,7 @@ const ToolCard = memo(
               </div>
               {((isList && !isCompact) || !isList) && (
                 <p
-                  className={`${isList ? "mt-0.5" : "mt-1.5 flex-1"} text-[10px] sm:text-xs leading-relaxed ${theme.textMuted} ${isList ? "" : "line-clamp-2 text-center md:text-start"}`}
+                  className={`${isList ? "mt-0.5" : "mt-1.5"} text-[10px] sm:text-xs leading-relaxed ${theme.textMuted} ${isList ? "" : "line-clamp-2 text-center md:text-start"}`}
                 >
                   {tool.description}
                 </p>
@@ -195,127 +196,6 @@ const ToolCard = memo(
 );
 ToolCard.displayName = "ToolCard";
 
-const BottomSheet = ({
-  isOpen,
-  onClose,
-  title,
-  options,
-  selectedValue,
-  onSelect,
-  theme,
-  locale,
-  isRTL,
-  searchable = false,
-  searchPlaceholder = "جستجو...",
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  options: { value: string; label: string; icon?: any }[];
-  selectedValue: string;
-  onSelect: (value: string) => void;
-  theme: any;
-  locale: string;
-  isRTL: boolean;
-  searchable?: boolean;
-  searchPlaceholder?: string;
-}) => {
-  const [mounted, setMounted] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery.trim()) return options;
-    const q = searchQuery.toLowerCase().trim();
-    return options.filter((o) => o.label.toLowerCase().includes(q));
-  }, [options, searchQuery]);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) return null;
-  return createPortal(
-    <div
-      className={`fixed inset-0 z-[100] transition-all duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
-    >
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        className={`absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-hidden rounded-t-2xl border-t shadow-2xl transition-transform duration-300 ${theme.card} ${theme.border} ${isOpen ? "translate-y-0" : "translate-y-full"}`}
-      >
-        <div
-          className={`flex items-center justify-between p-4 border-b ${theme.border}`}
-        >
-          <h3 className={`text-base font-bold ${theme.text}`}>{title}</h3>
-          <button
-            onClick={onClose}
-            className={`p-2 rounded-lg ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
-          >
-            <X size={18} />
-          </button>
-        </div>
-        {searchable && (
-          <div className={`p-3 border-b ${theme.border}`}>
-            <div className="relative">
-              <Search
-                size={16}
-                className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme.textMuted}`}
-              />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                className={`w-full pl-10 pr-8 py-2.5 text-sm rounded-lg border ${theme.border} ${theme.bg} ${theme.text} outline-none focus:ring-1 ${theme.ring}`}
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-        <div className="overflow-y-auto max-h-[calc(70vh-64px)] p-2">
-          <div className="space-y-1">
-            {filteredOptions.map((option) => {
-              const Icon = option.icon;
-              const isActive = selectedValue === option.value;
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => {
-                    onSelect(option.value);
-                    onClose();
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm transition-all ${isActive ? `${theme.secondary} ${theme.accent} font-bold` : `${theme.text} hover:bg-gray-100 dark:hover:bg-white/10`}`}
-                >
-                  {Icon && (
-                    <Icon
-                      size={18}
-                      className={isActive ? theme.accent : theme.textMuted}
-                    />
-                  )}
-                  <span>{option.label}</span>
-                  {isActive && (
-                    <span
-                      className={`${isRTL ? "mr-auto" : "ml-auto"} text-xs ${theme.accent}`}
-                    >
-                      ✓
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>,
-    document.body,
-  );
-};
 
 export default function ToolsGrid() {
   const theme = useThemeColors();
@@ -323,7 +203,7 @@ export default function ToolsGrid() {
   const content = toolsContent[locale];
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [visibleCount, setVisibleCount] = useState(9);
+  const [visibleCount, setVisibleCount] = useState(18);
   const [pinnedTools, setPinnedTools] = useState<string[]>([]);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -332,11 +212,22 @@ export default function ToolsGrid() {
   const [importText, setImportText] = useState("");
   const [layoutSettings, setLayoutSettings] =
     useState<LayoutSettings>(DEFAULT_LAYOUT);
-  const [isMobile, setIsMobile] = useState(false);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [showImportHelp, setShowImportHelp] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [showCategorySheet, setShowCategorySheet] = useState(false);
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showCategoryDropdown) return;
+    const handler = (e: MouseEvent) => {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(e.target as Node)) {
+        setShowCategoryDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showCategoryDropdown]);
 
   const uiText = useMemo(() => {
     const isFa = locale === "fa";
@@ -357,13 +248,6 @@ export default function ToolsGrid() {
       invalidJson: isFa ? "فرمت JSON نامعتبر است" : "Invalid JSON format",
     };
   }, [locale]);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   useEffect(() => {
     try {
@@ -582,61 +466,25 @@ export default function ToolsGrid() {
         uiText={uiText}
         locale={locale}
       />
+      {/* ─── Search + Layout controls ─── */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
-        <div
-          className={`hidden sm:flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
-        >
+        <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
           <div className="flex-1 relative">
-            <div
-              className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 ${theme.textMuted}`}
-            >
+            <div className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 ${theme.textMuted} pointer-events-none`}>
               <Search size={15} />
             </div>
             <input
               type="text"
               placeholder={content.search.placeholder}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none ${theme.bg} ${theme.text} ${theme.border}`}
+              onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(18); }}
+              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-colors ${theme.bg} ${theme.text} ${theme.border}`}
               dir={isRTL ? "rtl" : "ltr"}
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 p-1`}
-              >
-                <X size={14} className={theme.textMuted} />
-              </button>
-            )}
-          </div>
-          <LayoutControls
-            toolsLayout={layoutSettings.toolsLayout}
-            pinnedLayout={layoutSettings.pinnedLayout}
-            onToolsLayoutChange={handleToolsLayoutChange}
-            onPinnedLayoutChange={handlePinnedLayoutChange}
-            theme={theme}
-            locale={locale}
-          />
-        </div>
-        <div className="sm:hidden space-y-2">
-          <div className="relative">
-            <div
-              className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 ${theme.textMuted}`}
-            >
-              <Search size={15} />
-            </div>
-            <input
-              type="text"
-              placeholder={content.search.placeholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none ${theme.bg} ${theme.text} ${theme.border}`}
-              dir={isRTL ? "rtl" : "ltr"}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 p-1`}
+                className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
               >
                 <X size={14} className={theme.textMuted} />
               </button>
@@ -652,67 +500,77 @@ export default function ToolsGrid() {
           />
         </div>
       </div>
-      <div className="px-3 sm:px-4 md:px-0 max-w-7xl mx-auto">
-        {isMobile ? (
-          <>
-            <button
-              onClick={() => setShowCategorySheet(true)}
-              className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${theme.card} ${theme.border} ${theme.text} hover:shadow-md`}
-            >
-              <span className="flex items-center gap-2">
-                <Grid size={16} className={theme.accent} />
-                <span>
-                  {activeCategory === "all"
-                    ? content.categories.all
-                    : CATEGORIES.find((c) => c.id === activeCategory)?.id
-                      ? content.categories[
-                          activeCategory as keyof typeof content.categories
-                        ]
-                      : content.categories.all}
+
+      {/* ─── Category filter dropdown ─── */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
+        <div
+          ref={categoryDropdownRef}
+          className={`relative inline-block ${isRTL ? "text-right" : "text-left"}`}
+        >
+          {/* Trigger button */}
+          {(() => {
+            const activeCat = CATEGORIES.find((c) => c.id === activeCategory)!;
+            const ActiveIcon = activeCat.icon;
+            const activeLabel = content.categories[activeCategory as keyof typeof content.categories];
+            const toolCount = filteredTools.length;
+            return (
+              <button
+                onClick={() => setShowCategoryDropdown((v) => !v)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-medium transition-all duration-150 select-none ${theme.card} ${theme.border} ${theme.text} hover:border-blue-400`}
+              >
+                <SlidersHorizontal size={14} className={theme.accent} />
+                <ActiveIcon size={14} className={theme.accent} />
+                <span className="min-w-[60px]">{activeLabel}</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full ${theme.secondary} ${theme.textMuted}`}>
+                  {toolCount}
                 </span>
-              </span>
-              <ChevronDown size={16} className={theme.textMuted} />
-            </button>
-            <BottomSheet
-              isOpen={showCategorySheet}
-              onClose={() => setShowCategorySheet(false)}
-              title={locale === "fa" ? "انتخاب دسته‌بندی" : "Select Category"}
-              options={CATEGORIES.map((cat) => ({
-                value: cat.id,
-                label:
-                  content.categories[cat.id as keyof typeof content.categories],
-                icon: cat.icon,
-              }))}
-              selectedValue={activeCategory}
-              onSelect={(val) => {
-                setActiveCategory(val);
-                setShowCategorySheet(false);
-              }}
-              theme={theme}
-              locale={locale}
-              isRTL={isRTL}
-              searchable
-              searchPlaceholder={
-                locale === "fa" ? "جستجوی دسته‌بندی..." : "Search category..."
-              }
-            />
-          </>
-        ) : (
-          <div className="relative w-64">
-            <CustomDropdown
-              options={CATEGORIES.map((cat) => ({
-                value: cat.id,
-                label:
-                  content.categories[cat.id as keyof typeof content.categories],
-              }))}
-              value={activeCategory}
-              onChange={setActiveCategory}
-              placeholder={content.categories.all}
-              searchable
-              searchPlaceholder={locale === "fa" ? "جستجو..." : "Search..."}
-            />
-          </div>
-        )}
+                <ChevronDown
+                  size={14}
+                  className={`${theme.textMuted} transition-transform duration-200 ${showCategoryDropdown ? "rotate-180" : ""}`}
+                />
+              </button>
+            );
+          })()}
+
+          {/* Dropdown panel */}
+          {showCategoryDropdown && (
+            <div
+              className={`absolute top-full mt-2 z-50 p-2 rounded-2xl border shadow-2xl shadow-black/10 dark:shadow-black/40 ${theme.card} ${theme.border} w-72 sm:w-80 ${isRTL ? "right-0" : "left-0"}`}
+            >
+              <div className="grid grid-cols-3 gap-1">
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeCategory === cat.id;
+                  const Icon = cat.icon;
+                  const label = content.categories[cat.id as keyof typeof content.categories];
+                  const count = cat.id === "all"
+                    ? TOOLS.length
+                    : TOOLS.filter((t) => t.category === cat.id).length;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        setActiveCategory(cat.id);
+                        setVisibleCount(18);
+                        setShowCategoryDropdown(false);
+                      }}
+                      className={`flex flex-col items-center gap-1 p-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
+                        isActive
+                          ? "bg-blue-600 text-white shadow-sm"
+                          : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10 hover:text-blue-500`
+                      }`}
+                    >
+                      <Icon size={18} className={isActive ? "text-white" : ""} />
+                      <span className="text-center leading-tight">{label}</span>
+                      <span className={`text-[10px] ${isActive ? "text-blue-100" : theme.textMuted}`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className={`grid ${gridClass} px-3 sm:px-4 md:px-0`}>
         <AnimatePresence mode="popLayout">

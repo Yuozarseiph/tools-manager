@@ -78,8 +78,8 @@ export default function SimpleEditor({
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span>{file.content.split("\n").length} lines</span>
-          <span>{file.content.length} chars</span>
+          <span>{file.content.split("\n").length} {isFa ? "خط" : "lines"}</span>
+          <span>{file.content.length} {isFa ? "کاراکتر" : "chars"}</span>
         </div>
       </div>
 

@@ -271,7 +271,7 @@ export default function EditorPanel({
         viewRef.current = null;
       }
     };
-  }, [file?.id, isReady]);
+  }, [file?.id, isReady, isDark]);
 
   if (!isReady) {
     return (

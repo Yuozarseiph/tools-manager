@@ -10,8 +10,6 @@ import {
 } from "react";
 import {
   Upload,
-  FileCode2,
-  Download,
   AlertCircle,
   FileText,
   Palette,
@@ -19,15 +17,6 @@ import {
   Sparkles,
   Image as ImageIcon,
   FileDown,
-  Layout,
-  Type,
-  Maximize,
-  ArrowUpDown,
-  Film,
-  Table2,
-  List,
-  Heading,
-  RefreshCw,
 } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -42,7 +31,6 @@ import {
   type SlideModel,
   type Block,
   type AspectRatio,
-  type CssSubset,
   type TextRun,
 } from "./HtmlParser";
 import CustomDropdown from "@/components/ui/CustomDropdown";
@@ -876,7 +864,7 @@ export default function HtmlToPptxTool() {
               value={fontFamily}
               onChange={setFontFamily}
               searchable={true}
-              searchPlaceholder="جستجوی فونت..."
+              searchPlaceholder={content.ui.labels.fontSearchPlaceholder}
             />
           </div>
           <div>
@@ -936,7 +924,7 @@ export default function HtmlToPptxTool() {
         >
           <div className="flex items-center gap-2">
             <Palette className="w-4 h-4" />
-            <span className="text-xs">رنگ اصلی:</span>
+            <span className="text-xs">{content.ui.labels.primaryColor}</span>
             <input
               type="color"
               value={
@@ -958,7 +946,7 @@ export default function HtmlToPptxTool() {
           </div>
           <div className="flex items-center gap-2">
             <Palette className="w-4 h-4" />
-            <span className="text-xs">رنگ تأکید:</span>
+            <span className="text-xs">{content.ui.labels.accentColor}</span>
             <input
               type="color"
               value={
@@ -1018,7 +1006,7 @@ export default function HtmlToPptxTool() {
               value={footerText}
               onChange={(e) => setFooterText(e.target.value)}
               className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-blue-500`}
-              placeholder="متن پاورقی دلخواه..."
+              placeholder={content.ui.labels.footerPlaceholder}
             />
           </div>
         </div>
@@ -1069,32 +1057,32 @@ export default function HtmlToPptxTool() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               {[
                 {
-                  label: "اسلاید",
+                  label: content.ui.previewStats.slides,
                   value: previewInfo.totalSlides,
                   color: "text-blue-600",
                 },
                 {
-                  label: "عنوان",
+                  label: content.ui.previewStats.headings,
                   value: previewInfo.headings,
                   color: "text-purple-600",
                 },
                 {
-                  label: "پاراگراف",
+                  label: content.ui.previewStats.paragraphs,
                   value: previewInfo.paragraphs,
                   color: "text-green-600",
                 },
                 {
-                  label: "تصویر",
+                  label: content.ui.previewStats.images,
                   value: previewInfo.images,
                   color: "text-orange-600",
                 },
                 {
-                  label: "جدول",
+                  label: content.ui.previewStats.tables,
                   value: previewInfo.tables,
                   color: "text-teal-600",
                 },
                 {
-                  label: "لیست",
+                  label: content.ui.previewStats.lists,
                   value: previewInfo.lists,
                   color: "text-pink-600",
                 },

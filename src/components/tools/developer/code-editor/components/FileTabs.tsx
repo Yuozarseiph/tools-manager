@@ -18,7 +18,6 @@ export default function FileTabs({
   activeFileId,
   onTabClick,
   onTabClose,
-  theme,
 }: FileTabsProps) {
   if (tabs.length === 0) return null;
 
@@ -67,7 +66,7 @@ export default function FileTabs({
                 e.stopPropagation();
                 onTabClose(tab.fileId);
               }}
-              className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+              className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0"
               title="Close"
             >
               <X size={12} />

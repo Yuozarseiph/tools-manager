@@ -79,6 +79,7 @@ export default function FileExplorer({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dragExpandTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchDragRef = useRef({
     itemId: null as string | null,
     isDragging: false,
@@ -127,19 +128,31 @@ export default function FileExplorer({
     if (folderId) {
       setDragOverFolder(folderId);
       if (!expandedFolders.has(folderId)) {
-        setTimeout(() => onToggleFolder(folderId), 600);
+        if (dragExpandTimerRef.current) clearTimeout(dragExpandTimerRef.current);
+        dragExpandTimerRef.current = setTimeout(() => {
+          onToggleFolder(folderId);
+          dragExpandTimerRef.current = null;
+        }, 600);
       }
     }
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.stopPropagation();
+    if (dragExpandTimerRef.current) {
+      clearTimeout(dragExpandTimerRef.current);
+      dragExpandTimerRef.current = null;
+    }
     setDragOverFolder(null);
   };
 
   const handleDrop = (e: React.DragEvent, targetFolderId: string | null) => {
     e.preventDefault();
     e.stopPropagation();
+    if (dragExpandTimerRef.current) {
+      clearTimeout(dragExpandTimerRef.current);
+      dragExpandTimerRef.current = null;
+    }
     setDragOverFolder(null);
     const fileId = e.dataTransfer.getData("text/plain");
     if (fileId && fileId !== targetFolderId) {
@@ -152,6 +165,10 @@ export default function FileExplorer({
   };
 
   const handleDragEnd = () => {
+    if (dragExpandTimerRef.current) {
+      clearTimeout(dragExpandTimerRef.current);
+      dragExpandTimerRef.current = null;
+    }
     setDragOverFolder(null);
     setDraggedItem(null);
   };

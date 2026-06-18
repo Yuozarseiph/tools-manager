@@ -14,8 +14,7 @@
 .cm-editor .cm-scroller {
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
   overflow: auto !important;
-  /* پشتیبانی از ارتفاع داینامیک موبایل */
-  height: 100dvh !important;
+  height: 100% !important;
   max-height: 100% !important;
 }
 
@@ -192,15 +191,15 @@
 @media (max-width: 768px) {
   .cm-editor,
   .cm-editor .cm-scroller {
-    height: 100dvh !important;
-    max-height: 100dvh !important;
+    height: 100% !important;
+    max-height: 100% !important;
   }
-  
+
   /* جلوگیری از زوم خودکار هنگام فوکوس روی اینپوت‌ها در iOS */
   input, textarea, select {
     font-size: 16px !important;
   }
-  
+
   /* حفظ فضای امن در گوشی‌های دارای ناچ */
   .cm-editor .cm-content {
     padding-bottom: env(safe-area-inset-bottom, 8px) !important;

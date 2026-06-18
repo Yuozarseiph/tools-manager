@@ -16,6 +16,7 @@ export const toolsContent = {
       calculator: "ماشین‌حساب",
       graphics: "گرافیک",
       banking: "بانکی",
+      game: "بازی",
     },
     search: {
       placeholder: "جستجو در ابزارها...",
@@ -257,6 +258,7 @@ export const toolsContent = {
       calculator: "Calculator",
       graphics: "Graphics",
       banking: "Banking",
+      game: "Games",
     },
     search: {
       placeholder: "Search tools...",

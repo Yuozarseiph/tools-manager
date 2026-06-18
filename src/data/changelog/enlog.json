@@ -1,5 +1,42 @@
 [
   {
+    "version": "26.2.2",
+    "date": "June 18, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Redesigned home page category filter: replaced horizontal scrolling tabs with a compact dropdown button showing all categories in a clean 3-column panel with icons, labels, and tool counts",
+          "Improved tool cards in 2-column grid layout: fixed description text overflowing outside card boundaries by adding overflow-hidden",
+          "Improved home page UX: category dropdown now shows the number of tools matching the current filter",
+          "Optimized tool order by popularity and usefulness: most-used tools appear first",
+          "Reduced excessive whitespace in Hero section on home page"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed code editor theme not updating when toggling Dark/Light mode: added isDark to the editor effect dependency array",
+          "Fixed unsaved indicator (●) not appearing in code editor tabs: isDirty state now correctly activates on keystroke",
+          "Fixed code editor height overflow on mobile: changed height from 100dvh to 100% in CSS",
+          "Fixed repeated folder expand timer firing on every dragover event in File Explorer during drag & drop",
+          "Fixed duplicate scrollbar CSS block in globals.css",
+          "Fixed hardcoded Persian labels in Simple Editor (line count and character count now respect locale)",
+          "Fixed hardcoded Persian strings in HTML to PPTX tool: font search, color labels, footer placeholder, and preview stats",
+          "Fixed close button (×) visibility on mobile tabs: button is now always visible on touch devices"
+        ]
+      },
+      {
+        "category": "added",
+        "items": [
+          "Added Games category for Emerald Forge tool",
+          "Added new translation keys for HTML to PPTX: primary color, accent color, footer placeholder, and font search"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.2.1",
     "date": "May 1, 2026",
     "type": "update",

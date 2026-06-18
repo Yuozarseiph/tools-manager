@@ -14,7 +14,7 @@ export default function HeroSection() {
   const content = homeContent[locale];
 
   return (
-    <div className="text-center mb-20 space-y-6 pt-20">
+    <div className="text-center mb-8 sm:mb-12 space-y-4 pt-10 sm:pt-14">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
