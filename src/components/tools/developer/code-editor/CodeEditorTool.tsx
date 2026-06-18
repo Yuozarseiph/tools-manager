@@ -1,6 +1,5 @@
 // components/tools/developer/code-editor/CodeEditorTool.tsx
 "use client";
-
 import { useCallback, useState, useEffect } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useFileSystem } from "./hooks/useFileSystem";
@@ -57,16 +56,18 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
 
   const isFa = locale === "fa";
 
+  // ✅ جایگزینی resize با matchMedia برای جلوگیری از تداخل کیبورد موبایل
   useEffect(() => {
-    const check = () => {
-      const mobile = window.innerWidth < 768;
+    const mql = window.matchMedia("(max-width: 767px)");
+    const handleMatch = (e: MediaQueryListEvent | MediaQueryList) => {
+      const mobile = e.matches;
       setIsMobile(mobile);
       setIsSidebarOpen(!mobile);
     };
-    check();
+    handleMatch(mql);
+    mql.addEventListener("change", handleMatch);
     setIsReady(true);
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    return () => mql.removeEventListener("change", handleMatch);
   }, []);
 
   useEffect(() => {
@@ -76,10 +77,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
   }, [forceSave]);
 
   const handleSave = useCallback(() => forceSave(), [forceSave]);
-
-  const toggleProMode = () => {
-    setProMode((prev) => !prev);
-  };
+  const toggleProMode = () => setProMode((prev) => !prev);
 
   const containerClass = isFullscreen
     ? "fixed inset-0 z-50"
@@ -140,7 +138,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
       )}
 
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Desktop sidebar toggle button */}
+        {/* Desktop sidebar toggle */}
         {!isMobile && (
           <button
             onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -197,7 +195,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
             backgroundColor: "var(--app-card)",
           }}
         >
-          {/* Mobile close button - inside sidebar header */}
+          {/* Mobile close button */}
           {isMobile && (
             <div
               className="flex items-center justify-between p-2 border-b shrink-0"
@@ -233,18 +231,14 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
               onCreateItem={(name, lang, parentId, isFolder) => {
                 if (isFolder) createFolder(name, "folder", parentId, true);
                 else createItem(name, lang, parentId, false);
-                if (isMobile) {
-                  setTimeout(() => setIsSidebarOpen(false), 500);
-                }
+                if (isMobile) setTimeout(() => setIsSidebarOpen(false), 500);
               }}
               onDeleteItem={deleteItem}
               onRenameItem={renameItem}
               onMoveItem={moveItem}
               onFileClick={(fileId) => {
                 openTab(fileId);
-                if (isMobile) {
-                  setTimeout(() => setIsSidebarOpen(false), 300);
-                }
+                if (isMobile) setTimeout(() => setIsSidebarOpen(false), 300);
               }}
               onImportFile={importFile}
               onCancelCreate={() => setIsCreating(null)}
@@ -263,11 +257,17 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
           </div>
         </div>
 
-        {/* Mobile overlay - only when sidebar is open AND not creating/renaming */}
+        {/* Mobile overlay - prevents closing when input is focused or creating/renaming */}
         {isMobile && isSidebarOpen && !isCreating && !isRenaming && (
           <div
             className="absolute inset-0 z-[5] bg-black/30 backdrop-blur-sm"
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={(e) => {
+              // جلوگیری از بسته شدن هنگام فوکوس روی اینپوت‌ها
+              const target = e.target as HTMLElement;
+              if (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+                return;
+              setIsSidebarOpen(false);
+            }}
           />
         )}
 

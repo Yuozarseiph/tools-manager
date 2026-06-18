@@ -1,6 +1,5 @@
 // components/tools/developer/code-editor/components/FileTabs.tsx
 "use client";
-
 import { X, Circle } from "lucide-react";
 import { VirtualFile, EditorTab, SUPPORTED_LANGUAGES } from "../types";
 
@@ -45,10 +44,7 @@ export default function FileTabs({
           <div
             key={tab.fileId}
             onClick={() => onTabClick(tab.fileId)}
-            className={`
-              group flex items-center gap-1.5 px-3 py-2 text-xs cursor-pointer border-r shrink-0
-              transition-colors select-none
-            `}
+            className="group flex items-center gap-1.5 px-3 py-2 text-xs cursor-pointer border-r shrink-0 transition-colors select-none"
             style={{
               backgroundColor: isActive ? "var(--app-card)" : "transparent",
               borderRightColor: "var(--app-border)",
@@ -60,15 +56,12 @@ export default function FileTabs({
             }}
           >
             <span className="text-sm">{lang?.icon || "📄"}</span>
-
             <span className="max-w-[120px] truncate font-medium">
               {file.name}
             </span>
-
             {tab.isDirty && (
               <Circle size={8} className="fill-current opacity-40 shrink-0" />
             )}
-
             <button
               onClick={(e) => {
                 e.stopPropagation();

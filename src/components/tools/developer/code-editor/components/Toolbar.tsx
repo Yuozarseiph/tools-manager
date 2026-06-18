@@ -1,6 +1,5 @@
 // components/tools/developer/code-editor/components/Toolbar.tsx
 "use client";
-
 import { useState, useEffect } from "react";
 import {
   Save,
@@ -72,17 +71,13 @@ export default function Toolbar({
     setMounted(true);
   }, []);
 
-  // Priority actions (always visible)
   const primaryActions = (
     <>
-      {/* Save */}
       <Btn
         icon={Save}
         tooltip={isFa ? "ذخیره (Ctrl+S)" : "Save (Ctrl+S)"}
         onClick={onSave}
       />
-
-      {/* Pro Mode Toggle */}
       <Btn
         icon={proMode ? Zap : Sparkles}
         tooltip={
@@ -102,7 +97,6 @@ export default function Toolbar({
         </span>
       </Btn>
 
-      {/* More dropdown for mobile */}
       {isMobile && (
         <div className="relative">
           <Btn
@@ -212,10 +206,8 @@ export default function Toolbar({
     </>
   );
 
-  // Secondary actions (hidden on mobile, shown in dropdown)
   const secondaryActions = !isMobile && (
     <>
-      {/* Open Folder */}
       {mounted && isFileSystemSupported && (
         <Btn
           icon={FolderOpen}
@@ -223,8 +215,6 @@ export default function Toolbar({
           onClick={onOpenFolder}
         />
       )}
-
-      {/* Save to disk */}
       {mounted && isFileSystemSupported && activeFile && (
         <Btn
           icon={HardDrive}
@@ -232,8 +222,6 @@ export default function Toolbar({
           onClick={onSaveToDisk}
         />
       )}
-
-      {/* Save All */}
       {mounted && isFileSystemSupported && (
         <Btn
           icon={FolderDown}
@@ -242,15 +230,12 @@ export default function Toolbar({
           className="text-green-500"
         />
       )}
-
       {mounted && isFileSystemSupported && (
         <div
           className="w-px h-5 mx-0.5"
           style={{ backgroundColor: "var(--app-border)" }}
         />
       )}
-
-      {/* Download file */}
       {activeFile && (
         <Btn
           icon={FileOutput}
@@ -258,20 +243,15 @@ export default function Toolbar({
           onClick={() => onExportFile(activeFile.id)}
         />
       )}
-
-      {/* Download all */}
       <Btn
         icon={FolderOutput}
         tooltip={isFa ? "دانلود پروژه (JSON)" : "Download project (JSON)"}
         onClick={onExportAll}
       />
-
       <div
         className="w-px h-5 mx-0.5"
         style={{ backgroundColor: "var(--app-border)" }}
       />
-
-      {/* Reset */}
       {showResetConfirm ? (
         <div className="flex items-center gap-1 px-1">
           <span className="text-[10px] text-red-500 whitespace-nowrap">
@@ -302,13 +282,10 @@ export default function Toolbar({
           danger
         />
       )}
-
       <div
         className="w-px h-5 mx-0.5"
         style={{ backgroundColor: "var(--app-border)" }}
       />
-
-      {/* Fullscreen */}
       <Btn
         icon={isFullscreen ? Minimize2 : Maximize2}
         tooltip={
@@ -333,7 +310,6 @@ export default function Toolbar({
         borderColor: "var(--app-border)",
       }}
     >
-      {/* Left - Info */}
       <div
         className="flex items-center gap-2 text-xs min-w-0"
         style={{ color: "var(--app-text-muted)" }}
@@ -366,8 +342,6 @@ export default function Toolbar({
           </span>
         )}
       </div>
-
-      {/* Right - Actions */}
       <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
         {primaryActions}
         {secondaryActions}

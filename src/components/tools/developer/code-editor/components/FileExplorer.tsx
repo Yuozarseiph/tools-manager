@@ -1,7 +1,6 @@
 // components/tools/developer/code-editor/components/FileExplorer.tsx
 "use client";
-
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   FolderOpen,
   FolderClosed,
@@ -76,7 +75,17 @@ export default function FileExplorer({
   const [searchQuery, setSearchQuery] = useState("");
   const [dragOverFolder, setDragOverFolder] = useState<string | null>(null);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [isTouchDragging, setIsTouchDragging] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const touchDragRef = useRef({
+    itemId: null as string | null,
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+  });
+
   const isFa = locale === "fa";
 
   const handleCreate = () => {
@@ -104,7 +113,7 @@ export default function FileExplorer({
     }
   };
 
-  // Drag & Drop handlers
+  // 🖱️ Desktop Drag & Drop
   const handleDragStart = (e: React.DragEvent, fileId: string) => {
     e.dataTransfer.setData("text/plain", fileId);
     e.dataTransfer.effectAllowed = "move";
@@ -147,6 +156,81 @@ export default function FileExplorer({
     setDraggedItem(null);
   };
 
+  // 👆 Touch Drag & Drop (Mobile)
+  const handleTouchStart = (e: React.TouchEvent, itemId: string) => {
+    const touch = e.touches[0];
+    touchDragRef.current = {
+      itemId,
+      isDragging: false,
+      startX: touch.clientX,
+      startY: touch.clientY,
+    };
+    setDraggedItem(itemId);
+  };
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    const state = touchDragRef.current;
+    if (!state.itemId) return;
+    const touch = e.touches[0];
+    const dx = touch.clientX - state.startX;
+    const dy = touch.clientY - state.startY;
+
+    if (!state.isDragging && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
+      touchDragRef.current.isDragging = true;
+      setIsTouchDragging(true);
+    }
+
+    if (touchDragRef.current.isDragging) {
+      e.preventDefault();
+      const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+      const folderElem = elem?.closest("[data-drop-target]");
+      // ✅ FIX: Convert undefined to null to match useState<string | null>
+      const targetId = folderElem?.getAttribute("data-drop-target") ?? null;
+      setDragOverFolder(targetId);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: TouchEvent) => {
+      const state = touchDragRef.current;
+      if (state.isDragging && state.itemId) {
+        const touch = e.changedTouches[0];
+        const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+        const folderElem = elem?.closest("[data-drop-target]");
+        // ✅ FIX: Convert undefined to null
+        const targetId = folderElem?.getAttribute("data-drop-target") ?? null;
+
+        if (targetId !== null && targetId !== state.itemId) {
+          const item = files.find((f) => f.id === state.itemId);
+          if (item && item.parentId !== targetId) {
+            onMoveItem(state.itemId, targetId === "root" ? null : targetId);
+          }
+        }
+      }
+      touchDragRef.current = {
+        itemId: null,
+        isDragging: false,
+        startX: 0,
+        startY: 0,
+      };
+      setIsTouchDragging(false);
+      setDraggedItem(null);
+      setDragOverFolder(null);
+    },
+    [files, onMoveItem],
+  );
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    el.addEventListener("touchend", handleTouchEnd);
+    return () => {
+      el.removeEventListener("touchmove", handleTouchMove);
+      el.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleTouchMove, handleTouchEnd]);
+
   const getChildren = (parentId: string | null) => {
     let children = files.filter((f) => f.parentId === parentId);
     if (searchQuery) {
@@ -176,6 +260,8 @@ export default function FileExplorer({
         draggable
         onDragStart={(e) => handleDragStart(e, item.id)}
         onDragEnd={handleDragEnd}
+        onTouchStart={(e) => handleTouchStart(e, item.id)}
+        data-drop-target={item.isFolder ? item.id : undefined}
       >
         <div
           className={`group flex items-center gap-1 px-2 py-1 rounded cursor-pointer transition-colors ${
@@ -283,8 +369,9 @@ export default function FileExplorer({
             </span>
           )}
 
+          {/* ✅ Mobile: Always visible | Desktop: Hover only */}
           {isRenaming !== item.id && (
-            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
               {item.isFolder && (
                 <button
                   onClick={(e) => {
@@ -470,7 +557,10 @@ export default function FileExplorer({
       )}
 
       <div
+        ref={containerRef}
         className="flex-1 overflow-y-auto p-1"
+        data-drop-target="root"
+        style={{ touchAction: isTouchDragging ? "none" : "auto" }}
         onDragOver={(e) => handleDragOver(e, null)}
         onDrop={(e) => handleDrop(e, null)}
       >
