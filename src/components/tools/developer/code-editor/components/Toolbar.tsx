@@ -1,6 +1,7 @@
 // components/tools/developer/code-editor/components/Toolbar.tsx
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   Save,
   Maximize2,
@@ -65,11 +66,28 @@ export default function Toolbar({
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(
+    null,
+  );
+  const moreBtnRef = useRef<HTMLButtonElement>(null);
   const isFa = locale === "fa";
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Anchor the mobile "More" menu using fixed coordinates so no ancestor with
+  // overflow:hidden (fullscreen container, toolbar) can clip it.
+  const openMoreMenu = () => {
+    const rect = moreBtnRef.current?.getBoundingClientRect();
+    if (rect) {
+      setMenuPos({
+        top: rect.bottom + 6,
+        right: Math.max(8, window.innerWidth - rect.right),
+      });
+    }
+    setShowMore((v) => !v);
+  };
 
   const primaryActions = (
     <>
@@ -99,24 +117,33 @@ export default function Toolbar({
 
       {isMobile && (
         <div className="relative">
-          <Btn
-            icon={MoreHorizontal}
-            tooltip={isFa ? "بیشتر" : "More"}
-            onClick={() => setShowMore(!showMore)}
-          />
-          {showMore && (
-            <>
-              <div
-                className="fixed inset-0 z-30"
-                onClick={() => setShowMore(false)}
-              />
-              <div
-                className="absolute right-0 top-full mt-1 z-40 w-48 p-1.5 rounded-xl border shadow-xl"
-                style={{
-                  backgroundColor: "var(--app-card)",
-                  borderColor: "var(--app-border)",
-                }}
-              >
+          <button
+            ref={moreBtnRef}
+            onClick={openMoreMenu}
+            className="p-1.5 rounded transition-colors flex items-center gap-1 text-xs hover:bg-slate-100 dark:hover:bg-slate-800"
+            style={{ color: "var(--app-text-muted)" }}
+            title={isFa ? "بیشتر" : "More"}
+          >
+            <MoreHorizontal size={14} />
+          </button>
+          {mounted &&
+            showMore &&
+            menuPos &&
+            createPortal(
+              <>
+                <div
+                  className="fixed inset-0 z-[90]"
+                  onClick={() => setShowMore(false)}
+                />
+                <div
+                  className="fixed z-[95] w-56 max-h-[70vh] overflow-y-auto p-1.5 rounded-xl border shadow-2xl"
+                  style={{
+                    top: menuPos.top,
+                    right: menuPos.right,
+                    backgroundColor: "var(--app-card)",
+                    borderColor: "var(--app-border)",
+                  }}
+                >
                 {mounted && isFileSystemSupported && (
                   <>
                     <MoreBtn
@@ -198,9 +225,10 @@ export default function Toolbar({
                     setShowMore(false);
                   }}
                 />
-              </div>
-            </>
-          )}
+                </div>
+              </>,
+              document.body,
+            )}
         </div>
       )}
     </>

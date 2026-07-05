@@ -29,6 +29,8 @@ import {
   Landmark,
   Gamepad,
   Code2,
+  FileImage,
+  StretchVertical,
 } from "lucide-react";
 
 export interface Tool {
@@ -94,6 +96,22 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "image",
     badgeKey: "tools.items.image-to-pdf.badge",
+  },
+  {
+    id: "pdf-to-image",
+    Icon: FileImage,
+    href: "/tools/pdf-to-image",
+    status: "active",
+    category: "pdf",
+    badgeKey: "tools.items.pdf-to-image.badge",
+  },
+  {
+    id: "image-stitcher",
+    Icon: StretchVertical,
+    href: "/tools/image-stitcher",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.image-stitcher.badge",
   },
   {
     id: "qr-gen",

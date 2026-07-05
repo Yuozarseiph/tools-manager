@@ -468,8 +468,10 @@ export default function ToolsGrid() {
       />
       {/* ─── Search + Layout controls ─── */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
-        <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <div className="flex-1 relative">
+        <div
+          className={`flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-2 ${isRTL ? "sm:flex-row-reverse" : ""}`}
+        >
+          <div className="w-full sm:flex-1 relative">
             <div className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 ${theme.textMuted} pointer-events-none`}>
               <Search size={15} />
             </div>
@@ -490,14 +492,16 @@ export default function ToolsGrid() {
               </button>
             )}
           </div>
-          <LayoutControls
-            toolsLayout={layoutSettings.toolsLayout}
-            pinnedLayout={layoutSettings.pinnedLayout}
-            onToolsLayoutChange={handleToolsLayoutChange}
-            onPinnedLayoutChange={handlePinnedLayoutChange}
-            theme={theme}
-            locale={locale}
-          />
+          <div className="w-full sm:w-auto shrink-0">
+            <LayoutControls
+              toolsLayout={layoutSettings.toolsLayout}
+              pinnedLayout={layoutSettings.pinnedLayout}
+              onToolsLayoutChange={handleToolsLayoutChange}
+              onPinnedLayoutChange={handlePinnedLayoutChange}
+              theme={theme}
+              locale={locale}
+            />
+          </div>
         </div>
       </div>
 
@@ -535,7 +539,7 @@ export default function ToolsGrid() {
           {/* Dropdown panel */}
           {showCategoryDropdown && (
             <div
-              className={`absolute top-full mt-2 z-50 p-2 rounded-2xl border shadow-2xl shadow-black/10 dark:shadow-black/40 ${theme.card} ${theme.border} w-72 sm:w-80 ${isRTL ? "right-0" : "left-0"}`}
+              className={`absolute top-full mt-2 z-50 p-2 rounded-2xl border shadow-2xl shadow-black/10 dark:shadow-black/40 ${theme.card} ${theme.border} w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] ${isRTL ? "right-0" : "left-0"}`}
             >
               <div className="grid grid-cols-3 gap-1">
                 {CATEGORIES.map((cat) => {

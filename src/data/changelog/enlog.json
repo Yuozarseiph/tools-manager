@@ -1,5 +1,37 @@
 [
   {
+    "version": "26.3.0",
+    "date": "July 2, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "New \"PDF to Image\" tool: convert each PDF page to a JPG, PNG or WebP image with adjustable quality and render resolution, download individually or all at once — entirely in the browser",
+          "New \"Vertical Image Stitcher\" tool: stack up to 20 images into one tall, long image, with per-image cropping, reordering, horizontal alignment, gap and background-color controls, exporting to PNG or JPG",
+          "Fully rewritten Unit Converter with 15 categories: length, mass, temperature, area, volume, speed, time, pressure, energy, power, force, torque, frequency, angle and digital data (binary and decimal) at very high precision"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Added category search, quick source/target unit swapping and a copy-result button to the Unit Converter",
+          "Reused the shared Dropdown component across the new tools and the Unit Converter for a consistent UI",
+          "Improved the home-page search and layout-controls area: on mobile the search bar and layout controls now stack vertically without crowding"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Self-hosted the pdf.js library and its worker inside the project (no CDN) and fixed the loading error in the PDF-to-Image tool on the deployed site",
+          "Fixed the incomplete and misaligned mobile \"More\" dropdown in the Code Editor while Pro mode is active: it now renders via a portal with fixed positioning and is no longer clipped by any container",
+          "Fixed the home-page category panel overflowing the screen edge on mobile",
+          "Corrected mislabeled desktop grid layout options on the home page"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.2.2",
     "date": "June 18, 2026",
     "type": "update",

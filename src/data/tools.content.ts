@@ -65,6 +65,18 @@ export const toolsContent = {
           "چندین تصویر را به ترتیب صفحات در یک فایل PDF واحد ترکیب کنید.",
         badge: "جدید",
       },
+      "pdf-to-image": {
+        title: "تبدیل PDF به تصویر",
+        description:
+          "هر صفحه از فایل PDF را با کیفیت دلخواه به تصویر JPG، PNG یا WebP تبدیل کنید.",
+        badge: "جدید",
+      },
+      "image-stitcher": {
+        title: "ترکیب عمودی عکس‌ها",
+        description:
+          "تا ۲۰ عکس را زیر هم بچسبانید و تصویر طولانی بسازید؛ هر عکس قابل برش است.",
+        badge: "جدید",
+      },
       "html-to-pptx": {
         title: "تبدیل HTML به پاورپوینت",
         description:
@@ -304,6 +316,18 @@ export const toolsContent = {
         title: "Image to PDF",
         description:
           "Combine multiple images into a single PDF file in page order.",
+        badge: "New",
+      },
+      "pdf-to-image": {
+        title: "PDF to Image",
+        description:
+          "Convert each PDF page to a JPG, PNG or WebP image at your chosen quality.",
+        badge: "New",
+      },
+      "image-stitcher": {
+        title: "Vertical Image Stitcher",
+        description:
+          "Stack up to 20 images into one long image; crop each image as needed.",
         badge: "New",
       },
       "html-to-pptx": {

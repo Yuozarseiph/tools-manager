@@ -71,7 +71,7 @@ const allToolsLayoutOptionsMobile = [
   {
     value: "grid-2" as ToolsLayoutMode,
     icon: Columns2,
-    label: { fa: "گرید ۱ ستونه", en: "1 Columns" },
+    label: { fa: "گرید ۱ ستونه", en: "1 Column" },
   },
   {
     value: "grid-4" as ToolsLayoutMode,
