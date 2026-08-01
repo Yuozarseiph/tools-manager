@@ -90,7 +90,7 @@ export default function PasswordGeneratorTool() {
 
   const getStrengthColor = (s: number) => {
     if (s <= 2) return "bg-red-500";
-    if (s <= 4) return "bg-yellow-500";
+    if (s <= 4) return "bg-amber-500";
     return "bg-green-500";
   };
 
@@ -117,7 +117,7 @@ export default function PasswordGeneratorTool() {
           onClick={() => setMode("generate")}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             mode === "generate"
-              ? "bg-white dark:bg-zinc-700 shadow-sm text-blue-600"
+              ? "bg-white dark:bg-zinc-700 shadow-sm text-[var(--app-accent)]"
               : "text-zinc-400"
           }`}
         >
@@ -127,7 +127,7 @@ export default function PasswordGeneratorTool() {
           onClick={() => setMode("analyze")}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             mode === "analyze"
-              ? "bg-white dark:bg-zinc-700 shadow-sm text-blue-600"
+              ? "bg-white dark:bg-zinc-700 shadow-sm text-[var(--app-accent)]"
               : "text-zinc-400"
           }`}
         >
@@ -198,7 +198,7 @@ export default function PasswordGeneratorTool() {
                 max="64"
                 value={length}
                 onChange={(e) => setLength(Number(e.target.value))}
-                className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-[var(--app-accent)]"
               />
             </div>
 
@@ -223,7 +223,7 @@ export default function PasswordGeneratorTool() {
               ].map((opt) => (
                 <label
                   key={opt.key}
-                  className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all hover:border-blue-400 ${theme.bg} ${theme.border}`}
+                  className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all hover:border-[var(--app-accent)] ${theme.bg} ${theme.border}`}
                 >
                   <input
                     type="checkbox"
@@ -234,7 +234,7 @@ export default function PasswordGeneratorTool() {
                         [opt.key]: !prev[opt.key as keyof typeof options],
                       }))
                     }
-                    className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500"
+                    className="w-5 h-5 rounded text-[var(--app-accent)] focus:ring-[var(--app-accent)]"
                   />
                   <span className="font-medium">{opt.label}</span>
                 </label>
@@ -247,7 +247,7 @@ export default function PasswordGeneratorTool() {
           {/* Analyze UI */}
           <div className="space-y-6">
             <div
-              className={`relative p-1 rounded-2xl border-2 transition-all focus-within:border-blue-500 ${theme.bg} ${theme.border}`}
+              className={`relative p-1 rounded-2xl border-2 transition-all focus-within:border-[var(--app-accent)] ${theme.bg} ${theme.border}`}
             >
               <input
                 type={showPass ? "text" : "password"}
@@ -258,7 +258,7 @@ export default function PasswordGeneratorTool() {
               />
               <button
                 onClick={() => setShowPass(!showPass)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-400 hover:text-blue-500"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-400 hover:text-[var(--app-accent)]"
                 title={
                   showPass
                     ? content.ui.analyze.hideTitle

@@ -73,7 +73,7 @@ export default function HashGeneratorTool() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={content.ui.input.placeholder}
-          className={`w-full p-4 h-32 rounded-2xl resize-none outline-none border focus:ring-2 ring-blue-500/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
+          className={`w-full p-4 h-32 rounded-2xl resize-none outline-none border focus:ring-2 ring-[var(--app-accent)]/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
         />
       </div>
 
@@ -147,7 +147,7 @@ function HashRow({
             onClick={onCopy}
             className={`p-2 rounded-lg transition-colors ${
               isCopied
-                ? "text-green-500 bg-green-50 dark:bg-green-900/20"
+                ? "text-[var(--app-success-text)] bg-[var(--app-success-bg)] dark:bg-[var(--app-success-bg)]"
                 : "text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >

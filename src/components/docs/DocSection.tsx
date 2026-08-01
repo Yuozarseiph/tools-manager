@@ -60,7 +60,7 @@ export default function DocSection({ data, theme, index }: Props) {
             <ul className={`space-y-3 ${theme.textMuted}`}>
               {data.features.map((feat, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
                   <span className="leading-relaxed">{feat}</span>
                 </li>
               ))}
@@ -74,7 +74,7 @@ export default function DocSection({ data, theme, index }: Props) {
             <h4
               className={`font-bold mb-4 text-lg flex items-center gap-2 ${theme.text}`}
             >
-              <Cpu size={18} className="text-blue-500" />
+              <Cpu size={18} className="text-[var(--app-accent)]" />
               {content.section.howItWorksTitle}
             </h4>
 
@@ -84,7 +84,7 @@ export default function DocSection({ data, theme, index }: Props) {
               {data.howItWorks.map((step, i) => (
                 <li
                   key={i}
-                  className="leading-relaxed pl-1 marker:font-bold marker:text-blue-500"
+                  className="leading-relaxed pl-1 marker:font-bold marker:text-[var(--app-accent)]"
                 >
                   {step}
                 </li>

@@ -38,18 +38,18 @@ export default function ChangelogPage() {
       case "improved":
         return {
           icon: Wrench,
-          iconColor: "text-blue-500",
-          bgColor: "bg-blue-50 dark:bg-blue-950/30",
-          dotColor: "bg-blue-500",
-          borderColor: "border-blue-200 dark:border-blue-800",
+          iconColor: "text-[var(--app-accent)]",
+          bgColor: "bg-[var(--app-secondary-bg)]",
+          dotColor: "bg-[var(--app-accent)]",
+          borderColor: "border-[var(--app-border)]",
         };
       case "fixed":
         return {
           icon: Bug,
-          iconColor: "text-red-500",
-          bgColor: "bg-red-50 dark:bg-red-950/30",
-          dotColor: "bg-red-500",
-          borderColor: "border-red-200 dark:border-red-800",
+          iconColor: "text-[var(--app-error-text)]",
+          bgColor: "bg-[var(--app-error-bg)]",
+          dotColor: "bg-[var(--app-error-text)]",
+          borderColor: "border-[var(--app-error-border)]",
         };
       case "beta":
         return {
@@ -95,14 +95,14 @@ export default function ChangelogPage() {
           icon: Bug,
           label: content.type.fix,
           className:
-            "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800",
+            "bg-[var(--app-error-bg)] text-[var(--app-error-text)] border-[var(--app-error-border)]",
         };
       default:
         return {
           icon: Zap,
           label: content.type.update,
           className:
-            "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+            "bg-[var(--app-secondary-bg)] text-[var(--app-accent)] border-[var(--app-border)]",
         };
     }
   };
@@ -146,7 +146,7 @@ export default function ChangelogPage() {
             </div>
 
             {/* Gradient blobs */}
-            <div className="absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-blue-600 to-cyan-500" />
+            <div className="absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-[var(--app-gradient-from)] to-[var(--app-gradient-to)]" />
             <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-purple-600 to-pink-500" />
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function ChangelogPage() {
         {/* Timeline */}
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 opacity-30" />
+          <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--app-accent)] via-purple-500 to-emerald-500 opacity-30" />
 
           <div className="space-y-8">
             {data.map((entry, index) => {
@@ -189,7 +189,7 @@ export default function ChangelogPage() {
                   <div
                     className={`absolute left-2.5 md:left-4.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 shadow-md z-10 ${
                       isLatestEntry
-                        ? "bg-blue-500 ring-4 ring-blue-500/20"
+                        ? "bg-[var(--app-accent)] ring-4 ring-[var(--app-accent)]/20"
                         : "bg-slate-300 dark:bg-slate-600"
                     }`}
                   />
@@ -198,7 +198,7 @@ export default function ChangelogPage() {
                   <div
                     className={`rounded-2xl border overflow-hidden transition-all hover:shadow-lg ${
                       isLatestEntry
-                        ? `${theme.card} border-blue-200 dark:border-blue-800 ring-1 ring-blue-500/20`
+                        ? `${theme.card} border-[var(--app-accent)] ring-1 ring-[var(--app-accent)]/20`
                         : `${theme.card} ${theme.border}`
                     }`}
                   >
@@ -213,7 +213,7 @@ export default function ChangelogPage() {
                               {content.versionLabel} {entry.version}
                             </h2>
                             {isLatestEntry && (
-                              <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-600 text-white shadow-md shadow-blue-500/25">
+                              <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[var(--app-primary-bg)] text-white shadow-md">
                                 {content.currentLabel}
                               </span>
                             )}

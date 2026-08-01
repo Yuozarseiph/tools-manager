@@ -52,7 +52,7 @@ export default function Footer() {
               href="/docs"
               className={`
                 px-3 py-1.5 rounded-full
-                border border-transparent hover:border-blue-500/40
+                border border-transparent hover:border-[var(--app-accent)]/40
                 bg-black/0 hover:bg-black/5 dark:hover:bg-white/5
                 transition-all duration-200
               `}
@@ -63,7 +63,7 @@ export default function Footer() {
               href="/contact"
               className={`
                 px-3 py-1.5 rounded-full
-                border border-transparent hover:border-blue-500/40
+                border border-transparent hover:border-[var(--app-accent)]/40
                 bg-black/0 hover:bg-black/5 dark:hover:bg-white/5
                 transition-all duration-200
               `}
@@ -74,7 +74,7 @@ export default function Footer() {
               href="/privacy"
               className={`
                 px-3 py-1.5 rounded-full
-                border border-transparent hover:border-blue-500/40
+                border border-transparent hover:border-[var(--app-accent)]/40
                 bg-black/0 hover:bg-black/5 dark:hover:bg-white/5
                 transition-all duration-200
               `}
@@ -87,7 +87,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className={`
                 px-3 py-1.5 rounded-full
-                border border-transparent hover:border-blue-500/40
+                border border-transparent hover:border-[var(--app-accent)]/40
                 bg-black/0 hover:bg-black/5 dark:hover:bg-white/5
                 transition-all duration-200
               `}

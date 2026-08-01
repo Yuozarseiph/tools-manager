@@ -93,7 +93,7 @@ export default function Base64Tool() {
         >
           <div className="flex items-center gap-4">
             <span className={`font-bold ${theme.text}`}>{inputLabel}</span>
-            <div className="px-3 py-1 rounded-lg text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+            <div className="px-3 py-1 rounded-lg text-xs font-bold bg-[var(--app-secondary-bg)] text-[var(--app-accent)]">
               {content.ui.input.badge}
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function Base64Tool() {
               setOutput("");
               setError(null);
             }}
-            className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"
+            className="text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] p-2 rounded-lg transition-colors"
           >
             <Trash2 size={18} />
           </button>
@@ -145,7 +145,7 @@ export default function Base64Tool() {
         >
           <div className="flex items-center gap-4">
             <span className={`font-bold ${theme.text}`}>{outputLabel}</span>
-            <div className="px-3 py-1 rounded-lg text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+            <div className="px-3 py-1 rounded-lg text-xs font-bold bg-[var(--app-success-bg)] text-[var(--app-success-text)]">
               {content.ui.output.badge}
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function Base64Tool() {
           }`}
         >
           {error ? (
-            <div className="flex flex-col items-center justify-center h-full text-red-500 animate-pulse">
+            <div className="flex flex-col items-center justify-center h-full text-[var(--app-error-text)] animate-pulse">
               <AlertCircle size={48} className="mb-4" />
               <p className="font-bold text-lg">{error}</p>
             </div>

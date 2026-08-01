@@ -170,8 +170,8 @@ export default function AESEncryption() {
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-          <p className="text-red-500 text-sm">{error}</p>
+        <div className="p-4 rounded-xl bg-[var(--app-error-bg)] border border-[var(--app-error-border)]">
+          <p className="text-[var(--app-error-text)] text-sm">{error}</p>
         </div>
       )}
     </div>

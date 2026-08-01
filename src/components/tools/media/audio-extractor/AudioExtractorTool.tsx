@@ -243,8 +243,8 @@ export default function AudioExtractorTool() {
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
               ${
                 isDragActive
-                  ? "border-blue-500 scale-[0.99] bg-blue-50 dark:bg-blue-950/20"
-                  : `${theme.border} hover:border-blue-400`
+                  ? "border-[var(--app-accent)] scale-[0.99] bg-[var(--app-secondary-bg)]"
+                  : `${theme.border} hover:border-[var(--app-accent)]`
               }
               ${theme.bg}
               ${!isFFmpegLoaded ? "opacity-50 pointer-events-none" : ""}
@@ -322,7 +322,7 @@ export default function AudioExtractorTool() {
               <button
                 onClick={handleClear}
                 disabled={isProcessing}
-                className={`p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors disabled:opacity-50`}
+                className={`p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors disabled:opacity-50`}
                 title={content.ui.buttons.clear}
               >
                 <Trash2 size={20} />
@@ -398,7 +398,7 @@ export default function AudioExtractorTool() {
                   className={`w-full h-2 rounded-full overflow-hidden ${theme.bg}`}
                 >
                   <motion.div
-                    className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                    className="h-full bg-gradient-to-r from-[var(--app-gradient-from)] to-[var(--app-gradient-to)]"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.3 }}

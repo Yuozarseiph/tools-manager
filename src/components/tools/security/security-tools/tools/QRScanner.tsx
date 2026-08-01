@@ -146,7 +146,7 @@ export default function QRScanner() {
         >
           <video ref={videoRef} className="w-full" />
           <canvas ref={canvasRef} className="hidden" />
-          <div className="absolute inset-0 border-4 border-blue-500 pointer-events-none">
+          <div className="absolute inset-0 border-4 border-[var(--app-accent)] pointer-events-none">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/50"></div>
           </div>
         </div>

@@ -170,7 +170,7 @@ export default function ImageToPdfConverter() {
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-lg text-xs border ${colors.border} ${colors.card} ${colors.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-lg text-xs border ${colors.border} ${colors.card} ${colors.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
           />
           <button
             type="button"
@@ -198,7 +198,7 @@ export default function ImageToPdfConverter() {
                 setSelectedImages([]);
                 setPdfUrl(null);
               }}
-              className="text-sm text-red-500 hover:text-red-700 transition-colors"
+              className="text-sm text-[var(--app-error-text)] hover:opacity-80 transition-colors"
             >
               {content.ui.list.clearAll}
             </button>
@@ -224,7 +224,7 @@ export default function ImageToPdfConverter() {
                 </div>
                 <button
                   onClick={() => removeImage(index)}
-                  className="flex-shrink-0 text-red-500 hover:text-red-700 p-1"
+                  className="flex-shrink-0 text-[var(--app-error-text)] hover:opacity-80 p-1"
                 >
                   <X className="h-5 w-5" />
                 </button>

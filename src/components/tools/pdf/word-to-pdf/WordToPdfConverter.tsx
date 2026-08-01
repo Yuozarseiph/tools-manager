@@ -428,7 +428,7 @@ export default function WordToPdfConverter() {
                 <button
                   onClick={resetAll}
                   disabled={isConverting}
-                  className="text-red-500 hover:text-red-700 p-2 disabled:opacity-50"
+                  className="text-[var(--app-error-text)] hover:opacity-80 p-2 disabled:opacity-50"
                   title={content.ui.file.removeTitle}
                 >
                   <X size={20} />
@@ -437,12 +437,12 @@ export default function WordToPdfConverter() {
             )}
 
             {error && (
-              <div className="p-4 rounded-lg border border-red-300 bg-red-50 flex gap-3">
+              <div className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
                 <AlertCircle
                   size={20}
-                  className="text-red-600 flex-shrink-0 mt-0.5"
+                  className="text-[var(--app-error-text)] flex-shrink-0 mt-0.5"
                 />
-                <div className="text-sm text-red-700">{error}</div>
+                <div className="text-sm text-[var(--app-error-text)]">{error}</div>
               </div>
             )}
 
@@ -536,7 +536,7 @@ export default function WordToPdfConverter() {
               </span>
               <div className="flex items-center gap-2">
                 {isPreviewReady && (
-                  <span className="hidden sm:inline-flex text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600">
+                  <span className="hidden sm:inline-flex text-xs px-2 py-1 rounded-full bg-[var(--app-success-bg)] text-[var(--app-success-text)]">
                     {content.ui.preview?.liveLabel ?? "Live preview"}
                   </span>
                 )}

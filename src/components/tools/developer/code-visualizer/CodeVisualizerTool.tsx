@@ -398,9 +398,9 @@ export default function CodeVisualizerTool() {
                   onClick={toggleView}
                   className={`md:hidden p-1.5 rounded-lg ${
                     showEditor && !showGraph
-                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                      ? "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
                       : !showEditor && showGraph
-                        ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                        ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
                         : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                   }`}
                 >
@@ -591,7 +591,7 @@ export default function CodeVisualizerTool() {
                 </div>
                 <div
                   className={`font-bold ${
-                    stats.nodes > 0 ? "text-green-600" : "text-gray-500"
+                    stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-gray-500"
                   }`}
                 >
                   {statusLabelDesktop}
@@ -608,7 +608,7 @@ export default function CodeVisualizerTool() {
               </div>
               <div
                 className={`font-bold text-sm ${
-                  stats.nodes > 0 ? "text-green-600" : "text-gray-500"
+                  stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-gray-500"
                 }`}
               >
                 {statusLabelMobile}
@@ -651,12 +651,12 @@ export default function CodeVisualizerTool() {
             </div>
 
             {error && (
-              <div className="p-2 md:p-3 border-b bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+              <div className="p-2 md:p-3 border-b bg-[var(--app-error-bg)] border-[var(--app-error-border)]">
                 <div className="flex items-center gap-2">
-                  <div className="text-red-600 dark:text-red-400 text-xs">
+                  <div className="text-[var(--app-error-text)] text-xs">
                     ⚠
                   </div>
-                  <div className="text-xs md:text-sm text-red-700 dark:text-red-300 line-clamp-2">
+                  <div className="text-xs md:text-sm text-[var(--app-error-text)] line-clamp-2">
                     {error.length > 80 ? `${error.substring(0, 77)}...` : error}
                   </div>
                 </div>
@@ -723,7 +723,7 @@ export default function CodeVisualizerTool() {
             {isProcessing ? (
               <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-sm z-10">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 md:h-12 w-8 md:w-12 border-b-2 border-blue-600 mx-auto" />
+                  <div className="animate-spin rounded-full h-8 md:h-12 w-8 md:w-12 border-b-2 border-[var(--app-primary-bg)] mx-auto" />
                   <p
                     className={`mt-2 md:mt-4 ${theme.text} text-sm md:text-base`}
                   >
@@ -808,7 +808,7 @@ export default function CodeVisualizerTool() {
               <div className="flex items-center gap-2 text-xs md:text-sm">
                 <div
                   className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${
-                    nodes.length > 0 ? "bg-green-500" : "bg-gray-400"
+                    nodes.length > 0 ? "bg-[var(--app-success-text)]" : "bg-gray-400"
                   }`}
                 />
                 <span className={theme.text}>

@@ -126,8 +126,8 @@ export default function PdfMerger() {
         className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
         ${
           isDragActive
-            ? "border-blue-500 scale-[0.99]"
-            : `${theme.border} hover:border-blue-400`
+            ? "border-[var(--app-accent)] scale-[0.99]"
+            : `${theme.border} hover:border-[var(--app-accent)]`
         }
         ${theme.bg}
         ${isProcessing ? "opacity-60 pointer-events-none" : ""}`}
@@ -153,7 +153,7 @@ export default function PdfMerger() {
         </div>
       </div>
 
-      {error && <div className="mt-4 text-sm text-red-500">{error}</div>}
+      {error && <div className="mt-4 text-sm text-[var(--app-error-text)]">{error}</div>}
 
       <AnimatePresence>
         {files.length > 0 && (
@@ -170,7 +170,7 @@ export default function PdfMerger() {
               <button
                 onClick={() => setFiles([])}
                 disabled={isProcessing}
-                className="text-xs text-red-500 hover:underline disabled:opacity-40"
+                className="text-xs text-[var(--app-error-text)] hover:underline disabled:opacity-40"
               >
                 {content.ui.list.clearAll}
               </button>
@@ -204,7 +204,7 @@ export default function PdfMerger() {
                   <button
                     onClick={() => handleRemoveFile(idx)}
                     disabled={isProcessing}
-                    className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-40"
+                    className="p-2 text-zinc-400 hover:text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors disabled:opacity-40"
                   >
                     <Trash2 size={18} />
                   </button>

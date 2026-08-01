@@ -185,7 +185,7 @@ export default function ExcelViewerTool() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
             {rows.length === 0 ? (
-              <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl cursor-pointer hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-600/20 whitespace-nowrap">
+              <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-bold rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 whitespace-nowrap">
                 <UploadCloud size={20} />
                 <span>{content.ui.upload.buttonInitial}</span>
                 <input
@@ -235,14 +235,14 @@ export default function ExcelViewerTool() {
 
                 <button
                   onClick={downloadCSV}
-                  className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors text-green-600 border-green-200 dark:border-green-900"
+                  className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-success-bg)] dark:hover:bg-[var(--app-success-bg)] transition-colors text-[var(--app-success-text)] border-[var(--app-success-border)]"
                   title={content.ui.toolbar.csvTitle}
                 >
                   <FileText size={16} /> CSV
                 </button>
                 <button
                   onClick={downloadJSON}
-                  className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors text-amber-600 border-amber-200 dark:border-amber-900"
+                  className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-warning-bg)] dark:hover:bg-[var(--app-warning-bg)] transition-colors text-[var(--app-warning-text)] border-[var(--app-warning-border)]"
                   title={content.ui.toolbar.jsonTitle}
                 >
                   <FileJson size={16} /> JSON
@@ -250,7 +250,7 @@ export default function ExcelViewerTool() {
 
                 <button
                   onClick={handleReset}
-                  className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors ml-auto md:ml-0"
+                  className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] dark:hover:bg-[var(--app-error-bg)] rounded-lg transition-colors ml-auto md:ml-0"
                   title={content.ui.toolbar.closeTitle}
                 >
                   <X size={18} />
@@ -263,14 +263,14 @@ export default function ExcelViewerTool() {
             <div className="relative w-full md:w-64 group">
               <Search
                 size={16}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme.textMuted} group-focus-within:text-blue-500 transition-colors`}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme.textMuted} group-focus-within:text-[var(--app-accent)] transition-colors`}
               />
               <input
                 type="text"
                 placeholder={content.ui.search.placeholder}
                 value={searchQuery}
                 onChange={handleSearch}
-                className={`w-full pl-3 pr-9 py-2 text-sm rounded-xl border bg-transparent outline-none transition-all ${theme.border} focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 ${theme.text}`}
+                className={`w-full pl-3 pr-9 py-2 text-sm rounded-xl border bg-transparent outline-none transition-all ${theme.border} focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-accent)]/10 ${theme.text}`}
               />
             </div>
           )}
@@ -289,7 +289,7 @@ export default function ExcelViewerTool() {
                 onClick={() => handleSheetChange(name)}
                 className={`text-xs px-3 py-1 rounded-md whitespace-nowrap transition-all font-medium border ${
                   activeSheet === name
-                    ? "bg-blue-500 border-blue-500 text-white"
+                    ? "bg-[var(--app-primary-bg)] border-[var(--app-primary-bg)] text-white"
                     : `${theme.secondary} border-transparent ${theme.text} hover:bg-black/5 dark:hover:bg白/10 opacity-70 hover:opacity-100`
                 }`}
               >
@@ -330,7 +330,7 @@ export default function ExcelViewerTool() {
                   {filteredRows.map((row, rowIndex) => (
                     <tr
                       key={rowIndex}
-                      className="group border-b last:border-b-0 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors"
+                      className="group border-b last:border-b-0 hover:bg-[var(--app-secondary-bg)] dark:hover:bg-[var(--app-secondary-bg)] transition-colors"
                     >
                       <td className="p-3 border-r text-center font-mono opacity-40 bg-black/5 dark:bg-white/5 text-[0.8em]">
                         {rowIndex + 1}
@@ -369,10 +369,10 @@ export default function ExcelViewerTool() {
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-12 animate-in zoom-in-95 duration-500">
-            <div className="w-24 h-24 rounded-3xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-6 shadow-xl shadow-blue-500/10 ring-1 ring-blue-500/20">
+            <div className="w-24 h-24 rounded-3xl bg-[var(--app-secondary-bg)] dark:bg-[var(--app-secondary-bg)] flex items-center justify-center mb-6 shadow-xl shadow-[var(--app-accent)]/10 ring-1 ring-[var(--app-accent)]/20">
               <FileSpreadsheet
                 size={48}
-                className="text-blue-600 dark:text-blue-400 drop-shadow-sm"
+                className="text-[var(--app-accent)] drop-shadow-sm"
               />
             </div>
             <h4 className={`font-black text-2xl mb-3 ${theme.text}`}>

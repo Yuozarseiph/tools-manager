@@ -1,5 +1,26 @@
 [
   {
+    "version": "26.3.1",
+    "date": "July 13, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Complete visual identity refresh with a new brand color palette (deep royal navy #003260 and sandy beige #C9C1B0) across light and dark themes",
+          "Unified primary colors, buttons, active states and status banners (success, warning, error) across every tool to match the new visual identity",
+          "Updated the desktop (Windows) app with the latest changes and tools from the web version"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed a color inconsistency in some Code Editor danger buttons whose text color was hardcoded instead of following the active theme"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.3.0",
     "date": "July 2, 2026",
     "type": "release",

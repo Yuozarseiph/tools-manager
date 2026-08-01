@@ -148,7 +148,7 @@ export default function InstallmentCalculator() {
               className={`flex justify-between pt-2 border-t ${theme.border}`}
             >
               <span className={theme.textMuted}>تفاوت:</span>
-              <span className="font-bold text-red-500">
+              <span className="font-bold text-[var(--app-error-text)]">
                 {result.extraCost.toLocaleString()} {content.common.currency} (+
                 {((result.extraCost / parseFloat(cashPrice)) * 100).toFixed(1)}
                 %)

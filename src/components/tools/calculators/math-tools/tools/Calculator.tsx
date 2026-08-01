@@ -72,7 +72,7 @@ export default function CalculatorTool() {
   }) => {
     const variants = {
       default: `${theme.bg} ${theme.text} hover:opacity-80`,
-      operator: "bg-blue-500 text-white hover:bg-blue-600",
+      operator: "bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]",
       special:
         "bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-white hover:opacity-80",
       equal: "bg-green-500 text-white hover:bg-green-600",

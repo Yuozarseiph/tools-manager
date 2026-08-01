@@ -552,7 +552,7 @@ export default function AudioWaveformEqTool() {
                           >
                             <div className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-white/35" />
                             <div
-                              className="absolute left-0 right-0 bottom-0 bg-blue-500/80"
+                              className="absolute left-0 right-0 bottom-0 bg-[var(--app-accent)]/80"
                               style={{ height: `${pct}%` }}
                             />
                             <div

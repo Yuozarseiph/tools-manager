@@ -91,9 +91,9 @@ export default function DownloadPage() {
   const links = {
     pwa: "/",
     windowsSetup:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.0.0-Release/Tools.Manager-Setup-26.0.0.exe",
+      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.3.1/Tools.Manager-Setup-26.3.1.exe",
     windowsPortable:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.0.0-Release/Tools.Manager-Portable-26.0.0.exe",
+      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.3.1/Tools.Manager-Portable-26.3.1.exe",
   };
 
   return (
@@ -197,15 +197,15 @@ export default function DownloadPage() {
 
           <ul className={`space-y-2 text-sm ${theme.textMuted}`}>
             <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
               <span>{content.notes.items.verify}</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
               <span>{content.notes.items.beta}</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
               <span>{content.notes.items.pwa}</span>
             </li>
           </ul>

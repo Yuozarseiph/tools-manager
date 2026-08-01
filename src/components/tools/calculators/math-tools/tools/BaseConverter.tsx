@@ -128,7 +128,7 @@ export default function BaseConverter() {
                 className={`p-2 rounded-lg hover:opacity-70 ${theme.secondary}`}
               >
                 {copied === key ? (
-                  <Check size={18} className="text-green-500" />
+                  <Check size={18} className="text-[var(--app-success-text)]" />
                 ) : (
                   <Copy size={18} className={theme.textMuted} />
                 )}
@@ -139,8 +139,8 @@ export default function BaseConverter() {
       )}
 
       {results?.error && (
-        <div className="p-4 rounded-xl border border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/20">
-          <p className="text-red-600 dark:text-red-400">{results.error}</p>
+        <div className="p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)]">
+          <p className="text-[var(--app-error-text)]">{results.error}</p>
         </div>
       )}
 

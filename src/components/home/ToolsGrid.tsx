@@ -480,7 +480,7 @@ export default function ToolsGrid() {
               placeholder={content.search.placeholder}
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(18); }}
-              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-colors ${theme.bg} ${theme.text} ${theme.border}`}
+              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-[var(--app-accent)] focus:ring-2 focus:ring-[var(--app-accent)]/10 outline-none transition-colors ${theme.bg} ${theme.text} ${theme.border}`}
               dir={isRTL ? "rtl" : "ltr"}
             />
             {searchQuery && (
@@ -520,7 +520,7 @@ export default function ToolsGrid() {
             return (
               <button
                 onClick={() => setShowCategoryDropdown((v) => !v)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-medium transition-all duration-150 select-none ${theme.card} ${theme.border} ${theme.text} hover:border-blue-400`}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-medium transition-all duration-150 select-none ${theme.card} ${theme.border} ${theme.text} hover:border-[var(--app-accent)]`}
               >
                 <SlidersHorizontal size={14} className={theme.accent} />
                 <ActiveIcon size={14} className={theme.accent} />
@@ -559,13 +559,13 @@ export default function ToolsGrid() {
                       }}
                       className={`flex flex-col items-center gap-1 p-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10 hover:text-blue-500`
+                          ? "bg-[var(--app-primary-bg)] text-white shadow-sm"
+                          : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10 hover:text-[var(--app-accent)]`
                       }`}
                     >
                       <Icon size={18} className={isActive ? "text-white" : ""} />
                       <span className="text-center leading-tight">{label}</span>
-                      <span className={`text-[10px] ${isActive ? "text-blue-100" : theme.textMuted}`}>
+                      <span className={`text-[10px] ${isActive ? "text-white" : theme.textMuted}`}>
                         {count}
                       </span>
                     </button>
@@ -606,7 +606,7 @@ export default function ToolsGrid() {
                   setActiveCategory("all");
                   setSearchQuery("");
                 }}
-                className="text-blue-500 hover:underline text-sm mt-2"
+                className="text-[var(--app-accent)] hover:underline text-sm mt-2"
               >
                 {content.empty.showAll}
               </button>
@@ -636,13 +636,13 @@ export default function ToolsGrid() {
             <div className={`flex gap-2 p-1 rounded-xl ${theme.secondary}`}>
               <button
                 onClick={() => setExportFormat("file")}
-                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "file" ? "bg-blue-600 text-white" : `${theme.card} ${theme.text}`}`}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "file" ? "bg-[var(--app-primary-bg)] text-white" : `${theme.card} ${theme.text}`}`}
               >
                 <FileJson size={16} className="inline mr-1" /> {uiText.file}
               </button>
               <button
                 onClick={() => setExportFormat("text")}
-                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "text" ? "bg-blue-600 text-white" : `${theme.card} ${theme.text}`}`}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "text" ? "bg-[var(--app-primary-bg)] text-white" : `${theme.card} ${theme.text}`}`}
               >
                 <Copy size={16} className="inline mr-1" /> {uiText.text}
               </button>

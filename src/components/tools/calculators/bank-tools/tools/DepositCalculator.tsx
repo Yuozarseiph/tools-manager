@@ -158,7 +158,7 @@ export default function DepositCalculator() {
             <p className={`text-sm ${theme.textMuted} mb-1`}>
               {content.deposit.labels.earnedInterest}
             </p>
-            <p className={`text-2xl font-bold text-green-500`}>
+            <p className={`text-2xl font-bold text-[var(--app-success-text)]`}>
               {result.earnedInterest.toLocaleString()} {content.common.currency}
             </p>
           </div>

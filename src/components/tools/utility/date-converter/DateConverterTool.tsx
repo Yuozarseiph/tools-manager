@@ -496,12 +496,12 @@ function InputGroup({
         className={[
           "w-full p-4 text-center text-xl font-bold rounded-2xl border outline-none focus:ring-2 transition-colors",
           theme.bg,
-          error ? "border-red-500 focus:ring-red-500" : theme.border,
+          error ? "border-[var(--app-error-border)] focus:ring-[var(--app-error-border)]" : theme.border,
           theme.text,
           theme.ring,
         ].join(" ")}
       />
-      {error && <p className="text-xs text-red-500 mt-1 text-right">{error}</p>}
+      {error && <p className="text-xs text-[var(--app-error-text)] mt-1 text-right">{error}</p>}
     </div>
   );
 }
