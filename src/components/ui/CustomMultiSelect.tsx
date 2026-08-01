@@ -61,7 +61,7 @@ export default function CustomMultiSelect({
         className={`min-h-[42px] w-full px-3 py-2 rounded-xl border cursor-pointer flex items-center justify-between flex-wrap gap-2 transition-all ${
           theme.bg
         } ${theme.text} ${
-          isOpen ? "border-blue-500 ring-4 ring-blue-500/10" : theme.border
+          isOpen ? "border-[var(--app-accent)] ring-4 ring-[var(--app-accent)]/10" : theme.border
         }`}
       >
         <div className="flex flex-wrap gap-2">
@@ -69,12 +69,12 @@ export default function CustomMultiSelect({
             selectedValues.map((val) => (
               <span
                 key={val}
-                className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 text-xs px-2 py-1 rounded-md flex items-center gap-1"
+                className="bg-[var(--app-secondary-bg)] text-[var(--app-accent)] text-xs px-2 py-1 rounded-md flex items-center gap-1"
               >
                 {val}
                 <X
                   size={12}
-                  className="cursor-pointer hover:text-red-500"
+                  className="cursor-pointer hover:text-[var(--app-error-text)]"
                   onClick={(e) => removeOption(val, e)}
                 />
               </span>
@@ -102,7 +102,7 @@ export default function CustomMultiSelect({
               onClick={() => toggleOption(option)}
               className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors ${
                 selectedValues.includes(option)
-                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600"
+                  ? "bg-[var(--app-secondary-bg)] dark:bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
                   : `hover:bg-gray-100 dark:hover:bg-white/5 ${theme.text}`
               }`}
             >

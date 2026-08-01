@@ -1,5 +1,56 @@
 [
   {
+    "version": "26.3.2",
+    "date": "August 1, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Major performance overhaul of the Excel Editor: typing in a cell no longer re-renders the entire table, since each row and cell is now isolated and memoized",
+          "Search input is now debounced, so filtering runs only after you stop typing instead of on every keystroke",
+          "Undo history no longer clones the entire dataset on every cell focus — a snapshot is now taken only once per editing session, making large sheets far more responsive",
+          "Column type detection (used by filtering and sorting) is now cached per dataset instead of being recalculated multiple times per render",
+          "File size estimation is now recalculated only when rows or columns actually change, instead of on every keystroke",
+          "Added full keyboard navigation between cells (Tab, Shift+Tab, Enter, Ctrl+Arrow) for a spreadsheet-like editing experience",
+          "Added support for pasting multi-cell blocks copied from Excel or another sheet directly into the table",
+          "Added a loading indicator while a file is being read, instead of the UI silently freezing on large files",
+          "Improved responsiveness of the filter panel and the sum result box on small screens"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed the Excel Editor silently doing nothing when uploading an unsupported, empty, or unreadable file — a clear error message is now shown",
+          "Fixed duplicate column headers in uploaded files silently overwriting each other's data — duplicate headers are now automatically renamed to stay unique",
+          "Fixed re-selecting the same file not triggering the upload again",
+          "Fixed pagination being effectively broken in the underlying data-processing logic"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "26.3.1",
+    "date": "July 13, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Complete visual identity refresh with a new brand color palette (deep royal navy #003260 and sandy beige #C9C1B0) across light and dark themes",
+          "Unified primary colors, buttons, active states and status banners (success, warning, error) across every tool to match the new visual identity",
+          "Updated the desktop (Windows) app with the latest changes and tools from the web version"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed a color inconsistency in some Code Editor danger buttons whose text color was hardcoded instead of following the active theme"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.3.0",
     "date": "July 2, 2026",
     "type": "release",

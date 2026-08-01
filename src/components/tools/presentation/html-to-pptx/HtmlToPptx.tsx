@@ -613,7 +613,7 @@ export default function HtmlToPptxTool() {
     () =>
       extractBgClass(theme.primary) ||
       extractBgClass(theme.secondary) ||
-      "bg-blue-600",
+      "bg-[var(--app-primary-bg)]",
     [theme.primary, theme.secondary],
   );
 
@@ -823,7 +823,7 @@ export default function HtmlToPptxTool() {
             type="file"
             accept=".html,.htm,text/html"
             onChange={handleFileSelect}
-            className={`block w-full text-xs sm:text-sm cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/20 dark:file:text-blue-300 ${theme.text}`}
+            className={`block w-full text-xs sm:text-sm cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[var(--app-secondary-bg)] file:text-[var(--app-accent)] hover:file:opacity-90 ${theme.text}`}
           />
         </div>
 
@@ -837,7 +837,7 @@ export default function HtmlToPptxTool() {
             value={htmlSource}
             onChange={(e) => setHtmlSource(e.target.value)}
             placeholder={content.ui.editor.placeholder}
-            className={`w-full h-48 sm:h-56 resize-y rounded-lg border px-3 py-2 text-xs sm:text-sm font-mono transition-all focus:ring-2 focus:ring-blue-500 ${theme.card} ${theme.border} ${theme.text}`}
+            className={`w-full h-48 sm:h-56 resize-y rounded-lg border px-3 py-2 text-xs sm:text-sm font-mono transition-all focus:ring-2 focus:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
             dir="ltr"
             spellCheck={false}
           />
@@ -897,7 +897,7 @@ export default function HtmlToPptxTool() {
               max="24"
               value={baseFontSize}
               onChange={(e) => setBaseFontSize(Number(e.target.value))}
-              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-600"
+              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-[var(--app-accent)]"
             />
           </div>
           <div>
@@ -913,14 +913,14 @@ export default function HtmlToPptxTool() {
               step="0.1"
               value={lineSpacing}
               onChange={(e) => setLineSpacing(Number(e.target.value))}
-              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-600"
+              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-[var(--app-accent)]"
             />
           </div>
         </div>
 
         {/* Colors */}
         <div
-          className={`grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 p-3 rounded-lg ${presetTheme === "custom" ? "border-2 border-blue-300 dark:border-blue-600 bg-blue-50/30 dark:bg-blue-900/10" : ""}`}
+          className={`grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 p-3 rounded-lg ${presetTheme === "custom" ? "border-2 border-[var(--app-accent)] bg-[var(--app-secondary-bg)]" : ""}`}
         >
           <div className="flex items-center gap-2">
             <Palette className="w-4 h-4" />
@@ -973,7 +973,7 @@ export default function HtmlToPptxTool() {
                 type="checkbox"
                 checked={includeImages}
                 onChange={(e) => setIncludeImages(e.target.checked)}
-                className="w-4 h-4 rounded accent-blue-600"
+                className="w-4 h-4 rounded accent-[var(--app-accent)]"
               />
               {content.ui.labels.includeImages}
             </label>
@@ -992,7 +992,7 @@ export default function HtmlToPptxTool() {
               type="text"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
-              className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-blue-500`}
+              className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-[var(--app-ring)]`}
             />
           </div>
           <div>
@@ -1005,7 +1005,7 @@ export default function HtmlToPptxTool() {
               type="text"
               value={footerText}
               onChange={(e) => setFooterText(e.target.value)}
-              className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-blue-500`}
+              className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-[var(--app-ring)]`}
               placeholder={content.ui.labels.footerPlaceholder}
             />
           </div>
@@ -1020,7 +1020,7 @@ export default function HtmlToPptxTool() {
             className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all transform hover:scale-105 active:scale-95
               ${
                 hasContent && !isConverting
-                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
+                  ? "bg-gradient-to-r from-[var(--app-gradient-from)] to-[var(--app-gradient-to)] text-white shadow-lg"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
               }`}
           >
@@ -1059,7 +1059,7 @@ export default function HtmlToPptxTool() {
                 {
                   label: content.ui.previewStats.slides,
                   value: previewInfo.totalSlides,
-                  color: "text-blue-600",
+                  color: "text-[var(--app-accent)]",
                 },
                 {
                   label: content.ui.previewStats.headings,
@@ -1069,7 +1069,7 @@ export default function HtmlToPptxTool() {
                 {
                   label: content.ui.previewStats.paragraphs,
                   value: previewInfo.paragraphs,
-                  color: "text-green-600",
+                  color: "text-[var(--app-success-text)]",
                 },
                 {
                   label: content.ui.previewStats.images,
@@ -1103,7 +1103,7 @@ export default function HtmlToPptxTool() {
 
         {/* Error */}
         {error && (
-          <div className="mt-3 flex items-start gap-2 text-xs rounded-lg border px-3 py-2 bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
+          <div className="mt-3 flex items-start gap-2 text-xs rounded-lg border px-3 py-2 bg-[var(--app-error-bg)] border-[var(--app-error-border)] text-[var(--app-error-text)]">
             <AlertCircle className="w-4 h-4 mt-[2px] flex-shrink-0" />
             <p>{error}</p>
           </div>
@@ -1146,7 +1146,7 @@ export default function HtmlToPptxTool() {
               key={idx}
               className={`flex items-start gap-2 p-2 rounded-lg ${theme.textMuted}`}
             >
-              <span className="text-blue-500 mt-0.5">•</span>
+              <span className="text-[var(--app-accent)] mt-0.5">•</span>
               <span>{item}</span>
             </div>
           ))}

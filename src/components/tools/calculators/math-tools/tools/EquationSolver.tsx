@@ -100,13 +100,13 @@ export default function EquationSolver() {
         <p className={`text-xl font-mono ${theme.text}`}>
           {degree === 1 ? (
             <>
-              <span className="text-blue-500">{a || "a"}</span>x +{" "}
-              <span className="text-green-500">{b || "b"}</span> = 0
+              <span className="text-[var(--app-accent)]">{a || "a"}</span>x +{" "}
+              <span className="text-[var(--app-success-text)]">{b || "b"}</span> = 0
             </>
           ) : (
             <>
-              <span className="text-blue-500">{a || "a"}</span>x² +{" "}
-              <span className="text-green-500">{b || "b"}</span>x +{" "}
+              <span className="text-[var(--app-accent)]">{a || "a"}</span>x² +{" "}
+              <span className="text-[var(--app-success-text)]">{b || "b"}</span>x +{" "}
               <span className="text-orange-500">{c || "c"}</span> = 0
             </>
           )}

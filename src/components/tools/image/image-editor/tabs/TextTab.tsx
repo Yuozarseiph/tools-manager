@@ -570,7 +570,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                 onClick={() => setSelectedId(o.id)}
                 className={`w-full flex items-center justify-between px-2 py-1.5 rounded border text-left ${
                   o.id === selectedId
-                    ? "bg-blue-600 text-white border-blue-500"
+                    ? "bg-[var(--app-primary-bg)] text-white border-[var(--app-primary-bg)]"
                     : `${theme.bg} ${theme.text} ${theme.border} hover:bg-slate-800`
                 }`}
               >
@@ -602,7 +602,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
               disabled={!selected}
               className={`flex-1 px-2 py-1 rounded-lg text-xs ${
                 selected
-                  ? "bg-red-600 text-white hover:bg-red-500"
+                  ? "bg-[var(--app-error-text)] text-white hover:opacity-90"
                   : "bg-slate-900 text-slate-500 cursor-not-allowed"
               }`}
             >
@@ -895,7 +895,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
         <button
           type="button"
           onClick={handleDownload}
-          className="w-full mt-2 px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white hover:bg-blue-500"
+          className="w-full mt-2 px-3 py-1.5 rounded-lg text-xs bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]"
         >
           {content.ui.textTab.download}
         </button>

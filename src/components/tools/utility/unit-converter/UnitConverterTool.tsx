@@ -94,7 +94,7 @@ export default function UnitConverterTool() {
           value={catSearch}
           onChange={(e) => setCatSearch(e.target.value)}
           placeholder={ui.search}
-          className={`w-full py-2.5 ${isRTL ? "pr-10 pl-3" : "pl-10 pr-3"} rounded-xl border text-sm outline-none focus:ring-2 ring-blue-500/40 ${theme.bg} ${theme.border} ${theme.text}`}
+          className={`w-full py-2.5 ${isRTL ? "pr-10 pl-3" : "pl-10 pr-3"} rounded-xl border text-sm outline-none focus:ring-2 ring-[var(--app-ring)]/40 ${theme.bg} ${theme.border} ${theme.text}`}
         />
       </div>
 
@@ -133,7 +133,7 @@ export default function UnitConverterTool() {
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className={`w-full p-4 text-xl font-bold rounded-2xl border focus:ring-2 ring-blue-500/50 outline-none ${theme.bg} ${theme.border} ${theme.text}`}
+            className={`w-full p-4 text-xl font-bold rounded-2xl border focus:ring-2 ring-[var(--app-ring)]/50 outline-none ${theme.bg} ${theme.border} ${theme.text}`}
             dir="ltr"
           />
           <CustomDropdown
@@ -170,7 +170,7 @@ export default function UnitConverterTool() {
                 className={`shrink-0 p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10`}
               >
                 {copied ? (
-                  <Check size={16} className="text-green-500" />
+                  <Check size={16} className="text-[var(--app-success-text)]" />
                 ) : (
                   <Copy size={16} />
                 )}

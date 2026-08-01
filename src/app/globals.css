@@ -8,40 +8,66 @@
 /* ۱. متغیرهای CSS مخصوص تم روشن (پیش‌فرض)                            */
 /* ------------------------------------------------------------------ */
 :root {
-  --app-bg: #f8fafc;                 /* slate-50 */
-  --app-card: rgba(255, 255, 255, 0.8);
-  --app-text: #0f172a;              /* slate-900 */
-  --app-text-muted: #64748b;         /* slate-500 */
-  --app-border: #e2e8f0;            /* slate-200 */
-  --app-accent: #2563eb;            /* blue-600 */
-  --app-accent-hover: #1d4ed8;      /* blue-700 */
-  --app-secondary-bg: #eff6ff;      /* blue-50 */
-  --app-secondary-text: #1e40af;    /* blue-700 */
-  --app-primary-bg: #2563eb;
-  --app-primary-hover: #1d4ed8;
-  --app-ring: #93c5fd;              /* blue-300 */
-  --app-gradient-from: #2563eb;
-  --app-gradient-to: #06b6d4;
+  --app-bg: #f7f5f1;                 /* warm off-white, tinted by sand */
+  --app-card: rgba(255, 255, 255, 0.85);
+  --app-text: #00203d;              /* deep navy text */
+  --app-text-muted: #5b6b7a;         /* muted slate-navy */
+  --app-border: #e4ddd0;            /* soft sand border */
+  --app-accent: #003260;            /* brand navy */
+  --app-accent-hover: #002448;      /* darker navy */
+  --app-secondary-bg: #f1ece1;      /* soft sand tint */
+  --app-secondary-text: #6b5f4a;    /* warm taupe text */
+  --app-primary-bg: #003260;
+  --app-primary-hover: #002448;
+  --app-ring: #a7b9c9;              /* soft navy-tinted ring */
+  --app-gradient-from: #003260;
+  --app-gradient-to: #0a5a94;
+
+  --app-secondary-color: #c9c1b0;   /* brand taupe/sand */
+  --app-secondary-hover: #b8ae99;
+
+  --app-success-bg: #eef6ee;
+  --app-success-border: #b9dcb9;
+  --app-success-text: #1e6b34;
+  --app-warning-bg: #fdf3e2;
+  --app-warning-border: #eccf94;
+  --app-warning-text: #8a5a10;
+  --app-error-bg: #fbecec;
+  --app-error-border: #e5b3b3;
+  --app-error-text: #a3273a;
 }
 
 /* ------------------------------------------------------------------ */
 /* ۲. بازنویسی متغیرها برای تم تاریک                                   */
 /* ------------------------------------------------------------------ */
 :root.dark {
-  --app-bg: #020617;                 /* slate-950 */
-  --app-card: rgba(15, 23, 42, 0.8);
-  --app-text: #f8fafc;
-  --app-text-muted: #94a3b8;
-  --app-border: #1e293b;            /* slate-800 */
-  --app-accent: #60a5fa;            /* blue-400 */
-  --app-accent-hover: #3b82f6;
-  --app-secondary-bg: rgba(59, 130, 246, 0.15);
-  --app-secondary-text: #93c5fd;
-  --app-primary-bg: #3b82f6;
-  --app-primary-hover: #2563eb;
-  --app-ring: #1e40af;
-  --app-gradient-from: #60a5fa;
-  --app-gradient-to: #67e8f9;
+  --app-bg: #061c30;                 /* near-navy background */
+  --app-card: rgba(10, 40, 68, 0.75);
+  --app-text: #f3efe6;              /* warm sand-white text */
+  --app-text-muted: #a9b8c4;
+  --app-border: #163a52;
+  --app-accent: #7fa7c9;            /* light navy accent */
+  --app-accent-hover: #a0c1de;
+  --app-secondary-bg: rgba(201, 193, 176, 0.12);
+  --app-secondary-text: #c9c1b0;
+  --app-primary-bg: #0a4a80;
+  --app-primary-hover: #0d5a99;
+  --app-ring: #3d6f96;
+  --app-gradient-from: #0a4a80;
+  --app-gradient-to: #7fa7c9;
+
+  --app-secondary-color: #c9c1b0;
+  --app-secondary-hover: #ddd6c8;
+
+  --app-success-bg: rgba(76, 175, 100, 0.12);
+  --app-success-border: rgba(76, 175, 100, 0.4);
+  --app-success-text: #8fd6a3;
+  --app-warning-bg: rgba(230, 175, 80, 0.12);
+  --app-warning-border: rgba(230, 175, 80, 0.4);
+  --app-warning-text: #f0c882;
+  --app-error-bg: rgba(224, 100, 110, 0.12);
+  --app-error-border: rgba(224, 100, 110, 0.4);
+  --app-error-text: #f0a3ac;
 }
 
 /* ------------------------------------------------------------------ */
@@ -82,7 +108,7 @@ html::-webkit-scrollbar-thumb {
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.8);
+  background: rgba(0, 50, 96, 0.8);
 }
 .scrollbar-hide {
   -ms-overflow-style: none;

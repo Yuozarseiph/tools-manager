@@ -145,7 +145,7 @@ export default function JsonFormatterTool() {
         >
           <div className="flex items-center gap-2">
             <label
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors bg-blue-600 text-white hover:bg-blue-700`}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]`}
             >
               <UploadCloud size={14} />
               <span>{content.ui.upload.button}</span>
@@ -181,7 +181,7 @@ export default function JsonFormatterTool() {
             <div className="w-px h-4 mx-1 bg-gray-300 dark:bg-gray-700 self-center" />
             <button
               onClick={handleClear}
-              className="p-1.5 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500"
+              className="p-1.5 rounded-md hover:bg-[var(--app-error-bg)] dark:hover:bg-[var(--app-error-bg)] text-[var(--app-error-text)]"
               title={content.ui.toolbar.clear}
             >
               <Trash2 size={14} />
@@ -198,7 +198,7 @@ export default function JsonFormatterTool() {
         />
 
         {error && (
-          <div className="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-t border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+          <div className="px-4 py-2 bg-[var(--app-error-bg)] dark:bg-[var(--app-error-bg)] border-t border-[var(--app-error-border)] text-[var(--app-error-text)] text-xs flex items-center gap-2">
             <AlertCircle size={14} />
             <span className="truncate">
               {content.ui.error.prefix}
@@ -221,7 +221,7 @@ export default function JsonFormatterTool() {
               className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all
               ${
                 viewMode === "code"
-                  ? "bg-white dark:bg-black shadow-sm text-blue-600"
+                  ? "bg-white dark:bg-black shadow-sm text-[var(--app-accent)]"
                   : "opacity-50 hover:opacity-100"
               }`}
             >
@@ -250,7 +250,7 @@ export default function JsonFormatterTool() {
               onClick={handleCopy}
               className={`p-2 rounded-lg border transition-colors ${
                 copied
-                  ? "bg-green-50 text-green-600 border-green-200"
+                  ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)] border-[var(--app-success-border)]"
                   : `hover:bg-gray-100 dark:hover:bg-white/10 ${theme.border}`
               }`}
               title={content.ui.output.copyTitle}
@@ -263,7 +263,7 @@ export default function JsonFormatterTool() {
             </button>
             <button
               onClick={handleDownload}
-              className={`p-2 rounded-lg border hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors ${theme.border}`}
+              className={`p-2 rounded-lg border hover:bg-[var(--app-secondary-bg)] hover:text-[var(--app-accent)] dark:hover:bg-[var(--app-secondary-bg)] dark:hover:text-[var(--app-accent)] transition-colors ${theme.border}`}
               title={content.ui.output.downloadTitle}
             >
               <Download size={16} className={theme.textMuted} />

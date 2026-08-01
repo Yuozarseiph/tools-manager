@@ -276,7 +276,7 @@ export default function EditorPanel({
   if (!isReady) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-6 h-6 border-2 border-[var(--app-accent)] border-t-transparent rounded-full" />
       </div>
     );
   }

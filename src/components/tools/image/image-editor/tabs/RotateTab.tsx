@@ -177,7 +177,7 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
             onClick={() => setFlipH((v) => !v)}
             className={`px-2 py-1.5 rounded-lg ${
               flipH
-                ? "bg-blue-600 text-white"
+                ? "bg-[var(--app-primary-bg)] text-white"
                 : "bg-slate-800 text-slate-100 hover:bg-slate-700"
             }`}
           >
@@ -188,7 +188,7 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
             onClick={() => setFlipV((v) => !v)}
             className={`px-2 py-1.5 rounded-lg ${
               flipV
-                ? "bg-blue-600 text-white"
+                ? "bg-[var(--app-primary-bg)] text-white"
                 : "bg-slate-800 text-slate-100 hover:bg-slate-700"
             }`}
           >
@@ -207,7 +207,7 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
           <button
             type="button"
             onClick={handleDownload}
-            className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white hover:bg-blue-500"
+            className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]"
           >
             {content.ui.rotateTab.download}
           </button>

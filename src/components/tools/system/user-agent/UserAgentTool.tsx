@@ -206,7 +206,7 @@ export default function UserAgentTool() {
       <div
         className={`p-6 rounded-3xl border shadow-sm relative overflow-hidden group ${theme.card} ${theme.border}`}
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--app-gradient-from)] via-purple-500 to-[var(--app-gradient-to)]" />
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-sm font-bold ${theme.textMuted}`}>
             {content.ui.raw.title}
@@ -215,7 +215,7 @@ export default function UserAgentTool() {
             onClick={copyUA}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
               copied
-                ? "bg-green-100 text-green-600"
+                ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-zinc-800"
             }`}
           >
@@ -245,8 +245,8 @@ export default function UserAgentTool() {
               : ""
           }
           theme={theme}
-          color="text-blue-500"
-          bgColor="bg-blue-50 dark:bg-blue-900/20"
+          color="text-[var(--app-accent)]"
+          bgColor="bg-[var(--app-secondary-bg)]"
         />
         <InfoCard
           icon={Layers}
@@ -284,8 +284,8 @@ export default function UserAgentTool() {
           value={cpuInfo}
           sub={cores ? `${cores} ${content.ui.cards.cpu.coresSuffix}` : ""}
           theme={theme}
-          color="text-green-500"
-          bgColor="bg-green-50 dark:bg-green-900/20"
+          color="text-[var(--app-success-text)]"
+          bgColor="bg-[var(--app-success-bg)]"
         />
       </div>
 

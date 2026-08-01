@@ -201,8 +201,8 @@ export default function ImageConverter() {
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
           ${
             isDragActive
-              ? "border-blue-500 scale-[0.99]"
-              : `${theme.border} hover:border-blue-400`
+              ? "border-[var(--app-accent)] scale-[0.99]"
+              : `${theme.border} hover:border-[var(--app-accent)]`
           }
           ${theme.bg}`}
         >
@@ -286,7 +286,7 @@ export default function ImageConverter() {
           <button
             {...getRootProps()}
             type="button"
-            className={`w-full py-3 rounded-xl border-2 border-dashed font-medium transition ${theme.border} ${theme.text} hover:border-blue-400`}
+            className={`w-full py-3 rounded-xl border-2 border-dashed font-medium transition ${theme.border} ${theme.text} hover:border-[var(--app-accent)]`}
           >
             <input {...getInputProps()} />
             {content.ui.upload.addMore} ({files.length}/20{" "}
@@ -341,7 +341,7 @@ export default function ImageConverter() {
                 max="100"
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-                className="w-full accent-blue-500"
+                className="w-full accent-[var(--app-accent)]"
               />
               <div className="flex justify-between text-xs text-gray-400">
                 <span>{content.ui.quality.low}</span>
@@ -400,7 +400,7 @@ export default function ImageConverter() {
               setImageUrlInput(e.target.value)
             }
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
           />
           <button
             type="button"

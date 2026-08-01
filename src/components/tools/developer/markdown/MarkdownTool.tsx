@@ -39,7 +39,7 @@ export default function MarkdownTool() {
           <div className="flex gap-2">
             <button
               onClick={() => setMarkdown("")}
-              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors"
               title={content.ui.buttons.clear}
             >
               <Trash2 size={16} />
@@ -48,7 +48,7 @@ export default function MarkdownTool() {
               onClick={handleCopy}
               className={`p-2 rounded-lg transition-colors ${
                 copied
-                  ? "text-green-500 bg-green-50"
+                  ? "text-[var(--app-success-text)] bg-[var(--app-success-bg)]"
                   : "text-zinc-400 hover:bg-zinc-100"
               }`}
               title={content.ui.buttons.copy}

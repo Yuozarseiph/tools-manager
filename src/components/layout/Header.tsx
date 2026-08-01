@@ -111,7 +111,7 @@ export default function Header() {
       backdrop-blur-xl
       transition-all duration-200
       ${
-        pathname === path ? "text-blue-600 dark:text-blue-400" : theme.textMuted
+        pathname === path ? "text-[var(--app-accent)]" : theme.textMuted
       }
       hover:scale-105 active:scale-95
     `;
@@ -260,7 +260,7 @@ export default function Header() {
                       active:scale-[0.97]
                       ${
                         isActive
-                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                          ? "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
                           : isDonate
                             ? "text-red-500 hover:bg-red-500/10"
                             : `${theme.text} hover:bg-black/5 dark:hover:bg-white/5`
@@ -277,7 +277,7 @@ export default function Header() {
                     />
                     <span>{content[item.key]}</span>
                     {isActive && (
-                      <div className="mr-auto w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <div className="mr-auto w-1.5 h-1.5 rounded-full bg-[var(--app-accent)]" />
                     )}
                   </div>
                 );
@@ -339,7 +339,7 @@ export default function Header() {
                       active:scale-90
                       ${
                         active
-                          ? "text-blue-600 dark:text-blue-400"
+                          ? "text-[var(--app-accent)]"
                           : `text-zinc-500 dark:text-zinc-400`
                       }
                     `}
@@ -351,8 +351,8 @@ export default function Header() {
                           className="
                             absolute -top-0.5 -right-0.5
                             w-1.5 h-1.5 rounded-full
-                            bg-blue-500
-                            shadow-sm shadow-blue-500/50
+                            bg-[var(--app-accent)]
+                            shadow-sm shadow-[var(--app-accent)]/50
                           "
                         />
                       )}
@@ -383,7 +383,7 @@ export default function Header() {
                   active:scale-90
                   ${
                     moreOpen || isMoreActive
-                      ? "text-blue-600 dark:text-blue-400"
+                      ? "text-[var(--app-accent)]"
                       : "text-zinc-500 dark:text-zinc-400"
                   }
                 `}
@@ -402,8 +402,8 @@ export default function Header() {
                       className="
                         absolute -top-0.5 -right-0.5
                         w-1.5 h-1.5 rounded-full
-                        bg-blue-500
-                        shadow-sm shadow-blue-500/50
+                        bg-[var(--app-accent)]
+                        shadow-sm shadow-[var(--app-accent)]/50
                       "
                     />
                   )}

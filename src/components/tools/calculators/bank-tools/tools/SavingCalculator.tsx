@@ -167,7 +167,7 @@ export default function SavingCalculator() {
               <p className={`text-sm ${theme.textMuted} mb-1`}>
                 {content.saving.labels.totalEarned}
               </p>
-              <p className={`text-2xl font-bold text-green-500`}>
+              <p className={`text-2xl font-bold text-[var(--app-success-text)]`}>
                 {result.totalEarned.toLocaleString()} {content.common.currency}
               </p>
             </div>
@@ -252,7 +252,7 @@ export default function SavingCalculator() {
                       <td className={`p-2 ${theme.text}`}>
                         {row.deposits.toLocaleString()}
                       </td>
-                      <td className={`p-2 text-green-500`}>
+                      <td className={`p-2 text-[var(--app-success-text)]`}>
                         {row.interest.toLocaleString()}
                       </td>
                       <td className={`p-2 font-bold ${theme.text}`}>

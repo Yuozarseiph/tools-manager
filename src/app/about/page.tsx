@@ -21,9 +21,9 @@ import { aboutContent } from "@/data/pages/about.content";
 
 const FEATURE_ITEMS = [
   { id: "free", icon: Gift, color: "bg-green-500" },
-  { id: "privacy", icon: ShieldCheck, color: "bg-blue-500" },
+  { id: "privacy", icon: ShieldCheck, color: "bg-[var(--app-accent)]" },
   { id: "fast", icon: Zap, color: "bg-amber-500" },
-  { id: "product", icon: Layers, color: "bg-purple-500" },
+  { id: "product", icon: Layers, color: "bg-[var(--app-secondary-color)]" },
 ] as const;
 
 const FAQ_ITEMS = [
@@ -56,13 +56,13 @@ export default function AboutPage() {
 
         {/* --- Hero Section --- */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 bg-blue-500/10 text-blue-600 dark:text-blue-400">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 bg-[var(--app-secondary-bg)] text-[var(--app-accent)]">
             <ShieldCheck size={16} />
             <span>{content.hero.badge}</span>
           </div>
           <h1 className={`text-4xl md:text-6xl font-black mb-6 ${theme.text}`}>
             {content.hero.titlePrefix}{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--app-gradient-from)] to-purple-600">
               Tools Manager
             </span>
           </h1>
@@ -191,14 +191,14 @@ function FAQItem({ question, answer, theme }: any) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center justify-between p-5 text-right font-bold text-lg transition-colors ${
-          isOpen ? "text-blue-600" : theme.text
+          isOpen ? "text-[var(--app-accent)]" : theme.text
         }`}
       >
         {question}
         <ChevronDown
           size={20}
           className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-blue-600" : theme.textMuted
+            isOpen ? "rotate-180 text-[var(--app-accent)]" : theme.textMuted
           }`}
         />
       </button>

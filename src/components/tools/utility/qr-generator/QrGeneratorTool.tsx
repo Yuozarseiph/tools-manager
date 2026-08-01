@@ -324,7 +324,7 @@ export default function QrGeneratorTool() {
 
         {/* Quick Tips - Desktop only */}
         <div
-          className={`hidden lg:block p-6 rounded-2xl border border-blue-500/30 bg-blue-500/5`}
+          className={`hidden lg:block p-6 rounded-2xl border border-[var(--app-accent)]/30 bg-[var(--app-secondary-bg)]`}
         >
           <h4
             className={`font-bold mb-3 flex items-center gap-2 ${theme.text}`}
@@ -334,19 +334,19 @@ export default function QrGeneratorTool() {
           </h4>
           <ul className={`space-y-2 text-sm ${theme.textMuted}`}>
             <li className="flex items-start gap-2">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip1}</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip2}</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip3}</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip4}</span>
             </li>
           </ul>
@@ -618,7 +618,7 @@ export default function QrGeneratorTool() {
                 step="5"
                 value={quietZone}
                 onChange={(e) => setQuietZone(Number(e.target.value))}
-                className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-blue-600"
+                className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-[var(--app-accent)]"
               />
               <p className={`text-[10px] sm:text-xs ${theme.textMuted}`}>
                 {content.styling.quietZone.hint}
@@ -643,7 +643,7 @@ export default function QrGeneratorTool() {
                 step="128"
                 value={size}
                 onChange={(e) => setSize(Number(e.target.value))}
-                className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-blue-600"
+                className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-[var(--app-accent)]"
               />
             </div>
 
@@ -747,7 +747,7 @@ export default function QrGeneratorTool() {
                   step={0.02}
                   value={logoScale}
                   onChange={(e) => setLogoScale(Number(e.target.value))}
-                  className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-blue-600"
+                  className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-[var(--app-accent)]"
                 />
               </div>
             )}
@@ -756,7 +756,7 @@ export default function QrGeneratorTool() {
 
         {/* Mobile Tips */}
         <div
-          className={`lg:hidden p-3 sm:p-4 rounded-2xl border border-blue-500/30 bg-blue-500/5`}
+          className={`lg:hidden p-3 sm:p-4 rounded-2xl border border-[var(--app-accent)]/30 bg-[var(--app-secondary-bg)]`}
         >
           <h4
             className={`font-bold mb-2 flex items-center gap-2 text-xs sm:text-sm ${theme.text}`}
@@ -766,11 +766,11 @@ export default function QrGeneratorTool() {
           </h4>
           <ul className={`space-y-1 text-[10px] sm:text-xs ${theme.textMuted}`}>
             <li className="flex items-start gap-1.5">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip1}</span>
             </li>
             <li className="flex items-start gap-1.5">
-              <span className="text-blue-500 flex-shrink-0">•</span>
+              <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip2}</span>
             </li>
           </ul>

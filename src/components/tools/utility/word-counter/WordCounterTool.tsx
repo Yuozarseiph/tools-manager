@@ -71,7 +71,7 @@ export default function WordCounterTool() {
           <div className="flex gap-2">
             <button
               onClick={() => setText("")}
-              className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors"
+              className="p-1.5 hover:bg-[var(--app-error-bg)] text-[var(--app-error-text)] rounded-lg transition-colors"
               title={content.ui.buttons.clearTitle}
             >
               <Trash2 size={18} />
@@ -79,7 +79,7 @@ export default function WordCounterTool() {
             <button
               onClick={handleCopy}
               className={`flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
-                copied ? "bg-green-100 text-green-700" : theme.secondary
+                copied ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]" : theme.secondary
               }`}
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}

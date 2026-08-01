@@ -116,23 +116,23 @@ export default function ExpenseManager() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={20} className="text-green-500" />
+            <TrendingUp size={20} className="text-[var(--app-success-text)]" />
             <p className={`text-sm ${theme.textMuted}`}>
               {content.expense.labels.totalIncome}
             </p>
           </div>
-          <p className={`text-2xl font-bold text-green-500`}>
+          <p className={`text-2xl font-bold text-[var(--app-success-text)]`}>
             {totalIncome.toLocaleString()} {content.common.currency}
           </p>
         </div>
         <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <div className="flex items-center gap-2 mb-2">
-            <TrendingDown size={20} className="text-red-500" />
+            <TrendingDown size={20} className="text-[var(--app-error-text)]" />
             <p className={`text-sm ${theme.textMuted}`}>
               {content.expense.labels.totalExpense}
             </p>
           </div>
-          <p className={`text-2xl font-bold text-red-500`}>
+          <p className={`text-2xl font-bold text-[var(--app-error-text)]`}>
             {totalExpense.toLocaleString()} {content.common.currency}
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function ExpenseManager() {
           <div className="flex items-center gap-2 mb-2">
             <DollarSign
               size={20}
-              className={netBalance >= 0 ? "text-blue-500" : "text-orange-500"}
+              className={netBalance >= 0 ? "text-[var(--app-accent)]" : "text-orange-500"}
             />
             <p className={`text-sm ${theme.textMuted}`}>
               {content.expense.labels.netBalance}
@@ -148,7 +148,7 @@ export default function ExpenseManager() {
           </div>
           <p
             className={`text-2xl font-bold ${
-              netBalance >= 0 ? "text-blue-500" : "text-orange-500"
+              netBalance >= 0 ? "text-[var(--app-accent)]" : "text-orange-500"
             }`}
           >
             {netBalance.toLocaleString()} {content.common.currency}
@@ -175,7 +175,7 @@ export default function ExpenseManager() {
               onClick={() => setFormData({ ...formData, type: "income" })}
               className={`flex-1 py-2 rounded-xl font-medium ${
                 formData.type === "income"
-                  ? "bg-green-500 text-white"
+                  ? "bg-[var(--app-success-text)] text-white"
                   : `${theme.secondary} ${theme.text}`
               }`}
             >
@@ -185,7 +185,7 @@ export default function ExpenseManager() {
               onClick={() => setFormData({ ...formData, type: "expense" })}
               className={`flex-1 py-2 rounded-xl font-medium ${
                 formData.type === "expense"
-                  ? "bg-red-500 text-white"
+                  ? "bg-[var(--app-error-text)] text-white"
                   : `${theme.secondary} ${theme.text}`
               }`}
             >
@@ -306,7 +306,7 @@ export default function ExpenseManager() {
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className={`font-bold ${
-                        t.type === "income" ? "text-green-500" : "text-red-500"
+                        t.type === "income" ? "text-[var(--app-success-text)]" : "text-[var(--app-error-text)]"
                       }`}
                     >
                       {t.type === "income" ? "+" : "-"}{" "}
@@ -323,9 +323,9 @@ export default function ExpenseManager() {
                 </div>
                 <button
                   onClick={() => deleteTransaction(t.id)}
-                  className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-[var(--app-error-bg)] rounded-lg transition-colors"
                 >
-                  <Trash2 size={18} className="text-red-500" />
+                  <Trash2 size={18} className="text-[var(--app-error-text)]" />
                 </button>
               </div>
             ))

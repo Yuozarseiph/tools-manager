@@ -276,8 +276,8 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
     !w-3 !h-3 !bg-white dark:!bg-gray-800 
     !border-2 ${isDark ? "border-gray-600" : "border-gray-300"}
     transition-all duration-200
-    hover:!scale-125 hover:!border-blue-400
-    ${selected ? "!border-blue-500 !bg-blue-50 dark:!bg-blue-900/30" : ""}
+    hover:!scale-125 hover:!border-[var(--app-accent)]
+    ${selected ? "!border-[var(--app-accent)] !bg-[var(--app-secondary-bg)]" : ""}
   `;
 
   const getAccessLevelColor = (level: string) => {
@@ -300,7 +300,7 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
         shadow-sm transition-all duration-300 relative
         ${theme.text} ${styles.border} ${styles.bg}
         hover:shadow-md hover:border-opacity-80 group
-        ${selected ? "ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1" : ""}
+        ${selected ? "ring-2 ring-[var(--app-accent)] ring-offset-1" : ""}
         ${data.isAbstract ? "opacity-90" : ""}
       `}
       style={{

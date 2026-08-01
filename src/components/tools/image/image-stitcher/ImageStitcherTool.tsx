@@ -262,7 +262,7 @@ export default function ImageStitcherTool() {
             step={2}
             value={gap}
             onChange={(e) => setGap(parseInt(e.target.value))}
-            className="w-full accent-blue-600 mt-3"
+            className="w-full accent-[var(--app-accent)] mt-3"
           />
         </div>
         <div>
@@ -290,7 +290,7 @@ export default function ImageStitcherTool() {
             step={0.01}
             value={quality}
             onChange={(e) => setQuality(parseFloat(e.target.value))}
-            className="w-full accent-blue-600"
+            className="w-full accent-[var(--app-accent)]"
           />
         </div>
       )}
@@ -304,7 +304,7 @@ export default function ImageStitcherTool() {
           e.preventDefault();
           addFiles(e.dataTransfer.files);
         }}
-        className={`w-full flex flex-col items-center justify-center gap-2 py-10 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-blue-500 ${theme.bg}`}
+        className={`w-full flex flex-col items-center justify-center gap-2 py-10 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-[var(--app-accent)] ${theme.bg}`}
       >
         <UploadCloud size={32} className={theme.accent} />
         <span className={`font-bold ${theme.text}`}>{t.dropTitle}</span>
@@ -315,7 +315,7 @@ export default function ImageStitcherTool() {
       </button>
 
       {notice && (
-        <p className="mt-3 text-sm text-amber-500 font-medium text-center">
+        <p className="mt-3 text-sm text-[var(--app-warning-text)] font-medium text-center">
           {notice}
         </p>
       )}
@@ -342,7 +342,7 @@ export default function ImageStitcherTool() {
                   {it.el.naturalWidth}×{it.el.naturalHeight}px
                 </p>
                 {it.crop && (
-                  <span className="text-[10px] text-green-500 font-medium">
+                  <span className="text-[10px] text-[var(--app-success-text)] font-medium">
                     {t.cropped}
                   </span>
                 )}
@@ -478,7 +478,7 @@ function IconBtn({
       title={title}
       className={`p-1.5 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
         danger
-          ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+          ? "text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)]"
           : `${theme.text} hover:bg-black/5 dark:hover:bg-white/10`
       }`}
     >

@@ -283,9 +283,9 @@ export default function FileExplorer({
         <div
           className={`group flex items-center gap-1 px-2 py-1 rounded cursor-pointer transition-colors ${
             activeFileId === item.id
-              ? "bg-blue-50 dark:bg-blue-900/20"
+              ? "bg-[var(--app-secondary-bg)]"
               : dragOverFolder === item.id
-                ? "bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500"
+                ? "bg-[var(--app-success-bg)] ring-2 ring-[var(--app-success-border)]"
                 : "hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
           style={{ paddingLeft: `${depth * 16 + 8}px` }}
@@ -366,15 +366,15 @@ export default function FileExplorer({
               />
               <button
                 onClick={() => handleRename(item.id)}
-                className="p-0.5 rounded hover:bg-green-100"
+                className="p-0.5 rounded hover:bg-[var(--app-success-bg)]"
               >
-                <Check size={12} className="text-green-600" />
+                <Check size={12} className="text-[var(--app-success-text)]" />
               </button>
               <button
                 onClick={onCancelRename}
-                className="p-0.5 rounded hover:bg-red-100"
+                className="p-0.5 rounded hover:bg-[var(--app-error-bg)]"
               >
-                <X size={12} className="text-red-500" />
+                <X size={12} className="text-[var(--app-error-text)]" />
               </button>
             </div>
           ) : (
@@ -395,10 +395,10 @@ export default function FileExplorer({
                     e.stopPropagation();
                     onStartCreate("file", item.id);
                   }}
-                  className="p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                  className="p-0.5 rounded hover:bg-[var(--app-secondary-bg)]"
                   title={isFa ? "فایل جدید" : "New file"}
                 >
-                  <Plus size={12} className="text-blue-500" />
+                  <Plus size={12} className="text-[var(--app-accent)]" />
                 </button>
               )}
               <button
@@ -418,10 +418,10 @@ export default function FileExplorer({
                   if (confirm(isFa ? "حذف شود؟" : "Delete?"))
                     onDeleteItem(item.id);
                 }}
-                className="p-0.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30"
+                className="p-0.5 rounded hover:bg-[var(--app-error-bg)]"
                 title={isFa ? "حذف" : "Delete"}
               >
-                <Trash2 size={12} className="text-red-500" />
+                <Trash2 size={12} className="text-[var(--app-error-text)]" />
               </button>
             </div>
           )}
@@ -436,7 +436,7 @@ export default function FileExplorer({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-5 h-5 border-2 border-[var(--app-accent)] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -551,7 +551,7 @@ export default function FileExplorer({
             <div className="flex gap-1">
               <button
                 onClick={handleCreate}
-                className="flex-1 px-2 py-1 text-xs rounded bg-blue-500 text-white hover:bg-blue-600"
+                className="flex-1 px-2 py-1 text-xs rounded bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]"
               >
                 {isFa ? "ایجاد" : "Create"}
               </button>

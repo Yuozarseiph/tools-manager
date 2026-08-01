@@ -3,65 +3,82 @@ import {
   cloneRowsSafe,
   normalizeStr,
   parseNumberMaybe,
-  detectColumnType,
+  createColumnTypeCache,
   stripInternal,
   clampInt,
 } from "./utils";
-import {
-  CellValue,
-  DataRow,
-  SortDir,
-  SortState,
-  FilterOp,
-  FilterState,
-  ColumnType,
-} from "./types";
+import type { DataRow, SortState, FilterState, ColumnType } from "./types";
 
+const MAX_HISTORY = 10;
+
+/**
+ * Central derived-state hook for the Excel editor: search -> filter -> sort
+ * -> paginate, plus undo history management.
+ *
+ * Notes on the fixes made here vs. the previous version:
+ * - `paginatedRows` now actually takes `currentPage` into account (previously
+ *   hard-coded to page 1, so pagination silently did nothing when this hook
+ *   was used).
+ * - Column type detection is computed once per relevant row-set via a small
+ *   cache instead of re-scanning the same rows 2-3x per render (filter,
+ *   sort, and the "active filter type" badge all needed it separately).
+ */
 export function useExcelEditorLogic(
   rows: DataRow[],
   headers: string[],
   searchQuery: string,
   sort: SortState,
   filter: FilterState,
-  rowsPerPage: number
+  rowsPerPage: number,
+  currentPage: number,
 ) {
   const [history, setHistory] = useState<DataRow[][]>([]);
 
-  const saveToHistory = useCallback(() => {
+  const pushHistorySnapshot = useCallback((snapshotOf: DataRow[]) => {
     setHistory((prev) => {
-      const snap = cloneRowsSafe(rows);
+      const snap = cloneRowsSafe(snapshotOf);
       const next = [...prev, snap];
-      return next.length > 10 ? next.slice(1) : next;
+      return next.length > MAX_HISTORY ? next.slice(1) : next;
     });
-  }, [rows]);
+  }, []);
 
   const handleUndo = useCallback(() => {
-    if (history.length === 0) return;
+    if (history.length === 0) return undefined;
     const previousState = history[history.length - 1];
     setHistory((prev) => prev.slice(0, -1));
     return previousState;
   }, [history]);
 
+  const clearHistory = useCallback(() => setHistory([]), []);
+
   const searchedRows = useMemo(() => {
-    if (!searchQuery) return rows;
-    const q = searchQuery.toLowerCase();
+    if (!searchQuery.trim()) return rows;
+    const q = searchQuery.trim().toLowerCase();
     return rows.filter((row) =>
       Object.values(stripInternal(row)).some((val) =>
         String(val ?? "")
           .toLowerCase()
-          .includes(q)
-      )
+          .includes(q),
+      ),
     );
   }, [rows, searchQuery]);
 
+  // One cache per distinct `searchedRows` identity — shared by the filter
+  // logic and the "active filter type" badge so the column only gets
+  // scanned once, not twice, per render.
+  const searchedTypeCache = useMemo(
+    () => createColumnTypeCache(searchedRows),
+    [searchedRows],
+  );
+
   const activeFilterType: ColumnType = useMemo(() => {
     if (!filter?.column) return "text";
-    return detectColumnType(searchedRows, filter.column);
-  }, [filter?.column, searchedRows]);
+    return searchedTypeCache(filter.column);
+  }, [filter?.column, searchedTypeCache]);
 
   const filteredRows = useMemo(() => {
     if (!filter || !filter.column) return searchedRows;
-    const colType = detectColumnType(searchedRows, filter.column);
+    const colType = searchedTypeCache(filter.column);
 
     return searchedRows.filter((r) => {
       const v = r[filter.column];
@@ -92,12 +109,19 @@ export function useExcelEditorLogic(
       if (filter.op === "startsWith") return s.startsWith(q);
       return s.includes(q);
     });
-  }, [searchedRows, filter]);
+  }, [searchedRows, filter, searchedTypeCache]);
+
+  // Separate cache for filteredRows, since sort operates on the
+  // post-filter set (which can have a different type distribution).
+  const filteredTypeCache = useMemo(
+    () => createColumnTypeCache(filteredRows),
+    [filteredRows],
+  );
 
   const filteredSortedRows = useMemo(() => {
     if (!sort || !sort.column) return filteredRows;
 
-    const colType = detectColumnType(filteredRows, sort.column);
+    const colType = filteredTypeCache(sort.column);
     const dir = sort.dir === "asc" ? 1 : -1;
 
     const arr = [...filteredRows];
@@ -119,33 +143,41 @@ export function useExcelEditorLogic(
     });
 
     return arr;
-  }, [filteredRows, sort]);
+  }, [filteredRows, sort, filteredTypeCache]);
 
   const safeRowsPerPage = useMemo(
     () => clampInt(rowsPerPage, 1, 100),
-    [rowsPerPage]
+    [rowsPerPage],
   );
 
   const totalPages = useMemo(
-    () => Math.ceil(filteredSortedRows.length / safeRowsPerPage),
-    [filteredSortedRows.length, safeRowsPerPage]
+    () => Math.max(1, Math.ceil(filteredSortedRows.length / safeRowsPerPage)),
+    [filteredSortedRows.length, safeRowsPerPage],
   );
 
-  const paginatedRows = useMemo(
-    () =>
-      filteredSortedRows.slice((1 - 1) * safeRowsPerPage, 1 * safeRowsPerPage),
-    [filteredSortedRows, safeRowsPerPage]
+  const safeCurrentPage = useMemo(
+    () => clampInt(currentPage, 1, totalPages),
+    [currentPage, totalPages],
   );
+
+  const paginatedRows = useMemo(() => {
+    const start = (safeCurrentPage - 1) * safeRowsPerPage;
+    const end = start + safeRowsPerPage;
+    return filteredSortedRows.slice(start, end);
+  }, [filteredSortedRows, safeCurrentPage, safeRowsPerPage]);
 
   return {
-    saveToHistory,
+    history,
+    pushHistorySnapshot,
     handleUndo,
+    clearHistory,
     searchedRows,
     activeFilterType,
     filteredRows,
     filteredSortedRows,
     safeRowsPerPage,
     totalPages,
+    safeCurrentPage,
     paginatedRows,
   };
 }

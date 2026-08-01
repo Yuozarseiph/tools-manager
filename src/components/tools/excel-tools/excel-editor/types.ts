@@ -16,4 +16,10 @@ export type FilterState = {
   value2?: string;
 } | null;
 export type ColumnType = "number" | "text";
+
+export type LoadStatus =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "error"; message: string };
+
 export {};

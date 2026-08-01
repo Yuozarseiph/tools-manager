@@ -143,7 +143,7 @@ export default function CropModal({
     };
   }, []);
 
-  const handleStyle = "absolute w-3 h-3 bg-blue-500 border border-white rounded-sm";
+  const handleStyle = "absolute w-3 h-3 bg-[var(--app-accent)] border border-white rounded-sm";
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
@@ -170,7 +170,7 @@ export default function CropModal({
           <div className="absolute inset-0 bg-black/50 pointer-events-none" />
           {/* Selection window */}
           <div
-            className="absolute border-2 border-blue-500 cursor-move"
+            className="absolute border-2 border-[var(--app-accent)] cursor-move"
             style={{
               left: `${rect.x * 100}%`,
               top: `${rect.y * 100}%`,

@@ -228,8 +228,8 @@ export default function ImageResizerTool() {
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
               ${
                 isDragActive
-                  ? "border-blue-500 scale-[0.99] bg-blue-50 dark:bg-blue-950/20"
-                  : `${theme.border} hover:border-blue-400`
+                  ? "border-[var(--app-accent)] scale-[0.99] bg-[var(--app-secondary-bg)]"
+                  : `${theme.border} hover:border-[var(--app-accent)]`
               }
               ${theme.bg}
               `}
@@ -300,7 +300,7 @@ export default function ImageResizerTool() {
               </div>
               <button
                 onClick={handleClear}
-                className={`p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors`}
+                className={`p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors`}
                 title={content.ui.buttons.clear}
               >
                 <Trash2 size={20} />
@@ -423,7 +423,7 @@ export default function ImageResizerTool() {
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
           />
           <button
             type="button"

@@ -30,7 +30,7 @@ export default function ExcelEditorClient() {
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-4">
-          <div className="p-4 rounded-2xl w-fit shadow-lg shadow-blue-600/20 bg-blue-600">
+          <div className="p-4 rounded-2xl w-fit shadow-lg shadow-[var(--app-primary-bg)]/20 bg-[var(--app-primary-bg)]">
             <Edit3 size={32} className="text-white" />
           </div>
           <div>

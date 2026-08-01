@@ -105,7 +105,7 @@ export default function ImageEditorTool() {
             />
             <label
               htmlFor="image-editor-upload"
-              className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer bg-blue-600 text-white hover:bg-blue-500"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]"
             >
               {content.ui.editorHeader.upload}
             </label>
@@ -116,7 +116,7 @@ export default function ImageEditorTool() {
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
                 placeholder={content.ui.editorHeader.urlPlaceholder}
-                className={`w-40 md:w-64 px-2 py-1.5 rounded-lg text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-40 md:w-64 px-2 py-1.5 rounded-lg text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
               />
               <button
                 type="button"

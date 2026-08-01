@@ -135,7 +135,7 @@ export default function ExcelChartTool() {
       {/* Toolbar */}
       <div className={`p-6 border-b flex flex-col gap-6 ${theme.border}`}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl cursor-pointer hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 w-full sm:w-auto active:scale-95">
+          <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-medium rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 w-full sm:w-auto active:scale-95">
             <UploadCloud size={20} />
             <span>
               {data.length > 0
@@ -158,7 +158,7 @@ export default function ExcelChartTool() {
                   onClick={() => setChartType(type.id as typeof chartType)}
                   className={`p-2 rounded-lg transition-all duration-200 relative group ${
                     chartType === type.id
-                      ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                      ? "bg-white dark:bg-gray-700 text-[var(--app-accent)] shadow-sm"
                       : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-white/5"
                   }`}
                   title={type.title}
@@ -176,17 +176,17 @@ export default function ExcelChartTool() {
         {/* هشدار اعداد فارسی */}
         {hasPersianNumbers && (
           <div
-            className={`flex items-start gap-3 p-4 rounded-xl border ${theme.border} bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800`}
+            className={`flex items-start gap-3 p-4 rounded-xl border ${theme.border} bg-[var(--app-secondary-bg)] dark:bg-[var(--app-secondary-bg)] border-[var(--app-border)]`}
           >
             <AlertCircle
               size={18}
-              className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+              className="text-[var(--app-accent)] flex-shrink-0 mt-0.5"
             />
             <div className="text-sm">
-              <p className="font-bold text-blue-700 dark:text-blue-300 mb-1">
+              <p className="font-bold text-[var(--app-accent)] mb-1">
                 {content.ui.persianNumbers.title}
               </p>
-              <p className="text-blue-600 dark:text-blue-400 text-xs">
+              <p className="text-[var(--app-accent)] text-xs">
                 {content.ui.persianNumbers.description}
               </p>
             </div>
@@ -256,7 +256,7 @@ export default function ExcelChartTool() {
                 <label className="text-xs opacity-70">
                   {content.ui.settings.rangeLabel}{" "}
                   {chartType === "pie" && (
-                    <span className="text-amber-500 font-bold">
+                    <span className="text-[var(--app-warning-text)] font-bold">
                       {content.ui.settings.pieHint}
                     </span>
                   )}
@@ -301,7 +301,7 @@ export default function ExcelChartTool() {
                     onChange={(e) =>
                       setZoomLevel(Number(e.target.value) || 100)
                     }
-                    className="w-full accent-blue-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                    className="w-full accent-[var(--app-accent)] h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                   />
                 </div>
               ) : (

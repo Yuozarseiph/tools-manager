@@ -374,7 +374,7 @@ export default function PdfEditorTool() {
                 <button
                   onClick={resetAll}
                   disabled={isBusy}
-                  className="text-red-500 hover:text-red-700 p-2 disabled:opacity-50"
+                  className="text-[var(--app-error-text)] hover:opacity-80 p-2 disabled:opacity-50"
                   title={content.ui.file.removeTitle}
                 >
                   <X size={18} />
@@ -383,12 +383,12 @@ export default function PdfEditorTool() {
             )}
 
             {error && (
-              <div className="p-4 rounded-lg border border-red-300 bg-red-50 flex gap-3">
+              <div className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
                 <AlertCircle
                   size={20}
-                  className="text-red-600 flex-shrink-0 mt-0.5"
+                  className="text-[var(--app-error-text)] flex-shrink-0 mt-0.5"
                 />
-                <div className="text-sm text-red-700 whitespace-pre-wrap">
+                <div className="text-sm text-[var(--app-error-text)] whitespace-pre-wrap">
                   {error}
                 </div>
               </div>
@@ -498,7 +498,7 @@ export default function PdfEditorTool() {
                 </span>
 
                 {totalPages > 0 && (
-                  <span className="hidden sm:inline-flex text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600">
+                  <span className="hidden sm:inline-flex text-xs px-2 py-1 rounded-full bg-[var(--app-success-bg)] text-[var(--app-success-text)]">
                     {pageLabel}
                   </span>
                 )}
@@ -641,17 +641,17 @@ export default function PdfEditorTool() {
                             }}
                             className={`relative flex flex-col items-center justify-center gap-1 py-3 rounded-lg border text-xs transition-all ${
                               isActive
-                                ? "border-blue-500 ring-2 ring-blue-500"
+                                ? "border-[var(--app-accent)] ring-2 ring-[var(--app-accent)]"
                                 : "border-slate-200 dark:border-slate-800"
                             } ${
                               selected
-                                ? "bg-blue-50 dark:bg-blue-500/10"
+                                ? "bg-[var(--app-secondary-bg)]"
                                 : "bg-white dark:bg-slate-900"
                             }`}
                           >
                             <span className="font-semibold">{page}</span>
                             {selected && (
-                              <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-300">
+                              <span className="inline-flex items-center gap-1 text-[10px] text-[var(--app-accent)]">
                                 <Trash2 size={12} />
                                 {content.ui.viewer.selectedBadge}
                               </span>

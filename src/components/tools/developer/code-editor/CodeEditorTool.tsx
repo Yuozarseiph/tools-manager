@@ -87,7 +87,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
+          <div className="animate-spin w-8 h-8 border-2 border-[var(--app-accent)] border-t-transparent rounded-full mx-auto mb-4" />
           <p className="text-sm" style={{ color: "var(--app-text-muted)" }}>
             {isFa ? "در حال بارگذاری..." : "Loading..."}
           </p>

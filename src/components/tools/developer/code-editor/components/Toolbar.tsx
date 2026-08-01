@@ -255,7 +255,7 @@ export default function Toolbar({
           icon={FolderDown}
           tooltip={isFa ? "ذخیره همه در دیسک" : "Save all to disk"}
           onClick={onSaveAllToDisk}
-          className="text-green-500"
+          className="text-[var(--app-success-text)]"
         />
       )}
       {mounted && isFileSystemSupported && (
@@ -282,7 +282,7 @@ export default function Toolbar({
       />
       {showResetConfirm ? (
         <div className="flex items-center gap-1 px-1">
-          <span className="text-[10px] text-red-500 whitespace-nowrap">
+          <span className="text-[10px] text-[var(--app-error-text)] whitespace-nowrap">
             {isFa ? "مطمئنی؟" : "Sure?"}
           </span>
           <button
@@ -365,7 +365,7 @@ export default function Toolbar({
           </>
         )}
         {hasUnsavedChanges && (
-          <span className="text-amber-500 text-[11px] shrink-0">
+          <span className="text-[var(--app-warning-text)] text-[11px] shrink-0">
             ● {isFa ? "ذخیره نشده" : "Unsaved"}
           </span>
         )}
@@ -402,11 +402,15 @@ function Btn({
         active
           ? "bg-purple-600 text-white hover:bg-purple-700"
           : danger
-            ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+            ? "text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)]"
             : "hover:bg-slate-100 dark:hover:bg-slate-800"
       } ${className || ""}`}
       style={{
-        color: active ? "#fff" : danger ? "#ef4444" : "var(--app-text-muted)",
+        color: active
+          ? "#fff"
+          : danger
+            ? "var(--app-error-text)"
+            : "var(--app-text-muted)",
       }}
       title={tooltip}
     >
@@ -432,10 +436,10 @@ function MoreBtn({
       onClick={onClick}
       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors ${
         danger
-          ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+          ? "text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)]"
           : "hover:bg-slate-100 dark:hover:bg-slate-800"
       }`}
-      style={{ color: danger ? "#ef4444" : "var(--app-text)" }}
+      style={{ color: danger ? "var(--app-error-text)" : "var(--app-text)" }}
     >
       <Icon size={14} />
       <span>{label}</span>

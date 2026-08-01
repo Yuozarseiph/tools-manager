@@ -83,8 +83,8 @@ export default function PrimeChecker() {
         <div
           className={`p-6 rounded-xl border-2 text-center ${
             result.isPrime
-              ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-              : "border-red-500 bg-red-50 dark:bg-red-950/20"
+              ? "border-[var(--app-success-border)] bg-[var(--app-success-bg)]"
+              : "border-[var(--app-error-border)] bg-[var(--app-error-bg)]"
           }`}
         >
           <div
@@ -101,8 +101,8 @@ export default function PrimeChecker() {
           <p
             className={`text-xl font-bold ${
               result.isPrime
-                ? "text-green-700 dark:text-green-400"
-                : "text-red-700 dark:text-red-400"
+                ? "text-[var(--app-success-text)]"
+                : "text-[var(--app-error-text)]"
             }`}
           >
             {result.message}
@@ -117,7 +117,7 @@ export default function PrimeChecker() {
                 {result.nearPrimes.map((p) => (
                   <span
                     key={p}
-                    className="px-3 py-1 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300"
+                    className="px-3 py-1 rounded-lg bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
                   >
                     {p}
                   </span>

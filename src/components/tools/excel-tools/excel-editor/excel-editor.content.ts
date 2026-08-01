@@ -7,20 +7,21 @@ export const excelEditorContent = {
     id: "excel-editor",
     category: "excel",
     title: "ویرایشگر آنلاین اکسل",
-    description: "فایل‌های Excel یا CSV را در مرورگر خود ویرایش کنید و خروجی جدید بگیرید.",
+    description:
+      "فایل‌های Excel یا CSV را در مرورگر خود ویرایش کنید و خروجی جدید بگیرید.",
     features: [
       "آپلود مستقیم فایل Excel یا CSV",
       "ویرایش سلول‌ها به صورت جدولی",
       "افزودن و حذف سطرها",
       "جستجوی سریع در داده‌ها",
       "بازگشت (Undo) به وضعیت قبلی",
-      "دانلود خروجی به صورت Excel یا CSV"
+      "دانلود خروجی به صورت Excel یا CSV",
     ],
     ui: {
       upload: {
         buttonInitial: "انتخاب فایل Excel / CSV",
         buttonChange: "تغییر فایل داده",
-        acceptHint: "فرمت‌های مجاز: .xlsx، .xls، .csv"
+        acceptHint: "فرمت‌های مجاز: .xlsx، .xls، .csv",
       },
       actions: {
         exportExcel: "دانلود Excel",
@@ -31,7 +32,7 @@ export const excelEditorContent = {
         fullscreenEnterTitle: "نمایش تمام‌صفحه",
         fullscreenExitTitle: "خروج از تمام‌صفحه",
         copy: "کپی",
-        copied: "کپی شد"
+        copied: "کپی شد",
       },
       search: { placeholder: "جستجو در تمام ستون‌ها..." },
       filter: {
@@ -53,15 +54,15 @@ export const excelEditorContent = {
           startsWith: "شروع با",
           gt: "بزرگ‌تر از",
           lt: "کوچک‌تر از",
-          between: "بین"
-        }
+          between: "بین",
+        },
       },
       sort: {
         title: "مرتب‌سازی",
         noSort: "بدون مرتب‌سازی",
         directionAsc: "صعودی",
         directionDesc: "نزولی",
-        clear: "پاک کردن"
+        clear: "پاک کردن",
       },
       sum: {
         title: "جمع",
@@ -75,7 +76,7 @@ export const excelEditorContent = {
         to: "تا",
         resultLabel: "نتیجه",
         countedLabel: "تعداد سلول‌های عددی",
-        copyResult: "کپی نتیجه"
+        copyResult: "کپی نتیجه",
       },
       export: {
         title: "خروجی CSV",
@@ -83,12 +84,12 @@ export const excelEditorContent = {
         fromRowPlaceholder: "از ردیف",
         toRowPlaceholder: "تا ردیف",
         filteredButton: "دانلود CSV (فیلتر شده)",
-        rangeButton: "دانلود CSV (بازه انتخابی)"
+        rangeButton: "دانلود CSV (بازه انتخابی)",
       },
       table: {
         indexHeader: "ردیف",
         deleteHeader: "حذف",
-        deleteTooltip: "حذف این سطر"
+        deleteTooltip: "حذف این سطر",
       },
       pagination: {
         summaryPrefix: "نمایش ",
@@ -96,47 +97,61 @@ export const excelEditorContent = {
         summaryOfWord: " از ",
         summarySuffix: " ردیف",
         rowsPerPageLabel: "تعداد نمایش",
-        perPageSuffix: "در صفحه"
+        perPageSuffix: "در صفحه",
       },
       empty: {
         title: "هیچ فایلی انتخاب نشده است",
-        description: "برای شروع، یک فایل Excel یا CSV انتخاب کنید تا داده‌ها در اینجا قابل ویرایش باشند."
+        description:
+          "برای شروع، یک فایل Excel یا CSV انتخاب کنید تا داده‌ها در اینجا قابل ویرایش باشند.",
+      },
+      status: {
+        loading: "در حال خواندن فایل...",
+        errorTitle: "خطا در بارگذاری فایل",
+        invalidType:
+          "فرمت فایل پشتیبانی نمی‌شود. لطفاً فایل xlsx، xls یا csv انتخاب کنید.",
+        emptyFile: "فایل انتخاب‌شده داده‌ای ندارد یا قابل خواندن نیست.",
+        parseError:
+          "خواندن فایل با خطا مواجه شد. لطفاً فایل را بررسی و دوباره تلاش کنید.",
+        dismiss: "متوجه شدم",
       },
       page: {
         title: "ویرایشگر آنلاین اکسل",
-        description: "بدون نیاز به نصب نرم‌افزار، فایل‌های Excel یا CSV را در مرورگر خود ویرایش و ذخیره کنید."
-      }
-    }
+        description:
+          "بدون نیاز به نصب نرم‌افزار، فایل‌های Excel یا CSV را در مرورگر خود ویرایش و ذخیره کنید.",
+      },
+    },
   },
   en: {
     id: "excel-editor",
     category: "excel",
     title: "Online Excel editor",
-    description: "Edit Excel or CSV files directly in your browser and export the result.",
+    description:
+      "Edit Excel or CSV files directly in your browser and export the result.",
     features: [
       "Upload Excel or CSV files",
       "Edit cells in a spreadsheet-like table",
       "Add and remove rows",
       "Quick search across all columns",
       "Undo recent changes",
-      "Download as Excel or CSV"
+      "Download as Excel or CSV",
     ],
     ui: {
       upload: {
         buttonInitial: "Choose Excel / CSV file",
         buttonChange: "Change data file",
-        acceptHint: "Supported formats: .xlsx, .xls, .csv"
+        acceptHint: "Supported formats: .xlsx, .xls, .csv",
       },
       actions: {
         exportExcel: "Export to Excel",
         addRow: "Add row",
         undoTitle: "Undo last change",
         closeFileTitle: "Close file and clear data",
-        resetConfirm: "Are you sure you want to close the file and clear all data?",
+        resetConfirm:
+          "Are you sure you want to close the file and clear all data?",
         fullscreenEnterTitle: "Enter full screen",
         fullscreenExitTitle: "Exit full screen",
         copy: "Copy",
-        copied: "Copied"
+        copied: "Copied",
       },
       search: { placeholder: "Search across all columns..." },
       filter: {
@@ -158,15 +173,15 @@ export const excelEditorContent = {
           startsWith: "Starts with",
           gt: "Greater than",
           lt: "Less than",
-          between: "Between"
-        }
+          between: "Between",
+        },
       },
       sort: {
         title: "Sort",
         noSort: "No sort",
         directionAsc: "Ascending",
         directionDesc: "Descending",
-        clear: "Clear"
+        clear: "Clear",
       },
       sum: {
         title: "Sum",
@@ -180,7 +195,7 @@ export const excelEditorContent = {
         to: "To",
         resultLabel: "Result",
         countedLabel: "Counted numeric cells",
-        copyResult: "Copy result"
+        copyResult: "Copy result",
       },
       export: {
         title: "CSV export",
@@ -188,12 +203,12 @@ export const excelEditorContent = {
         fromRowPlaceholder: "From row",
         toRowPlaceholder: "To row",
         filteredButton: "Export CSV (filtered)",
-        rangeButton: "Export CSV (selected range)"
+        rangeButton: "Export CSV (selected range)",
       },
       table: {
         indexHeader: "Row",
         deleteHeader: "Delete",
-        deleteTooltip: "Delete this row"
+        deleteTooltip: "Delete this row",
       },
       pagination: {
         summaryPrefix: "Showing ",
@@ -201,18 +216,30 @@ export const excelEditorContent = {
         summaryOfWord: " of ",
         summarySuffix: " rows",
         rowsPerPageLabel: "Rows",
-        perPageSuffix: "per page"
+        perPageSuffix: "per page",
       },
       empty: {
         title: "No file selected",
-        description: "Upload an Excel or CSV file to start editing its data in this table."
+        description:
+          "Upload an Excel or CSV file to start editing its data in this table.",
+      },
+      status: {
+        loading: "Reading file...",
+        errorTitle: "Failed to load file",
+        invalidType:
+          "Unsupported file format. Please choose an xlsx, xls, or csv file.",
+        emptyFile: "The selected file has no readable data.",
+        parseError:
+          "Something went wrong while reading the file. Please check it and try again.",
+        dismiss: "Dismiss",
       },
       page: {
         title: "Online Excel editor",
-        description: "Edit Excel or CSV files in your browser and export the updated sheet as a new file."
-      }
-    }
-  }
+        description:
+          "Edit Excel or CSV files in your browser and export the updated sheet as a new file.",
+      },
+    },
+  },
 };
 
 export type ExcelEditorToolContent = typeof excelEditorContent.fa;

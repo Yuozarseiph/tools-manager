@@ -85,6 +85,12 @@ function parseNumberMaybe(v: unknown): number | undefined {
   return parenNegative ? (n === 0 ? -0 : -Math.abs(n)) : n;
 }
 
+/**
+ * Detects the dominant type of a column by sampling up to 200 rows.
+ * Pure function — callers should memoize results themselves keyed on
+ * (rows reference, column) to avoid redundant re-scans; see
+ * `createColumnTypeCache` below.
+ */
 function detectColumnType(rows: DataRow[], column: string): ColumnType {
   let checked = 0;
   let numeric = 0;
@@ -96,6 +102,25 @@ function detectColumnType(rows: DataRow[], column: string): ColumnType {
   }
   if (checked === 0) return "text";
   return numeric / checked >= 0.7 ? "number" : "text";
+}
+
+/**
+ * Creates a tiny memoization cache for detectColumnType so that when the
+ * same (rows array reference, column) pair is requested multiple times in
+ * the same render pass (e.g. by filter, sort and the UI "type" badge),
+ * the underlying scan only runs once instead of 3x.
+ * Call `createColumnTypeCache()` once per relevant rows-array identity
+ * (e.g. inside a useMemo keyed on that array).
+ */
+function createColumnTypeCache(rows: DataRow[]) {
+  const cache = new Map<string, ColumnType>();
+  return (column: string): ColumnType => {
+    const hit = cache.get(column);
+    if (hit) return hit;
+    const type = detectColumnType(rows, column);
+    cache.set(column, type);
+    return type;
+  };
 }
 
 function stripInternal(row: DataRow): Record<string, CellValue> {
@@ -120,6 +145,30 @@ function downloadTextFile(name: string, text: string, mime: string) {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Ensures header names are unique (Excel/CSV files can contain duplicate
+ * column names, e.g. two columns both literally called "Name"). Without
+ * this, rows built as plain objects keyed by header would silently drop
+ * data for every duplicate but the last.
+ */
+function dedupeHeaders(headers: string[]): string[] {
+  const seen = new Map<string, number>();
+  return headers.map((h) => {
+    const base = h === "" ? "Column" : h;
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    return count === 0 ? base : `${base} (${count + 1})`;
+  });
+}
+
+/** Basic sanity check that the uploaded file looks like a spreadsheet we can parse. */
+function isSupportedSpreadsheetFile(file: File): boolean {
+  const name = file.name.toLowerCase();
+  return (
+    name.endsWith(".xlsx") || name.endsWith(".xls") || name.endsWith(".csv")
+  );
+}
+
 export {
   makeId,
   cloneRowsSafe,
@@ -127,7 +176,10 @@ export {
   normalizeNumberString,
   parseNumberMaybe,
   detectColumnType,
+  createColumnTypeCache,
   stripInternal,
   clampInt,
   downloadTextFile,
+  dedupeHeaders,
+  isSupportedSpreadsheetFile,
 };

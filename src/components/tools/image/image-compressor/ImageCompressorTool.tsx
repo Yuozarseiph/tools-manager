@@ -127,8 +127,8 @@ export default function ImageCompressorTool() {
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
           ${
             isDragActive
-              ? "border-blue-500 scale-[0.99]"
-              : `${theme.border} hover:border-blue-400`
+              ? "border-[var(--app-accent)] scale-[0.99]"
+              : `${theme.border} hover:border-[var(--app-accent)]`
           }
           ${theme.bg}
           `}
@@ -170,7 +170,7 @@ export default function ImageCompressorTool() {
                     </span>
                   )}
                   {compressedSizeKB && reductionPercent !== null && (
-                    <span className="text-green-500 font-bold">
+                    <span className="text-[var(--app-success-text)] font-bold">
                       {content.ui.fileInfo.compressed} {compressedSizeKB} KB (
                       {reductionPercent}
                       {content.ui.fileInfo.reductionSuffix})
@@ -184,7 +184,7 @@ export default function ImageCompressorTool() {
                 setFile(null);
                 setCompressedFile(null);
               }}
-              className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+              className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg"
             >
               <Trash2 size={20} />
             </button>
@@ -206,7 +206,7 @@ export default function ImageCompressorTool() {
                 step="0.1"
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-                className="w-full h-2 bg-zinc-200 rounded-lg accent-blue-600 cursor-pointer"
+                className="w-full h-2 bg-zinc-200 rounded-lg accent-[var(--app-accent)] cursor-pointer"
               />
             </div>
           </div>
@@ -251,7 +251,7 @@ export default function ImageCompressorTool() {
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
           />
           <button
             type="button"

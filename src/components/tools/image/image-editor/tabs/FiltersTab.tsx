@@ -146,7 +146,7 @@ export default function FiltersTab({ imageUrl, hasImage }: FiltersTabProps) {
               <button
                 type="button"
                 onClick={handleDownload}
-                className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white hover:bg-blue-500"
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]"
               >
                 {content.ui.filters.download}
               </button>

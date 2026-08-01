@@ -332,7 +332,7 @@ export default function ExifRemoverTool() {
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]`}
           />
           <button
             type="button"

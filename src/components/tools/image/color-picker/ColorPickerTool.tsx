@@ -455,7 +455,7 @@ export default function ColorPickerTool() {
               onClick={resetImage}
               className={`absolute top-4 right-4 p-2 rounded-xl shadow-lg transition-all hover:scale-105 ${theme.card} border ${theme.border}`}
             >
-              <Trash2 size={18} className="text-red-500" />
+              <Trash2 size={18} className="text-[var(--app-error-text)]" />
             </button>
           )}
         </div>
@@ -484,7 +484,7 @@ export default function ColorPickerTool() {
               disabled={!imageLoaded}
               className={`mt-3 px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 mx-auto ${
                 copiedIndex === -1
-                  ? "bg-green-500 text-white"
+                  ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
                   : `${theme.secondary} ${theme.accent}`
               } ${!imageLoaded ? "opacity-50 cursor-not-allowed" : ""}`}
             >
@@ -567,7 +567,7 @@ export default function ColorPickerTool() {
                 </h3>
                 <button
                   onClick={() => setPickedColors([])}
-                  className={`text-xs ${theme.textMuted} hover:text-red-500 transition`}
+                  className={`text-xs ${theme.textMuted} hover:text-[var(--app-error-text)] transition`}
                 >
                   {content.ui.history.clearAll}
                 </button>
@@ -597,7 +597,7 @@ export default function ColorPickerTool() {
                         onClick={() => copyToClipboard(color, idx)}
                         className={`p-2 rounded-lg transition-all ${
                           copiedIndex === idx
-                            ? "bg-green-100 dark:bg-green-900 text-green-600"
+                            ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
                             : `hover:${theme.secondary} ${theme.textMuted}`
                         }`}
                       >
@@ -627,7 +627,7 @@ export default function ColorPickerTool() {
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder={content.ui.upload.urlPlaceholder}
-            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`flex-1 px-3 py-2 rounded-xl text-xs border ${theme.border} ${theme.bg} ${theme.text} focus:outline-none focus:ring-1 focus:ring-[var(--app-ring)]`}
           />
           <button
             type="button"

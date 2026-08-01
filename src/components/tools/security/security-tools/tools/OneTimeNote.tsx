@@ -140,7 +140,7 @@ export default function OneTimeNote() {
         <>
           {/* Success Message */}
           <div
-            className={`p-6 rounded-xl border-2 border-green-500/30 bg-green-500/10`}
+            className={`p-6 rounded-xl border-2 border-[var(--app-success-border)] bg-[var(--app-success-bg)]`}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 rounded-xl bg-green-500">
@@ -185,7 +185,7 @@ export default function OneTimeNote() {
 
           {/* Info */}
           <div
-            className={`p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/30`}
+            className={`p-4 rounded-xl bg-[var(--app-warning-bg)] border border-[var(--app-warning-border)]`}
           >
             <p className={`text-sm ${theme.textMuted}`}>
               ⚠️ این لینک پس از{" "}

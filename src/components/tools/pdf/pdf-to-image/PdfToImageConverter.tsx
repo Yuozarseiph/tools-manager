@@ -6,62 +6,69 @@ import {
   Loader2,
   Download,
   RotateCcw,
-  FileImage,
+  RefreshCw,
+  Archive,
+  Crop,
+  ImageOff,
+  Layers,
+  Images,
 } from "lucide-react";
 import download from "downloadjs";
-
 import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { usePdfToImageToolContent } from "./pdf-to-image.content";
+import ImageEditModal from "./ImageEditModal";
+import {
+  type OutFormat,
+  type ToolImage,
+  MIME,
+  EXT,
+  makeId,
+  parsePageRange,
+  extractEmbeddedImages,
+  buildZip,
+  dataUrlToBytes,
+} from "./pdf-image-utils";
 
-type OutFormat = "png" | "jpeg" | "webp";
-
-interface RenderedPage {
-  index: number;
-  dataUrl: string;
-  width: number;
-  height: number;
-}
-
-const MIME: Record<OutFormat, string> = {
-  png: "image/png",
-  jpeg: "image/jpeg",
-  webp: "image/webp",
-};
-const EXT: Record<OutFormat, string> = { png: "png", jpeg: "jpg", webp: "webp" };
+type Mode = "pages" | "extract";
 
 export default function PdfToImageConverter() {
   const theme = useThemeColors();
   const t = usePdfToImageToolContent();
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<File | null>(null);
 
+  const [mode, setMode] = useState<Mode>("pages");
   const [format, setFormat] = useState<OutFormat>("png");
   const [quality, setQuality] = useState(0.92);
   const [scale, setScale] = useState(2);
+  const [pageRange, setPageRange] = useState("");
+  const [minSize, setMinSize] = useState(100);
+  const [dedupe, setDedupe] = useState(true);
   const [fileName, setFileName] = useState<string>("");
-  const [pages, setPages] = useState<RenderedPage[]>([]);
+  const [items, setItems] = useState<ToolImage[]>([]);
   const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState<{ done: number; total: number } | null>(
-    null,
-  );
+  const [progress, setProgress] = useState<{
+    done: number;
+    total: number;
+  } | null>(null);
   const [error, setError] = useState<string>("");
+  const [hasProcessed, setHasProcessed] = useState(false);
+  const [editing, setEditing] = useState<ToolImage | null>(null);
+  const [zipping, setZipping] = useState(false);
 
-  const baseName = fileName.replace(/\.pdf$/i, "") || "page";
+  const baseName = fileName.replace(/\.pdf$/i, "") || "pdf";
 
-  const renderPdf = useCallback(
-    async (file: File) => {
+  const processPdf = useCallback(
+    async (file: File, modeOverride?: Mode) => {
+      const activeMode = modeOverride ?? mode;
       setError("");
       setBusy(true);
-      setPages([]);
+      setItems([]);
       setProgress(null);
       try {
-        // Load the self-hosted pdf.js library at runtime with `webpackIgnore`
-        // so Webpack never processes its ESM (the bundled build throws
-        // "Object.defineProperty called on non-object" under Next 16 + Webpack).
-        // Files use a .js extension (not .mjs) so the production host serves
-        // them with a JavaScript MIME type; both live in /public/pdfjs (offline).
-        // A runtime string specifier keeps TypeScript and Webpack from trying
-        // to resolve/bundle this path; it is served from /public at runtime.
+        // Self-hosted pdf.js loaded at runtime (see previous implementation notes):
+        // webpackIgnore keeps Next/Webpack from bundling it; served from /public/pdfjs.
         const libUrl = "/pdfjs/pdf.min.js";
         const mod: any = await import(/* webpackIgnore: true */ libUrl);
         const pdfjs = mod.getDocument ? mod : mod.default;
@@ -70,37 +77,75 @@ export default function PdfToImageConverter() {
         const buffer = await file.arrayBuffer();
         const doc = await pdfjs.getDocument({ data: buffer }).promise;
         const total = doc.numPages;
-        setProgress({ done: 0, total });
-
-        const out: RenderedPage[] = [];
-        for (let i = 1; i <= total; i++) {
-          const pdfPage = await doc.getPage(i);
-          const viewport = pdfPage.getViewport({ scale });
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          if (!ctx) continue;
-          canvas.width = Math.floor(viewport.width);
-          canvas.height = Math.floor(viewport.height);
-          // JPEG has no alpha — paint a white background first.
-          if (format === "jpeg") {
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-          await pdfPage.render({ canvas, viewport }).promise;
-          const dataUrl = canvas.toDataURL(
-            MIME[format],
-            format === "png" ? undefined : quality,
-          );
-          out.push({
-            index: i,
-            dataUrl,
-            width: canvas.width,
-            height: canvas.height,
-          });
-          pdfPage.cleanup();
-          setProgress({ done: i, total });
+        const pageList = parsePageRange(pageRange, total);
+        if (pageList.length === 0) {
+          setError(t.invalidRange);
+          return;
         }
-        setPages(out);
+        setProgress({ done: 0, total: pageList.length });
+        const out: ToolImage[] = [];
+
+        if (activeMode === "pages") {
+          let done = 0;
+          for (const pageNum of pageList) {
+            const pdfPage = await doc.getPage(pageNum);
+            const viewport = pdfPage.getViewport({ scale });
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            if (!ctx) continue;
+            canvas.width = Math.floor(viewport.width);
+            canvas.height = Math.floor(viewport.height);
+            // JPEG has no alpha — paint a white background first.
+            if (format === "jpeg") {
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            // Passing both keeps compatibility with pdf.js v4 (canvasContext) and v5 (canvas).
+            await pdfPage.render({ canvasContext: ctx, canvas, viewport })
+              .promise;
+            const dataUrl = canvas.toDataURL(
+              MIME[format],
+              format === "png" ? undefined : quality,
+            );
+            out.push({
+              id: makeId(),
+              dataUrl,
+              width: canvas.width,
+              height: canvas.height,
+              pageIndex: pageNum,
+              source: "page",
+              fileLabel: `page-${pageNum}`,
+              displayLabel: `${t.page} ${pageNum}`,
+            });
+            pdfPage.cleanup?.();
+            done += 1;
+            setProgress({ done, total: pageList.length });
+          }
+        } else {
+          const extracted = await extractEmbeddedImages(pdfjs, doc, {
+            pageList,
+            minSize,
+            dedupe,
+            onProgress: (done, tot) => setProgress({ done, total: tot }),
+          });
+          extracted.forEach((ex, i) => {
+            const dataUrl = ex.canvas.toDataURL(
+              MIME[format],
+              format === "png" ? undefined : quality,
+            );
+            out.push({
+              id: makeId(),
+              dataUrl,
+              width: ex.canvas.width,
+              height: ex.canvas.height,
+              pageIndex: ex.pageIndex,
+              source: "embedded",
+              fileLabel: `img-${i + 1}-page-${ex.pageIndex}`,
+              displayLabel: `${t.image} ${i + 1} · ${t.fromPage} ${ex.pageIndex}`,
+            });
+          });
+        }
+        setItems(out);
       } catch (err) {
         console.error("[pdf-to-image]", err);
         const msg = String((err as Error)?.message || "");
@@ -109,9 +154,10 @@ export default function PdfToImageConverter() {
       } finally {
         setBusy(false);
         setProgress(null);
+        setHasProcessed(true);
       }
     },
-    [format, quality, scale, t.error, t.passwordError],
+    [mode, format, quality, scale, pageRange, minSize, dedupe, t],
   );
 
   const handleFile = useCallback(
@@ -121,37 +167,92 @@ export default function PdfToImageConverter() {
         setError(t.error);
         return;
       }
+      fileRef.current = file;
       setFileName(file.name);
-      renderPdf(file);
+      setHasProcessed(false);
+      processPdf(file);
     },
-    [renderPdf, t.error],
+    [processPdf, t.error],
   );
 
+  const changeMode = (m: Mode) => {
+    if (m === mode || busy) return;
+    setMode(m);
+    setItems([]);
+    setHasProcessed(false);
+    setError("");
+  };
+
+  const switchToPages = () => {
+    setMode("pages");
+    setItems([]);
+    setError("");
+    if (fileRef.current) processPdf(fileRef.current, "pages");
+  };
+
   const downloadPage = useCallback(
-    (p: RenderedPage) => {
-      download(p.dataUrl, `${baseName}-${p.index}.${EXT[format]}`, MIME[format]);
+    (p: ToolImage) => {
+      download(
+        p.dataUrl,
+        `${baseName}-${p.fileLabel}.${EXT[format]}`,
+        MIME[format],
+      );
     },
     [baseName, format],
   );
 
-  const downloadAll = useCallback(() => {
-    // Sequential downloads with a small delay so the browser doesn't drop them.
-    pages.forEach((p, i) => {
-      setTimeout(() => downloadPage(p), i * 250);
-    });
-  }, [pages, downloadPage]);
+  const downloadZip = useCallback(async () => {
+    if (!items.length || zipping) return;
+    setZipping(true);
+    try {
+      const entries = items.map((it) => ({
+        name: `${baseName}-${it.fileLabel}.${EXT[format]}`,
+        data: dataUrlToBytes(it.dataUrl),
+      }));
+      const blob = buildZip(entries);
+      download(blob, `${baseName}-images.zip`, "application/zip");
+    } catch (err) {
+      console.error("[pdf-to-image][zip]", err);
+      // Fallback: sequential downloads.
+      items.forEach((p, i) => setTimeout(() => downloadPage(p), i * 250));
+    } finally {
+      setZipping(false);
+    }
+  }, [items, zipping, baseName, format, downloadPage]);
 
   const reset = useCallback(() => {
-    setPages([]);
+    setItems([]);
     setFileName("");
     setError("");
+    setHasProcessed(false);
+    fileRef.current = null;
     if (inputRef.current) inputRef.current.value = "";
   }, []);
+
+  const handleEditSave = useCallback(
+    (id: string, dataUrl: string, width: number, height: number) => {
+      setItems((prev) =>
+        prev.map((it) =>
+          it.id === id ? { ...it, dataUrl, width, height } : it,
+        ),
+      );
+      setEditing(null);
+    },
+    [],
+  );
 
   const formatOptions = [
     { value: "png", label: "PNG" },
     { value: "jpeg", label: "JPG" },
     { value: "webp", label: "WebP" },
+  ];
+
+  const minSizeOptions = [
+    { value: "0", label: t.minSizeAll },
+    { value: "50", label: "≥ 50px" },
+    { value: "100", label: "≥ 100px" },
+    { value: "200", label: "≥ 200px" },
+    { value: "400", label: "≥ 400px" },
   ];
 
   return (
@@ -166,8 +267,39 @@ export default function PdfToImageConverter() {
         onChange={(e) => handleFile(e.target.files?.[0])}
       />
 
+      {/* Mode switcher */}
+      <div
+        className={`grid grid-cols-2 gap-1 p-1 rounded-xl border mb-1.5 ${theme.border} ${theme.bg}`}
+      >
+        <button
+          type="button"
+          onClick={() => changeMode("pages")}
+          className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-opacity ${
+            mode === "pages"
+              ? theme.primary
+              : `${theme.textMuted} hover:opacity-70`
+          }`}
+        >
+          <Layers size={16} /> {t.modePages}
+        </button>
+        <button
+          type="button"
+          onClick={() => changeMode("extract")}
+          className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-opacity ${
+            mode === "extract"
+              ? theme.primary
+              : `${theme.textMuted} hover:opacity-70`
+          }`}
+        >
+          <Images size={16} /> {t.modeImages}
+        </button>
+      </div>
+      <p className={`text-[10px] mb-5 ${theme.textMuted}`}>
+        {mode === "pages" ? t.modePagesHint : t.modeImagesHint}
+      </p>
+
       {/* Controls */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid sm:grid-cols-3 gap-4 mb-4">
         <div>
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.format}
@@ -179,7 +311,9 @@ export default function PdfToImageConverter() {
             searchable={false}
           />
         </div>
-        <div className={format === "png" ? "opacity-50 pointer-events-none" : ""}>
+        <div
+          className={format === "png" ? "opacity-50 pointer-events-none" : ""}
+        >
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.quality} — {Math.round(quality * 100)}%
           </label>
@@ -190,28 +324,98 @@ export default function PdfToImageConverter() {
             step={0.01}
             value={quality}
             onChange={(e) => setQuality(parseFloat(e.target.value))}
-            className="w-full accent-blue-600 mt-3"
+            className="w-full accent-[var(--app-accent)] mt-3"
           />
         </div>
-        <div>
+        {mode === "pages" ? (
+          <div>
+            <label
+              className={`text-xs font-bold mb-2 block ${theme.textMuted}`}
+            >
+              {t.scale} — {scale}×
+            </label>
+            <input
+              type="range"
+              min={1}
+              max={4}
+              step={0.5}
+              value={scale}
+              onChange={(e) => setScale(parseFloat(e.target.value))}
+              className="w-full accent-[var(--app-accent)] mt-3"
+            />
+            <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+              {t.scaleHint}
+            </p>
+          </div>
+        ) : (
+          <div>
+            <label
+              className={`text-xs font-bold mb-2 block ${theme.textMuted}`}
+            >
+              {t.minSize}
+            </label>
+            <CustomDropdown
+              options={minSizeOptions}
+              value={String(minSize)}
+              onChange={(v) => setMinSize(Number(v))}
+              searchable={false}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="grid sm:grid-cols-3 gap-4 mb-6 items-start">
+        <div className="sm:col-span-2">
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
-            {t.scale} — {scale}×
+            {t.pageRange}
           </label>
           <input
-            type="range"
-            min={1}
-            max={4}
-            step={0.5}
-            value={scale}
-            onChange={(e) => setScale(parseFloat(e.target.value))}
-            className="w-full accent-blue-600 mt-3"
+            dir="ltr"
+            value={pageRange}
+            onChange={(e) => setPageRange(e.target.value)}
+            placeholder={t.pageRangePlaceholder}
+            className={`w-full px-3 py-2 rounded-xl border text-sm focus:outline-none ${theme.border} ${theme.bg} ${theme.text}`}
           />
-          <p className={`text-[10px] mt-1 ${theme.textMuted}`}>{t.scaleHint}</p>
+          <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+            {t.pageRangeHint}
+          </p>
         </div>
+        {mode === "extract" && (
+          <div>
+            <label
+              className={`text-xs font-bold mb-2 block ${theme.textMuted}`}
+            >
+              {t.dedupe}
+            </label>
+            <button
+              type="button"
+              onClick={() => setDedupe((v) => !v)}
+              className="flex items-center gap-2.5 mt-1"
+            >
+              <span
+                className={`w-9 h-5 rounded-full relative transition-colors ${
+                  dedupe ? "bg-[var(--app-accent)]" : "bg-gray-400/40"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${
+                    dedupe ? "end-0.5" : "start-0.5"
+                  }`}
+                />
+              </span>
+              <span className={`text-xs font-medium ${theme.text}`}>
+                {dedupe ? "✓" : "✗"}
+              </span>
+            </button>
+            <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+              {t.dedupeHint}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Dropzone */}
-      {pages.length === 0 && !busy && (
+      {items.length === 0 && !busy && (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
@@ -220,42 +424,84 @@ export default function PdfToImageConverter() {
             e.preventDefault();
             handleFile(e.dataTransfer.files?.[0]);
           }}
-          className={`w-full flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-blue-500 ${theme.bg}`}
+          className={`w-full flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-[var(--app-accent)] ${theme.bg}`}
         >
           <UploadCloud size={40} className={theme.accent} />
-          <span className={`text-lg font-bold ${theme.text}`}>{t.dropTitle}</span>
+          <span className={`text-lg font-bold ${theme.text}`}>
+            {t.dropTitle}
+          </span>
           <span className={`text-sm ${theme.textMuted}`}>{t.dropHint}</span>
-          <span className={`mt-2 px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}>
+          <span
+            className={`mt-2 px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}
+          >
             {t.selectFile}
           </span>
         </button>
       )}
 
       {error && (
-        <p className="mt-4 text-sm text-red-500 font-medium text-center">{error}</p>
+        <p className="mt-4 text-sm text-[var(--app-error-text)] font-medium text-center">
+          {error}
+        </p>
       )}
 
       {busy && (
         <div className="flex flex-col items-center gap-3 py-16">
           <Loader2 size={36} className={`animate-spin ${theme.accent}`} />
           <span className={`text-sm font-medium ${theme.text}`}>
-            {progress ? `${t.rendering} ${progress.done}/${progress.total}` : t.loading}
+            {progress
+              ? `${mode === "pages" ? t.rendering : t.extracting} ${progress.done}/${progress.total}`
+              : t.loading}
           </span>
         </div>
       )}
 
-      {pages.length > 0 && !busy && (
+      {/* Empty extraction result */}
+      {hasProcessed &&
+        !busy &&
+        items.length === 0 &&
+        mode === "extract" &&
+        !error && (
+          <div className="text-center py-12">
+            <ImageOff size={40} className={`mx-auto mb-3 ${theme.textMuted}`} />
+            <p className={`font-bold mb-1 ${theme.text}`}>{t.noImages}</p>
+            <p className={`text-sm mb-4 ${theme.textMuted}`}>
+              {t.noImagesHint}
+            </p>
+            <button
+              type="button"
+              onClick={switchToPages}
+              className={`px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}
+            >
+              {t.switchToPages}
+            </button>
+          </div>
+        )}
+
+      {items.length > 0 && !busy && (
         <>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <span className={`text-sm font-bold ${theme.text}`}>
-              {pages.length} {t.pages}
+              {items.length} {mode === "pages" ? t.pages : t.images}
             </span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
-                onClick={downloadAll}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}
+                onClick={downloadZip}
+                disabled={zipping}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium disabled:opacity-60 ${theme.primary}`}
               >
-                <Download size={16} /> {t.downloadAll}
+                {zipping ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Archive size={16} />
+                )}
+                {zipping ? t.zipping : t.downloadZip}
+              </button>
+              <button
+                onClick={() => fileRef.current && processPdf(fileRef.current)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border ${theme.border} ${theme.text} hover:opacity-80`}
+              >
+                <RefreshCw size={16} /> {t.reprocess}
               </button>
               <button
                 onClick={reset}
@@ -266,26 +512,41 @@ export default function PdfToImageConverter() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {pages.map((p) => (
+            {items.map((it) => (
               <div
-                key={p.index}
-                className={`group relative rounded-xl border overflow-hidden ${theme.border} ${theme.bg}`}
+                key={it.id}
+                className={`group rounded-xl border overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${theme.border} ${theme.bg}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={p.dataUrl}
-                  alt={`${t.page} ${p.index}`}
-                  className="w-full h-auto block bg-white"
-                  loading="lazy"
-                />
-                <div className="flex items-center justify-between px-3 py-2 text-xs">
-                  <span className={theme.textMuted}>
-                    <FileImage size={12} className="inline mr-1" />
-                    {t.page} {p.index}
+                <button
+                  type="button"
+                  className="block w-full relative"
+                  onClick={() => setEditing(it)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={it.dataUrl}
+                    alt={it.displayLabel}
+                    className="w-full h-auto block bg-white"
+                    loading="lazy"
+                  />
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 text-gray-900 text-xs font-bold">
+                      <Crop size={13} /> {t.edit}
+                    </span>
                   </span>
+                </button>
+                <div className="px-3 py-2">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className={`font-bold ${theme.text}`}>
+                      {it.displayLabel}
+                    </span>
+                    <span className={theme.textMuted} dir="ltr">
+                      {it.width}×{it.height}
+                    </span>
+                  </div>
                   <button
-                    onClick={() => downloadPage(p)}
-                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg font-medium ${theme.secondary} ${theme.accent} hover:opacity-80`}
+                    onClick={() => downloadPage(it)}
+                    className={`w-full inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium ${theme.secondary} ${theme.accent} hover:opacity-80`}
                   >
                     <Download size={12} /> {t.download}
                   </button>
@@ -294,6 +555,17 @@ export default function PdfToImageConverter() {
             ))}
           </div>
         </>
+      )}
+
+      {editing && (
+        <ImageEditModal
+          key={editing.id}
+          item={editing}
+          format={format}
+          quality={quality}
+          onClose={() => setEditing(null)}
+          onSave={handleEditSave}
+        />
       )}
     </div>
   );

@@ -161,7 +161,7 @@ export default function IPCheckerTool() {
           onClick={fetchIP}
           disabled={loading}
           className={`absolute top-4 right-4 p-2 rounded-full transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
-            loading ? "animate-spin text-blue-500" : "text-zinc-400"
+            loading ? "animate-spin text-[var(--app-accent)]" : "text-zinc-400"
           }`}
           title={content.ui.main.refreshTitle}
         >
@@ -170,18 +170,18 @@ export default function IPCheckerTool() {
 
         {loading ? (
           <div className="flex flex-col items-center gap-4 py-10">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-16 h-16 border-4 border-[var(--app-accent)] border-t-transparent rounded-full animate-spin" />
             <p className={`text-sm animate-pulse ${theme.textMuted}`}>
               {content.ui.main.loading}
             </p>
           </div>
         ) : error ? (
-          <div className="text-red-500 py-8 flex flex-col items-center gap-2">
+          <div className="text-[var(--app-error-text)] py-8 flex flex-col items-center gap-2">
             <ShieldAlert size={48} />
             <p>{error}</p>
             <button
               onClick={fetchIP}
-              className="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition-colors"
+              className="mt-4 px-4 py-2 bg-[var(--app-error-bg)] text-[var(--app-error-text)] rounded-lg text-sm font-bold hover:opacity-80 transition-colors"
             >
               {content.ui.main.retry}
             </button>
@@ -189,7 +189,7 @@ export default function IPCheckerTool() {
         ) : data ? (
           <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div
-              className={`text-sm font-bold mb-2 px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400`}
+              className={`text-sm font-bold mb-2 px-3 py-1 rounded-full bg-[var(--app-success-bg)] text-[var(--app-success-text)]`}
             >
               {content.ui.main.publicIpLabel}
             </div>
@@ -206,8 +206,8 @@ export default function IPCheckerTool() {
               <div
                 className={`p-2 rounded-xl transition-colors ${
                   copied
-                    ? "text-green-500 bg-green-50"
-                    : "text-zinc-300 group-hover:text-blue-500"
+                    ? "text-[var(--app-success-text)] bg-[var(--app-success-bg)]"
+                    : "text-zinc-300 group-hover:text-[var(--app-accent)]"
                 }`}
               >
                 {copied ? <Check size={24} /> : <Copy size={24} />}
@@ -265,7 +265,7 @@ function Badge({ icon: Icon, text, theme }: any) {
     <div
       className={`flex items-center gap-2 px-4 py-2 rounded-xl border bg-zinc-50/50 dark:bg-zinc-900/50 ${theme.text} ${theme.border}`}
     >
-      <Icon size={16} className="text-blue-500" />
+      <Icon size={16} className="text-[var(--app-accent)]" />
       <span className="text-sm font-bold">{text}</span>
     </div>
   );
