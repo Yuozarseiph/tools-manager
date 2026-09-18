@@ -1,4 +1,3 @@
-// components/docs/docSection.content.ts
 import { useLanguage } from "@/context/LanguageContext";
 
 export type DocSectionUiContent = {
@@ -6,6 +5,7 @@ export type DocSectionUiContent = {
     featuresTitle: string;
     howItWorksTitle: string;
     privacyTitle: string;
+    openTool: string;
   };
   categories: Record<string, string>;
 };
@@ -16,13 +16,18 @@ export const docSectionContent: Record<"fa" | "en", DocSectionUiContent> = {
       featuresTitle: "ویژگی‌ها",
       howItWorksTitle: "نحوه کار",
       privacyTitle: "حریم خصوصی",
+      openTool: "باز کردن ابزار",
     },
     categories: {
       pdf: "PDF",
       image: "تصویر",
+      developer: "توسعه‌دهنده",
       excel: "اکسل",
       security: "امنیت",
       system: "سیستم",
+      utility: "ابزارهای کاربردی",
+      audio: "صوت",
+      presentation: "پاورپوینت",
       text: "متن",
       other: "سایر",
     },
@@ -32,13 +37,18 @@ export const docSectionContent: Record<"fa" | "en", DocSectionUiContent> = {
       featuresTitle: "Features",
       howItWorksTitle: "How it works",
       privacyTitle: "Privacy",
+      openTool: "Open tool",
     },
     categories: {
       pdf: "PDF",
       image: "Image",
+      developer: "Developer",
       excel: "Excel",
       security: "Security",
       system: "System",
+      utility: "Utility",
+      audio: "Audio",
+      presentation: "PowerPoint",
       text: "Text",
       other: "Other",
     },

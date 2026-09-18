@@ -1,24 +1,25 @@
-// content/home.content.ts
-
 export const homeContent = {
   fa: {
     hero: {
-      titleLine1: "ابزارهای کاربردی،",
-      titleHighlight: "سریع، امن و همیشه رایگان",
+      titleLine1: "ابزارهای کاربردی، ساده و سریع",
+      titleHighlight: "همه در یک جا",
       subtitle:
-        "تمام پردازش‌ها در مرورگر شما انجام می‌شود. فایل‌های شما هرگز آپلود نمی‌شوند و حریم خصوصی شما ۱۰۰٪ تضمین شده است.",
+        "ابزارهای روزمره برای فایل‌ها، تصویر، PDF، توسعه و بیشتر؛ با تمرکز روی سرعت، سادگی و حریم خصوصی.",
+      primaryAction: "مشاهده ابزارها",
+      privacyNote: "پردازش بسیاری از ابزارها مستقیماً در مرورگر انجام می‌شود.",
     },
   } as const,
 
   en: {
     hero: {
-      titleLine1: "Powerful tools,",
-      titleHighlight: "fast, secure and always free",
+      titleLine1: "Useful tools, simple and fast",
+      titleHighlight: "all in one place",
       subtitle:
-        "All processing happens in your browser. Your files are never uploaded and your privacy is 100% protected.",
+        "Everyday tools for files, images, PDFs, development and more, focused on speed, simplicity and privacy.",
+      primaryAction: "Browse tools",
+      privacyNote: "Many tools process your data directly in the browser.",
     },
   } as const,
 };
 
-// تایپ خودکار
 export type HomeContent = typeof homeContent.fa;

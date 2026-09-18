@@ -59,6 +59,12 @@ export const toolsContent = {
           "فایل Word (.docx) خود را آپلود کرده و به فرمت PDF تبدیل کنید.",
         badge: "جدید",
       },
+      "pdf-to-word": {
+        title: "تبدیل PDF به Word",
+        description:
+          "فایل PDF را بدون آپلود به DOCX تبدیل کنید؛ با حالت متن قابل‌ویرایش یا حفظ چیدمان صفحات.",
+        badge: "جدید",
+      },
       "image-to-pdf": {
         title: "تبدیل تصویر به PDF",
         description:
@@ -99,6 +105,12 @@ export const toolsContent = {
         title: "مبدل فرمت تصویر",
         description: "تبدیل JPG, PNG و WebP به یکدیگر با حفظ کیفیت بالا.",
         badge: "رایگان",
+      },
+      "image-to-text": {
+        title: "استخراج متن از تصویر",
+        description:
+          "استخراج متن فارسی و انگلیسی از عکس با OCR و امکان کپی یا دانلود خروجی.",
+        badge: "OCR",
       },
       "color-picker": {
         title: "استخراج رنگ",
@@ -197,6 +209,12 @@ export const toolsContent = {
         description:
           "لینک و متن خود را به کدهای QR رنگی و قابل دانلود تبدیل کنید.",
         badge: "رایگان",
+      },
+      "qr-reader": {
+        title: "خواندن QR Code",
+        description:
+          "خواندن QR Code از تصویر، اسکرین‌شات، کلیپ‌بورد یا دوربین؛ کاملاً در مرورگر.",
+        badge: "جدید",
       },
       "audio-editor": {
         title: "ویرایشگر صوت (بتا)",
@@ -312,6 +330,12 @@ export const toolsContent = {
         description: "Upload a Word (.docx) file and convert it to PDF format.",
         badge: "New",
       },
+      "pdf-to-word": {
+        title: "PDF to Word",
+        description:
+          "Convert PDF files to DOCX locally in your browser, with editable-text and layout-preserving modes.",
+        badge: "New",
+      },
       "image-to-pdf": {
         title: "Image to PDF",
         description:
@@ -353,6 +377,12 @@ export const toolsContent = {
         description:
           "Convert between JPG, PNG and WebP while preserving high quality.",
         badge: "Free",
+      },
+      "image-to-text": {
+        title: "Image to Text (OCR)",
+        description:
+          "Extract editable Persian and English text from images with browser-based OCR.",
+        badge: "OCR",
       },
       "color-picker": {
         title: "Color picker",
@@ -451,6 +481,12 @@ export const toolsContent = {
         description:
           "Turn your links and text into colorful, downloadable QR codes.",
         badge: "Free",
+      },
+      "qr-reader": {
+        title: "QR Code Reader",
+        description:
+          "Read QR codes from images, screenshots, clipboard or your camera directly in the browser.",
+        badge: "New",
       },
       "audio-editor": {
         title: "Audio editor (beta)",

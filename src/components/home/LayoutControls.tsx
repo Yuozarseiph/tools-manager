@@ -1,19 +1,21 @@
 "use client";
-import { memo, useState, useEffect, useRef } from "react";
+
+import { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  LayoutGrid,
-  LayoutList,
   AlignJustify,
+  Check,
+  ChevronDown,
   Columns2,
   Columns3,
   Columns4,
   GripHorizontal,
+  LayoutList,
   Minimize2,
-  ChevronDown,
   X,
 } from "lucide-react";
-import { ToolsLayoutMode, PinnedLayoutMode } from "./types";
+
+import { PinnedLayoutMode, ToolsLayoutMode } from "./types";
 
 interface LayoutControlsProps {
   toolsLayout: ToolsLayoutMode;
@@ -23,418 +25,325 @@ interface LayoutControlsProps {
   theme: any;
   locale: string;
 }
+
 type LocaleType = "fa" | "en";
 
-const allToolsLayoutOptions = [
-  {
-    value: "list-compact" as ToolsLayoutMode,
-    icon: AlignJustify,
-    label: { fa: "لیست فشرده", en: "Compact List" },
-  },
-  {
-    value: "list-detail" as ToolsLayoutMode,
-    icon: LayoutList,
-    label: { fa: "لیست کامل", en: "Detailed List" },
-  },
-  {
-    value: "grid-1" as ToolsLayoutMode,
-    icon: AlignJustify,
-    label: { fa: "گرید ۱ ستونه", en: "1 Column" },
-  },
-  {
-    value: "grid-2" as ToolsLayoutMode,
-    icon: Columns2,
-    label: { fa: "گرید ۲ ستونه", en: "2 Columns" },
-  },
-  {
-    value: "grid-3" as ToolsLayoutMode,
-    icon: Columns3,
-    label: { fa: "گرید ۳ ستونه", en: "3 Columns" },
-  },
-  {
-    value: "grid-4" as ToolsLayoutMode,
-    icon: Columns4,
-    label: { fa: "گرید ۴ ستونه", en: "4 Columns" },
-  },
-];
-const allToolsLayoutOptionsMobile = [
-  {
-    value: "list-compact" as ToolsLayoutMode,
-    icon: AlignJustify,
-    label: { fa: "لیست فشرده", en: "Compact List" },
-  },
-  {
-    value: "list-detail" as ToolsLayoutMode,
-    icon: LayoutList,
-    label: { fa: "لیست کامل", en: "Detailed List" },
-  },
-  {
-    value: "grid-2" as ToolsLayoutMode,
-    icon: Columns2,
-    label: { fa: "گرید ۱ ستونه", en: "1 Column" },
-  },
-  {
-    value: "grid-4" as ToolsLayoutMode,
-    icon: Columns4,
-    label: { fa: "گرید ۲ ستونه", en: "2 Columns" },
-  },
-];
-const mobileToolsOptions = allToolsLayoutOptionsMobile.filter((o) =>
-  ["list-compact", "list-detail", "grid-2", "grid-4"].includes(o.value),
-);
-const pinnedLayoutOptions = [
-  {
-    value: "horizontal-scroll" as PinnedLayoutMode,
-    icon: GripHorizontal,
-    label: { fa: "اسکرول افقی", en: "Horizontal Scroll" },
-  },
-  {
-    value: "grid-small" as PinnedLayoutMode,
-    icon: Minimize2,
-    label: { fa: "نمایش ریز", en: "Small Grid" },
-  },
-  {
-    value: "grid-medium" as PinnedLayoutMode,
-    icon: Columns3,
-    label: { fa: "نمایش متوسط", en: "Medium Grid" },
-  },
-  {
-    value: "grid-large" as PinnedLayoutMode,
-    icon: Columns4,
-    label: { fa: "نمایش درشت", en: "Large Grid" },
-  },
-  {
-    value: "minimal" as PinnedLayoutMode,
-    icon: AlignJustify,
-    label: { fa: "فوق فشرده", en: "Ultra Compact" },
-  },
+const toolOptions = [
+  { value: "list-compact" as ToolsLayoutMode, icon: AlignJustify, label: { fa: "لیست فشرده", en: "Compact list" } },
+  { value: "list-detail" as ToolsLayoutMode, icon: LayoutList, label: { fa: "لیست کامل", en: "Detailed list" } },
+  { value: "grid-1" as ToolsLayoutMode, icon: AlignJustify, label: { fa: "یک ستون", en: "1 column" } },
+  { value: "grid-2" as ToolsLayoutMode, icon: Columns2, label: { fa: "دو ستون", en: "2 columns" } },
+  { value: "grid-3" as ToolsLayoutMode, icon: Columns3, label: { fa: "سه ستون", en: "3 columns" } },
+  { value: "grid-4" as ToolsLayoutMode, icon: Columns4, label: { fa: "چهار ستون", en: "4 columns" } },
 ];
 
-const BottomSheet = ({
-  isOpen,
+const pinnedOptions = [
+  { value: "horizontal-scroll" as PinnedLayoutMode, icon: GripHorizontal, label: { fa: "اسکرول افقی", en: "Horizontal scroll" } },
+  { value: "grid-small" as PinnedLayoutMode, icon: Minimize2, label: { fa: "نمایش ریز", en: "Small grid" } },
+  { value: "grid-medium" as PinnedLayoutMode, icon: Columns3, label: { fa: "نمایش متوسط", en: "Medium grid" } },
+  { value: "grid-large" as PinnedLayoutMode, icon: Columns4, label: { fa: "نمایش درشت", en: "Large grid" } },
+  { value: "minimal" as PinnedLayoutMode, icon: AlignJustify, label: { fa: "فوق فشرده", en: "Ultra compact" } },
+];
+
+function MobileSheet({
+  open,
   onClose,
   title,
   options,
-  selectedValue,
-  onSelect,
+  value,
+  onChange,
   theme,
   locale,
-  isRTL,
 }: {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
   title: string;
   options: any[];
-  selectedValue: string;
-  onSelect: (v: any) => void;
+  value: string;
+  onChange: (value: any) => void;
   theme: any;
   locale: LocaleType;
-  isRTL: boolean;
-}) => {
+}) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) return null;
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted || !open) return null;
+
   return createPortal(
     <div
-      className={`fixed inset-0 z-[100] transition-all duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+      className="fixed inset-0 z-[100] flex items-end bg-black/45"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
     >
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+      <button
+        type="button"
+        className="absolute inset-0"
+        aria-label={locale === "fa" ? "بستن" : "Close"}
         onClick={onClose}
       />
+
       <div
-        className={`absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-hidden rounded-t-2xl border-t shadow-2xl transition-transform duration-300 ${theme.card} ${theme.border} ${isOpen ? "translate-y-0" : "translate-y-full"}`}
+        className={`relative w-full rounded-t-[28px] border-t p-3 shadow-2xl ${theme.card} ${theme.border}`}
       >
-        <div
-          className={`flex items-center justify-between p-4 border-b ${theme.border}`}
-        >
-          <h3 className={`text-base font-bold ${theme.text}`}>{title}</h3>
+        <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-current opacity-15" />
+
+        <div className="mb-2 flex items-center justify-between px-2">
+          <h3 className={`text-base font-black ${theme.text}`}>{title}</h3>
           <button
+            type="button"
             onClick={onClose}
-            className={`p-2 rounded-lg ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
+            className={`flex h-10 w-10 items-center justify-center rounded-full ${theme.secondary} ${theme.text}`}
+            aria-label={locale === "fa" ? "بستن" : "Close"}
           >
-            <X size={18} />
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
-        <div className="overflow-y-auto max-h-[calc(70vh-64px)] p-2">
-          <div className="space-y-1">
-            {options.map((option) => {
-              const Icon = option.icon;
-              const isActive = selectedValue === option.value;
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => {
-                    onSelect(option.value);
-                    onClose();
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm transition-all ${isActive ? `${theme.secondary} ${theme.accent} font-bold` : `${theme.text} hover:bg-gray-100 dark:hover:bg-white/10`}`}
-                >
-                  <Icon
-                    size={18}
-                    className={isActive ? theme.accent : theme.textMuted}
-                  />
-                  <span>{option.label[locale]}</span>
-                  {isActive && (
-                    <span
-                      className={`${isRTL ? "mr-auto" : "ml-auto"} text-xs ${theme.accent}`}
-                    >
-                      ✓
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+
+        <div
+          className="grid gap-1"
+          style={{
+            paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
+          }}
+        >
+          {options.map((option) => {
+            const Icon = option.icon;
+            const active = option.value === value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onChange(option.value);
+                  onClose();
+                }}
+                className={`flex min-h-13 items-center gap-3 rounded-[16px] px-3.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+                  active
+                    ? `${theme.secondary} ${theme.accent}`
+                    : `${theme.text} hover:bg-black/5 dark:hover:bg-white/5`
+                }`}
+              >
+                <Icon size={17} aria-hidden="true" />
+                <span className="flex-1 text-start">{option.label[locale]}</span>
+                {active && <Check size={15} aria-hidden="true" />}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>,
     document.body,
   );
-};
+}
 
-export const LayoutControls = memo(
-  ({
-    toolsLayout,
-    pinnedLayout,
-    onToolsLayoutChange,
-    onPinnedLayoutChange,
-    theme,
-    locale,
-  }: LayoutControlsProps) => {
-    const localeKey = locale as LocaleType;
-    const isRTL = locale === "fa";
-    const [openToolsMenu, setOpenToolsMenu] = useState(false);
-    const [openPinnedMenu, setOpenPinnedMenu] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-    const toolsMenuRef = useRef<HTMLDivElement>(null);
-    const pinnedMenuRef = useRef<HTMLDivElement>(null);
-    const toolsButtonRef = useRef<HTMLButtonElement>(null);
-    const pinnedButtonRef = useRef<HTMLButtonElement>(null);
+export const LayoutControls = memo(function LayoutControls({
+  toolsLayout,
+  pinnedLayout,
+  onToolsLayoutChange,
+  onPinnedLayoutChange,
+  theme,
+  locale,
+}: LayoutControlsProps) {
+  const localeKey = locale as LocaleType;
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [pinnedOpen, setPinnedOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      const check = () => setIsMobile(window.innerWidth < 640);
-      check();
-      window.addEventListener("resize", check);
-      return () => window.removeEventListener("resize", check);
-    }, []);
-    useEffect(() => {
-      if (isMobile) return;
-      const h = (e: MouseEvent) => {
-        if (
-          toolsMenuRef.current &&
-          !toolsMenuRef.current.contains(e.target as Node) &&
-          toolsButtonRef.current &&
-          !toolsButtonRef.current.contains(e.target as Node)
-        )
-          setOpenToolsMenu(false);
-        if (
-          pinnedMenuRef.current &&
-          !pinnedMenuRef.current.contains(e.target as Node) &&
-          pinnedButtonRef.current &&
-          !pinnedButtonRef.current.contains(e.target as Node)
-        )
-          setOpenPinnedMenu(false);
-      };
-      if (openToolsMenu || openPinnedMenu)
-        document.addEventListener("mousedown", h);
-      return () => document.removeEventListener("mousedown", h);
-    }, [openToolsMenu, openPinnedMenu, isMobile]);
+  useEffect(() => {
+    const update = () => setMobile(window.innerWidth < 640);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
-    const toolsOptions = isMobile ? mobileToolsOptions : allToolsLayoutOptions;
-    const currentToolsLabel =
-      toolsOptions.find((o) => o.value === toolsLayout)?.label[localeKey] || "";
-    const currentPinnedLabel =
-      pinnedLayoutOptions.find((o) => o.value === pinnedLayout)?.label[
-        localeKey
-      ] || "";
+  useEffect(() => {
+    if (mobile) return;
 
-    return (
-      <>
-        <div
-          className={`hidden sm:flex ${isRTL ? "flex-row-reverse" : "flex-row"} items-stretch gap-2`}
-        >
-          <div className="relative" ref={toolsMenuRef}>
-            <button
-              ref={toolsButtonRef}
-              onClick={() => {
-                setOpenToolsMenu(!openToolsMenu);
-                setOpenPinnedMenu(false);
-              }}
-              className={`h-full flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150 border hover:shadow-md hover:-translate-y-0.5 ${theme.card} ${theme.border}`}
-            >
-              <LayoutGrid size={14} className={theme.accent} />
-              <span className={theme.text}>
-                {localeKey === "fa" ? "ابزارها" : "Tools"}
-              </span>
-              <ChevronDown
-                size={12}
-                className={`${theme.textMuted} transition-transform duration-200 ${openToolsMenu ? "rotate-180" : ""}`}
-              />
-            </button>
-            <div
-              className={`absolute top-full mt-2 ${isRTL ? "left-0" : "right-0"} z-50 w-44 p-1.5 rounded-xl border shadow-xl transition-all duration-200 origin-top ${theme.card} ${theme.border} ${openToolsMenu ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"}`}
-            >
-              <div
-                className={`text-[10px] font-semibold px-2 py-1 mb-1 border-b ${theme.textMuted} ${theme.border}`}
-              >
-                {localeKey === "fa" ? "نمایش ابزارها" : "Tools Display"}
-              </div>
-              {allToolsLayoutOptions.map((option) => {
-                const Icon = option.icon;
-                const isActive = toolsLayout === option.value;
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      onToolsLayoutChange(option.value);
-                      setOpenToolsMenu(false);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs transition-all ${isActive ? `${theme.secondary} ${theme.accent} font-bold` : `${theme.text} hover:bg-gray-100 dark:hover:bg-white/10`}`}
-                  >
-                    <Icon
-                      size={15}
-                      className={isActive ? theme.accent : theme.textMuted}
-                    />
-                    <span>{option.label[localeKey]}</span>
-                    {isActive && (
-                      <span
-                        className={`${isRTL ? "mr-auto" : "ml-auto"} text-[10px] ${theme.accent}`}
-                      >
-                        ✓
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div className="relative" ref={pinnedMenuRef}>
-            <button
-              ref={pinnedButtonRef}
-              onClick={() => {
-                setOpenPinnedMenu(!openPinnedMenu);
-                setOpenToolsMenu(false);
-              }}
-              className={`h-full flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150 border hover:shadow-md hover:-translate-y-0.5 ${theme.card} ${theme.border}`}
-            >
-              <LayoutGrid size={14} className={theme.accent} />
-              <span className={theme.text}>
-                {localeKey === "fa" ? "پین‌ها" : "Pinned"}
-              </span>
-              <ChevronDown
-                size={12}
-                className={`${theme.textMuted} transition-transform duration-200 ${openPinnedMenu ? "rotate-180" : ""}`}
-              />
-            </button>
-            <div
-              className={`absolute top-full mt-2 ${isRTL ? "left-0" : "right-0"} z-50 w-44 p-1.5 rounded-xl border shadow-xl transition-all duration-200 origin-top ${theme.card} ${theme.border} ${openPinnedMenu ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"}`}
-            >
-              <div
-                className={`text-[10px] font-semibold px-2 py-1 mb-1 border-b ${theme.textMuted} ${theme.border}`}
-              >
-                {localeKey === "fa" ? "نمایش پین‌ها" : "Pinned Display"}
-              </div>
-              {pinnedLayoutOptions.map((option) => {
-                const Icon = option.icon;
-                const isActive = pinnedLayout === option.value;
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      onPinnedLayoutChange(option.value);
-                      setOpenPinnedMenu(false);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs transition-all ${isActive ? `${theme.secondary} ${theme.accent} font-bold` : `${theme.text} hover:bg-gray-100 dark:hover:bg-white/10`}`}
-                  >
-                    <Icon
-                      size={15}
-                      className={isActive ? theme.accent : theme.textMuted}
-                    />
-                    <span>{option.label[localeKey]}</span>
-                    {isActive && (
-                      <span
-                        className={`${isRTL ? "mr-auto" : "ml-auto"} text-[10px] ${theme.accent}`}
-                      >
-                        ✓
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <div className="sm:hidden grid grid-cols-2 gap-2">
-          <button
-            onClick={() => setOpenToolsMenu(true)}
-            className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-xs font-medium border hover:shadow-md ${theme.card} ${theme.border}`}
-          >
-            <div className="flex items-center gap-1.5">
-              <LayoutGrid size={14} className={theme.accent} />
-              <span className={theme.text}>
-                {localeKey === "fa" ? "چیدمان ابزارها" : "Tools Layout"}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span
-                className={`text-[10px] truncate max-w-[70px] ${theme.textMuted}`}
-              >
-                {currentToolsLabel}
-              </span>
-              <ChevronDown size={12} className={theme.textMuted} />
-            </div>
-          </button>
-          <button
-            onClick={() => setOpenPinnedMenu(true)}
-            className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-xs font-medium border hover:shadow-md ${theme.card} ${theme.border}`}
-          >
-            <div className="flex items-center gap-1.5">
-              <LayoutGrid size={14} className={theme.accent} />
-              <span className={theme.text}>
-                {localeKey === "fa" ? "چیدمان پین‌ها" : "Pinned Layout"}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span
-                className={`text-[10px] truncate max-w-[70px] ${theme.textMuted}`}
-              >
-                {currentPinnedLabel}
-              </span>
-              <ChevronDown size={12} className={theme.textMuted} />
-            </div>
-          </button>
-        </div>
-        {isMobile && (
-          <BottomSheet
-            isOpen={openToolsMenu}
-            onClose={() => setOpenToolsMenu(false)}
-            title={localeKey === "fa" ? "چیدمان ابزارها" : "Tools Layout"}
-            options={mobileToolsOptions}
-            selectedValue={toolsLayout}
-            onSelect={onToolsLayoutChange}
+    const outside = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setToolsOpen(false);
+        setPinnedOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", outside);
+    return () => document.removeEventListener("mousedown", outside);
+  }, [mobile]);
+
+  const selectedTool = toolOptions.find((item) => item.value === toolsLayout) ?? toolOptions[3];
+  const selectedPinned = pinnedOptions.find((item) => item.value === pinnedLayout) ?? pinnedOptions[2];
+
+  return (
+    <div ref={rootRef}>
+      <div className="hidden items-center gap-2 sm:flex">
+        <Dropdown
+          label={localeKey === "fa" ? "نمایش ابزارها" : "Tools view"}
+          selected={selectedTool}
+          options={toolOptions}
+          value={toolsLayout}
+          open={toolsOpen}
+          onToggle={() => {
+            setToolsOpen((value) => !value);
+            setPinnedOpen(false);
+          }}
+          onChange={(value: ToolsLayoutMode) => {
+            onToolsLayoutChange(value);
+            setToolsOpen(false);
+          }}
+          theme={theme}
+          locale={localeKey}
+        />
+
+        <Dropdown
+          label={localeKey === "fa" ? "نمایش پین‌ها" : "Pinned view"}
+          selected={selectedPinned}
+          options={pinnedOptions}
+          value={pinnedLayout}
+          open={pinnedOpen}
+          onToggle={() => {
+            setPinnedOpen((value) => !value);
+            setToolsOpen(false);
+          }}
+          onChange={(value: PinnedLayoutMode) => {
+            onPinnedLayoutChange(value);
+            setPinnedOpen(false);
+          }}
+          theme={theme}
+          locale={localeKey}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 sm:hidden">
+        <MobileTrigger
+          label={localeKey === "fa" ? "ابزارها" : "Tools"}
+          value={selectedTool.label[localeKey]}
+          icon={selectedTool.icon}
+          onClick={() => setToolsOpen(true)}
+          theme={theme}
+        />
+        <MobileTrigger
+          label={localeKey === "fa" ? "پین‌ها" : "Pinned"}
+          value={selectedPinned.label[localeKey]}
+          icon={selectedPinned.icon}
+          onClick={() => setPinnedOpen(true)}
+          theme={theme}
+        />
+      </div>
+
+      {mobile && (
+        <>
+          <MobileSheet
+            open={toolsOpen}
+            onClose={() => setToolsOpen(false)}
+            title={localeKey === "fa" ? "چیدمان ابزارها" : "Tools layout"}
+            options={toolOptions.filter((item) =>
+              ["list-compact", "list-detail", "grid-2", "grid-4"].includes(item.value),
+            )}
+            value={toolsLayout}
+            onChange={onToolsLayoutChange}
             theme={theme}
             locale={localeKey}
-            isRTL={isRTL}
           />
-        )}
-        {isMobile && (
-          <BottomSheet
-            isOpen={openPinnedMenu}
-            onClose={() => setOpenPinnedMenu(false)}
-            title={localeKey === "fa" ? "چیدمان پین‌ها" : "Pinned Layout"}
-            options={pinnedLayoutOptions}
-            selectedValue={pinnedLayout}
-            onSelect={onPinnedLayoutChange}
+
+          <MobileSheet
+            open={pinnedOpen}
+            onClose={() => setPinnedOpen(false)}
+            title={localeKey === "fa" ? "چیدمان پین‌ها" : "Pinned layout"}
+            options={pinnedOptions}
+            value={pinnedLayout}
+            onChange={onPinnedLayoutChange}
             theme={theme}
             locale={localeKey}
-            isRTL={isRTL}
           />
-        )}
-      </>
-    );
-  },
-);
+        </>
+      )}
+    </div>
+  );
+});
+
 LayoutControls.displayName = "LayoutControls";
+
+function Dropdown({
+  label,
+  selected,
+  options,
+  value,
+  open,
+  onToggle,
+  onChange,
+  theme,
+  locale,
+}: any) {
+  const Icon = selected.icon;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className={`flex min-h-12 items-center gap-2 rounded-[16px] border px-3.5 text-xs font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
+      >
+        <Icon size={16} className={theme.accent} aria-hidden="true" />
+        <span>{label}</span>
+        <ChevronDown
+          size={14}
+          className={`${theme.textMuted} ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className={`absolute end-0 top-full z-50 mt-2 w-52 rounded-[20px] border p-2 shadow-xl ${theme.card} ${theme.border}`}
+        >
+          {options.map((option: any) => {
+            const OptionIcon = option.icon;
+            const active = value === option.value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="menuitemradio"
+                aria-checked={active}
+                onClick={() => onChange(option.value)}
+                className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-xs font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] ${
+                  active
+                    ? `${theme.secondary} ${theme.accent}`
+                    : `${theme.text} hover:bg-black/5 dark:hover:bg-white/5`
+                }`}
+              >
+                <OptionIcon size={16} aria-hidden="true" />
+                <span className="flex-1 text-start">{option.label[locale]}</span>
+                {active && <Check size={14} aria-hidden="true" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileTrigger({ label, value, icon: Icon, onClick, theme }: any) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex min-h-12 items-center gap-2 rounded-[16px] border px-3 text-start focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border}`}
+    >
+      <Icon size={16} className={theme.accent} aria-hidden="true" />
+      <div className="min-w-0 flex-1">
+        <div className={`text-[10px] font-bold ${theme.textMuted}`}>{label}</div>
+        <div className={`truncate text-xs font-black ${theme.text}`}>{value}</div>
+      </div>
+      <ChevronDown size={13} className={theme.textMuted} aria-hidden="true" />
+    </button>
+  );
+}

@@ -1,318 +1,438 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useThemeColors } from "@/hooks/useThemeColors";
 import {
+  ArrowLeft,
   ArrowRight,
-  Calendar,
-  Rocket,
-  Wrench,
   Bug,
-  Sparkles,
+  Calendar,
+  ChevronDown,
   FlaskConical,
-  StickyNote,
   GitBranch,
+  Rocket,
+  Search,
+  Sparkles,
+  StickyNote,
+  Wrench,
+  X,
   Zap,
 } from "lucide-react";
-import { CHANGELOG_BY_LOCALE, type ChangelogEntry } from "@/data/changelog";
-import { useLanguage } from "@/context/LanguageContext";
+
+import {
+  CHANGELOG_BY_LOCALE,
+  type ChangelogEntry,
+} from "@/data/changelog";
 import { useChangelogContent } from "@/data/changelog/changelog.content";
+import { useLanguage } from "@/context/LanguageContext";
+import { useThemeColors } from "@/hooks/useThemeColors";
+
+type CategoryKey = "added" | "improved" | "fixed" | "beta" | "note";
+
+const CATEGORY_CONFIG: Record<
+  CategoryKey,
+  {
+    icon: any;
+    className: string;
+    dotClassName: string;
+  }
+> = {
+  added: {
+    icon: Sparkles,
+    className:
+      "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    dotClassName: "bg-emerald-500",
+  },
+  improved: {
+    icon: Wrench,
+    className:
+      "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]",
+    dotClassName: "bg-[var(--app-accent)]",
+  },
+  fixed: {
+    icon: Bug,
+    className:
+      "bg-[var(--app-error-bg)] text-[var(--app-error-text)]",
+    dotClassName: "bg-[var(--app-error-text)]",
+  },
+  beta: {
+    icon: FlaskConical,
+    className:
+      "bg-purple-500/10 text-purple-700 dark:text-purple-300",
+    dotClassName: "bg-purple-500",
+  },
+  note: {
+    icon: StickyNote,
+    className:
+      "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    dotClassName: "bg-amber-500",
+  },
+};
 
 export default function ChangelogPage() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
   const content = useChangelogContent();
+  const isFa = locale === "fa";
 
   const data: ChangelogEntry[] = CHANGELOG_BY_LOCALE[locale];
 
-  const getCategoryConfig = (category: string) => {
-    switch (category) {
-      case "added":
-        return {
-          icon: Sparkles,
-          iconColor: "text-emerald-500",
-          bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
-          dotColor: "bg-emerald-500",
-          borderColor: "border-emerald-200 dark:border-emerald-800",
-        };
-      case "improved":
-        return {
-          icon: Wrench,
-          iconColor: "text-[var(--app-accent)]",
-          bgColor: "bg-[var(--app-secondary-bg)]",
-          dotColor: "bg-[var(--app-accent)]",
-          borderColor: "border-[var(--app-border)]",
-        };
-      case "fixed":
-        return {
-          icon: Bug,
-          iconColor: "text-[var(--app-error-text)]",
-          bgColor: "bg-[var(--app-error-bg)]",
-          dotColor: "bg-[var(--app-error-text)]",
-          borderColor: "border-[var(--app-error-border)]",
-        };
-      case "beta":
-        return {
-          icon: FlaskConical,
-          iconColor: "text-purple-500",
-          bgColor: "bg-purple-50 dark:bg-purple-950/30",
-          dotColor: "bg-purple-500",
-          borderColor: "border-purple-200 dark:border-purple-800",
-        };
-      case "note":
-        return {
-          icon: StickyNote,
-          iconColor: "text-amber-500",
-          bgColor: "bg-amber-50 dark:bg-amber-950/30",
-          dotColor: "bg-amber-500",
-          borderColor: "border-amber-200 dark:border-amber-800",
-        };
-      default:
-        return {
-          icon: Sparkles,
-          iconColor: "text-gray-500",
-          bgColor: "bg-gray-50 dark:bg-gray-950/30",
-          dotColor: "bg-gray-500",
-          borderColor: "border-gray-200 dark:border-gray-800",
-        };
-    }
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(
+    () => new Set(data[0]?.version ? [data[0].version] : []),
+  );
+
+  useEffect(() => {
+    if (!data[0]?.version) return;
+
+    setExpandedVersions((current) => {
+      if (current.size > 0) return current;
+      return new Set([data[0].version]);
+    });
+  }, [data]);
+
+  const filteredEntries = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase(locale);
+
+    if (!query) return data;
+
+    return data.filter((entry) => {
+      if (
+        entry.version.toLocaleLowerCase(locale).includes(query) ||
+        entry.date.toLocaleLowerCase(locale).includes(query) ||
+        entry.type.toLocaleLowerCase(locale).includes(query)
+      ) {
+        return true;
+      }
+
+      return entry.changes.some((group) => {
+        const categoryLabel =
+          content.categories[
+          group.category as keyof typeof content.categories
+          ] ?? group.category;
+
+        return (
+          categoryLabel.toLocaleLowerCase(locale).includes(query) ||
+          group.items.some((item) =>
+            item.toLocaleLowerCase(locale).includes(query),
+          )
+        );
+      });
+    });
+  }, [content.categories, data, locale, searchQuery]);
+
+  const toggleVersion = (version: string) => {
+    setExpandedVersions((current) => {
+      const next = new Set(current);
+
+      if (next.has(version)) {
+        next.delete(version);
+      } else {
+        next.add(version);
+      }
+
+      return next;
+    });
   };
 
-  const getCategoryTitle = (category: string) =>
-    content.categories[category as keyof typeof content.categories] ?? category;
-
-  const getTypeBadge = (type: string) => {
+  const getTypeConfig = (type: string) => {
     switch (type) {
       case "release":
         return {
           icon: Rocket,
           label: content.type.release,
-          className:
-            "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
         };
       case "fix":
         return {
           icon: Bug,
           label: content.type.fix,
-          className:
-            "bg-[var(--app-error-bg)] text-[var(--app-error-text)] border-[var(--app-error-border)]",
         };
       default:
         return {
           icon: Zap,
           label: content.type.update,
-          className:
-            "bg-[var(--app-secondary-bg)] text-[var(--app-accent)] border-[var(--app-border)]",
         };
     }
   };
 
-  const isLatest = (_entry: ChangelogEntry, index: number) => index === 0;
-
   return (
     <div className={`min-h-screen ${theme.bg}`}>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
-        {/* Header */}
-        <div className="mb-10 lg:mb-14">
-          <Link
-            href="/"
-            className={`inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
-          >
-            <ArrowRight size={16} />
-            {content.back}
-          </Link>
-
-          <div
-            className={`rounded-3xl border p-8 md:p-12 relative overflow-hidden ${theme.card} ${theme.border}`}
-          >
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`p-3 rounded-xl ${theme.secondary}`}>
-                  <Rocket size={28} className={theme.accent} />
-                </div>
-                <div>
-                  <h1
-                    className={`text-3xl md:text-4xl font-black ${theme.text}`}
-                  >
-                    {content.hero.title}
-                  </h1>
-                </div>
-              </div>
-              <p
-                className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}
-              >
-                {content.hero.subtitle}
-              </p>
-            </div>
-
-            {/* Gradient blobs */}
-            <div className="absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-[var(--app-gradient-from)] to-[var(--app-gradient-to)]" />
-            <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-purple-600 to-pink-500" />
-          </div>
-        </div>
-
-        {/* Version filter legend */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          {(["added", "improved", "fixed", "beta", "note"] as const).map(
-            (cat) => {
-              const catConfig = getCategoryConfig(cat);
-              const Icon = catConfig.icon;
-              return (
-                <div
-                  key={cat}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${catConfig.bgColor} ${catConfig.borderColor}`}
-                >
-                  <Icon size={14} className={catConfig.iconColor} />
-                  <span className={catConfig.iconColor}>
-                    {getCategoryTitle(cat)}
-                  </span>
-                </div>
-              );
-            },
+      <main className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-10">
+        <Link
+          href="/"
+          className={`inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.textMuted}`}
+        >
+          {isFa ? (
+            <ArrowRight size={16} aria-hidden="true" />
+          ) : (
+            <ArrowLeft size={16} aria-hidden="true" />
           )}
-        </div>
+          {content.back}
+        </Link>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--app-accent)] via-purple-500 to-emerald-500 opacity-30" />
+        <header className="mb-8 mt-8 max-w-3xl">
+          <div
+            className={`mb-5 flex h-11 w-11 items-center justify-center rounded-[15px] ${theme.secondary}`}
+          >
+            <Rocket size={20} className={theme.accent} aria-hidden="true" />
+          </div>
 
-          <div className="space-y-8">
-            {data.map((entry, index) => {
-              const typeConfig = getTypeBadge(entry.type);
+          <h1
+            className={`text-3xl font-black tracking-[-0.025em] sm:text-4xl ${theme.text}`}
+          >
+            {content.hero.title}
+          </h1>
+
+          <p className={`mt-4 text-base leading-8 ${theme.textMuted}`}>
+            {content.hero.subtitle}
+          </p>
+        </header>
+
+        <section
+          aria-label={content.search.label}
+          className={`mb-5 rounded-[20px] border p-3 sm:p-4 ${theme.card} ${theme.border}`}
+        >
+          <label htmlFor="changelog-search" className="sr-only">
+            {content.search.label}
+          </label>
+
+          <div className="relative">
+            <Search
+              size={17}
+              className={`pointer-events-none absolute top-1/2 -translate-y-1/2 ${isFa ? "right-4" : "left-4"
+                } ${theme.textMuted}`}
+              aria-hidden="true"
+            />
+
+            <input
+              id="changelog-search"
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder={content.search.placeholder}
+              className={`min-h-12 w-full rounded-[15px] border bg-transparent py-3 text-sm outline-none focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${isFa ? "pl-11 pr-11" : "pl-11 pr-11"
+                } ${theme.border} ${theme.text}`}
+            />
+
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label={content.search.clear}
+                className={`absolute top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${isFa ? "left-2.5" : "right-2.5"
+                  } ${theme.secondary} ${theme.textMuted}`}
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          {searchQuery && (
+            <p
+              className={`mt-2 px-1 text-xs ${theme.textMuted}`}
+              aria-live="polite"
+            >
+              {filteredEntries.length} {content.search.results}
+            </p>
+          )}
+        </section>
+
+        {filteredEntries.length === 0 ? (
+          <div
+            className={`flex min-h-52 flex-col items-center justify-center rounded-[22px] border border-dashed px-5 text-center ${theme.border}`}
+          >
+            <Search
+              size={24}
+              className={theme.textMuted}
+              aria-hidden="true"
+            />
+            <p className={`mt-3 text-sm font-black ${theme.text}`}>
+              {content.search.noResults}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className={`mt-3 rounded-full px-4 py-2 text-sm font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.secondary} ${theme.accent}`}
+            >
+              {content.search.clear}
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredEntries.map((entry, index) => {
+              const isLatest = data[0]?.version === entry.version;
+              const isExpanded =
+                searchQuery.trim().length > 0 ||
+                expandedVersions.has(entry.version);
+              const typeConfig = getTypeConfig(entry.type);
               const TypeIcon = typeConfig.icon;
-              const isLatestEntry = isLatest(entry, index);
+              const panelId = `changelog-${entry.version.replace(
+                /[^a-zA-Z0-9_-]/g,
+                "-",
+              )}`;
 
               return (
-                <div key={entry.version} className="relative pl-10 md:pl-14">
-                  {/* Timeline dot */}
-                  <div
-                    className={`absolute left-2.5 md:left-4.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 shadow-md z-10 ${
-                      isLatestEntry
-                        ? "bg-[var(--app-accent)] ring-4 ring-[var(--app-accent)]/20"
-                        : "bg-slate-300 dark:bg-slate-600"
-                    }`}
-                  />
-
-                  {/* Card */}
-                  <div
-                    className={`rounded-2xl border overflow-hidden transition-all hover:shadow-lg ${
-                      isLatestEntry
-                        ? `${theme.card} border-[var(--app-accent)] ring-1 ring-[var(--app-accent)]/20`
-                        : `${theme.card} ${theme.border}`
-                    }`}
+                <article
+                  key={entry.version}
+                  className={`overflow-hidden rounded-[22px] border ${isLatest
+                      ? "border-[var(--app-accent)]"
+                      : theme.border
+                    } ${theme.card}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleVersion(entry.version)}
+                    aria-expanded={isExpanded}
+                    aria-controls={panelId}
+                    className={`flex w-full items-start gap-4 p-4 text-start focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-[var(--app-ring)] sm:p-5`}
                   >
-                    {/* Header */}
-                    <div className={`p-5 md:p-6 border-b ${theme.border}`}>
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-3 mb-1">
-                            <h2
-                              className={`text-xl md:text-2xl font-bold ${theme.text}`}
-                            >
-                              {content.versionLabel} {entry.version}
-                            </h2>
-                            {isLatestEntry && (
-                              <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[var(--app-primary-bg)] text-white shadow-md">
-                                {content.currentLabel}
-                              </span>
-                            )}
-                          </div>
-                          <div
-                            className={`flex items-center gap-2 text-sm ${theme.textMuted}`}
-                          >
-                            <Calendar size={14} />
-                            <span>{entry.date}</span>
-                          </div>
-                        </div>
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+                    >
+                      <TypeIcon
+                        size={18}
+                        className={theme.accent}
+                        aria-hidden="true"
+                      />
+                    </span>
 
-                        <div
-                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold ${typeConfig.className}`}
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`text-base font-black sm:text-lg ${theme.text}`}
                         >
-                          <TypeIcon size={14} />
-                          {typeConfig.label}
-                        </div>
-                      </div>
-                    </div>
+                          {content.versionLabel} {entry.version}
+                        </span>
 
-                    {/* Changes */}
-                    <div className="p-5 md:p-6">
+                        {isLatest && (
+                          <span
+                            className={`rounded-full px-2.5 py-1 text-[10px] font-black ${theme.primary} text-white`}
+                          >
+                            {content.currentLabel}
+                          </span>
+                        )}
+
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-[10px] font-black ${theme.secondary} ${theme.textMuted}`}
+                        >
+                          {typeConfig.label}
+                        </span>
+                      </span>
+
+                      <span
+                        className={`mt-1.5 flex items-center gap-1.5 text-xs ${theme.textMuted}`}
+                      >
+                        <Calendar size={13} aria-hidden="true" />
+                        {entry.date}
+                      </span>
+                    </span>
+
+                    <span
+                      className={`mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${theme.secondary} ${theme.textMuted}`}
+                      aria-hidden="true"
+                    >
+                      <ChevronDown
+                        size={16}
+                        className={`transition-transform motion-reduce:transition-none ${isExpanded ? "rotate-180" : ""
+                          }`}
+                      />
+                    </span>
+                  </button>
+
+                  {isExpanded && (
+                    <div
+                      id={panelId}
+                      className={`border-t px-4 pb-5 pt-4 sm:px-5 sm:pb-6 ${theme.border}`}
+                    >
+                      <span className="sr-only">
+                        {content.release.hideChanges}
+                      </span>
+
                       <div className="space-y-6">
-                        {entry.changes.map((changeGroup, idx) => {
-                          const catConfig = getCategoryConfig(
-                            changeGroup.category,
-                          );
-                          const CatIcon = catConfig.icon;
+                        {entry.changes.map((changeGroup, groupIndex) => {
+                          const category =
+                            changeGroup.category as CategoryKey;
+                          const config =
+                            CATEGORY_CONFIG[category] ??
+                            CATEGORY_CONFIG.improved;
+                          const CategoryIcon = config.icon;
+                          const categoryTitle =
+                            content.categories[
+                            category as keyof typeof content.categories
+                            ] ?? category;
 
                           return (
-                            <div key={idx}>
-                              <div className="flex items-center gap-2.5 mb-3">
-                                <div
-                                  className={`p-1.5 rounded-lg ${catConfig.bgColor}`}
+                            <section
+                              key={`${entry.version}-${category}-${groupIndex}`}
+                              aria-labelledby={`${panelId}-${category}-${groupIndex}`}
+                            >
+                              <div className="mb-3 flex items-center gap-2">
+                                <span
+                                  className={`flex h-8 w-8 items-center justify-center rounded-[11px] ${config.className}`}
                                 >
-                                  <CatIcon
-                                    size={14}
-                                    className={catConfig.iconColor}
+                                  <CategoryIcon
+                                    size={15}
+                                    aria-hidden="true"
                                   />
-                                </div>
-                                <h3
-                                  className={`text-sm font-bold uppercase tracking-wider ${catConfig.iconColor}`}
+                                </span>
+
+                                <h2
+                                  id={`${panelId}-${category}-${groupIndex}`}
+                                  className={`text-sm font-black ${theme.text}`}
                                 >
-                                  {getCategoryTitle(changeGroup.category)}
-                                </h3>
+                                  {categoryTitle}
+                                </h2>
                               </div>
 
-                              <ul className="space-y-2 ml-2">
-                                {changeGroup.items.map((item, itemIdx) => (
+                              <ul className="space-y-2.5">
+                                {changeGroup.items.map((item, itemIndex) => (
                                   <li
-                                    key={itemIdx}
-                                    className={`flex items-start gap-3 text-sm ${theme.textMuted}`}
+                                    key={`${entry.version}-${groupIndex}-${itemIndex}`}
+                                    className={`flex items-start gap-3 text-sm leading-7 ${theme.textMuted}`}
                                   >
                                     <span
-                                      className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${catConfig.dotColor}`}
+                                      className={`mt-[0.7rem] h-1.5 w-1.5 shrink-0 rounded-full ${config.dotClassName}`}
+                                      aria-hidden="true"
                                     />
-                                    <span className="leading-relaxed">
-                                      {item}
-                                    </span>
+                                    <span>{item}</span>
                                   </li>
                                 ))}
                               </ul>
-                            </div>
+                            </section>
                           );
                         })}
                       </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </article>
               );
             })}
           </div>
-        </div>
+        )}
 
-        {/* Footer */}
-        <div className="mt-12 space-y-4">
-          <div
-            className={`rounded-2xl border p-6 text-center ${theme.card} ${theme.border}`}
-          >
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <GitBranch size={16} className={theme.accent} />
-              <p className={`text-sm ${theme.textMuted}`}>{content.note}</p>
-            </div>
-          </div>
-
-          <div className="text-center py-4">
-            <p className={`text-sm ${theme.textMuted}`}>
-              {content.contact.question}{" "}
-              <Link
-                href="/contact"
-                className={`font-bold hover:underline ${theme.accent}`}
-              >
-                {content.contact.contact}
-              </Link>
+        <footer className={`mt-8 border-t pt-6 ${theme.border}`}>
+          <div className="flex items-start gap-3">
+            <GitBranch
+              size={17}
+              className={`mt-0.5 shrink-0 ${theme.accent}`}
+              aria-hidden="true"
+            />
+            <p className={`text-sm leading-7 ${theme.textMuted}`}>
+              {content.note}
             </p>
           </div>
-        </div>
-      </div>
+
+          <p className={`mt-4 text-sm ${theme.textMuted}`}>
+            {content.contact.question}{" "}
+            <Link
+              href="/contact"
+              className={`font-black underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.accent}`}
+            >
+              {content.contact.contact}
+            </Link>
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }

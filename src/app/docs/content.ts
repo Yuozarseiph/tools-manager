@@ -1,4 +1,3 @@
-// app/docs/content.ts
 import { useLanguage } from "@/context/LanguageContext";
 
 export const DOC_CATEGORIES = [
@@ -34,6 +33,11 @@ export type DocsPageUiContent = {
   };
   sidebar: {
     mobileTitle: string;
+    searchPlaceholder: string;
+    searchLabel: string;
+    noResults: string;
+    openMenu: string;
+    closeMenu: string;
   };
   nav: {
     prev: string;
@@ -51,16 +55,16 @@ export const docsContent = {
     page: {
       title: "مستندات و راهنمای ابزارها",
       description:
-        "راهنمای کامل استفاده از ابزارهای Tools Manager، شامل توضیح قابلیت‌ها، نحوه کار و نکات حریم خصوصی هر ابزار.",
+        "راهنمای کامل استفاده از ابزارهای QodeForge، شامل قابلیت‌ها، نحوه کار، نکات فنی و حریم خصوصی هر ابزار.",
     },
     seo: {
-      title: "مستندات Tools Manager | راهنمای ابزارها",
+      title: "مستندات QodeForge | راهنمای ابزارها",
       description:
-        "در این بخش می‌توانید توضیحات کامل، ویژگی‌ها و نحوه کار با ابزارهای مختلف (PDF، تصویر، اکسل، امنیت، سیستم و …) را ببینید.",
-      canonical: "https://toolsmanager.yuozarseip.top/docs",
-      ogTitle: "مستندات و راهنمای استفاده از ابزارهای Tools Manager",
+        "راهنمای ابزارهای QodeForge برای PDF، تصویر، توسعه، اکسل، امنیت، سیستم و ابزارهای کاربردی.",
+      canonical: "https://qodeforge.ir/docs",
+      ogTitle: "مستندات و راهنمای ابزارهای QodeForge",
       ogDescription:
-        "قبل از استفاده از هر ابزار، صفحه مستندات آن را ببینید تا با محدودیت‌ها، نکات فنی و حریم خصوصی آن آشنا شوید.",
+        "قابلیت‌ها، محدودیت‌ها، نحوه کار و نکات حریم خصوصی ابزارهای QodeForge را ببینید.",
       applicationCategory: "Documentation",
       inLanguage: "fa-IR",
     } satisfies SeoContent,
@@ -69,11 +73,16 @@ export const docsContent = {
       hero: {
         title: "مستندات ابزارها",
         subtitle:
-          "راهنمای استفاده از ابزارها، قابلیت‌ها، محدودیت‌ها و نکات حریم خصوصی هر ابزار را اینجا ببینید.",
-        badge: "همیشه در حال بروزرسانی",
+          "راهنمای قابلیت‌ها، نحوه کار، محدودیت‌ها و حریم خصوصی ابزارهای QodeForge.",
+        badge: "به‌روزرسانی مداوم",
       },
       sidebar: {
         mobileTitle: "فهرست ابزارها",
+        searchPlaceholder: "جستجو در مستندات...",
+        searchLabel: "جستجو در مستندات",
+        noResults: "موردی پیدا نشد",
+        openMenu: "باز کردن فهرست مستندات",
+        closeMenu: "بستن فهرست مستندات",
       },
       nav: {
         prev: "قبلی",
@@ -99,18 +108,18 @@ export const docsContent = {
 
   en: {
     page: {
-      title: "Tools Manager documentation",
+      title: "QodeForge documentation",
       description:
-        "Detailed guides for all Tools Manager utilities, including features, how they work and privacy notes.",
+        "Detailed guides for QodeForge tools, including features, how they work, technical notes and privacy information.",
     },
     seo: {
-      title: "Tools Manager docs | Tool guides",
+      title: "QodeForge docs | Tool guides",
       description:
-        "Browse detailed descriptions, features and technical notes for PDF, image, Excel, security, system and other tools.",
-      canonical: "https://toolsmanager.yuozarseip.top/docs",
-      ogTitle: "Documentation and usage guide for Tools Manager tools",
+        "Browse QodeForge documentation for PDF, image, developer, Excel, security, system and utility tools.",
+      canonical: "https://qodeforge.ir/docs",
+      ogTitle: "QodeForge tool documentation",
       ogDescription:
-        "Read each tool’s documentation to understand its capabilities, limitations, technical details and privacy behavior.",
+        "Read capabilities, limitations, technical details and privacy information for QodeForge tools.",
       applicationCategory: "Documentation",
       inLanguage: "en-US",
     } satisfies SeoContent,
@@ -119,11 +128,16 @@ export const docsContent = {
       hero: {
         title: "Tool documentation",
         subtitle:
-          "Read usage guides, features, limitations, and privacy notes for each tool.",
+          "Capabilities, usage details, limitations and privacy information for QodeForge tools.",
         badge: "Continuously updated",
       },
       sidebar: {
         mobileTitle: "Tools list",
+        searchPlaceholder: "Search documentation...",
+        searchLabel: "Search documentation",
+        noResults: "No documentation found",
+        openMenu: "Open documentation list",
+        closeMenu: "Close documentation list",
       },
       nav: {
         prev: "Previous",

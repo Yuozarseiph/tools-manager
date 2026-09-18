@@ -77,14 +77,15 @@ const vazirmatn = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tools Manager - جعبه ابزار آنلاین رایگان",
+  metadataBase: new URL("https://qodeforge.ir"),
+  title: "QodeForge (کد فورج) - جعبه ابزار آنلاین رایگان",
   description:
     "ابزارهای ادغام PDF، فشرده‌سازی عکس و ابزارهای توسعه‌دهندگان به صورت کاملاً امن و سمت کلاینت.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Tools Manager",
+    title: "QodeForge",
   },
   icons: {
     icon: "/icons/icon-192.png",

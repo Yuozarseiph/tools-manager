@@ -1,52 +1,60 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback, memo } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
-  Search,
-  X,
-  Grid,
-  FileText,
-  Image as ImageIcon,
-  Code2,
-  ShieldCheck,
-  MonitorSmartphone,
-  Wrench,
-  Presentation,
-  Music,
-  Table,
   Calculator,
-  Palette,
+  Check,
+  ChevronDown,
+  Code2,
+  Copy,
+  Download,
+  FileJson,
+  FileText,
+  Gamepad2,
+  Grid,
+  HelpCircle,
+  Image as ImageIcon,
   Landmark,
+  MonitorSmartphone,
+  Music,
+  Palette,
   Pin,
   PinOff,
-  Copy,
-  Check,
-  FileJson,
-  Upload,
-  Download,
-  HelpCircle,
-  Gamepad2,
-  ChevronDown,
+  Presentation,
+  Search,
+  ShieldCheck,
   SlidersHorizontal,
+  Table,
+  Upload,
+  Wrench,
+  X,
 } from "lucide-react";
-import { useThemeColors } from "@/hooks/useThemeColors";
-import { TOOLS } from "@/data/tools";
+
 import { useLanguage } from "@/context/LanguageContext";
+import { TOOLS } from "@/data/tools";
 import { toolsContent } from "@/data/tools.content";
+import { useThemeColors } from "@/hooks/useThemeColors";
+
+import HelpModal from "./HelpModal";
 import { LayoutControls } from "./LayoutControls";
 import { PinnedSection } from "./PinnedSection";
 import {
-  ToolsLayoutMode,
-  PinnedLayoutMode,
-  LayoutSettings,
   DEFAULT_LAYOUT,
   LAYOUT_STORAGE_KEY,
+  LayoutSettings,
+  PinnedLayoutMode,
+  ToolsLayoutMode,
   ToolWithText,
 } from "./types";
-import HelpModal from "./HelpModal";
 
 const CATEGORIES = [
   { id: "all", icon: Grid },
@@ -74,135 +82,154 @@ type ExportData = {
 const getGridClass = (layout: ToolsLayoutMode): string => {
   switch (layout) {
     case "list-compact":
-      return "grid-cols-1 gap-1.5";
+      return "grid-cols-1 gap-2";
     case "list-detail":
       return "grid-cols-1 gap-3";
     case "grid-1":
       return "grid-cols-1 gap-3";
     case "grid-2":
-      return "grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3";
+      return "grid-cols-1 sm:grid-cols-2 gap-3";
     case "grid-3":
-      return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3";
+      return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
     case "grid-4":
-      return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5";
+      return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3";
     default:
       return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
   }
 };
 
-const ToolCard = memo(
-  ({
-    tool,
-    isPinned,
-    onTogglePin,
-    theme,
-    locale,
-    content,
-    layout,
-  }: {
-    tool: ToolWithText;
-    isPinned: boolean;
-    onTogglePin: (id: string, e: React.MouseEvent) => void;
-    theme: any;
-    locale: string;
-    content: any;
-    layout: ToolsLayoutMode;
-  }) => {
-    const isList =
-      layout === "list-compact" ||
-      layout === "list-detail" ||
-      layout === "grid-1";
-    const isCompact = layout === "list-compact";
-    const isRTL = locale === "fa";
+const ToolCard = memo(function ToolCard({
+  tool,
+  isPinned,
+  onTogglePin,
+  theme,
+  locale,
+  content,
+  layout,
+}: {
+  tool: ToolWithText;
+  isPinned: boolean;
+  onTogglePin: (id: string, event: React.MouseEvent) => void;
+  theme: any;
+  locale: string;
+  content: any;
+  layout: ToolsLayoutMode;
+}) {
+  const list =
+    layout === "list-compact" ||
+    layout === "list-detail" ||
+    layout === "grid-1";
+  const compact = layout === "list-compact";
+  const isRTL = locale === "fa";
 
-    return (
-      <motion.div
-        layout
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.1 }}
-        className="h-full"
+  return (
+    <article
+      className={`group relative h-full rounded-[20px] border transition-shadow hover:shadow-sm ${theme.card} ${theme.border}`}
+    >
+      <Link
+        href={tool.href}
+        className={`flex h-full rounded-[20px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+          list ? "items-start gap-3 p-3.5 pe-14" : "flex-col p-4"
+        } ${
+          tool.status === "coming-soon"
+            ? "pointer-events-none opacity-50 grayscale"
+            : ""
+        }`}
       >
-        <Link
-          href={tool.href}
-          className={`relative group h-full flex overflow-hidden rounded-xl sm:rounded-2xl border transition-all duration-150 hover:-translate-y-0.5 ${theme.card} ${theme.border} ${isList ? "p-2.5 sm:p-3" : "p-3 sm:p-3.5"} ${tool.status === "coming-soon" ? "opacity-60 grayscale pointer-events-none" : ""} ${isList ? "flex-row items-start gap-3" : "flex-col"}`}
+        <div
+          className={`flex shrink-0 items-center justify-center rounded-[15px] ${theme.secondary} ${
+            list ? "h-11 w-11" : "h-12 w-12"
+          }`}
         >
-          <button
-            onClick={(e) => onTogglePin(tool.id, e)}
-            className={`absolute top-2 ${isRTL ? "left-2" : "right-2"} z-10 p-1 rounded-md transition-all duration-150 ${isList ? "relative top-0 left-0 right-0" : ""} text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-950/50`}
-          >
-            {isPinned ? (
-              <Pin size={12} className="fill-current" />
-            ) : (
-              <PinOff size={12} />
-            )}
-          </button>
-          <div
-            className={`flex-1 flex ${isList ? "flex-row items-start gap-3" : "flex-col"}`}
-          >
-            <div
-              className={`shrink-0 ${isList ? "w-8 h-8" : "w-9 h-9 sm:w-10 sm:h-10"} rounded-lg flex items-center justify-center ${theme.secondary} ${isList ? "" : "mb-2"}`}
-            >
-              <tool.Icon
-                className={`${isList ? "w-4 h-4" : "w-4 h-4 sm:w-5 sm:h-5"} ${theme.accent}`}
-              />
-            </div>
-            <div className="flex-1 min-w-0 flex flex-col">
-              <div
-                className={`flex items-center gap-1.5 ${isList ? "" : "justify-center md:justify-start"}`}
-              >
-                <h2
-                  className={`text-xs sm:text-sm font-bold truncate ${theme.text}`}
-                >
-                  {tool.title}
-                </h2>
-                {tool.badge && (
-                  <span
-                    className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${theme.border} ${theme.secondary}`}
-                  >
-                    {tool.badge}
-                  </span>
-                )}
-              </div>
-              {((isList && !isCompact) || !isList) && (
-                <p
-                  className={`${isList ? "mt-0.5" : "mt-1.5"} text-[10px] sm:text-xs leading-relaxed ${theme.textMuted} ${isList ? "" : "line-clamp-2 text-center md:text-start"}`}
-                >
-                  {tool.description}
-                </p>
-              )}
-              {/* اسپیسر برای یکسان‌سازی ارتفاع در حالت گرید */}
-              {!isList && <div className="flex-1 min-h-0" />}
-            </div>
-          </div>
-          {!isList && (
-            <div
-              className={`mt-2 sm:mt-3 pt-2 border-t flex items-center justify-center text-[10px] font-semibold opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 ${theme.border} ${theme.accent}`}
-            >
-              <span className="flex items-center gap-1">
-                {content.item.cta}
-                <ArrowLeft
-                  size={10}
-                  className={`mt-0.5 ${isRTL ? "rotate-180" : ""}`}
-                />
-              </span>
-            </div>
-          )}
-        </Link>
-      </motion.div>
-    );
-  },
-);
-ToolCard.displayName = "ToolCard";
+          <tool.Icon
+            className={`${list ? "h-5 w-5" : "h-[22px] w-[22px]"} ${theme.accent}`}
+            aria-hidden="true"
+          />
+        </div>
 
+        <div className={`min-w-0 flex-1 ${list ? "" : "mt-4"}`}>
+          <div className="flex min-w-0 items-center gap-2">
+            <h2
+              className={`min-w-0 truncate text-sm font-black sm:text-[15px] ${theme.text}`}
+            >
+              {tool.title}
+            </h2>
+
+            {tool.badge && (
+              <span
+                className={`shrink-0 rounded-full border px-2 py-1 text-[9px] font-black ${theme.border} ${theme.secondary} ${theme.accent}`}
+              >
+                {tool.badge}
+              </span>
+            )}
+          </div>
+
+          {!compact && (
+            <p
+              className={`mt-2 text-xs leading-6 ${theme.textMuted} ${
+                list ? "" : "line-clamp-2"
+              }`}
+            >
+              {tool.description}
+            </p>
+          )}
+        </div>
+
+        {!list && (
+          <div
+            className={`mt-5 flex items-center justify-between border-t pt-3 text-xs font-black ${theme.border} ${theme.accent}`}
+          >
+            <span>{content.item.cta}</span>
+            <ArrowLeft
+              size={14}
+              className={isRTL ? "rotate-180" : ""}
+              aria-hidden="true"
+            />
+          </div>
+        )}
+      </Link>
+
+      <button
+        type="button"
+        onClick={(event) => onTogglePin(tool.id, event)}
+        aria-pressed={isPinned}
+        aria-label={
+          isPinned
+            ? locale === "fa"
+              ? `حذف ${tool.title} از پین‌ها`
+              : `Unpin ${tool.title}`
+            : locale === "fa"
+              ? `پین کردن ${tool.title}`
+              : `Pin ${tool.title}`
+        }
+        className={`absolute top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+          isRTL ? "left-3" : "right-3"
+        } ${
+          isPinned
+            ? "bg-amber-500/15 text-amber-500"
+            : `${theme.secondary} ${theme.textMuted}`
+        }`}
+      >
+        {isPinned ? (
+          <Pin size={16} className="fill-current" aria-hidden="true" />
+        ) : (
+          <PinOff size={16} aria-hidden="true" />
+        )}
+      </button>
+    </article>
+  );
+});
+
+ToolCard.displayName = "ToolCard";
 
 export default function ToolsGrid() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
   const content = toolsContent[locale];
+  const isRTL = locale === "fa";
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [visibleCount, setVisibleCount] = useState(18);
   const [pinnedTools, setPinnedTools] = useState<string[]>([]);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -215,27 +242,17 @@ export default function ToolsGrid() {
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [showImportHelp, setShowImportHelp] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!showCategoryDropdown) return;
-    const handler = (e: MouseEvent) => {
-      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(e.target as Node)) {
-        setShowCategoryDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [showCategoryDropdown]);
 
   const uiText = useMemo(() => {
     const isFa = locale === "fa";
     return {
-      pinnedTitle: isFa ? "ابزارهای پین شده" : "Pinned Tools",
+      pinnedTitle: isFa ? "ابزارهای پین‌شده" : "Pinned tools",
       noPinned: isFa ? "هنوز ابزاری پین نشده" : "No tools pinned yet",
-      exportTitle: isFa ? "خروجی تنظیمات" : "Export Settings",
-      importTitle: isFa ? "وارد کردن تنظیمات" : "Import Settings",
+      exportTitle: isFa ? "خروجی تنظیمات" : "Export settings",
+      importTitle: isFa ? "وارد کردن تنظیمات" : "Import settings",
       file: isFa ? "فایل" : "File",
       text: isFa ? "متن" : "Text",
       downloadJson: isFa ? "دانلود فایل JSON" : "Download JSON file",
@@ -246,6 +263,8 @@ export default function ToolsGrid() {
       pasteJson: isFa ? "JSON را اینجا پیست کنید..." : "Paste JSON here...",
       import: isFa ? "وارد کردن" : "Import",
       invalidJson: isFa ? "فرمت JSON نامعتبر است" : "Invalid JSON format",
+      category: isFa ? "دسته‌بندی" : "Category",
+      searchLabel: isFa ? "جستجو در ابزارها" : "Search tools",
     };
   }, [locale]);
 
@@ -253,6 +272,7 @@ export default function ToolsGrid() {
     try {
       const savedLayout = localStorage.getItem(LAYOUT_STORAGE_KEY);
       if (savedLayout) setLayoutSettings(JSON.parse(savedLayout));
+
       const savedPins = localStorage.getItem("tm_pinned_tools");
       if (savedPins) {
         const data = JSON.parse(savedPins);
@@ -263,20 +283,32 @@ export default function ToolsGrid() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!showCategoryDropdown) return;
+
+    const handler = (event: MouseEvent) => {
+      if (
+        categoryDropdownRef.current &&
+        !categoryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showCategoryDropdown]);
+
   const saveLayoutSettings = useCallback((settings: LayoutSettings) => {
-    try {
-      localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(settings));
-    } catch (error) {
-      console.error("Failed to save layout settings:", error);
-    }
+    localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(settings));
   }, []);
 
   const handleToolsLayoutChange = useCallback(
     (layout: ToolsLayoutMode) => {
-      setLayoutSettings((prev) => {
-        const ns = { ...prev, toolsLayout: layout };
-        saveLayoutSettings(ns);
-        return ns;
+      setLayoutSettings((previous) => {
+        const next = { ...previous, toolsLayout: layout };
+        saveLayoutSettings(next);
+        return next;
       });
     },
     [saveLayoutSettings],
@@ -284,53 +316,52 @@ export default function ToolsGrid() {
 
   const handlePinnedLayoutChange = useCallback(
     (layout: PinnedLayoutMode) => {
-      setLayoutSettings((prev) => {
-        const ns = { ...prev, pinnedLayout: layout };
-        saveLayoutSettings(ns);
-        return ns;
+      setLayoutSettings((previous) => {
+        const next = { ...previous, pinnedLayout: layout };
+        saveLayoutSettings(next);
+        return next;
       });
     },
     [saveLayoutSettings],
   );
 
   const savePinnedTools = useCallback((pins: string[]) => {
-    try {
-      localStorage.setItem(
-        "tm_pinned_tools",
-        JSON.stringify({
-          pinnedTools: pins,
-          exportDate: new Date().toISOString(),
-          version: "1.0",
-        }),
-      );
-    } catch (error) {
-      console.error("Failed to save pinned tools:", error);
-    }
+    localStorage.setItem(
+      "tm_pinned_tools",
+      JSON.stringify({
+        pinnedTools: pins,
+        exportDate: new Date().toISOString(),
+        version: "1.0",
+      }),
+    );
   }, []);
 
   const togglePin = useCallback(
-    (toolId: string, e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setPinnedTools((prev) => {
-        const np = prev.includes(toolId)
-          ? prev.filter((id) => id !== toolId)
-          : [...prev, toolId];
-        savePinnedTools(np);
-        return np;
+    (toolId: string, event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      setPinnedTools((previous) => {
+        const next = previous.includes(toolId)
+          ? previous.filter((id) => id !== toolId)
+          : [...previous, toolId];
+
+        savePinnedTools(next);
+        return next;
       });
     },
     [savePinnedTools],
   );
 
   const removePin = useCallback(
-    (toolId: string, e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setPinnedTools((prev) => {
-        const np = prev.filter((id) => id !== toolId);
-        savePinnedTools(np);
-        return np;
+    (toolId: string, event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      setPinnedTools((previous) => {
+        const next = previous.filter((id) => id !== toolId);
+        savePinnedTools(next);
+        return next;
       });
     },
     [savePinnedTools],
@@ -339,21 +370,28 @@ export default function ToolsGrid() {
   const toolsWithText = useMemo<ToolWithText[]>(
     () =>
       TOOLS.map((tool) => {
-        const td = content.items[tool.id as keyof typeof content.items];
-        if (!td)
-          return { ...tool, title: tool.id, description: "", badge: undefined };
-        return {
-          ...tool,
-          title: td.title,
-          description: td.description,
-          badge: td.badge,
-        };
+        const item = content.items[tool.id as keyof typeof content.items];
+
+        return item
+          ? {
+              ...tool,
+              title: item.title,
+              description: item.description,
+              badge: item.badge,
+            }
+          : {
+              ...tool,
+              title: tool.id,
+              description: "",
+              badge: undefined,
+            };
       }),
-    [locale, content],
+    [content],
   );
 
   const pinnedToolsList = useMemo(() => {
     const seen = new Set<string>();
+
     return toolsWithText.filter((tool) => {
       if (pinnedTools.includes(tool.id) && !seen.has(tool.id)) {
         seen.add(tool.id);
@@ -365,22 +403,24 @@ export default function ToolsGrid() {
 
   const filteredTools = useMemo(() => {
     let result = toolsWithText;
-    if (activeCategory !== "all")
-      result = result.filter((t) => t.category === activeCategory);
-    const q = searchQuery.toLowerCase().trim();
-    if (q)
+
+    if (activeCategory !== "all") {
+      result = result.filter((tool) => tool.category === activeCategory);
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    if (query) {
       result = result.filter(
-        (t) =>
-          t.title.toLowerCase().includes(q) ||
-          t.description.toLowerCase().includes(q),
+        (tool) =>
+          tool.title.toLowerCase().includes(query) ||
+          tool.description.toLowerCase().includes(query),
       );
+    }
+
     return result;
   }, [searchQuery, activeCategory, toolsWithText]);
 
-  const visibleTools = useMemo(
-    () => filteredTools.slice(0, visibleCount),
-    [filteredTools, visibleCount],
-  );
+  const visibleTools = filteredTools.slice(0, visibleCount);
 
   const getExportData = useCallback(
     (): ExportData => ({
@@ -392,15 +432,14 @@ export default function ToolsGrid() {
   );
 
   const handleExportFile = useCallback(() => {
-    const data = getExportData();
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
+    const blob = new Blob([JSON.stringify(getExportData(), null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `pinned-tools-${new Date().toISOString().split("T")[0]}.json`;
-    a.click();
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `pinned-tools-${new Date().toISOString().split("T")[0]}.json`;
+    anchor.click();
     URL.revokeObjectURL(url);
     setShowExportModal(false);
   }, [getExportData]);
@@ -410,21 +449,22 @@ export default function ToolsGrid() {
       JSON.stringify(getExportData(), null, 2),
     );
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 2000);
   }, [getExportData]);
 
   const handleImportFile = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
       if (!file) return;
+
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = (loadEvent) => {
         try {
-          const data = JSON.parse(event.target?.result as string);
+          const data = JSON.parse(loadEvent.target?.result as string);
           if (data.pinnedTools && Array.isArray(data.pinnedTools)) {
-            const up = [...new Set(data.pinnedTools as string[])];
-            setPinnedTools(up);
-            savePinnedTools(up);
+            const unique = [...new Set(data.pinnedTools as string[])];
+            setPinnedTools(unique);
+            savePinnedTools(unique);
             setShowImportModal(false);
           }
         } catch {
@@ -440,9 +480,9 @@ export default function ToolsGrid() {
     try {
       const data = JSON.parse(importText);
       if (data.pinnedTools && Array.isArray(data.pinnedTools)) {
-        const up = [...new Set(data.pinnedTools as string[])];
-        setPinnedTools(up);
-        savePinnedTools(up);
+        const unique = [...new Set(data.pinnedTools as string[])];
+        setPinnedTools(unique);
+        savePinnedTools(unique);
         setImportText("");
         setShowImportModal(false);
       }
@@ -451,11 +491,17 @@ export default function ToolsGrid() {
     }
   }, [importText, savePinnedTools, uiText.invalidJson]);
 
-  const gridClass = getGridClass(layoutSettings.toolsLayout);
-  const isRTL = locale === "fa";
+  const activeCategoryData =
+    CATEGORIES.find((category) => category.id === activeCategory) ??
+    CATEGORIES[0];
+  const ActiveCategoryIcon = activeCategoryData.icon;
+  const activeCategoryLabel =
+    content.categories[
+      activeCategory as keyof typeof content.categories
+    ];
 
   return (
-    <div className="pb-20 sm:pb-28 pt-1 sm:pt-2 space-y-4 sm:space-y-5">
+    <section id="tools-workspace" className="scroll-mt-24 space-y-5 pb-20">
       <PinnedSection
         pinnedTools={pinnedToolsList}
         onRemove={removePin}
@@ -466,166 +512,200 @@ export default function ToolsGrid() {
         uiText={uiText}
         locale={locale}
       />
-      {/* ─── Search + Layout controls ─── */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
-        <div
-          className={`flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-2 ${isRTL ? "sm:flex-row-reverse" : ""}`}
-        >
-          <div className="w-full sm:flex-1 relative">
-            <div className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 ${theme.textMuted} pointer-events-none`}>
-              <Search size={15} />
-            </div>
+
+      <div
+        className={`rounded-[22px] border p-3 sm:p-4 ${theme.card} ${theme.border}`}
+      >
+        <div className="grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="relative">
+            <label htmlFor="tools-search" className="sr-only">
+              {uiText.searchLabel}
+            </label>
+
+            <Search
+              size={18}
+              aria-hidden="true"
+              className={`pointer-events-none absolute top-1/2 -translate-y-1/2 ${
+                isRTL ? "right-4" : "left-4"
+              } ${theme.textMuted}`}
+            />
+
             <input
-              type="text"
-              placeholder={content.search.placeholder}
+              id="tools-search"
+              type="search"
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(18); }}
-              className={`w-full py-2.5 ${isRTL ? "pr-9 pl-9" : "pl-9 pr-9"} rounded-xl border text-sm focus:border-[var(--app-accent)] focus:ring-2 focus:ring-[var(--app-accent)]/10 outline-none transition-colors ${theme.bg} ${theme.text} ${theme.border}`}
+              placeholder={content.search.placeholder}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setVisibleCount(18);
+              }}
+              className={`min-h-12 w-full rounded-[16px] border bg-transparent py-3 text-sm outline-none transition-colors focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${
+                isRTL ? "pl-11 pr-11" : "pl-11 pr-11"
+              } ${theme.border} ${theme.text}`}
               dir={isRTL ? "rtl" : "ltr"}
             />
+
             {searchQuery && (
               <button
+                type="button"
                 onClick={() => setSearchQuery("")}
-                className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
+                className={`absolute top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+                  isRTL ? "left-2.5" : "right-2.5"
+                } ${theme.secondary} ${theme.textMuted}`}
+                aria-label={isRTL ? "پاک کردن جستجو" : "Clear search"}
               >
-                <X size={14} className={theme.textMuted} />
+                <X size={14} aria-hidden="true" />
               </button>
             )}
           </div>
-          <div className="w-full sm:w-auto shrink-0">
-            <LayoutControls
-              toolsLayout={layoutSettings.toolsLayout}
-              pinnedLayout={layoutSettings.pinnedLayout}
-              onToolsLayoutChange={handleToolsLayoutChange}
-              onPinnedLayoutChange={handlePinnedLayoutChange}
+
+          <LayoutControls
+            toolsLayout={layoutSettings.toolsLayout}
+            pinnedLayout={layoutSettings.pinnedLayout}
+            onToolsLayoutChange={handleToolsLayoutChange}
+            onPinnedLayoutChange={handlePinnedLayoutChange}
+            theme={theme}
+            locale={locale}
+          />
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div ref={categoryDropdownRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setShowCategoryDropdown((value) => !value)}
+              aria-expanded={showCategoryDropdown}
+              aria-haspopup="menu"
+              className={`flex min-h-11 items-center gap-2 rounded-[15px] border px-3.5 text-xs font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
+            >
+              <SlidersHorizontal size={15} className={theme.accent} aria-hidden="true" />
+              <span className={theme.textMuted}>{uiText.category}</span>
+              <ActiveCategoryIcon size={15} className={theme.accent} aria-hidden="true" />
+              <span>{activeCategoryLabel}</span>
+              <ChevronDown
+                size={14}
+                aria-hidden="true"
+                className={`${theme.textMuted} ${
+                  showCategoryDropdown ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {showCategoryDropdown && (
+              <div
+                role="menu"
+                className={`absolute top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-[22px] border p-2 shadow-xl ${
+                  isRTL ? "right-0" : "left-0"
+                } ${theme.card} ${theme.border}`}
+              >
+                <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+                  {CATEGORIES.map((category) => {
+                    const Icon = category.icon;
+                    const active = activeCategory === category.id;
+                    const label =
+                      content.categories[
+                        category.id as keyof typeof content.categories
+                      ];
+                    const count =
+                      category.id === "all"
+                        ? TOOLS.length
+                        : TOOLS.filter(
+                            (tool) => tool.category === category.id,
+                          ).length;
+
+                    return (
+                      <button
+                        key={category.id}
+                        type="button"
+                        role="menuitemradio"
+                        aria-checked={active}
+                        onClick={() => {
+                          setActiveCategory(category.id);
+                          setVisibleCount(18);
+                          setShowCategoryDropdown(false);
+                        }}
+                        className={`flex min-h-16 items-center gap-2 rounded-[15px] px-3 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] ${
+                          active
+                            ? `${theme.secondary} ${theme.accent}`
+                            : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/5`
+                        }`}
+                      >
+                        <Icon size={17} aria-hidden="true" />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-xs font-black">
+                            {label}
+                          </span>
+                          <span className="mt-0.5 block text-[10px] opacity-70">
+                            {count}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <span
+            className={`rounded-full px-3 py-2 text-xs font-bold ${theme.secondary} ${theme.textMuted}`}
+            aria-live="polite"
+          >
+            {filteredTools.length}
+          </span>
+        </div>
+      </div>
+
+      <div className={`grid ${getGridClass(layoutSettings.toolsLayout)}`}>
+        {visibleTools.length > 0 ? (
+          visibleTools.map((tool) => (
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              isPinned={pinnedTools.includes(tool.id)}
+              onTogglePin={togglePin}
               theme={theme}
               locale={locale}
+              content={content}
+              layout={layoutSettings.toolsLayout}
             />
+          ))
+        ) : (
+          <div
+            className={`col-span-full flex min-h-56 flex-col items-center justify-center rounded-[22px] border border-dashed px-5 text-center ${theme.border}`}
+          >
+            <Search size={24} className={theme.textMuted} aria-hidden="true" />
+            <p className={`mt-3 text-sm font-black ${theme.text}`}>
+              {content.empty.title}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveCategory("all");
+                setSearchQuery("");
+              }}
+              className={`mt-3 rounded-full px-4 py-2 text-sm font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.secondary} ${theme.accent}`}
+            >
+              {content.empty.showAll}
+            </button>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* ─── Category filter dropdown ─── */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
-        <div
-          ref={categoryDropdownRef}
-          className={`relative inline-block ${isRTL ? "text-right" : "text-left"}`}
-        >
-          {/* Trigger button */}
-          {(() => {
-            const activeCat = CATEGORIES.find((c) => c.id === activeCategory)!;
-            const ActiveIcon = activeCat.icon;
-            const activeLabel = content.categories[activeCategory as keyof typeof content.categories];
-            const toolCount = filteredTools.length;
-            return (
-              <button
-                onClick={() => setShowCategoryDropdown((v) => !v)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-medium transition-all duration-150 select-none ${theme.card} ${theme.border} ${theme.text} hover:border-[var(--app-accent)]`}
-              >
-                <SlidersHorizontal size={14} className={theme.accent} />
-                <ActiveIcon size={14} className={theme.accent} />
-                <span className="min-w-[60px]">{activeLabel}</span>
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${theme.secondary} ${theme.textMuted}`}>
-                  {toolCount}
-                </span>
-                <ChevronDown
-                  size={14}
-                  className={`${theme.textMuted} transition-transform duration-200 ${showCategoryDropdown ? "rotate-180" : ""}`}
-                />
-              </button>
-            );
-          })()}
-
-          {/* Dropdown panel */}
-          {showCategoryDropdown && (
-            <div
-              className={`absolute top-full mt-2 z-50 p-2 rounded-2xl border shadow-2xl shadow-black/10 dark:shadow-black/40 ${theme.card} ${theme.border} w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] ${isRTL ? "right-0" : "left-0"}`}
-            >
-              <div className="grid grid-cols-3 gap-1">
-                {CATEGORIES.map((cat) => {
-                  const isActive = activeCategory === cat.id;
-                  const Icon = cat.icon;
-                  const label = content.categories[cat.id as keyof typeof content.categories];
-                  const count = cat.id === "all"
-                    ? TOOLS.length
-                    : TOOLS.filter((t) => t.category === cat.id).length;
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => {
-                        setActiveCategory(cat.id);
-                        setVisibleCount(18);
-                        setShowCategoryDropdown(false);
-                      }}
-                      className={`flex flex-col items-center gap-1 p-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
-                        isActive
-                          ? "bg-[var(--app-primary-bg)] text-white shadow-sm"
-                          : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10 hover:text-[var(--app-accent)]`
-                      }`}
-                    >
-                      <Icon size={18} className={isActive ? "text-white" : ""} />
-                      <span className="text-center leading-tight">{label}</span>
-                      <span className={`text-[10px] ${isActive ? "text-white" : theme.textMuted}`}>
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className={`grid ${gridClass} px-3 sm:px-4 md:px-0`}>
-        <AnimatePresence mode="popLayout">
-          {visibleTools.length > 0 ? (
-            visibleTools.map((tool) => (
-              <ToolCard
-                key={tool.id}
-                tool={tool}
-                isPinned={pinnedTools.includes(tool.id)}
-                onTogglePin={togglePin}
-                theme={theme}
-                locale={locale}
-                content={content}
-                layout={layoutSettings.toolsLayout}
-              />
-            ))
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="col-span-full text-center py-16 opacity-50"
-            >
-              <Search size={32} className={`mx-auto mb-3 ${theme.textMuted}`} />
-              <p className={`text-base font-medium ${theme.text}`}>
-                {content.empty.title}
-              </p>
-              <button
-                onClick={() => {
-                  setActiveCategory("all");
-                  setSearchQuery("");
-                }}
-                className="text-[var(--app-accent)] hover:underline text-sm mt-2"
-              >
-                {content.empty.showAll}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
       {visibleCount < filteredTools.length && (
         <div className="flex justify-center">
           <button
-            onClick={() => setVisibleCount((c) => c + 9)}
-            className={`px-5 py-2.5 text-sm rounded-xl font-medium shadow-sm hover:shadow-md transition-all ${theme.primary}`}
+            type="button"
+            onClick={() => setVisibleCount((count) => count + 9)}
+            className={`min-h-12 rounded-full px-6 text-sm font-black text-white shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.primary}`}
           >
             {content.loadMore}
           </button>
         </div>
       )}
+
       {showExportModal && (
-        <Modal
+        <SettingsModal
           title={uiText.exportTitle}
           onClose={() => setShowExportModal(false)}
           theme={theme}
@@ -633,59 +713,69 @@ export default function ToolsGrid() {
           onHelp={() => setShowExportHelp(true)}
         >
           <div className="space-y-4">
-            <div className={`flex gap-2 p-1 rounded-xl ${theme.secondary}`}>
+            <div className={`grid grid-cols-2 gap-1 rounded-[15px] p-1 ${theme.secondary}`}>
               <button
+                type="button"
                 onClick={() => setExportFormat("file")}
-                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "file" ? "bg-[var(--app-primary-bg)] text-white" : `${theme.card} ${theme.text}`}`}
+                aria-pressed={exportFormat === "file"}
+                className={`rounded-[12px] px-3 py-2.5 text-sm font-black ${
+                  exportFormat === "file"
+                    ? `${theme.card} ${theme.text} shadow-sm`
+                    : theme.textMuted
+                }`}
               >
-                <FileJson size={16} className="inline mr-1" /> {uiText.file}
+                <FileJson size={16} className="me-1.5 inline" aria-hidden="true" />
+                {uiText.file}
               </button>
               <button
+                type="button"
                 onClick={() => setExportFormat("text")}
-                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${exportFormat === "text" ? "bg-[var(--app-primary-bg)] text-white" : `${theme.card} ${theme.text}`}`}
+                aria-pressed={exportFormat === "text"}
+                className={`rounded-[12px] px-3 py-2.5 text-sm font-black ${
+                  exportFormat === "text"
+                    ? `${theme.card} ${theme.text} shadow-sm`
+                    : theme.textMuted
+                }`}
               >
-                <Copy size={16} className="inline mr-1" /> {uiText.text}
+                <Copy size={16} className="me-1.5 inline" aria-hidden="true" />
+                {uiText.text}
               </button>
             </div>
+
             {exportFormat === "file" ? (
               <button
+                type="button"
                 onClick={handleExportFile}
-                className={`w-full py-3 rounded-xl font-medium ${theme.primary}`}
+                className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] font-black text-white ${theme.primary}`}
               >
-                <Download size={16} className="inline mr-2" />{" "}
+                <Download size={17} aria-hidden="true" />
                 {uiText.downloadJson}
               </button>
             ) : (
-              <div>
+              <>
                 <textarea
                   readOnly
+                  aria-label={uiText.text}
                   value={JSON.stringify(getExportData(), null, 2)}
-                  className={`w-full h-40 p-3 rounded-xl border text-sm font-mono ${theme.border} ${theme.bg} ${theme.text}`}
+                  className={`h-44 w-full resize-none rounded-[16px] border p-4 font-mono text-xs ${theme.border} ${theme.bg} ${theme.text}`}
                   dir="ltr"
                 />
                 <button
+                  type="button"
                   onClick={handleCopyToClipboard}
-                  className={`mt-2 w-full py-2.5 rounded-lg border font-medium ${theme.border} ${theme.card} hover:bg-gray-50 dark:hover:bg-white/10`}
+                  className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-[14px] border text-sm font-black ${theme.card} ${theme.border} ${theme.text}`}
                 >
-                  {copied ? (
-                    <>
-                      <Check size={14} className="inline mr-1" />{" "}
-                      {uiText.copied}
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={14} className="inline mr-1" />{" "}
-                      {uiText.copyClipboard}
-                    </>
-                  )}
+                  {copied ? <Check size={15} /> : <Copy size={15} />}
+                  {copied ? uiText.copied : uiText.copyClipboard}
                 </button>
-              </div>
+              </>
             )}
           </div>
-        </Modal>
+        </SettingsModal>
       )}
+
       {showImportModal && (
-        <Modal
+        <SettingsModal
           title={uiText.importTitle}
           onClose={() => {
             setShowImportModal(false);
@@ -697,11 +787,14 @@ export default function ToolsGrid() {
         >
           <div className="space-y-4">
             <button
+              type="button"
               onClick={() => fileInputRef.current?.click()}
-              className={`w-full py-3 rounded-xl border font-medium ${theme.border} ${theme.card} hover:bg-gray-50 dark:hover:bg-white/10`}
+              className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] border text-sm font-black ${theme.card} ${theme.border} ${theme.text}`}
             >
-              <Upload size={16} className="inline mr-2" /> {uiText.uploadFile}
+              <Upload size={17} aria-hidden="true" />
+              {uiText.uploadFile}
             </button>
+
             <input
               ref={fileInputRef}
               type="file"
@@ -709,26 +802,32 @@ export default function ToolsGrid() {
               onChange={handleImportFile}
               className="hidden"
             />
-            <div className={`text-center text-sm ${theme.textMuted}`}>
+
+            <div className={`text-center text-xs ${theme.textMuted}`}>
               {uiText.or}
             </div>
+
             <textarea
+              aria-label={uiText.pasteJson}
               placeholder={uiText.pasteJson}
               value={importText}
-              onChange={(e) => setImportText(e.target.value)}
-              className={`w-full h-32 p-3 rounded-xl border text-sm font-mono ${theme.border} ${theme.bg} ${theme.text}`}
+              onChange={(event) => setImportText(event.target.value)}
+              className={`h-36 w-full resize-none rounded-[16px] border p-4 font-mono text-xs ${theme.border} ${theme.bg} ${theme.text}`}
               dir="ltr"
             />
+
             <button
+              type="button"
               onClick={handleImportText}
               disabled={!importText}
-              className={`w-full py-2.5 rounded-lg font-medium disabled:opacity-50 ${theme.primary}`}
+              className={`min-h-12 w-full rounded-[15px] text-sm font-black text-white disabled:opacity-40 ${theme.primary}`}
             >
               {uiText.import}
             </button>
           </div>
-        </Modal>
+        </SettingsModal>
       )}
+
       <HelpModal
         isOpen={showExportHelp}
         onClose={() => setShowExportHelp(false)}
@@ -743,11 +842,11 @@ export default function ToolsGrid() {
         locale={locale}
         type="import"
       />
-    </div>
+    </section>
   );
 }
 
-function Modal({
+function SettingsModal({
   title,
   onClose,
   children,
@@ -762,33 +861,57 @@ function Modal({
   locale: string;
   onHelp: () => void;
 }) {
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[150] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] sm:items-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-modal-title"
       onClick={onClose}
     >
       <div
-        className={`max-w-md w-full rounded-2xl p-6 shadow-2xl border ${theme.card} ${theme.border}`}
-        onClick={(e) => e.stopPropagation()}
+        className={`w-full max-w-md overflow-hidden rounded-[26px] border shadow-2xl ${theme.card} ${theme.border}`}
+        onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-4">
+        <div
+          className={`flex items-center justify-between border-b p-5 ${theme.border}`}
+        >
           <div className="flex items-center gap-2">
-            <h3 className={`text-lg font-bold ${theme.text}`}>{title}</h3>
-            <button
-              onClick={onHelp}
-              className={`p-1 rounded-lg transition-colors ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
+            <h3
+              id="settings-modal-title"
+              className={`text-lg font-black ${theme.text}`}
             >
-              <HelpCircle size={16} />
+              {title}
+            </h3>
+            <button
+              type="button"
+              onClick={onHelp}
+              className={`flex h-8 w-8 items-center justify-center rounded-full ${theme.secondary} ${theme.textMuted}`}
+              aria-label={locale === "fa" ? "راهنما" : "Help"}
+            >
+              <HelpCircle size={15} aria-hidden="true" />
             </button>
           </div>
+
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10"
+            className={`flex h-10 w-10 items-center justify-center rounded-full ${theme.secondary} ${theme.text}`}
+            aria-label={locale === "fa" ? "بستن" : "Close"}
           >
-            <X size={18} className={theme.text} />
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
-        {children}
+
+        <div className="p-5">{children}</div>
       </div>
     </div>
   );

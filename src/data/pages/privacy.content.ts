@@ -5,13 +5,13 @@ export const privacyContent = {
     back: "بازگشت به خانه",
     hero: {
       title: "سیاست حفظ حریم خصوصی",
-      lead: "در Tools Manager، حفاظت از حریم خصوصی شما یک قابلیت اضافی نیست؛ بلکه اصل بنیادین طراحی این پلتفرم است. ما متعهد به شفافیت کامل در نحوه برخورد با داده‌ها هستیم.",
+      lead: "در کد فورج (QodeForge)، حفاظت از حریم خصوصی شما یک قابلیت اضافی نیست؛ بلکه اصل بنیادین طراحی این پلتفرم است. ما متعهد به شفافیت کامل در نحوه برخورد با داده‌ها هستیم.",
       lastUpdated: "آخرین بروزرسانی: ۱۲ آذر ۱۴۰۴",
     },
     principle1: {
       title: "اصل شماره یک: پردازش محلی و بدون سرور",
       intro:
-        "Tools Manager هیچ سرور بک‌اند (Back-end) برای پردازش، ذخیره یا تحلیل فایل‌های کاربران ندارد. برخلاف بسیاری از سرویس‌های آنلاین که اطلاعات کاربران را به سرورهای خود منتقل می‌کنند، در اینجا:",
+        "کد فورج هیچ سرور بک‌اند (Back-end) برای پردازش، ذخیره یا تحلیل فایل‌های کاربران ندارد. برخلاف بسیاری از سرویس‌های آنلاین که اطلاعات کاربران را به سرورهای خود منتقل می‌کنند، در اینجا:",
       points: {
         noUpload: "فایل‌های شما هرگز آپلود نمی‌شوند",
         noLeaveDevice: "هیچ داده‌ای از دستگاه شما خارج نمی‌شود",
@@ -73,13 +73,13 @@ export const privacyContent = {
     back: "Back to home",
     hero: {
       title: "Privacy policy",
-      lead: "At Tools Manager, privacy is not an optional feature; it is a core design principle. We are fully committed to being transparent about how we handle data.",
+      lead: "At QodeForge, privacy is not an optional feature; it is a core design principle. We are fully committed to being transparent about how we handle data.",
       lastUpdated: "Last updated: Dec 2, 2025",
     },
     principle1: {
       title: "Principle #1: Local, serverless processing",
       intro:
-        "Tools Manager has no backend servers for processing, storing or analyzing user files. Unlike many online services that send your data to their servers, here:",
+        "QodeForge has no backend servers for processing, storing or analyzing user files. Unlike many online services that send your data to their servers, here:",
       points: {
         noUpload: "Your files are never uploaded",
         noLeaveDevice: "No data leaves your device",

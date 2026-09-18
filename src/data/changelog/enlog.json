@@ -1,5 +1,71 @@
 [
   {
+    "version": "26.4.0",
+    "date": "September 18, 2026",
+    "type": "release",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added a new \"PDF to Word\" tool with fully client-side conversion, editable DOCX output, page-range selection, RTL/LTR handling, embedded images, scanned-page fallback, and an optional layout-preserving mode",
+          "Added selectable PDF-to-Word quality presets (Fast, Balanced, High Quality) so users can balance conversion speed, output size, and render quality",
+          "Added a new \"Image to Text\" OCR tool with Persian, English, and mixed-language recognition, drag & drop, clipboard paste, editable extracted text, confidence display, copy, and TXT download",
+          "Added dedicated OCR modes for standard documents and stylized/logo text, including automatic fallback when normal OCR returns weak or empty results",
+          "Added a standalone \"QR Code Reader\" with image upload, drag & drop, clipboard paste, live camera scanning, screenshot-friendly detection, result copying, and direct URL opening",
+          "Added a searchable Docs navigation experience so users can quickly find documentation by tool name, description, or category",
+          "Added direct \"Open tool\" actions inside Docs entries for faster navigation from documentation to the actual tool",
+          "Added changelog search across version numbers, dates, categories, and change descriptions",
+          "Added collapsible changelog releases, with the latest release expanded by default and older releases kept compact for faster scanning",
+          "Added a cleaner FAQ experience on the About page with a controlled accordion, one-open-at-a-time behavior, clearer numbering, and improved mobile readability"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Rebranded the product from Tools Manager / ToolsManager to QodeForge, while keeping XenonQode as the parent brand",
+          "Updated primary site-owned metadata, manifest values, canonical URLs, structured data, sitemap references, footer branding, About content, Docs content, Download content, and Privacy content to use QodeForge and the qodeforge.ir domain",
+          "Introduced a more consistent Material 3-inspired design language across About, Home, Docs, Download, Contact, Privacy, Changelog, and the site footer while preserving the existing header behavior",
+          "Redesigned the footer as a full-width site surface with clearer QodeForge / XenonQode hierarchy, quick links, legal information, mobile bottom-navigation clearance, and stronger light/dark theme consistency",
+          "Simplified the Home hero to prioritize fast access to tools, with a shorter message, one primary action, and a concise privacy note instead of decorative panels and visual clutter",
+          "Redesigned the Home tools workspace with clearer search, category filtering, layout controls, pinned tools, tool cards, empty states, import/export dialogs, and mobile bottom sheets",
+          "Improved Home accessibility by removing nested interactive elements such as buttons inside links, adding meaningful ARIA states and labels, strengthening focus-visible behavior, and improving keyboard navigation",
+          "Refined pinned-tools interactions with a dedicated delete mode, clearer icon-button labels, safer removal actions, and better compact layouts across desktop and mobile",
+          "Redesigned Docs with a lightweight sticky sidebar, searchable tool index, mobile bottom sheet, clearer content hierarchy, direct tool access, and clean internal navigation without URL hash fragments",
+          "Improved Docs content presentation with more readable feature lists, numbered workflow steps, clearer technical/privacy notes, and better responsive spacing",
+          "Simplified the Download page so users can immediately distinguish the Web/PWA version, Windows Setup, Windows Portable, Android, and Linux availability",
+          "Updated the Download page to show the web release as 26.4.0 while keeping the current published Windows desktop build at 26.3.1 until a newer desktop package is released",
+          "Redesigned Contact around a simpler two-column structure with direct support email access, clearer support topics, cleaner social links, and a more focused contact form",
+          "Improved the Contact form with real labels, autocomplete hints, better error/status announcements, safer EmailJS environment checks, and clearer keyboard focus states",
+          "Redesigned Privacy from a heavily decorative card layout into a calmer document-style page focused on readability, collection practices, local storage, security, updates, and contact information",
+          "Removed non-essential Privacy statistics and decorative animations so the policy is easier to scan and understand on mobile and desktop",
+          "Redesigned Changelog from a decorative timeline into a compact release log optimized for scanning long release history, especially on mobile",
+          "Improved changelog accessibility with semantic release sections, aria-expanded/aria-controls states, visible keyboard focus, and clearer category grouping",
+          "Improved Persian OCR quality with upscaling, grayscale preprocessing, contrast enhancement, Otsu/adaptive thresholding, sharpening, auto-rotation, DPI tuning, Persian character normalization, and RTL output",
+          "Improved stylized-text and logo recognition by evaluating multiple preprocessed image variants and using dedicated page-segmentation modes for sparse text, text blocks, and single lines",
+          "Improved PDF-to-Word performance and memory usage by scaling rendered pages according to the selected quality level, compressing embedded images, and releasing canvas memory after processing",
+          "Improved QR scanning reliability for screenshots and difficult images with an additional high-contrast decoding pass and safer camera lifecycle management",
+          "Improved responsive behavior and accessibility across redesigned pages with simpler layouts, consistent minimum touch targets, clearer focus rings, reduced non-essential motion, and stronger RTL/LTR handling",
+          "Standardized clean in-page scrolling behavior so internal section navigation uses scrollIntoView without changing the URL or adding hash fragments"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed PDF-to-Word cancellation being reported as a development console error / Next.js overlay even when the user intentionally cancelled the conversion",
+          "Fixed QR camera scanning lifecycle issues that could prevent scanning from starting reliably because of stale React state, and ensured camera tracks are stopped and cleaned up correctly",
+          "Fixed weak or empty Persian OCR results on many logo-style images by automatically switching to the specialized logo/stylized-text recognition pipeline when needed",
+          "Fixed invalid nested interactive structures on Home tool and pinned cards that could cause accessibility and keyboard-navigation problems",
+          "Fixed multiple missing or unclear accessible labels and state announcements across Home controls, dialogs, search fields, pinned actions, and layout selectors",
+          "Fixed Contact form failure handling when EmailJS environment variables are missing, so the UI now reports an error state instead of relying on unsafe non-null assertions",
+          "Fixed inconsistent back-arrow direction on redesigned bilingual pages so Persian and English navigation follow the correct RTL/LTR direction",
+          "Fixed Home layout-control TypeScript build failure caused by implicitly typed callback values by explicitly typing tool-layout and pinned-layout change handlers",
+          "Fixed outdated QodeForge web-version labeling on the Download page by updating the displayed web/PWA release to 26.4.0",
+          "Fixed several remaining legacy brand/domain references in redesigned primary pages so site-owned links and metadata consistently point to qodeforge.ir"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.3.2",
     "date": "August 1, 2026",
     "type": "update",
@@ -889,7 +955,9 @@
       },
       {
         "category": "note",
-        "items": ["English UI language is not available yet in this version"]
+        "items": [
+          "English UI language is not available yet in this version"
+        ]
       }
     ]
   },

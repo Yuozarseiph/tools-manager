@@ -1,17 +1,19 @@
 "use client";
+
 import { memo, useState } from "react";
 import Link from "next/link";
 import {
+  Download,
+  HelpCircle,
   Pin,
   PinOff,
-  Download,
+  Trash2,
   Upload,
   X,
-  Trash2,
-  HelpCircle,
 } from "lucide-react";
-import { PinnedLayoutMode, ToolWithText } from "./types";
+
 import HelpModal from "./HelpModal";
+import { PinnedLayoutMode, ToolWithText } from "./types";
 
 interface PinnedSectionProps {
   pinnedTools: ToolWithText[];
@@ -27,181 +29,149 @@ interface PinnedSectionProps {
 const getContainerClass = (layout: PinnedLayoutMode): string => {
   switch (layout) {
     case "horizontal-scroll":
-      return "flex overflow-x-auto scrollbar-hide gap-2 pb-2";
+      return "flex overflow-x-auto scrollbar-hide gap-2 pb-1";
     case "grid-small":
-      return "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5";
+      return "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2";
     case "grid-medium":
-      return "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-2";
+      return "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2";
     case "grid-large":
-      return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3";
+      return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5";
     case "minimal":
-      return "flex flex-wrap gap-1";
+      return "flex flex-wrap gap-2";
     default:
       return "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2";
   }
 };
 
-const PinnedCard = memo(
-  ({
-    tool,
-    onRemove,
-    theme,
-    layout,
-    locale,
-    deleteMode,
-  }: {
-    tool: ToolWithText;
-    onRemove: (id: string, e: React.MouseEvent) => void;
-    theme: any;
-    layout: PinnedLayoutMode;
-    locale: string;
-    deleteMode: boolean;
-  }) => {
-    const isHorizontal = layout === "horizontal-scroll";
-    const isMinimal = layout === "minimal";
-    return (
+const PinnedCard = memo(function PinnedCard({
+  tool,
+  onRemove,
+  theme,
+  layout,
+  locale,
+  deleteMode,
+}: {
+  tool: ToolWithText;
+  onRemove: (id: string, e: React.MouseEvent) => void;
+  theme: any;
+  layout: PinnedLayoutMode;
+  locale: string;
+  deleteMode: boolean;
+}) {
+  const horizontal = layout === "horizontal-scroll";
+  const minimal = layout === "minimal";
+
+  return (
+    <div
+      className={`group relative rounded-[16px] border ${theme.card} ${theme.border} ${
+        horizontal ? "w-28 shrink-0" : ""
+      }`}
+    >
       <Link
         href={tool.href}
-        className={`group relative flex items-center p-2 rounded-lg border transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md ${isHorizontal ? "w-24 shrink-0" : isMinimal ? "" : "flex-col text-center"} ${theme.card} ${theme.border} ${tool.status === "coming-soon" ? "opacity-60 grayscale pointer-events-none" : ""} ${isMinimal ? "gap-2" : "gap-1"}`}
+        className={`flex min-h-14 items-center rounded-[16px] p-2.5 transition-shadow hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+          minimal ? "gap-2" : "flex-col justify-center gap-1.5 text-center"
+        } ${
+          tool.status === "coming-soon"
+            ? "pointer-events-none opacity-50 grayscale"
+            : ""
+        }`}
       >
-        {deleteMode && (
-          <button
-            onClick={(e) => onRemove(tool.id, e)}
-            className="absolute -top-1.5 -right-1.5 p-0.5 rounded-full bg-red-500 text-white shadow-md hover:bg-red-600 transition-colors"
-            title={locale === "fa" ? "حذف از پین‌ها" : "Remove from pins"}
-          >
-            <X size={10} />
-          </button>
-        )}
         <div
-          className={`shrink-0 rounded-lg flex items-center justify-center ${theme.secondary} ${isMinimal ? "w-6 h-6" : "w-8 h-8"}`}
+          className={`flex shrink-0 items-center justify-center rounded-[12px] ${theme.secondary} ${
+            minimal ? "h-8 w-8" : "h-9 w-9"
+          }`}
         >
           <tool.Icon
-            className={`${isMinimal ? "w-3.5 h-3.5" : "w-4 h-4"} ${theme.accent}`}
+            className={`${minimal ? "h-4 w-4" : "h-[18px] w-[18px]"} ${theme.accent}`}
+            aria-hidden="true"
           />
         </div>
+
         <span
-          className={`font-medium ${theme.text} truncate ${isMinimal ? "text-xs" : "text-[9px] sm:text-[10px] line-clamp-2"}`}
+          className={`max-w-full truncate font-bold ${theme.text} ${
+            minimal ? "text-xs" : "text-[10px]"
+          }`}
         >
           {tool.title}
         </span>
       </Link>
-    );
-  },
-);
+
+      {deleteMode && (
+        <button
+          type="button"
+          onClick={(event) => onRemove(tool.id, event)}
+          className="absolute -end-1.5 -top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-red-500 text-white shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-300"
+          aria-label={
+            locale === "fa"
+              ? `حذف ${tool.title} از پین‌ها`
+              : `Remove ${tool.title} from pins`
+          }
+        >
+          <X size={13} aria-hidden="true" />
+        </button>
+      )}
+    </div>
+  );
+});
+
 PinnedCard.displayName = "PinnedCard";
 
-export const PinnedSection = memo(
-  ({
-    pinnedTools,
-    onRemove,
-    onExport,
-    onImport,
-    layout,
-    theme,
-    uiText,
-    locale,
-  }: PinnedSectionProps) => {
-    const containerClass = getContainerClass(layout);
-    const isRTL = locale === "fa";
-    const [deleteMode, setDeleteMode] = useState(false);
-    const [showHelp, setShowHelp] = useState(false);
+export const PinnedSection = memo(function PinnedSection({
+  pinnedTools,
+  onRemove,
+  onExport,
+  onImport,
+  layout,
+  theme,
+  uiText,
+  locale,
+}: PinnedSectionProps) {
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
+  const isFa = locale === "fa";
+
+  if (pinnedTools.length === 0) {
     return (
       <>
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-0">
-          <div
-            className={`rounded-xl sm:rounded-2xl border p-3 sm:p-4 shadow-sm ${theme.card} ${theme.border}`}
-          >
+        <div
+          className={`flex flex-col gap-3 rounded-[20px] border px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${theme.card} ${theme.border}`}
+        >
+          <div className="flex min-w-0 items-center gap-3">
             <div
-              className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
             >
-              <div
-                className={`flex items-center gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
-              >
-                <Pin size={16} className={theme.accent} />
-                <h3 className={`text-xs sm:text-sm font-bold ${theme.text}`}>
-                  {uiText.pinnedTitle}
-                </h3>
-                {pinnedTools.length > 0 && (
-                  <span
-                    className={`text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full ${theme.textMuted} ${theme.secondary}`}
-                  >
-                    {pinnedTools.length}
-                  </span>
-                )}
-              </div>
-              <div
-                className={`flex items-center gap-0.5 ${isRTL ? "flex-row-reverse" : ""}`}
-              >
-                <button
-                  onClick={() => setShowHelp(true)}
-                  className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
-                  title={locale === "fa" ? "راهنما" : "Help"}
-                >
-                  <HelpCircle size={14} />
-                </button>
-                {pinnedTools.length > 0 && (
-                  <button
-                    onClick={() => setDeleteMode(!deleteMode)}
-                    className={`p-1.5 rounded-lg transition-all ${deleteMode ? "bg-red-500 text-white hover:bg-red-600" : `${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}`}
-                    title={locale === "fa" ? "حالت حذف" : "Delete Mode"}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-                <button
-                  onClick={onExport}
-                  className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
-                  title={uiText.exportTitle}
-                >
-                  <Upload size={14} />
-                </button>
-                <button
-                  onClick={onImport}
-                  className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
-                  title={uiText.importTitle}
-                >
-                  <Download size={14} />
-                </button>
-              </div>
+              <PinOff size={17} className={theme.accent} aria-hidden="true" />
             </div>
-            {pinnedTools.length > 0 ? (
-              <div className={containerClass}>
-                {pinnedTools.map((tool, index) => (
-                  <PinnedCard
-                    key={`pinned-${tool.id}-${index}`}
-                    tool={tool}
-                    onRemove={onRemove}
-                    theme={theme}
-                    layout={layout}
-                    locale={locale}
-                    deleteMode={deleteMode}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                className={`text-center py-6 sm:py-8 ${theme.textMuted} text-xs sm:text-sm`}
-              >
-                <PinOff size={22} className="mx-auto mb-2 opacity-30" />
+            <div className="min-w-0">
+              <div className={`text-sm font-black ${theme.text}`}>
                 {uiText.noPinned}
               </div>
-            )}
-            {deleteMode && pinnedTools.length > 0 && (
-              <div className={`mt-3 pt-3 border-t ${theme.border} text-center`}>
-                <p className="text-[10px] text-red-500 dark:text-red-400 flex items-center justify-center gap-1">
-                  <X size={10} />
-                  <span>
-                    {locale === "fa"
-                      ? "برای حذف پین روی دکمه قرمز کلیک کنید"
-                      : "Click the red button to unpin"}
-                  </span>
-                </p>
+              <div className={`mt-0.5 text-xs ${theme.textMuted}`}>
+                {isFa
+                  ? "ابزارهای پرکاربرد را پین کن تا سریع‌تر به آن‌ها برسی."
+                  : "Pin frequently used tools for quicker access."}
               </div>
-            )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <IconButton
+              label={isFa ? "راهنمای پین‌ها" : "Pinned tools help"}
+              onClick={() => setShowHelp(true)}
+              icon={HelpCircle}
+              theme={theme}
+            />
+            <IconButton
+              label={uiText.importTitle}
+              onClick={onImport}
+              icon={Download}
+              theme={theme}
+            />
           </div>
         </div>
+
         <HelpModal
           isOpen={showHelp}
           onClose={() => setShowHelp(false)}
@@ -211,6 +181,126 @@ export const PinnedSection = memo(
         />
       </>
     );
-  },
-);
+  }
+
+  return (
+    <>
+      <section
+        aria-labelledby="pinned-tools-title"
+        className={`rounded-[22px] border p-4 sm:p-5 ${theme.card} ${theme.border}`}
+      >
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-[14px] ${theme.secondary}`}
+            >
+              <Pin size={17} className={theme.accent} aria-hidden="true" />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h2
+                  id="pinned-tools-title"
+                  className={`text-sm font-black ${theme.text}`}
+                >
+                  {uiText.pinnedTitle}
+                </h2>
+                <span
+                  className={`rounded-full px-2 py-1 text-[10px] font-black ${theme.secondary} ${theme.accent}`}
+                >
+                  {pinnedTools.length}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <IconButton
+              label={isFa ? "راهنما" : "Help"}
+              onClick={() => setShowHelp(true)}
+              icon={HelpCircle}
+              theme={theme}
+            />
+            <IconButton
+              label={isFa ? "حالت حذف" : "Delete mode"}
+              onClick={() => setDeleteMode((value) => !value)}
+              icon={Trash2}
+              theme={theme}
+              active={deleteMode}
+              danger
+            />
+            <IconButton
+              label={uiText.exportTitle}
+              onClick={onExport}
+              icon={Upload}
+              theme={theme}
+            />
+            <IconButton
+              label={uiText.importTitle}
+              onClick={onImport}
+              icon={Download}
+              theme={theme}
+            />
+          </div>
+        </div>
+
+        <div className={getContainerClass(layout)}>
+          {pinnedTools.map((tool) => (
+            <PinnedCard
+              key={tool.id}
+              tool={tool}
+              onRemove={onRemove}
+              theme={theme}
+              layout={layout}
+              locale={locale}
+              deleteMode={deleteMode}
+            />
+          ))}
+        </div>
+      </section>
+
+      <HelpModal
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
+        theme={theme}
+        locale={locale}
+        type="pinned"
+      />
+    </>
+  );
+});
+
 PinnedSection.displayName = "PinnedSection";
+
+function IconButton({
+  label,
+  onClick,
+  icon: Icon,
+  theme,
+  active = false,
+  danger = false,
+}: {
+  label: string;
+  onClick: () => void;
+  icon: any;
+  theme: any;
+  active?: boolean;
+  danger?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      aria-pressed={active || undefined}
+      className={`flex h-10 w-10 items-center justify-center rounded-[14px] border transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+        active && danger
+          ? "border-red-500 bg-red-500 text-white"
+          : `${theme.card} ${theme.border} ${theme.textMuted}`
+      }`}
+    >
+      <Icon size={16} aria-hidden="true" />
+    </button>
+  );
+}

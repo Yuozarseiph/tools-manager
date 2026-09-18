@@ -2,85 +2,125 @@
 
 import Link from "next/link";
 import {
+  ArrowLeft,
   ArrowRight,
+  Check,
   Download,
-  Monitor,
   Globe,
+  Lock,
+  Monitor,
   Smartphone,
   Terminal,
-  BadgeCheck,
-  Lock,
 } from "lucide-react";
-import { useThemeColors } from "@/hooks/useThemeColors";
+
 import { useLanguage } from "@/context/LanguageContext";
 import { downloadContent } from "@/data/pages/download.content";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
-type CardProps = {
+type DownloadAction = {
+  label: string;
+  href?: string;
+  disabled?: boolean;
+  download?: boolean;
+};
+
+type DownloadCardProps = {
   icon: any;
   title: string;
-  desc: string;
+  description: string;
   hint?: string;
-  actions: Array<{
-    label: string;
-    href?: string;
-    disabled?: boolean;
-  }>;
+  version?: string;
+  actions: DownloadAction[];
   theme: any;
+  locale: string;
+  featured?: boolean;
 };
 
 function DownloadCard({
   icon: Icon,
   title,
-  desc,
+  description,
   hint,
+  version,
   actions,
   theme,
-}: CardProps) {
+  locale,
+  featured = false,
+}: DownloadCardProps) {
   return (
-    <div
-      className={`p-8 rounded-3xl border shadow-xl ${theme.card} ${theme.border}`}
+    <section
+      className={`flex h-full flex-col rounded-[22px] border p-5 sm:p-6 ${featured ? "shadow-sm" : ""
+        } ${theme.card} ${theme.border}`}
     >
-      <div className="flex items-center gap-4 mb-4">
-        <div className={`p-3 rounded-xl ${theme.secondary}`}>
-          <Icon size={26} className={theme.accent} />
+      <div className="flex items-start gap-4">
+        <div
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] ${theme.secondary}`}
+        >
+          <Icon size={21} className={theme.accent} aria-hidden="true" />
         </div>
-        <h2 className={`text-xl font-black ${theme.text}`}>{title}</h2>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className={`text-lg font-black ${theme.text}`}>{title}</h2>
+
+            {version && (
+              <span
+                className={`rounded-full px-2.5 py-1 text-[10px] font-black ${theme.secondary} ${theme.accent}`}
+              >
+                {version}
+              </span>
+            )}
+          </div>
+
+          <p className={`mt-2 text-sm leading-7 ${theme.textMuted}`}>
+            {description}
+          </p>
+        </div>
       </div>
 
-      <p className={`text-sm leading-relaxed mb-5 ${theme.textMuted}`}>
-        {desc}
-      </p>
+      <div className="mt-auto pt-6">
+        <div className="grid gap-2 sm:grid-cols-2">
+          {actions.map((action) =>
+            action.disabled ? (
+              <button
+                key={action.label}
+                type="button"
+                disabled
+                className={`flex min-h-12 cursor-not-allowed items-center justify-center gap-2 rounded-[15px] border px-4 text-sm font-black opacity-45 ${theme.border} ${theme.textMuted}`}
+              >
+                <Lock size={16} aria-hidden="true" />
+                {action.label}
+              </button>
+            ) : action.href === "/" ? (
+              <Link
+                key={action.label}
+                href={action.href}
+                className={`flex min-h-12 items-center justify-center gap-2 rounded-[15px] px-4 text-sm font-black text-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.primary}`}
+              >
+                <Globe size={16} aria-hidden="true" />
+                {action.label}
+              </Link>
+            ) : (
+              <a
+                key={action.label}
+                href={action.href}
+                download={action.download}
+                className={`flex min-h-12 items-center justify-center gap-2 rounded-[15px] px-4 text-sm font-black text-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.primary}`}
+              >
+                <Download size={16} aria-hidden="true" />
+                {action.label}
+              </a>
+            ),
+          )}
+        </div>
 
-      <div className="flex flex-col md:flex-row gap-3">
-        {actions.map((a, idx) =>
-          a.disabled ? (
-            <button
-              key={idx}
-              disabled
-              className="w-full py-3 rounded-xl font-bold border opacity-50 cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              <Lock size={16} />
-              {a.label}
-            </button>
-          ) : (
-            <a
-              key={idx}
-              href={a.href}
-              className={`w-full py-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 ${theme.primary}`}
-            >
-              <Download size={16} />
-              {a.label}
-            </a>
-          )
+        {hint && (
+          <p className={`mt-3 text-xs leading-6 ${theme.textMuted}`}>
+            {hint}
+          </p>
         )}
       </div>
-
-      {hint && (
-        <div className={`mt-4 text-xs opacity-70 ${theme.textMuted}`}>
-          {hint}
-        </div>
-      )}
-    </div>
+    </section>
   );
 }
 
@@ -88,6 +128,8 @@ export default function DownloadPage() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
   const content = downloadContent[locale];
+  const isFa = locale === "fa";
+
   const links = {
     pwa: "/",
     windowsSetup:
@@ -97,61 +139,63 @@ export default function DownloadPage() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme.bg}`}>
-      <div className="max-w-6xl mx-auto px-6 pt-10 w-full pb-20">
+    <div className={`min-h-screen ${theme.bg}`}>
+      <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-10">
         <Link
           href="/"
-          className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+          className={`inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {content.back}
+          {isFa ? (
+            <ArrowRight size={16} aria-hidden="true" />
+          ) : (
+            <ArrowLeft size={16} aria-hidden="true" />
+          )}
+          {content.back}
         </Link>
 
-        {/* Hero */}
-        <div
-          className={`rounded-3xl border p-8 md:p-12 mb-10 relative overflow-hidden ${theme.card} ${theme.border}`}
-        >
-          <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className={`p-3 rounded-xl ${theme.secondary}`}>
-                <BadgeCheck size={28} className={theme.accent} />
-              </div>
-              <h1 className={`text-3xl md:text-4xl font-black ${theme.text}`}>
-                {content.hero.title}
-              </h1>
-            </div>
-
-            <p className={`text-base md:text-lg max-w-2xl ${theme.textMuted}`}>
-              {content.hero.lead}
-              <span className="block mt-2 text-sm opacity-70">
-                {content.hero.badge}
-              </span>
-            </p>
+        <header className="mb-10 mt-8 max-w-3xl">
+          <div
+            className={`mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black ${theme.secondary} ${theme.accent}`}
+          >
+            <Check size={14} aria-hidden="true" />
+            {content.hero.badge}
           </div>
 
-          <div
-            className={`absolute -top-20 -left-20 w-40 h-40 rounded-full blur-3xl opacity-20 ${theme.gradient} bg-gradient-to-br`}
-          />
-          <div
-            className={`absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 ${theme.gradient} bg-gradient-to-br`}
-          />
-        </div>
+          <h1
+            className={`text-3xl font-black tracking-[-0.025em] sm:text-4xl ${theme.text}`}
+          >
+            {content.hero.title}
+          </h1>
 
-        {/* Cards */}
-        <div className="grid lg:grid-cols-2 gap-8">
+          <p className={`mt-4 text-base leading-8 ${theme.textMuted}`}>
+            {content.hero.lead}
+          </p>
+        </header>
+
+        <div className="grid gap-4 lg:grid-cols-2">
           <DownloadCard
             icon={Globe}
             title={content.cards.pwa.title}
-            desc={content.cards.pwa.desc}
+            description={content.cards.pwa.desc}
             hint={content.cards.pwa.hint}
-            actions={[{ label: content.cards.pwa.cta, href: links.pwa }]}
+            version={content.cards.pwa.version}
+            actions={[
+              {
+                label: content.cards.pwa.cta,
+                href: links.pwa,
+              },
+            ]}
             theme={theme}
+            locale={locale}
+            featured
           />
 
           <DownloadCard
             icon={Monitor}
             title={content.cards.windows.title}
-            desc={content.cards.windows.desc}
+            description={content.cards.windows.desc}
             hint={content.cards.windows.hint}
+            version={content.cards.windows.version}
             actions={[
               {
                 label: content.cards.windows.setupCta,
@@ -163,54 +207,77 @@ export default function DownloadPage() {
               },
             ]}
             theme={theme}
+            locale={locale}
+            featured
           />
 
           <DownloadCard
             icon={Smartphone}
             title={content.cards.android.title}
-            desc={content.cards.android.desc}
-            actions={[{ label: content.cards.android.cta, disabled: true }]}
+            description={content.cards.android.desc}
+            version={content.cards.android.version}
+            actions={[
+              {
+                label: content.cards.android.cta,
+                disabled: true,
+              },
+            ]}
             theme={theme}
+            locale={locale}
           />
 
           <DownloadCard
             icon={Terminal}
             title={content.cards.linux.title}
-            desc={content.cards.linux.desc}
-            actions={[{ label: content.cards.linux.cta, disabled: true }]}
+            description={content.cards.linux.desc}
+            version={content.cards.linux.version}
+            actions={[
+              {
+                label: content.cards.linux.cta,
+                disabled: true,
+              },
+            ]}
             theme={theme}
+            locale={locale}
           />
         </div>
 
-        {/* Notes */}
-        <div
-          className={`mt-10 p-6 rounded-2xl border ${theme.border} bg-gray-50/50 dark:bg-white/5`}
+        <section
+          aria-labelledby="download-notes-title"
+          className={`mt-8 rounded-[22px] border p-5 sm:p-6 ${theme.card} ${theme.border}`}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className={`p-2 rounded-xl ${theme.secondary}`}>
-              <Lock size={18} className={theme.accent} />
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+            >
+              <Lock size={18} className={theme.accent} aria-hidden="true" />
             </div>
-            <h3 className={`font-bold text-lg ${theme.text}`}>
+
+            <h2
+              id="download-notes-title"
+              className={`text-base font-black ${theme.text}`}
+            >
               {content.notes.title}
-            </h3>
+            </h2>
           </div>
 
-          <ul className={`space-y-2 text-sm ${theme.textMuted}`}>
-            <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
-              <span>{content.notes.items.verify}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
-              <span>{content.notes.items.beta}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
-              <span>{content.notes.items.pwa}</span>
-            </li>
+          <ul className="mt-5 grid gap-3">
+            {Object.values(content.notes.items).map((item) => (
+              <li
+                key={item}
+                className={`flex items-start gap-3 text-sm leading-7 ${theme.textMuted}`}
+              >
+                <span
+                  className="mt-[0.65rem] h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ background: "var(--app-accent)" }}
+                  aria-hidden="true"
+                />
+                <span>{item}</span>
+              </li>
+            ))}
           </ul>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

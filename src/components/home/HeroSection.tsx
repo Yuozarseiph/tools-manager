@@ -1,42 +1,58 @@
-// components/home/HeroSection.tsx
 "use client";
 
-import { motion } from "framer-motion";
-import { useThemeColors } from "@/hooks/useThemeColors";
+import { ArrowDown, ShieldCheck } from "lucide-react";
+
 import { useLanguage } from "@/context/LanguageContext";
 import { homeContent } from "@/data/home.content";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function HeroSection() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
-
-  // 🔥 انتخاب محتوا بر اساس زبان
   const content = homeContent[locale];
 
-  return (
-    <div className="text-center mb-8 sm:mb-12 space-y-4 pt-10 sm:pt-14">
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`text-4xl md:text-6xl font-black tracking-tight leading-tight ${theme.text}`}
-      >
-        {content.hero.titleLine1}
-        <br className="hidden md:block" />
-        <span
-          className={`bg-clip-text text-transparent bg-gradient-to-r ${theme.gradient}`}
-        >
-          {content.hero.titleHighlight}
-        </span>
-      </motion.h1>
+  const scrollToTools = () => {
+    document
+      .getElementById("tools-workspace")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className={`text-lg md:text-xl max-w-2xl mx-auto leading-relaxed transition-colors duration-300 ${theme.textMuted}`}
-      >
-        {content.hero.subtitle}
-      </motion.p>
-    </div>
+  return (
+    <section className="py-12 text-center sm:py-16 lg:py-20">
+      <div className="mx-auto max-w-3xl">
+        <h1
+          className={`text-4xl font-black leading-[1.12] tracking-[-0.035em] sm:text-5xl lg:text-6xl ${theme.text}`}
+        >
+          {content.hero.titleLine1}
+          <span className={`mt-2 block ${theme.accent}`}>
+            {content.hero.titleHighlight}
+          </span>
+        </h1>
+
+        <p
+          className={`mx-auto mt-6 max-w-2xl text-base leading-8 sm:text-lg ${theme.textMuted}`}
+        >
+          {content.hero.subtitle}
+        </p>
+
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={scrollToTools}
+            className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-black text-white shadow-sm transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] motion-reduce:transition-none ${theme.primary}`}
+          >
+            {content.hero.primaryAction}
+            <ArrowDown size={17} aria-hidden="true" />
+          </button>
+        </div>
+
+        <div
+          className={`mx-auto mt-5 flex max-w-xl items-center justify-center gap-2 text-xs leading-6 ${theme.textMuted}`}
+        >
+          <ShieldCheck size={15} className={theme.accent} aria-hidden="true" />
+          <span>{content.hero.privacyNote}</span>
+        </div>
+      </div>
+    </section>
   );
 }

@@ -1,21 +1,24 @@
 "use client";
 
+import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Mail,
-  Send,
-  Github,
-  Instagram,
-  MessageSquarePlus,
-  Bug,
-  Handshake,
-} from "lucide-react";
-import { useThemeColors } from "@/hooks/useThemeColors";
-import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bug,
+  CheckCircle2,
+  Github,
+  Handshake,
+  Instagram,
+  Mail,
+  MessageSquarePlus,
+  Send,
+} from "lucide-react";
+
 import { useLanguage } from "@/context/LanguageContext";
 import { contactContent } from "@/data/pages/contact.content";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 const TelegramIcon = ({
   size,
@@ -27,296 +30,428 @@ const TelegramIcon = ({
   <Send
     size={size}
     className={className}
-    style={{ transform: "rotate(-45deg) translateX(2px)" }}
+    style={{ transform: "rotate(-45deg) translateX(1px)" }}
+    aria-hidden="true"
   />
 );
+
+type FormState = {
+  user_name: string;
+  user_email: string;
+  message: string;
+};
 
 export default function ContactPage() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
   const content = contactContent[locale];
+  const isFa = locale === "fa";
 
   const formRef = useRef<HTMLFormElement>(null);
-  const [form, setForm] = useState({
+
+  const [form, setForm] = useState<FormState>({
     user_name: "",
     user_email: "",
     message: "",
   });
+
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const updateField = (field: keyof FormState, value: string) => {
+    setForm((current) => ({ ...current, [field]: value }));
+
+    if (status === "error") {
+      setStatus("idle");
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!formRef.current || status === "sending") return;
+
+    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceID || !templateID || !publicKey) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
 
-    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
-
-    if (formRef.current) {
-      emailjs.sendForm(serviceID, templateID, formRef.current, publicKey).then(
-        () => {
-          setStatus("success");
-          setForm({ user_name: "", user_email: "", message: "" });
-        },
-        (error) => {
-          console.error(error);
-          setStatus("error");
-        },
+    try {
+      await emailjs.sendForm(
+        serviceID,
+        templateID,
+        formRef.current,
+        publicKey,
       );
+
+      setForm({
+        user_name: "",
+        user_email: "",
+        message: "",
+      });
+      setStatus("success");
+    } catch (error) {
+      console.error("EmailJS send failed:", error);
+      setStatus("error");
     }
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme.bg}`}>
-      <div className="max-w-6xl mx-auto px-6 pt-10 w-full pb-20">
+    <div className={`min-h-screen ${theme.bg}`}>
+      <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-10">
         <Link
           href="/"
-          className={`inline-flex items-center text-sm font-medium mb-8 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+          className={`inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {content.back}
+          {isFa ? (
+            <ArrowRight size={16} aria-hidden="true" />
+          ) : (
+            <ArrowLeft size={16} aria-hidden="true" />
+          )}
+          {content.back}
         </Link>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* ستون اطلاعات */}
-          <div className="space-y-8">
-            <div>
+        <div className="mt-8 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <section aria-labelledby="contact-title">
+            <div className="max-w-xl">
               <h1
-                className={`text-4xl md:text-5xl font-black mb-6 ${theme.text}`}
+                id="contact-title"
+                className={`text-3xl font-black leading-tight tracking-[-0.025em] sm:text-4xl ${theme.text}`}
               >
                 {content.hero.title}
               </h1>
-              <p className={`text-lg leading-relaxed ${theme.textMuted}`}>
+
+              <p
+                className={`mt-4 text-base leading-8 ${theme.textMuted}`}
+              >
                 {content.hero.lead}
               </p>
             </div>
 
-            <div className="space-y-6">
-              <ContactItem
-                icon={Mail}
-                title={content.supportEmail.title}
-                value={content.supportEmail.value}
-                theme={theme}
-              />
+            <div className="mt-8 space-y-6">
+              <section aria-labelledby="support-email-title">
+                <h2
+                  id="support-email-title"
+                  className={`mb-3 text-xs font-black uppercase tracking-[0.14em] ${theme.textMuted}`}
+                >
+                  {content.supportEmail.title}
+                </h2>
+
+                <a
+                  href={`mailto:${content.supportEmail.value}`}
+                  className={`group flex min-h-14 items-center gap-3 rounded-[18px] border px-4 transition-shadow hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border}`}
+                >
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+                  >
+                    <Mail
+                      size={18}
+                      className={theme.accent}
+                      aria-hidden="true"
+                    />
+                  </span>
+
+                  <span
+                    dir="ltr"
+                    className={`min-w-0 flex-1 truncate text-start text-sm font-black ${theme.text}`}
+                  >
+                    {content.supportEmail.value}
+                  </span>
+                </a>
+              </section>
+
+              <section aria-labelledby="contact-help-title">
+                <h2
+                  id="contact-help-title"
+                  className={`mb-3 text-xs font-black uppercase tracking-[0.14em] ${theme.textMuted}`}
+                >
+                  {content.helpBox.title}
+                </h2>
+
+                <div
+                  className={`rounded-[20px] border p-4 sm:p-5 ${theme.card} ${theme.border}`}
+                >
+                  <ul className="space-y-4">
+                    <HelpItem
+                      icon={Handshake}
+                      text={content.helpBox.items.cooperation}
+                      theme={theme}
+                    />
+                    <HelpItem
+                      icon={MessageSquarePlus}
+                      text={content.helpBox.items.feature}
+                      theme={theme}
+                    />
+                    <HelpItem
+                      icon={Bug}
+                      text={content.helpBox.items.bug}
+                      theme={theme}
+                    />
+                  </ul>
+
+                  <p
+                    className={`mt-5 border-t pt-4 text-xs leading-6 ${theme.border} ${theme.textMuted}`}
+                  >
+                    {content.helpBox.footer}
+                  </p>
+                </div>
+              </section>
+
+              <section aria-labelledby="social-title">
+                <h2
+                  id="social-title"
+                  className={`mb-3 text-xs font-black uppercase tracking-[0.14em] ${theme.textMuted}`}
+                >
+                  {content.social.title}
+                </h2>
+
+                <div className="flex flex-wrap gap-2">
+                  <SocialLink
+                    icon={Github}
+                    href="https://github.com/Yuozarseiph"
+                    label="GitHub"
+                    theme={theme}
+                  />
+                  <SocialLink
+                    icon={Instagram}
+                    href="https://instagram.com/yousefshaker.dev"
+                    label="Instagram"
+                    theme={theme}
+                  />
+                  <SocialLink
+                    icon={TelegramIcon}
+                    href="https://t.me/developer_iranain"
+                    label="Telegram"
+                    theme={theme}
+                  />
+                </div>
+              </section>
             </div>
+          </section>
 
-            {/* توضیحات همکاری و گزارش */}
-            <div
-              className={`p-6 rounded-2xl border ${theme.border} ${theme.card}`}
-            >
-              <h3 className={`font-bold text-lg ${theme.text}`}>
-                {content.helpBox.title}
-              </h3>
-
-              <div className="space-y-3 mt-4">
-                <FeatureItem
-                  icon={Handshake}
-                  text={content.helpBox.items.cooperation}
-                  theme={theme}
-                />
-                <FeatureItem
-                  icon={MessageSquarePlus}
-                  text={content.helpBox.items.feature}
-                  theme={theme}
-                />
-                <FeatureItem
-                  icon={Bug}
-                  text={content.helpBox.items.bug}
-                  theme={theme}
-                />
-              </div>
-
-              <p
-                className={`text-sm mt-4 pt-4 border-t border-dashed ${theme.border} ${theme.textMuted}`}
-              >
-                {content.helpBox.footer}
-              </p>
-            </div>
-
-            <div className="pt-4">
-              <h3 className={`text-sm font-bold mb-4 ${theme.textMuted}`}>
-                {content.social.title}
-              </h3>
-              <div className="flex gap-4">
-                <SocialBtn
-                  icon={Github}
-                  href="https://github.com/Yuozarseiph"
-                  theme={theme}
-                  label="Github"
-                />
-                <SocialBtn
-                  icon={Instagram}
-                  href="https://instagram.com/yousefshaker.dev"
-                  theme={theme}
-                  label="Instagram"
-                />
-                <SocialBtn
-                  icon={TelegramIcon}
-                  href="https://t.me/developer_iranain"
-                  theme={theme}
-                  label="Telegram"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* ستون فرم */}
-          <div
-            className={`p-8 rounded-3xl border shadow-xl ${theme.card} ${theme.border}`}
+          <section
+            aria-labelledby="contact-form-title"
+            className={`self-start rounded-[24px] border p-5 sm:p-7 ${theme.card} ${theme.border}`}
           >
             {status === "success" ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-20">
-                <div className="w-20 h-20 bg-[var(--app-success-bg)] text-[var(--app-success-text)] rounded-full flex items-center justify-center mb-4 shadow-lg">
-                  <Send size={40} />
+              <div
+                className="flex min-h-[28rem] flex-col items-center justify-center px-4 text-center"
+                role="status"
+                aria-live="polite"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--app-success-bg)] text-[var(--app-success-text)]">
+                  <CheckCircle2 size={26} aria-hidden="true" />
                 </div>
-                <h3 className={`text-2xl font-bold ${theme.text}`}>
+
+                <h2 className={`mt-5 text-xl font-black ${theme.text}`}>
                   {content.form.successTitle}
-                </h3>
-                <p className={theme.textMuted}>{content.form.successBody}</p>
+                </h2>
+
+                <p
+                  className={`mt-2 max-w-md text-sm leading-7 ${theme.textMuted}`}
+                >
+                  {content.form.successBody}
+                </p>
+
                 <button
+                  type="button"
                   onClick={() => setStatus("idle")}
-                  className="mt-6 text-[var(--app-accent)] font-bold hover:underline"
+                  className={`mt-6 min-h-11 rounded-full px-5 text-sm font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.secondary} ${theme.accent}`}
                 >
                   {content.form.newMessage}
                 </button>
               </div>
             ) : (
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                <h3 className={`text-xl font-bold mb-6 ${theme.text}`}>
-                  {content.form.title}
-                </h3>
-
-                <div className="space-y-2">
-                  <label className={`text-sm font-bold ${theme.textMuted}`}>
-                    {content.form.nameLabel}
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="user_name"
-                    value={form.user_name}
-                    onChange={(e) =>
-                      setForm({ ...form, user_name: e.target.value })
-                    }
-                    className={`w-full p-4 rounded-xl border outline-none focus:ring-2 ring-[var(--app-ring)]/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
-                    placeholder={content.form.namePlaceholder}
-                  />
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                noValidate={false}
+              >
+                <div className="mb-6">
+                  <h2
+                    id="contact-form-title"
+                    className={`text-xl font-black ${theme.text}`}
+                  >
+                    {content.form.title}
+                  </h2>
                 </div>
 
-                <div className="space-y-2">
-                  <label className={`text-sm font-bold ${theme.textMuted}`}>
-                    {content.form.emailLabel}
-                  </label>
-                  <input
-                    required
-                    type="email"
-                    name="user_email"
-                    value={form.user_email}
-                    onChange={(e) =>
-                      setForm({ ...form, user_email: e.target.value })
-                    }
-                    className={`w-full p-4 rounded-xl border outline-none focus:ring-2 ring-[var(--app-ring)]/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
-                    placeholder={content.form.emailPlaceholder}
-                  />
+                <div className="space-y-5">
+                  <FormField
+                    id="contact-name"
+                    label={content.form.nameLabel}
+                    theme={theme}
+                  >
+                    <input
+                      id="contact-name"
+                      required
+                      type="text"
+                      name="user_name"
+                      autoComplete="name"
+                      value={form.user_name}
+                      onChange={(event) =>
+                        updateField("user_name", event.target.value)
+                      }
+                      placeholder={content.form.namePlaceholder}
+                      className={`min-h-12 w-full rounded-[15px] border bg-transparent px-4 text-sm outline-none transition-colors placeholder:opacity-50 focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${theme.border} ${theme.text}`}
+                    />
+                  </FormField>
+
+                  <FormField
+                    id="contact-email"
+                    label={content.form.emailLabel}
+                    theme={theme}
+                  >
+                    <input
+                      id="contact-email"
+                      required
+                      type="email"
+                      name="user_email"
+                      autoComplete="email"
+                      inputMode="email"
+                      dir="ltr"
+                      value={form.user_email}
+                      onChange={(event) =>
+                        updateField("user_email", event.target.value)
+                      }
+                      placeholder={content.form.emailPlaceholder}
+                      className={`min-h-12 w-full rounded-[15px] border bg-transparent px-4 text-start text-sm outline-none transition-colors placeholder:opacity-50 focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${theme.border} ${theme.text}`}
+                    />
+                  </FormField>
+
+                  <FormField
+                    id="contact-message"
+                    label={content.form.messageLabel}
+                    theme={theme}
+                  >
+                    <textarea
+                      id="contact-message"
+                      required
+                      rows={7}
+                      name="message"
+                      value={form.message}
+                      onChange={(event) =>
+                        updateField("message", event.target.value)
+                      }
+                      placeholder={content.form.messagePlaceholder}
+                      className={`w-full resize-y rounded-[15px] border bg-transparent p-4 text-sm leading-7 outline-none transition-colors placeholder:opacity-50 focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${theme.border} ${theme.text}`}
+                    />
+                  </FormField>
                 </div>
 
-                <div className="space-y-2">
-                  <label className={`text-sm font-bold ${theme.textMuted}`}>
-                    {content.form.messageLabel}
-                  </label>
-                  <textarea
-                    required
-                    rows={5}
-                    name="message"
-                    value={form.message}
-                    onChange={(e) =>
-                      setForm({ ...form, message: e.target.value })
-                    }
-                    className={`w-full p-4 rounded-xl border outline-none resize-none focus:ring-2 ring-[var(--app-ring)]/20 transition-all ${theme.bg} ${theme.border} ${theme.text}`}
-                    placeholder={content.form.messagePlaceholder}
-                  />
+                <div
+                  className="mt-5 min-h-6"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {status === "error" && (
+                    <p
+                      role="alert"
+                      className="text-sm font-bold text-[var(--app-error-text)]"
+                    >
+                      {content.form.error}
+                    </p>
+                  )}
                 </div>
-
-                {status === "error" && (
-                  <div className="text-[var(--app-error-text)] text-sm font-bold text-center">
-                    {content.form.error}
-                  </div>
-                )}
 
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className={`w-full py-4 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 ${
-                    status === "sending"
-                      ? "bg-zinc-400 cursor-wait"
-                      : "bg-[var(--app-primary-bg)] hover:bg-[var(--app-primary-hover)] shadow-lg"
-                  }`}
+                  className={`mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] px-5 text-sm font-black text-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] disabled:cursor-wait disabled:opacity-60 ${theme.primary}`}
                 >
-                  {status === "sending" ? (
-                    content.form.sending
-                  ) : (
-                    <>
-                      <span>{content.form.send}</span>
-                      <Send size={18} />
-                    </>
-                  )}
+                  <span>
+                    {status === "sending"
+                      ? content.form.sending
+                      : content.form.send}
+                  </span>
+                  <Send size={17} aria-hidden="true" />
                 </button>
               </form>
             )}
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
 
-// --- Sub Components ---
-
-function ContactItem({ icon: Icon, title, value, theme }: any) {
+function FormField({
+  id,
+  label,
+  theme,
+  children,
+}: {
+  id: string;
+  label: string;
+  theme: any;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center gap-4 group">
-      <div
-        className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors group-hover:scale-110 duration-300 ${theme.secondary}`}
+    <div>
+      <label
+        htmlFor={id}
+        className={`mb-2 block text-sm font-black ${theme.text}`}
       >
-        <Icon size={24} className={theme.accent} />
-      </div>
-      <div>
-        <p className={`text-sm font-bold opacity-60 ${theme.textMuted}`}>
-          {title}
-        </p>
-        <p className={`text-lg font-semibold ${theme.text}`}>{value}</p>
-      </div>
+        {label}
+      </label>
+      {children}
     </div>
   );
 }
 
-function FeatureItem({ icon: Icon, text, theme }: any) {
+function HelpItem({
+  icon: Icon,
+  text,
+  theme,
+}: {
+  icon: any;
+  text: string;
+  theme: any;
+}) {
   return (
-    <div className="flex items-center gap-3">
-      <Icon size={18} className={theme.accent} />
-      <span className={`text-sm font-medium ${theme.text}`}>{text}</span>
-    </div>
+    <li className="flex items-start gap-3">
+      <span
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] ${theme.secondary}`}
+      >
+        <Icon size={16} className={theme.accent} aria-hidden="true" />
+      </span>
+
+      <span className={`pt-1.5 text-sm leading-6 ${theme.text}`}>
+        {text}
+      </span>
+    </li>
   );
 }
 
-function SocialBtn({ icon: Icon, href, theme, label }: any) {
+function SocialLink({
+  icon: Icon,
+  href,
+  theme,
+  label,
+}: {
+  icon: any;
+  href: string;
+  theme: any;
+  label: string;
+}) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`
-        p-3 rounded-xl border transition-all
-        hover:-translate-y-1 hover:shadow-lg
-        ${theme.border}
-        text-slate-500 dark:text-slate-400
-        [&:hover]:text-[var(--app-accent)]
-        [&:hover]:bg-slate-100 dark:[&:hover]:bg-slate-800
-      `}
+      aria-label={label}
       title={label}
+      className={`flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-bold transition-shadow hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
     >
-      <Icon size={24} />
+      <Icon size={17} className={theme.accent} />
+      <span>{label}</span>
     </a>
   );
 }

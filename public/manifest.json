@@ -1,7 +1,7 @@
 {
-  "name": "Tools Manager",
-  "short_name": "Tools",
-  "description": "All-in-one tools for developers and users",
+  "name": "QodeForge",
+  "short_name": "QodeForge",
+  "description": "QodeForge — all-in-one browser-based tools for developers and everyday users",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

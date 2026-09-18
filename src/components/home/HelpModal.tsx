@@ -1,10 +1,7 @@
-// components/home/HelpModal.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  X
-} from "lucide-react";
+import { useEffect } from "react";
+import { X } from "lucide-react";
 
 import { helpContent } from "./HelpContent";
 
@@ -23,61 +20,81 @@ export default function HelpModal({
   locale,
   type,
 }: HelpModalProps) {
-  const [isDark, setIsDark] = useState(false);
-
   useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
-  }, []);
+    if (!isOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   const content = helpContent[locale as "fa" | "en"][type];
-  const isRTL = locale === "fa";
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] sm:items-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="help-dialog-title"
       onClick={onClose}
     >
       <div
-        className={`${theme.card} ${theme.border} max-w-md w-full max-h-[80vh] overflow-hidden rounded-2xl border shadow-2xl`}
-        onClick={(e) => e.stopPropagation()}
+        className={`w-full max-w-lg overflow-hidden rounded-[26px] border shadow-2xl ${theme.card} ${theme.border}`}
+        onClick={(event) => event.stopPropagation()}
       >
         <div
-          className={`flex items-center justify-between p-4 border-b ${theme.border}`}
+          className={`flex items-center justify-between border-b p-5 ${theme.border}`}
         >
-          <h3 className={`text-lg font-bold ${theme.text}`}>{content.title}</h3>
-          <button
-            onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-gray-100 dark:hover:bg-white/10`}
+          <h3
+            id="help-dialog-title"
+            className={`text-lg font-black ${theme.text}`}
           >
-            <X size={18} />
+            {content.title}
+          </h3>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className={`flex h-10 w-10 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.secondary} ${theme.text}`}
+            aria-label={locale === "fa" ? "بستن" : "Close"}
+          >
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
-        <div className="overflow-y-auto p-4 space-y-4">
-          {content.sections.map((section: any, idx: number) => {
-            const Icon = section.icon;
-            return (
-              <div
-                key={idx}
-                className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
-              >
+
+        <div className="max-h-[70vh] overflow-y-auto p-3 sm:p-4">
+          <div className="grid gap-2">
+            {content.sections.map((section: any, index: number) => {
+              const Icon = section.icon;
+
+              return (
                 <div
-                  className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${theme.secondary}`}
+                  key={`${section.title}-${index}`}
+                  className={`flex gap-4 rounded-[18px] border p-4 ${theme.border}`}
                 >
-                  <Icon size={20} className={theme.accent} />
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+                  >
+                    <Icon size={18} className={theme.accent} aria-hidden="true" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <h4 className={`text-sm font-black ${theme.text}`}>
+                      {section.title}
+                    </h4>
+                    <p className={`mt-1.5 text-xs leading-6 ${theme.textMuted}`}>
+                      {section.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className={`text-sm font-bold ${theme.text} mb-1`}>
-                    {section.title}
-                  </h4>
-                  <p className={`text-xs ${theme.textMuted} leading-relaxed`}>
-                    {section.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

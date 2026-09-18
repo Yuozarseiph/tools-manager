@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const baseUrl = "https://toolsmanager.yuozarseiph.top";
+const baseUrl = "https://qodeforge.ir";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [

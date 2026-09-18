@@ -3,7 +3,7 @@
 export const footerContent = {
   fa: {
     text: "توسعه‌یافته توسط تیم XenonQode.",
-    year: "© {year} ToolsManager.",
+    year: "© {year} QodeForge.",
     madeBy: "ساخته‌شده توسط تیم XenonQode.",
     links: {
       docs: "مستندات",
@@ -12,12 +12,12 @@ export const footerContent = {
       team: "XenonQode",
     },
     description:
-      "ToolsManager مجموعه‌ای از ابزارهای تحت وب است که برای انجام سریع و ساده‌ی کارهای روزمره طراحی شده‌اند و مستقیماً در مرورگر اجرا می‌شوند.",
+      "کد فورج (QodeForge) مجموعه‌ای از ابزارهای تحت وب است که برای انجام سریع و ساده‌ی کارهای روزمره طراحی شده‌اند و مستقیماً در مرورگر اجرا می‌شوند.",
   } as const,
 
   en: {
     text: "Developed by the XenonQode team.",
-    year: "© {year} ToolsManager.",
+    year: "© {year} QodeForge.",
     madeBy: "Built by the XenonQode team.",
     links: {
       docs: "Docs",
@@ -26,7 +26,7 @@ export const footerContent = {
       team: "XenonQode",
     },
     description:
-      "ToolsManager is a collection of browser‑based tools designed to handle everyday tasks quickly and efficiently.",
+      "QodeForge is a collection of browser‑based tools designed to handle everyday tasks quickly and efficiently.",
   } as const,
 };
 

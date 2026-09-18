@@ -2,89 +2,105 @@
 
 import Link from "next/link";
 import {
+  ArrowLeft,
   ArrowRight,
-  ShieldCheck,
-  Database,
-  UserX,
-  ServerOff,
-  Cookie,
-  Lock,
-  History,
-  Mail,
   CheckCircle2,
+  Cookie,
+  Database,
+  History,
+  Lock,
+  Mail,
+  ServerOff,
+  ShieldCheck,
+  UserX,
 } from "lucide-react";
-import { useThemeColors } from "@/hooks/useThemeColors";
+
 import { useLanguage } from "@/context/LanguageContext";
 import { privacyContent } from "@/data/pages/privacy.content";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function PrivacyPage() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
-
-  // 🔥 انتخاب محتوا بر اساس زبان
   const content = privacyContent[locale];
+  const isFa = locale === "fa";
 
   return (
-    <div
-      className={`min-h-screen flex flex-col ${theme.bg} transition-colors duration-500`}
-    >
-      <div className="max-w-4xl mx-auto px-6 pt-10 w-full pb-20">
-        {/* دکمه بازگشت */}
+    <div className={`min-h-screen ${theme.bg}`}>
+      <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-10">
         <Link
           href="/"
-          className={`inline-flex items-center text-sm font-medium mb-12 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+          className={`inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.textMuted}`}
         >
-          <ArrowRight size={16} className="ml-1" /> {content.back}
+          {isFa ? (
+            <ArrowRight size={16} aria-hidden="true" />
+          ) : (
+            <ArrowLeft size={16} aria-hidden="true" />
+          )}
+          {content.back}
         </Link>
 
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {/* هدر اصلی */}
-          <div className="text-center mb-16">
-            <div
-              className={`w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full border-4 shadow-xl ${theme.border} ${theme.secondary}`}
-            >
-              <ShieldCheck size={48} className={theme.accent} />
-            </div>
-            <h1
-              className={`text-3xl md:text-5xl font-black mb-6 tracking-tight ${theme.text}`}
-            >
-              {content.hero.title}
-            </h1>
-            <p
-              className={`text-lg leading-relaxed max-w-3xl mx-auto ${theme.textMuted}`}
-            >
-              {content.hero.lead}
-            </p>
-            <div
-              className={`inline-block mt-6 px-4 py-1.5 rounded-full text-xs font-bold border ${theme.border} ${theme.secondary} ${theme.textMuted}`}
-            >
-              {content.hero.lastUpdated}
-            </div>
+        <header className="mb-10 mt-8 max-w-3xl">
+          <div
+            className={`mb-5 flex h-11 w-11 items-center justify-center rounded-[15px] ${theme.secondary}`}
+          >
+            <ShieldCheck
+              size={20}
+              className={theme.accent}
+              aria-hidden="true"
+            />
           </div>
 
-          {/* اصل شماره یک */}
-          <div
-            className={`relative overflow-hidden p-8 md:p-10 rounded-3xl border-2 ${theme.border} ${theme.card} group transition-all duration-500`}
+          <h1
+            className={`text-3xl font-black leading-tight tracking-[-0.025em] sm:text-4xl ${theme.text}`}
           >
-            <div
-              className={`absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-5 blur-3xl ${theme.primary}`}
-            />
-            <h2
-              className={`text-2xl font-bold mb-6 flex items-center gap-3 relative z-10 ${theme.text}`}
-            >
-              <div className={`p-2 rounded-lg ${theme.secondary}`}>
-                <ServerOff size={24} className={theme.accent} />
+            {content.hero.title}
+          </h1>
+
+          <p className={`mt-4 text-base leading-8 ${theme.textMuted}`}>
+            {content.hero.lead}
+          </p>
+
+          <p
+            className={`mt-4 inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${theme.secondary} ${theme.textMuted}`}
+          >
+            {content.hero.lastUpdated}
+          </p>
+        </header>
+
+        <div className="space-y-6">
+          <section
+            aria-labelledby="privacy-main-principle"
+            className={`rounded-[22px] border p-5 sm:p-6 ${theme.card} ${theme.border}`}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+              >
+                <ServerOff
+                  size={18}
+                  className={theme.accent}
+                  aria-hidden="true"
+                />
               </div>
-              {content.principle1.title}
-            </h2>
 
-            <p
-              className={`text-lg leading-loose mb-8 relative z-10 ${theme.textMuted}`}
-            >
-              {content.principle1.intro}
-            </p>
+              <div className="min-w-0">
+                <h2
+                  id="privacy-main-principle"
+                  className={`text-xl font-black ${theme.text}`}
+                >
+                  {content.principle1.title}
+                </h2>
 
-            <div className="grid md:grid-cols-2 gap-4 relative z-10">
+                <p
+                  className={`mt-3 text-sm leading-7 sm:text-base ${theme.textMuted}`}
+                >
+                  {content.principle1.intro}
+                </p>
+              </div>
+            </div>
+
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               <CheckItem
                 text={content.principle1.points.noUpload}
                 theme={theme}
@@ -101,220 +117,283 @@ export default function PrivacyPage() {
                 text={content.principle1.points.onlyCpuRam}
                 theme={theme}
               />
-            </div>
-          </div>
+            </ul>
+          </section>
 
-          {/* چه چیز جمع‌آوری نمی‌شود */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <PrivacyCard
-              icon={Database}
-              title={content.noData.files.title}
-              theme={theme}
-            >
-              {content.noData.files.body}
-            </PrivacyCard>
-
-            <PrivacyCard
-              icon={UserX}
-              title={content.noData.account.title}
-              theme={theme}
-            >
-              <div className="space-y-3">
-                <p className={theme.textMuted}>
-                  {content.noData.account.intro}
-                </p>
-                <ul className={`space-y-2 text-sm ${theme.textMuted}`}>
-                  <li className="flex items-center gap-2 opacity-80">
-                    • {content.noData.account.bullets.noSignup}
-                  </li>
-                  <li className="flex items-center gap-2 opacity-80">
-                    • {content.noData.account.bullets.noEmail}
-                  </li>
-                  <li className="flex items-center gap-2 opacity-80">
-                    • {content.noData.account.bullets.noPassword}
-                  </li>
-                </ul>
-                <p className={`pt-2 text-sm font-bold ${theme.accent}`}>
-                  {content.noData.account.anonymous}
-                </p>
-              </div>
-            </PrivacyCard>
-          </div>
-
-          {/* کوکی‌ها و Local Storage */}
-          <div
-            className={`p-8 rounded-3xl border ${theme.border} ${theme.card}`}
+          <section
+            aria-labelledby="privacy-data-title"
+            className={`rounded-[22px] border p-5 sm:p-6 ${theme.card} ${theme.border}`}
           >
             <h2
-              className={`text-2xl font-bold mb-8 flex items-center gap-3 ${theme.text}`}
+              id="privacy-data-title"
+              className={`text-xl font-black ${theme.text}`}
             >
-              <Cookie size={26} className={theme.textMuted} />{" "}
-              {content.cookies.title}
+              {isFa ? "اطلاعاتی که جمع‌آوری نمی‌کنیم" : "Data we do not collect"}
             </h2>
 
-            <div className="space-y-8 divide-y divide-dashed dark:divide-zinc-800 divide-zinc-200">
-              <div className="pb-8">
-                <h3
-                  className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme.text}`}
-                >
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
+              <InfoBlock
+                icon={Database}
+                title={content.noData.files.title}
+                theme={theme}
+              >
+                <p>{content.noData.files.body}</p>
+              </InfoBlock>
+
+              <InfoBlock
+                icon={UserX}
+                title={content.noData.account.title}
+                theme={theme}
+              >
+                <p>{content.noData.account.intro}</p>
+
+                <ul className="mt-3 space-y-2">
+                  <li>{content.noData.account.bullets.noSignup}</li>
+                  <li>{content.noData.account.bullets.noEmail}</li>
+                  <li>{content.noData.account.bullets.noPassword}</li>
+                </ul>
+
+                <p className={`mt-4 font-black ${theme.accent}`}>
+                  {content.noData.account.anonymous}
+                </p>
+              </InfoBlock>
+            </div>
+          </section>
+
+          <section
+            aria-labelledby="privacy-storage-title"
+            className={`rounded-[22px] border p-5 sm:p-6 ${theme.card} ${theme.border}`}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+              >
+                <Cookie
+                  size={18}
+                  className={theme.accent}
+                  aria-hidden="true"
+                />
+              </div>
+
+              <h2
+                id="privacy-storage-title"
+                className={`text-xl font-black ${theme.text}`}
+              >
+                {content.cookies.title}
+              </h2>
+            </div>
+
+            <div className="mt-6 space-y-6">
+              <div>
+                <h3 className={`text-base font-black ${theme.text}`}>
                   {content.cookies.noTrackingTitle}
                 </h3>
-                <p className={`leading-relaxed ${theme.textMuted}`}>
+                <p className={`mt-2 text-sm leading-7 ${theme.textMuted}`}>
                   {content.cookies.noTrackingBody}
                 </p>
               </div>
 
-              <div className="pt-8">
-                <h3
-                  className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme.text}`}
-                >
+              <div className={`border-t pt-6 ${theme.border}`}>
+                <h3 className={`text-base font-black ${theme.text}`}>
                   {content.cookies.localTitle}
                 </h3>
-                <p className={`leading-relaxed mb-4 ${theme.textMuted}`}>
+
+                <p className={`mt-2 text-sm leading-7 ${theme.textMuted}`}>
                   {content.cookies.localIntro}
                 </p>
 
                 <div
-                  className={`p-5 rounded-2xl border ${theme.border} ${theme.secondary}`}
+                  className={`mt-4 flex items-start gap-3 rounded-[18px] p-4 ${theme.secondary}`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="p-2 rounded-lg bg-white dark:bg-black/20 shadow-sm">
-                      <History size={20} className={theme.text} />
-                    </div>
-                    <div>
-                      <strong className={`block text-base mb-1 ${theme.text}`}>
-                        {content.cookies.themeTitle}
-                      </strong>
-                      <p
-                        className={`text-sm opacity-80 leading-relaxed ${theme.textMuted}`}
-                      >
-                        {content.cookies.themeBody}
-                      </p>
-                    </div>
+                  <History
+                    size={18}
+                    className={`mt-0.5 shrink-0 ${theme.accent}`}
+                    aria-hidden="true"
+                  />
+
+                  <div>
+                    <h4 className={`text-sm font-black ${theme.text}`}>
+                      {content.cookies.themeTitle}
+                    </h4>
+                    <p
+                      className={`mt-1.5 text-xs leading-6 ${theme.textMuted}`}
+                    >
+                      {content.cookies.themeBody}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* امنیت داده‌ها */}
-          <div
-            className={`p-8 rounded-3xl border relative overflow-hidden ${theme.border} ${theme.card}`}
+          <section
+            aria-labelledby="privacy-security-title"
+            className={`rounded-[22px] border p-5 sm:p-6 ${theme.card} ${theme.border}`}
           >
-            <div
-              className={`absolute inset-0 opacity-5 bg-gradient-to-r ${theme.gradient}`}
-            />
-            <h2
-              className={`text-2xl font-bold mb-6 flex items-center gap-3 relative z-10 ${theme.text}`}
-            >
-              <Lock size={26} className={theme.accent} />{" "}
-              {content.security.title}
-            </h2>
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${theme.secondary}`}
+              >
+                <Lock
+                  size={18}
+                  className={theme.accent}
+                  aria-hidden="true"
+                />
+              </div>
 
-            <p
-              className={`leading-loose mb-8 relative z-10 ${theme.textMuted}`}
-            >
+              <h2
+                id="privacy-security-title"
+                className={`text-xl font-black ${theme.text}`}
+              >
+                {content.security.title}
+              </h2>
+            </div>
+
+            <p className={`mt-5 text-sm leading-7 ${theme.textMuted}`}>
               {content.security.intro}
             </p>
 
-            <div className="grid sm:grid-cols-3 gap-4 relative z-10">
-              <SecurityStat
-                label={content.security.stats.db}
-                value="0"
+            <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+              <SecurityItem
+                text={content.security.stats.db}
                 theme={theme}
               />
-              <SecurityStat
-                label={content.security.stats.info}
-                value="0"
+              <SecurityItem
+                text={content.security.stats.info}
                 theme={theme}
               />
-              <SecurityStat
-                label={content.security.stats.sale}
-                value="0"
+              <SecurityItem
+                text={content.security.stats.sale}
                 theme={theme}
               />
-            </div>
+            </ul>
 
             <p
-              className={`mt-8 text-center font-bold text-lg relative z-10 ${theme.accent}`}
+              className={`mt-6 border-t pt-5 text-sm font-black leading-7 ${theme.border} ${theme.accent}`}
             >
               {content.security.quote}
             </p>
-          </div>
+          </section>
 
-          {/* فوتر بخش حریم خصوصی */}
-          <div
-            className={`grid md:grid-cols-2 gap-8 border-t border-dashed pt-10 ${theme.border}`}
+          <section
+            aria-labelledby="privacy-updates-title"
+            className={`border-t pt-8 ${theme.border}`}
           >
-            <div>
-              <h3 className={`font-bold mb-3 ${theme.text}`}>
-                {content.footer.changesTitle}
-              </h3>
-              <p className={`text-sm leading-relaxed ${theme.textMuted}`}>
-                {content.footer.changesBody}
-              </p>
+            <div className="grid gap-8 sm:grid-cols-2">
+              <div>
+                <h2
+                  id="privacy-updates-title"
+                  className={`text-base font-black ${theme.text}`}
+                >
+                  {content.footer.changesTitle}
+                </h2>
+
+                <p className={`mt-2 text-sm leading-7 ${theme.textMuted}`}>
+                  {content.footer.changesBody}
+                </p>
+              </div>
+
+              <div>
+                <h2 className={`text-base font-black ${theme.text}`}>
+                  {content.footer.contactTitle}
+                </h2>
+
+                <p className={`mt-2 text-sm leading-7 ${theme.textMuted}`}>
+                  {content.footer.contactBody}
+                </p>
+
+                <Link
+                  href="/contact"
+                  className={`mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-black text-white shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.primary}`}
+                >
+                  <Mail size={16} aria-hidden="true" />
+                  {content.footer.contactButton}
+                </Link>
+              </div>
             </div>
-            <div>
-              <h3 className={`font-bold mb-3 ${theme.text}`}>
-                {content.footer.contactTitle}
-              </h3>
-              <p className={`text-sm leading-relaxed mb-4 ${theme.textMuted}`}>
-                {content.footer.contactBody}
-              </p>
-              <Link
-                href="/contact"
-                className={`inline-flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all ${theme.primary} hover:brightness-110`}
-              >
-                <Mail size={16} /> {content.footer.contactButton}
-              </Link>
-            </div>
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
 
-// --- Sub Components ---
-
-function CheckItem({ text, theme }: { text: string; theme: any }) {
+function CheckItem({
+  text,
+  theme,
+}: {
+  text: string;
+  theme: any;
+}) {
   return (
-    <div
-      className={`flex items-center gap-3 p-3 rounded-xl border ${theme.border} bg-white/50 dark:bg-black/20`}
-    >
-      <CheckCircle2 size={18} className={theme.accent} />
-      <span className={`text-sm font-medium ${theme.text}`}>{text}</span>
-    </div>
+    <li className="flex items-start gap-3">
+      <CheckCircle2
+        size={17}
+        className={`mt-1 shrink-0 ${theme.accent}`}
+        aria-hidden="true"
+      />
+      <span className={`text-sm leading-6 ${theme.text}`}>
+        {text}
+      </span>
+    </li>
   );
 }
 
-function PrivacyCard({ icon: Icon, title, children, theme }: any) {
+function InfoBlock({
+  icon: Icon,
+  title,
+  children,
+  theme,
+}: {
+  icon: any;
+  title: string;
+  children: React.ReactNode;
+  theme: any;
+}) {
   return (
-    <div
-      className={`p-6 rounded-2xl border flex flex-col h-full transition-colors duration-300 ${theme.border} ${theme.card}`}
-    >
-      <div
-        className={`w-12 h-12 mb-4 rounded-xl flex items-center justify-center ${theme.secondary}`}
-      >
-        <Icon size={24} className={theme.accent} />
+    <div>
+      <div className="flex items-center gap-3">
+        <div
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] ${theme.secondary}`}
+        >
+          <Icon
+            size={16}
+            className={theme.accent}
+            aria-hidden="true"
+          />
+        </div>
+
+        <h3 className={`text-base font-black ${theme.text}`}>
+          {title}
+        </h3>
       </div>
-      <h3 className={`text-xl font-bold mb-4 ${theme.text}`}>{title}</h3>
-      <div className={`text-sm leading-loose flex-1 ${theme.textMuted}`}>
+
+      <div className={`mt-3 text-sm leading-7 ${theme.textMuted}`}>
         {children}
       </div>
     </div>
   );
 }
 
-function SecurityStat({ label, value, theme }: any) {
+function SecurityItem({
+  text,
+  theme,
+}: {
+  text: string;
+  theme: any;
+}) {
   return (
-    <div
-      className={`p-4 rounded-2xl text-center border ${theme.border} ${theme.bg}`}
+    <li
+      className={`flex min-h-12 items-center gap-2 rounded-[15px] px-3.5 ${theme.secondary}`}
     >
-      <div className={`font-black text-3xl mb-1 ${theme.text}`}>{value}</div>
-      <div className={`text-xs font-medium opacity-70 ${theme.textMuted}`}>
-        {label}
-      </div>
-    </div>
+      <CheckCircle2
+        size={16}
+        className={`shrink-0 ${theme.accent}`}
+        aria-hidden="true"
+      />
+      <span className={`text-xs font-bold leading-5 ${theme.text}`}>
+        {text}
+      </span>
+    </li>
   );
 }

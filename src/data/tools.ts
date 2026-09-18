@@ -90,6 +90,14 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.word-to-pdf.badge",
   },
   {
+    id: "pdf-to-word",
+    Icon: FileType,
+    href: "/tools/pdf-to-word",
+    status: "active",
+    category: "pdf",
+    badgeKey: "tools.items.pdf-to-word.badge",
+  },
+  {
     id: "image-to-pdf",
     Icon: ImageIcon,
     href: "/tools/image-to-pdf",
@@ -120,6 +128,14 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "utility",
     badgeKey: "tools.items.qr-gen.badge",
+  },
+  {
+    id: "qr-reader",
+    Icon: QrCode,
+    href: "/tools/qr-reader",
+    status: "active",
+    category: "utility",
+    badgeKey: "tools.items.qr-reader.badge",
   },
   {
     id: "pdf-editor",
@@ -168,6 +184,14 @@ export const TOOLS: Tool[] = [
     status: "active",
     category: "image",
     badgeKey: "tools.items.image-converter.badge",
+  },
+  {
+    id: "image-to-text",
+    Icon: FileImage,
+    href: "/tools/image-to-text",
+    status: "active",
+    category: "image",
+    badgeKey: "tools.items.image-to-text.badge",
   },
   {
     id: "unit-converter",

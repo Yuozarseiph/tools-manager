@@ -30,29 +30,29 @@ export const metadata: Metadata = {
 function buildJsonLd() {
   const baseProvider = {
     "@type": "Organization",
-    name: "Tools Manager",
-    url: "https://toolsmanager.yuozarseip.top",
+    name: "QodeForge",
+    url: "https://qodeforge.ir",
   };
 
   return [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      name: fa.title.replace(/\s*\|\s*QodeForge$/, ""),
       description: fa.description,
       url: fa.canonical,
       inLanguage: fa.inLanguage ?? "fa-IR",
-      about: "Tools Manager documentation (Persian)",
+      about: "QodeForge documentation (Persian)",
       provider: baseProvider,
     },
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      name: en.title.replace(/\s*\|\s*QodeForge$/, ""),
       description: en.description,
       url: en.canonical,
       inLanguage: en.inLanguage ?? "en-US",
-      about: "Tools Manager documentation (English)",
+      about: "QodeForge documentation (English)",
       provider: baseProvider,
     },
   ];

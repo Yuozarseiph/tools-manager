@@ -1,6 +1,6 @@
 {
   "name": "tools-manager",
-  "version": "26.3.2",
+  "version": "26.4.0",
   "private": true,
   "scripts": {
     "copy-pdf-worker": "node scripts/copy-pdf-worker.mjs",
@@ -80,6 +80,7 @@
     "reactflow": "^11.11.4",
     "recharts": "^3.5.1",
     "tailwind-merge": "^3.4.0",
+    "tesseract.js": "^7.0.0",
     "ua-parser-js": "^2.0.6",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.9"

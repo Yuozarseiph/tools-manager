@@ -1,4 +1,3 @@
-// data/changelog/changelog.content.ts
 import { useLanguage } from "@/context/LanguageContext";
 
 export const changelogContent = {
@@ -7,7 +6,7 @@ export const changelogContent = {
     hero: {
       title: "سوابق تغییرات",
       subtitle:
-        "آخرین به‌روزرسانی‌ها و تغییرات اصلی در ابزارهای ما را بررسی کنید.",
+        "نسخه‌ها، قابلیت‌های جدید، بهبودها و رفع خطاهای QodeForge را مرور کنید.",
     },
     versionLabel: "نسخه",
     currentLabel: "آخرین نسخه",
@@ -23,18 +22,30 @@ export const changelogContent = {
       beta: "نسخه آزمایشی",
       note: "یادداشت",
     },
-    note: "تغییرات بیشتر در مستندات و مخزن کد ما قابل مشاهده است.",
+    search: {
+      label: "جستجو در سوابق تغییرات",
+      placeholder: "جستجوی نسخه یا تغییر...",
+      clear: "پاک کردن جستجو",
+      noResults: "نتیجه‌ای برای این جستجو پیدا نشد.",
+      results: "نسخه پیدا شد",
+    },
+    release: {
+      showChanges: "نمایش تغییرات",
+      hideChanges: "بستن تغییرات",
+    },
+    note: "تاریخچه کامل نسخه‌ها در همین صفحه نگهداری می‌شود.",
     contact: {
       question: "سوالی دارید؟",
       contact: "تماس با ما",
     },
   },
+
   en: {
     back: "Back to home",
     hero: {
       title: "Changelog",
       subtitle:
-        "Check out the latest updates and major changes across our tools.",
+        "Browse QodeForge releases, new features, improvements and fixes.",
     },
     versionLabel: "Version",
     currentLabel: "Latest",
@@ -50,7 +61,18 @@ export const changelogContent = {
       beta: "Beta",
       note: "Note",
     },
-    note: "More detailed changes are available in our docs and source repo.",
+    search: {
+      label: "Search changelog",
+      placeholder: "Search versions or changes...",
+      clear: "Clear search",
+      noResults: "No matching changelog entries were found.",
+      results: "versions found",
+    },
+    release: {
+      showChanges: "Show changes",
+      hideChanges: "Hide changes",
+    },
+    note: "The complete release history is kept on this page.",
     contact: {
       question: "Have a question?",
       contact: "Contact us",

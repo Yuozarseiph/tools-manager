@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import HeroSection from "@/components/home/HeroSection";
@@ -9,10 +8,8 @@ export default function Home() {
   const theme = useThemeColors();
 
   return (
-    <div
-      className={`min-h-screen font-sans transition-colors duration-500 flex flex-col ${theme.bg}`}
-    >
-      <main className="flex-1 max-w-5xl mx-auto px-6 w-full">
+    <div className={`min-h-screen font-sans ${theme.bg}`}>
+      <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-4 sm:px-6 lg:px-8">
         <HeroSection />
         <ToolsGrid />
       </main>
