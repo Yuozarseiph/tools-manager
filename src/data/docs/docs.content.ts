@@ -13,14 +13,19 @@ import {
   Wrench,
   Volume2,
   Presentation,
+  Calculator,
+  Landmark,
+  Gamepad2,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import rawDocs from "./docs.content.json";
+import { supplementalDocs } from "./supplemental.docs";
 
 type Lang = "fa" | "en";
 
-type RawDocItem = {
+export type RawDocItem = {
   id: string;
+  href?: string;
   title: string;
   category: string;
   description: string;
@@ -52,6 +57,9 @@ const CATEGORY_ICON: Record<string, LucideIcon> = {
   utility: Wrench,
   audio: Volume2,
   presentation: Presentation,
+  calculator: Calculator,
+  banking: Landmark,
+  game: Gamepad2,
 };
 
 export function useDocsContent(): DocSectionItem[] {
@@ -60,7 +68,7 @@ export function useDocsContent(): DocSectionItem[] {
 
   return useMemo(
     () =>
-      DOCS_RAW[lang].map((doc) => ({
+      [...DOCS_RAW[lang], ...supplementalDocs[lang]].map((doc) => ({
         ...doc,
         icon: CATEGORY_ICON[doc.category] ?? BookOpen,
       })),

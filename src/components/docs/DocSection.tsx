@@ -61,7 +61,8 @@ export default function DocSection({ data, theme }: Props) {
           </div>
 
           <Link
-            href={`/tools/${data.id}`}
+            href={data.href ?? `/tools/${data.id}`}
+            {...(data.href ? { target: "_blank", rel: "noreferrer" } : {})}
             className={`inline-flex min-h-11 shrink-0 items-center justify-center gap-2 self-start rounded-full px-5 text-sm font-black text-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.primary}`}
           >
             {content.section.openTool}

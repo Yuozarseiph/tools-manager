@@ -10,6 +10,9 @@ export const DOC_CATEGORIES = [
   "excel",
   "audio",
   "presentation",
+  "calculator",
+  "banking",
+  "game",
 ] as const;
 
 export type DocsCategory = (typeof DOC_CATEGORIES)[number];
@@ -102,6 +105,9 @@ export const docsContent = {
         excel: "اکسل",
         audio: "صوت",
         presentation: "پاورپوینت",
+        calculator: "محاسبات",
+        banking: "بانکی و مالی",
+        game: "سرگرمی",
       },
     } satisfies DocsPageUiContent,
   },
@@ -157,6 +163,9 @@ export const docsContent = {
         excel: "Excel",
         audio: "Audio",
         presentation: "PowerPoint",
+        calculator: "Calculators",
+        banking: "Banking & finance",
+        game: "Games",
       },
     } satisfies DocsPageUiContent,
   },
