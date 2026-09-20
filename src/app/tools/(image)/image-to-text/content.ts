@@ -18,11 +18,11 @@ export const imageToTextPageContent = {
         "متن فارسی و انگلیسی را مستقیماً در مرورگر از تصاویر JPG، PNG و WebP استخراج کن؛ بدون آپلود تصویر روی سرور.",
     },
     seo: {
-      title: "استخراج متن از عکس آنلاین (OCR) | Tools Manager",
+      title: "استخراج متن از عکس آنلاین (OCR) | QodeForge",
       description:
         "ابزار OCR آنلاین برای استخراج متن فارسی و انگلیسی از تصویر، با پردازش داخل مرورگر، امکان کپی و دانلود متن و بدون آپلود فایل.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-to-text",
-      ogTitle: "Image to Text OCR | Tools Manager",
+      canonical: "https://qodeforge.ir/tools/image-to-text",
+      ogTitle: "Image to Text OCR | QodeForge",
       ogDescription:
         "Extract editable Persian and English text from images directly in your browser.",
       applicationCategory: "UtilitiesApplication",
@@ -36,10 +36,10 @@ export const imageToTextPageContent = {
         "Extract Persian and English text from JPG, PNG and WebP images directly in your browser without uploading the image to a server.",
     },
     seo: {
-      title: "Image to Text OCR online | Tools Manager",
+      title: "Image to Text OCR online | QodeForge",
       description:
         "Extract editable text from images with browser-based OCR. Supports Persian and English, copy, editing and TXT download.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-to-text",
+      canonical: "https://qodeforge.ir/tools/image-to-text",
       ogTitle: "Online Image to Text OCR",
       ogDescription:
         "Extract editable Persian and English text from images directly in your browser.",
@@ -57,3 +57,4 @@ export function useImageToTextPageContent() {
 export function getImageToTextSeo(locale: "fa" | "en"): SeoContent {
   return imageToTextPageContent[locale].seo;
 }
+

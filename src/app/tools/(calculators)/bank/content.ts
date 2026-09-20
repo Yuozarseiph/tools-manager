@@ -21,10 +21,10 @@ export const bankToolsContent = {
         "محاسبه وام، سود سپرده، خرید اقساطی، پس‌انداز، مدیریت هزینه و درآمد و قیمت لحظه‌ای سکه، طلا و ارز - همه در یک مکان.",
     },
     seo: {
-      title: "ابزارهای بانکی و مالی آنلاین | Tools Manager",
+      title: "ابزارهای بانکی و مالی آنلاین | QodeForge",
       description:
         "محاسبه اقساط وام، سود سپرده بانکی، خرید اقساطی، پس‌انداز، مدیریت هزینه و درآمد و مشاهده قیمت لحظه‌ای سکه، طلا و ارز به صورت رایگان.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/bank",
+      canonical: "https://qodeforge.ir/tools/bank",
       ogTitle: "ابزارهای بانکی و مالی (Bank & Financial Tools)",
       ogDescription:
         "محاسبه دقیق اقساط وام، سود سپرده، خرید اقساطی، رشد پس‌انداز، مدیریت هزینه‌ها و قیمت لحظه‌ای طلا و ارز - همه در یک ابزار.",
@@ -40,10 +40,10 @@ export const bankToolsContent = {
         "Calculate loans, deposit interest, installment purchases, savings, expense management and live prices of gold, coins and currencies - all in one place.",
     },
     seo: {
-      title: "Online Bank & Financial Tools | Tools Manager",
+      title: "Online Bank & Financial Tools | QodeForge",
       description:
         "Calculate loan installments, bank deposit interest, installment purchases, savings growth, expense management and view live prices of gold, coins and currencies for free.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/bank",
+      canonical: "https://qodeforge.ir/tools/bank",
       ogTitle: "Bank & Financial Tools",
       ogDescription:
         "Accurately calculate loan installments, deposit interest, installment purchases, savings growth, expense management and live gold and currency prices - all in one tool.",
@@ -71,3 +71,4 @@ export function useBankToolsPageContent() {
 export function getBankToolsSeo(locale: "fa" | "en"): SeoContent {
   return bankToolsContent[locale].seo;
 }
+

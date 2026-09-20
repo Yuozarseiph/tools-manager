@@ -21,10 +21,10 @@ export const excelViewerContent = {
         "فایل‌های Excel یا CSV را در مرورگر باز کن، بین شیت‌ها جابه‌جا شو، جستجو انجام بده و بدون نیاز به نصب آفیس، داده‌ها را ببین.",
     },
     seo: {
-      title: "نمایشگر Excel و CSV آنلاین | Tools Manager",
+      title: "نمایشگر Excel و CSV آنلاین | QodeForge",
       description:
         "فایل‌های Excel و CSV را مستقیماً در مرورگر نمایش بده، شیت‌ها و سطرها را ببین و برای بررسی سریع داده‌ها دیگر به نرم‌افزار دسکتاپ وابسته نباش.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-viewer",
+      canonical: "https://qodeforge.ir/tools/excel-viewer",
       ogTitle: "نمایشگر تحت‌وب برای فایل‌های Excel و CSV",
       ogDescription:
         "فایل جدولی را آپلود کن، شیت‌های مختلف را بررسی کن، روی داده‌ها جستجو کن و اگر خواستی آن‌ها را به CSV یا JSON تبدیل کن.",
@@ -49,10 +49,10 @@ export const excelViewerContent = {
         "Open Excel or CSV files in your browser, switch between sheets, search data and inspect tables without installing Office.",
     },
     seo: {
-      title: "Excel and CSV viewer online | Tools Manager",
+      title: "Excel and CSV viewer online | QodeForge",
       description:
         "Display Excel and CSV files directly in the browser, browse sheets and rows, and review data quickly without desktop software.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-viewer",
+      canonical: "https://qodeforge.ir/tools/excel-viewer",
       ogTitle: "Web-based viewer for Excel and CSV files",
       ogDescription:
         "Upload tabular files, inspect different sheets, search within the data and optionally export content as CSV or JSON.",
@@ -89,3 +89,4 @@ export function useExcelViewerPageContent() {
 export function getExcelViewerSeo(locale: "fa" | "en"): SeoContent {
   return excelViewerContent[locale].seo;
 }
+

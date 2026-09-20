@@ -601,7 +601,7 @@ export function useFileSystem() {
         return result;
       };
       const folderFiles = collectFiles(folderId, folder.name);
-      let zipContent = `# ${folder.name}\n\nDownloaded from Tools Manager\nDate: ${new Date().toISOString()}\n\n## Files:\n\n`;
+      let zipContent = `# ${folder.name}\n\nDownloaded from QodeForge\nDate: ${new Date().toISOString()}\n\n## Files:\n\n`;
       folderFiles.forEach((f) => {
         zipContent += `### ${f.path}\n\`\`\`\n${f.content}\n\`\`\`\n\n`;
       });
@@ -650,3 +650,4 @@ export function useFileSystem() {
     isFileSystemSupported: isFileSystemSupported(),
   };
 }
+

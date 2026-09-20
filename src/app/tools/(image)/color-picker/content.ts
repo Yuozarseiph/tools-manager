@@ -21,10 +21,10 @@ export const colorPickerContent = {
         "رنگ دلخواه را انتخاب کن یا از روی تصویر رنگ بردار، کدهای HEX، RGB و HSL را ببین و آن‌ها را در طراحی یا کد استفاده کن.",
     },
     seo: {
-      title: "ابزار Color Picker آنلاین | Tools Manager",
+      title: "ابزار Color Picker آنلاین | QodeForge",
       description:
         "رنگ‌ها را از روی تصویر یا پالت انتخاب کن، کدهای HEX و RGB را کپی کن و تاریخچهٔ رنگ‌های استفاده‌شده را همیشه در دسترس داشته باش.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/color-picker",
+      canonical: "https://qodeforge.ir/tools/color-picker",
       ogTitle: "انتخاب‌گر رنگ تحت‌وب برای طراحان و توسعه‌دهندگان",
       ogDescription:
         "رنگ دلخواه را انتخاب کن، از روی تصویر نمونه‌برداری کن و پالت رنگی خودت را برای پروژه‌های بعدی ذخیره کن.",
@@ -40,10 +40,10 @@ export const colorPickerContent = {
         "Pick colors from a palette or sample them from images, then copy HEX, RGB and HSL codes for your designs and code.",
     },
     seo: {
-      title: "Color picker online tool | Tools Manager",
+      title: "Color picker online tool | QodeForge",
       description:
         "Select colors from images or a palette, copy HEX and RGB codes and keep a handy history of recently used colors.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/color-picker",
+      canonical: "https://qodeforge.ir/tools/color-picker",
       ogTitle: "Web-based color picker for designers and developers",
       ogDescription:
         "Choose colors, sample them from images and build reusable palettes for your next UI or branding project.",
@@ -71,3 +71,4 @@ export function useColorPickerPageContent() {
 export function getColorPickerSeo(locale: "fa" | "en"): SeoContent {
   return colorPickerContent[locale].seo;
 }
+

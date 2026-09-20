@@ -20,10 +20,10 @@ export const pdfToImageContent = {
         "فایل PDF را انتخاب کن و هر صفحه را با کیفیت دلخواه به تصویر JPG، PNG یا WebP تبدیل و دانلود کن؛ همه چیز در مرورگر و بدون آپلود انجام می‌شود.",
     },
     seo: {
-      title: "تبدیل PDF به عکس آنلاین (JPG/PNG/WebP) | Tools Manager",
+      title: "تبدیل PDF به عکس آنلاین (JPG/PNG/WebP) | QodeForge",
       description:
         "صفحات PDF را به تصاویر JPG، PNG یا WebP تبدیل کن، کیفیت را تنظیم کن و تصاویر را تکی یا به‌صورت فایل ZIP دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/pdf-to-image",
+      canonical: "https://qodeforge.ir/tools/pdf-to-image",
       ogTitle: "مبدل آنلاین PDF به تصویر",
       ogDescription:
         "هر صفحه از PDF را با دقت بالا به تصویر تبدیل کن و بدون نصب نرم‌افزار خروجی بگیر.",
@@ -39,10 +39,10 @@ export const pdfToImageContent = {
         "Pick a PDF file and convert each page to a JPG, PNG or WebP image at your chosen quality, then download it — all in your browser with no upload.",
     },
     seo: {
-      title: "PDF to image converter online (JPG/PNG/WebP) | Tools Manager",
+      title: "PDF to image converter online (JPG/PNG/WebP) | QodeForge",
       description:
         "Convert PDF pages to JPG, PNG or WebP images, adjust the quality and download them individually or as a ZIP.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/pdf-to-image",
+      canonical: "https://qodeforge.ir/tools/pdf-to-image",
       ogTitle: "Online PDF to image converter",
       ogDescription:
         "Turn every PDF page into a high-resolution image and export without installing any software.",
@@ -67,3 +67,4 @@ export function usePdfToImagePageContent() {
 export function getPdfToImageSeo(locale: "fa" | "en"): SeoContent {
   return pdfToImageContent[locale].seo;
 }
+

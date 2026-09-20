@@ -20,10 +20,10 @@ export const textToPdfContent = {
         "متن خود را در ویرایشگر وارد کن، اندازه فونت و تراز متن را تنظیم کن و یک فایل PDF تمیز برای چاپ، اشتراک‌گذاری یا آرشیو بساز.",
     },
     seo: {
-      title: "ابزار تبدیل متن به PDF آنلاین | Tools Manager",
+      title: "ابزار تبدیل متن به PDF آنلاین | QodeForge",
       description:
         "متن فارسی یا انگلیسی را با چند کلیک به PDF تبدیل کن، تعداد کاراکتر و خطوط را ببین و خروجی نهایی را برای استفاده شخصی یا کاری دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/text-to-pdf",
+      canonical: "https://qodeforge.ir/tools/text-to-pdf",
       ogTitle: "مبدل تحت‌وب متن به PDF",
       ogDescription:
         "بدون نیاز به واژه‌پرداز سنگین، متن خود را در مرورگر بنویس و یک فایل PDF مرتب و آماده چاپ یا ارسال بساز.",
@@ -39,10 +39,10 @@ export const textToPdfContent = {
         "Type or paste your text, adjust font size and alignment, then generate a clean PDF ready for printing, sharing or archiving.",
     },
     seo: {
-      title: "Text to PDF converter online | Tools Manager",
+      title: "Text to PDF converter online | QodeForge",
       description:
         "Quickly turn English or Persian text into a PDF, see character and line counts and download the final document for personal or work use.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/text-to-pdf",
+      canonical: "https://qodeforge.ir/tools/text-to-pdf",
       ogTitle: "In‑browser text to PDF converter",
       ogDescription:
         "Create neat, ready‑to‑print PDF documents from plain text directly in your browser, without heavy word processors.",
@@ -67,3 +67,4 @@ export function useTextToPdfPageContent() {
 export function getTextToPdfSeo(locale: "fa" | "en"): SeoContent {
   return textToPdfContent[locale].seo;
 }
+

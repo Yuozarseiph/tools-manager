@@ -24,6 +24,7 @@ interface LayoutControlsProps {
   onPinnedLayoutChange: (layout: PinnedLayoutMode) => void;
   theme: any;
   locale: string;
+  mode?: "all" | "tools" | "pinned";
 }
 
 type LocaleType = "fa" | "en";
@@ -145,6 +146,7 @@ export const LayoutControls = memo(function LayoutControls({
   onPinnedLayoutChange,
   theme,
   locale,
+  mode = "all",
 }: LayoutControlsProps) {
   const localeKey = locale as LocaleType;
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -179,7 +181,7 @@ export const LayoutControls = memo(function LayoutControls({
   return (
     <div ref={rootRef}>
       <div className="hidden items-center gap-2 sm:flex">
-        <Dropdown
+        {mode !== "pinned" && <Dropdown
           label={localeKey === "fa" ? "نمایش ابزارها" : "Tools view"}
           selected={selectedTool}
           options={toolOptions}
@@ -195,9 +197,9 @@ export const LayoutControls = memo(function LayoutControls({
           }}
           theme={theme}
           locale={localeKey}
-        />
+        />}
 
-        <Dropdown
+        {mode !== "tools" && <Dropdown
           label={localeKey === "fa" ? "نمایش پین‌ها" : "Pinned view"}
           selected={selectedPinned}
           options={pinnedOptions}
@@ -213,29 +215,29 @@ export const LayoutControls = memo(function LayoutControls({
           }}
           theme={theme}
           locale={localeKey}
-        />
+        />}
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:hidden">
-        <MobileTrigger
+        {mode !== "pinned" && <MobileTrigger
           label={localeKey === "fa" ? "ابزارها" : "Tools"}
           value={selectedTool.label[localeKey]}
           icon={selectedTool.icon}
           onClick={() => setToolsOpen(true)}
           theme={theme}
-        />
-        <MobileTrigger
+        />}
+        {mode !== "tools" && <MobileTrigger
           label={localeKey === "fa" ? "پین‌ها" : "Pinned"}
           value={selectedPinned.label[localeKey]}
           icon={selectedPinned.icon}
           onClick={() => setPinnedOpen(true)}
           theme={theme}
-        />
+        />}
       </div>
 
       {mobile && (
         <>
-          <MobileSheet
+          {mode !== "pinned" && <MobileSheet
             open={toolsOpen}
             onClose={() => setToolsOpen(false)}
             title={localeKey === "fa" ? "چیدمان ابزارها" : "Tools layout"}
@@ -246,9 +248,9 @@ export const LayoutControls = memo(function LayoutControls({
             onChange={onToolsLayoutChange}
             theme={theme}
             locale={localeKey}
-          />
+          />}
 
-          <MobileSheet
+          {mode !== "tools" && <MobileSheet
             open={pinnedOpen}
             onClose={() => setPinnedOpen(false)}
             title={localeKey === "fa" ? "چیدمان پین‌ها" : "Pinned layout"}
@@ -257,7 +259,7 @@ export const LayoutControls = memo(function LayoutControls({
             onChange={onPinnedLayoutChange}
             theme={theme}
             locale={localeKey}
-          />
+          />}
         </>
       )}
     </div>

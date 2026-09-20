@@ -21,10 +21,10 @@ export const imageToPdfContent = {
         "چند تصویر را انتخاب کن، ترتیب آن‌ها را مشخص کن و یک فایل PDF مرتب برای اشتراک‌گذاری، چاپ یا آرشیو بساز؛ همه چیز در مرورگر انجام می‌شود.",
     },
     seo: {
-      title: "ابزار تبدیل تصویر به PDF آنلاین | Tools Manager",
+      title: "ابزار تبدیل تصویر به PDF آنلاین | QodeForge",
       description:
         "عکس‌ها را به یک یا چند فایل PDF تبدیل کن، ترتیب صفحات را بچین و بدون نصب نرم‌افزار اضافی خروجی را دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-to-pdf",
+      canonical: "https://qodeforge.ir/tools/image-to-pdf",
       ogTitle: "مبدل آنلاین تصویر به PDF",
       ogDescription:
         "چندین تصویر را در مرورگر آپلود کن، آن‌ها را مرتب کن و یک فایل PDF آماده برای ارسال، چاپ یا ذخیره‌سازی بساز.",
@@ -40,10 +40,10 @@ export const imageToPdfContent = {
         "Select several images, arrange their order and generate a clean PDF file for sharing, printing or archiving directly in your browser.",
     },
     seo: {
-      title: "Image to PDF converter online | Tools Manager",
+      title: "Image to PDF converter online | QodeForge",
       description:
         "Turn images into one or more PDF files, reorder pages and download the result without installing extra software.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-to-pdf",
+      canonical: "https://qodeforge.ir/tools/image-to-pdf",
       ogTitle: "Online image to PDF converter",
       ogDescription:
         "Upload multiple images, arrange them visually and create a ready-to-share PDF file entirely in the browser.",
@@ -71,3 +71,4 @@ export function useImageToPdfPageContent() {
 export function getImageToPdfSeo(locale: "fa" | "en"): SeoContent {
   return imageToPdfContent[locale].seo;
 }
+

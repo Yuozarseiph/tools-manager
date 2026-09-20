@@ -23,10 +23,10 @@ export const imageConverterContent = {
         "برای کاهش حجم، یکسان‌سازی فرمت تصاویر سایت یا آماده‌سازی برای اشتراک‌گذاری در شبکه‌های اجتماعی مناسب است.",
     },
     seo: {
-      title: "مبدل فرمت تصویر آنلاین | Tools Manager",
+      title: "مبدل فرمت تصویر آنلاین | QodeForge",
       description:
         "تصاویر را به‌صورت گروهی بین فرمت‌های رایج مثل JPG، PNG، WEBP و AVIF تبدیل کن، کیفیت را تنظیم کن و خروجی را دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-converter",
+      canonical: "https://qodeforge.ir/tools/image-converter",
       ogTitle: "تبدیل‌کننده تحت‌وب فرمت تصاویر (Batch Image Converter)",
       ogDescription:
         "چند تصویر را انتخاب کن، فرمت مقصد و کیفیت را مشخص کن و خروجی نهایی را برای استفاده در وب‌سایت، اپلیکیشن یا شبکه‌های اجتماعی دانلود کن.",
@@ -44,10 +44,10 @@ export const imageConverterContent = {
         "Ideal for reducing size, unifying formats for websites or preparing images for social media sharing.",
     },
     seo: {
-      title: "Image format converter online | Tools Manager",
+      title: "Image format converter online | QodeForge",
       description:
         "Batch-convert images between popular formats such as JPG, PNG, WEBP and AVIF, adjust quality and download the results.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/image-converter",
+      canonical: "https://qodeforge.ir/tools/image-converter",
       ogTitle: "Web-based image format converter (Batch)",
       ogDescription:
         "Select multiple images, choose the target format and quality, then download ready-to-use files for web, apps or social media.",
@@ -75,3 +75,4 @@ export function useImageConverterPageContent() {
 export function getImageConverterSeo(locale: "fa" | "en"): SeoContent {
   return imageConverterContent[locale].seo;
 }
+

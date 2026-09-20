@@ -21,10 +21,10 @@ export const codeVisualizerContent = {
         "کد جاوااسکریپت، تایپ‌اسکریپت یا #C را وارد کن و گراف ساختار توابع، کلاس‌ها و وابستگی‌ها را به‌صورت بصری در مرورگر ببین.",
     },
     seo: {
-      title: "ابزار Code Visualizer آنلاین | Tools Manager",
+      title: "ابزار Code Visualizer آنلاین | QodeForge",
       description:
         "ساختار کد را به‌صورت گراف بصری مشاهده کن، توابع و وابستگی‌ها را دنبال کن و درک معماری پروژه را سریع‌تر کن؛ همه در مرورگر و بدون نیاز به نصب.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/code-visualizer",
+      canonical: "https://qodeforge.ir/tools/code-visualizer",
       ogTitle: "بصری‌سازی آنلاین ساختار کد (JavaScript / C#)",
       ogDescription:
         "کد خود را در ابزار Code Visualizer بچسبان، گراف را ببین و بین نماهای مختلف (درختی، سلسله‌مراتبی و ...) جابه‌جا شو تا وابستگی‌ها را بهتر تحلیل کنی.",
@@ -40,10 +40,10 @@ export const codeVisualizerContent = {
         "Paste your JavaScript, TypeScript or C# code and explore its structure as an interactive graph directly in the browser.",
     },
     seo: {
-      title: "Online Code Visualizer | Tools Manager",
+      title: "Online Code Visualizer | QodeForge",
       description:
         "Visualize code structure as graphs, inspect functions and dependencies, and understand your project architecture faster in the browser.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/code-visualizer",
+      canonical: "https://qodeforge.ir/tools/code-visualizer",
       ogTitle: "Online code structure visualizer (JavaScript / C#)",
       ogDescription:
         "Paste your code into the Code Visualizer, see the generated graph, and switch between layouts to better analyze relationships and dependencies.",
@@ -71,3 +71,4 @@ export function useCodeVisualizerPageContent() {
 export function getCodeVisualizerSeo(locale: "fa" | "en"): SeoContent {
   return codeVisualizerContent[locale].seo;
 }
+

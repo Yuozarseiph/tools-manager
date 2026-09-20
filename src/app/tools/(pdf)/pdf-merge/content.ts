@@ -22,10 +22,10 @@ export const pdfMergeContent = {
         "همه‌ی پردازش‌ها در مرورگر شما انجام می‌شود و نیازی به نصب نرم‌افزار یا آپلود روی سرور نیست.",
     },
     seo: {
-      title: "ابزار ادغام PDF آنلاین | Tools Manager",
+      title: "ابزار ادغام PDF آنلاین | QodeForge",
       description:
         "چند فایل PDF را به‌سادگی در یک فایل ترکیب کن، ترتیب صفحات را حفظ کن و خروجی نهایی را برای استفاده شخصی یا کاری دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/pdf-merge",
+      canonical: "https://qodeforge.ir/tools/pdf-merge",
       ogTitle: "ادغام‌کننده تحت‌وب فایل‌های PDF",
       ogDescription:
         "بدون نصب نرم‌افزار سنگین، چندین PDF را در مرورگر ادغام کن و یک فایل نهایی منظم و آماده‌ی ارسال یا بایگانی بساز.",
@@ -43,10 +43,10 @@ export const pdfMergeContent = {
         "All processing happens in your browser, with no software installation or server upload required.",
     },
     seo: {
-      title: "PDF merge tool online | Tools Manager",
+      title: "PDF merge tool online | QodeForge",
       description:
         "Easily combine multiple PDF files into one, keep page order intact and download the final document for personal or work use.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/pdf-merge",
+      canonical: "https://qodeforge.ir/tools/pdf-merge",
       ogTitle: "Web-based PDF merger",
       ogDescription:
         "Merge multiple PDFs directly in your browser and generate a clean, ready-to-share document without heavy desktop tools.",
@@ -71,3 +71,4 @@ export function usePdfMergePageContent() {
 export function getPdfMergeSeo(locale: "fa" | "en"): SeoContent {
   return pdfMergeContent[locale].seo;
 }
+

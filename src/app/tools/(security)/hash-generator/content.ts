@@ -20,10 +20,10 @@ export const hashGeneratorContent = {
         "رشته‌ی متن یا داده‌ی خود را وارد کن تا هش‌ آن را با الگوریتم‌های مختلف مانند SHA‑1، SHA‑256، SHA‑384 و SHA‑512 به‌صورت محلی در مرورگر به‌دست بیاوری.",
     },
     seo: {
-      title: "ابزار تولید هش آنلاین | Tools Manager",
+      title: "ابزار تولید هش آنلاین | QodeForge",
       description:
         "هش امن برای متن‌ها و رمزهایت بساز، چند الگوریتم مختلف را هم‌زمان ببین و بدون ارسال داده‌ها به سرور، خروجی را کپی کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/hash-generator",
+      canonical: "https://qodeforge.ir/tools/hash-generator",
       ogTitle: "تولیدکننده تحت‌وب هش (SHA و دیگر الگوریتم‌ها)",
       ogDescription:
         "با وارد کردن متن، هش‌ آن را با چند الگوریتم پرکاربرد امنیتی تولید کن و برای ذخیره‌سازی امن یا بررسی یکپارچگی از آن استفاده کن.",
@@ -39,10 +39,10 @@ export const hashGeneratorContent = {
         "Enter your text or data to compute its hash using algorithms like SHA‑1, SHA‑256, SHA‑384 and SHA‑512 directly in your browser.",
     },
     seo: {
-      title: "Online hash generator tool | Tools Manager",
+      title: "Online hash generator tool | QodeForge",
       description:
         "Generate secure hashes for strings and passwords, compare multiple algorithms at once and copy the results without sending data to a server.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/hash-generator",
+      canonical: "https://qodeforge.ir/tools/hash-generator",
       ogTitle: "Web-based hash generator (SHA and more)",
       ogDescription:
         "Quickly compute hashes with popular cryptographic algorithms in the browser and use them for integrity checks or secure storage.",
@@ -67,3 +67,4 @@ export function useHashGeneratorPageContent() {
 export function getHashGeneratorSeo(locale: "fa" | "en"): SeoContent {
   return hashGeneratorContent[locale].seo;
 }
+

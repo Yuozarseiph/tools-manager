@@ -1,5 +1,21 @@
 [
   {
+    "version": "26.4.1",
+    "date": "September 20, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "improved",
+        "items": [
+          "Completed the product-wide rebrand from Tools Manager to QodeForge across titles, SEO, structured data, generated files, and internal links",
+          "Unified the design of tool pages, search, category, layout, and pinned-tool controls",
+          "Improved QodeForge logo presentation in the header and footer and updated the sitemap for all active tools",
+          "Refined back, upload, and primary tool controls across desktop and mobile"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.4.0",
     "date": "September 18, 2026",
     "type": "release",

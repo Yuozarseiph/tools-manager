@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  Wand2,
   Heart,
   Book,
   Mail,
@@ -132,20 +132,16 @@ export default function Header() {
             href="/"
             className="flex items-center gap-2 select-none rounded-full"
           >
-            <div
-              className={`
-                w-8 h-8 sm:w-9 sm:h-9 rounded-full
-                flex items-center justify-center
-                ${theme.primary}
-              `}
-            >
-              <Wand2 size={18} className="text-white" />
-            </div>
+            <Image
+              src="/icons/qodeforge.png"
+              alt="QodeForge"
+              width={48}
+              height={48}
+              className="h-14 w-14 rounded-full bg-[var(--app-secondary-color)] p-1.5 object-contain shadow-md sm:h-16 sm:w-16"
+              priority
+            />
             <span
-              className={`
-                hidden xs:inline text-sm sm:text-base font-black
-                ${theme.text}
-              `}
+              className={`hidden text-sm font-black sm:inline ${theme.text}`}
             >
               {content.brand.nameMain}
               <span className={theme.accent}>{content.brand.nameAccent}</span>

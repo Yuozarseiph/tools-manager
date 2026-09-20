@@ -20,10 +20,10 @@ export const htmlToPptxContent = {
         "محتوای HTML یا Markdown را وارد کن، اسلایدها را در مرورگر پیش‌نمایش بگیر و یک فایل پاورپوینت (PPTX) ساختارمند برای ارائه بساز.",
     },
     seo: {
-      title: "ابزار تبدیل HTML به پاورپوینت آنلاین | Tools Manager",
+      title: "ابزار تبدیل HTML به پاورپوینت آنلاین | QodeForge",
       description:
         "متن HTML یا Markdown را به اسلایدهای پاورپوینت تبدیل کن، ساختار عنوان‌ها را حفظ کن و فایل PPTX نهایی را برای ارائه یا ویرایش دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/html-to-pptx",
+      canonical: "https://qodeforge.ir/tools/html-to-pptx",
       ogTitle: "مبدل تحت‌وب HTML و Markdown به پاورپوینت (PPTX)",
       ogDescription:
         "بدون نصب نرم‌افزار، از روی HTML یا Markdown اسلایدهای قابل ویرایش پاورپوینت بساز و آن‌ها را برای جلسات، کلاس‌ها یا وبینارها آماده کن.",
@@ -39,10 +39,10 @@ export const htmlToPptxContent = {
         "Paste HTML or Markdown, preview how it maps to slides and generate a structured PPTX file for your presentations.",
     },
     seo: {
-      title: "HTML to PPTX converter online | Tools Manager",
+      title: "HTML to PPTX converter online | QodeForge",
       description:
         "Turn HTML or Markdown content into PowerPoint slides, keep heading structure and download an editable PPTX file for talks or classes.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/html-to-pptx",
+      canonical: "https://qodeforge.ir/tools/html-to-pptx",
       ogTitle: "Web-based HTML & Markdown to PowerPoint (PPTX) converter",
       ogDescription:
         "Quickly build editable PowerPoint decks from HTML or Markdown directly in the browser, ready for presenting or further styling.",
@@ -67,3 +67,4 @@ export function useHtmlToPptxPageContent() {
 export function getHtmlToPptxSeo(locale: "fa" | "en"): SeoContent {
   return htmlToPptxContent[locale].seo;
 }
+

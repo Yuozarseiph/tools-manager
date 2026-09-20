@@ -20,10 +20,10 @@ export const backgroundRemoverContent = {
         "تصویر را آپلود کن تا پس‌زمینه به‌صورت خودکار حذف شود و خروجی PNG با پس‌زمینه شفاف بگیری. پردازش روی دستگاه شما انجام می‌شود.",
     },
     seo: {
-      title: "حذف پس‌زمینه تصویر (آفلاین) | Tools Manager",
+      title: "حذف پس‌زمینه تصویر (آفلاین) | QodeForge",
       description:
         "حذف پس‌زمینه عکس با هوش مصنوعی به‌صورت محلی در مرورگر، بدون آپلود فایل. خروجی PNG شفاف دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/background-remover",
+      canonical: "https://qodeforge.ir/tools/background-remover",
       ogTitle: "حذف پس‌زمینه عکس (کاملاً آفلاین)",
       ogDescription:
         "پس‌زمینه تصویر را حذف کن و خروجی شفاف (PNG) بگیر — بدون ارسال فایل به سرور.",
@@ -39,10 +39,10 @@ export const backgroundRemoverContent = {
         "Upload an image to automatically remove the background and download a transparent PNG. Processing runs on your device.",
     },
     seo: {
-      title: "Offline background remover | Tools Manager",
+      title: "Offline background remover | QodeForge",
       description:
         "Remove image backgrounds locally in your browser with no uploads and export a transparent PNG.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/background-remover",
+      canonical: "https://qodeforge.ir/tools/background-remover",
       ogTitle: "Offline background remover",
       ogDescription:
         "Remove backgrounds and export transparent PNG output — privacy-first, no uploads.",
@@ -67,3 +67,4 @@ export function useBackgroundRemoverPageContent() {
 export function getBackgroundRemoverSeo(locale: "fa" | "en"): SeoContent {
   return backgroundRemoverContent[locale].seo;
 }
+

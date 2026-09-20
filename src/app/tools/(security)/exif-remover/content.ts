@@ -21,10 +21,10 @@ export const exifRemoverContent = {
     },
 
     seo: {
-      title: "حذف متادیتای عکس (EXIF) | Tools Manager",
+      title: "حذف متادیتای عکس (EXIF) | QodeForge",
       description:
         "متادیتای پنهان عکس‌ها را حذف کن (GPS، مدل دستگاه، تاریخ) و نسخه پاک‌سازی‌شده را دانلود کن؛ بدون ارسال فایل به سرور.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/exif-remover",
+      canonical: "https://qodeforge.ir/tools/exif-remover",
       ogTitle: "حذف EXIF عکس‌ها (حریم خصوصی و امنیت)",
       ogDescription:
         "قبل از انتشار عکس در شبکه‌های اجتماعی، متادیتای حساس مثل لوکیشن و اطلاعات دستگاه را پاک‌سازی کن.",
@@ -41,10 +41,10 @@ export const exifRemoverContent = {
     },
 
     seo: {
-      title: "EXIF remover tool | Tools Manager",
+      title: "EXIF remover tool | QodeForge",
       description:
         "Remove hidden image metadata (GPS, device model, timestamps) and download a cleaned file — with no uploads to a server.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/exif-remover",
+      canonical: "https://qodeforge.ir/tools/exif-remover",
       ogTitle: "EXIF remover (privacy-first)",
       ogDescription:
         "Clean sensitive photo metadata before sharing on social media, fully local processing.",
@@ -69,3 +69,4 @@ export function useExifRemoverPageContent() {
 export function getExifRemoverSeo(locale: "fa" | "en"): SeoContent {
   return exifRemoverContent[locale].seo;
 }
+

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowUpLeft,
   ArrowUpRight,
@@ -9,7 +10,6 @@ import {
   Fingerprint,
   Mail,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 
 import { useLanguage } from "@/context/LanguageContext";
@@ -58,11 +58,13 @@ export default function Footer() {
           {/* Brand / message */}
           <div>
             <div className="flex items-center gap-4">
-              <div
-                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] shadow-sm ${theme.primary}`}
-              >
-                <Sparkles size={25} className="text-white" />
-              </div>
+              <Image
+                src="/icons/txt-qodeforge.png"
+                alt="QodeForge"
+                width={154}
+                height={154}
+                className="h-16 w-16 rounded-[20px] bg-[var(--app-secondary-color)] p-2 object-contain shadow-sm"
+              />
 
               <div>
                 <div className={`text-2xl font-black tracking-tight ${theme.text}`}>

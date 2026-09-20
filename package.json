@@ -1,6 +1,6 @@
 {
-  "name": "tools-manager",
-  "version": "26.4.0",
+  "name": "qodeforge",
+  "version": "26.4.1",
   "private": true,
   "scripts": {
     "copy-pdf-worker": "node scripts/copy-pdf-worker.mjs",
@@ -105,3 +105,4 @@
     "typescript": "^5"
   }
 }
+

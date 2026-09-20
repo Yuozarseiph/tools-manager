@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   Download,
@@ -24,6 +25,7 @@ interface PinnedSectionProps {
   theme: any;
   uiText: any;
   locale: string;
+  layoutControls?: ReactNode;
 }
 
 const getContainerClass = (layout: PinnedLayoutMode): string => {
@@ -126,6 +128,7 @@ export const PinnedSection = memo(function PinnedSection({
   theme,
   uiText,
   locale,
+  layoutControls,
 }: PinnedSectionProps) {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -157,6 +160,7 @@ export const PinnedSection = memo(function PinnedSection({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {layoutControls}
             <IconButton
               label={isFa ? "راهنمای پین‌ها" : "Pinned tools help"}
               onClick={() => setShowHelp(true)}
@@ -215,6 +219,7 @@ export const PinnedSection = memo(function PinnedSection({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {layoutControls}
             <IconButton
               label={isFa ? "راهنما" : "Help"}
               onClick={() => setShowHelp(true)}

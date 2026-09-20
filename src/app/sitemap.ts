@@ -46,6 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools/image-resizer",
     "/tools/image-to-pdf",
     "/tools/image-to-svg",
+    "/tools/image-to-text",
 
     // PDF
     "/tools/pdf-editor",
@@ -69,13 +70,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Utility
     "/tools/date-converter",
     "/tools/qr-generator",
+    "/tools/qr-reader",
     "/tools/unit-converter",
     "/tools/word-counter",
   ];
 
   const allRoutes = [...staticRoutes, ...toolsRoutes];
 
-  const lastModified = new Date("2026-05-01");
+  const lastModified = new Date();
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,

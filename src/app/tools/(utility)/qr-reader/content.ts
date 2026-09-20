@@ -18,10 +18,10 @@ export const qrReaderPageContent = {
         "QR Code را از تصویر، اسکرین‌شات، کلیپ‌بورد یا دوربین بخوان؛ پردازش به‌صورت محلی در مرورگر انجام می‌شود.",
     },
     seo: {
-      title: "QR Code Reader آنلاین | Tools Manager",
+      title: "QR Code Reader آنلاین | QodeForge",
       description:
         "خواندن QR Code از عکس، اسکرین‌شات یا دوربین با پردازش محلی در مرورگر، بدون آپلود فایل روی سرور.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/qr-reader",
+      canonical: "https://qodeforge.ir/tools/qr-reader",
       ogTitle: "QR Code Reader Online",
       ogDescription:
         "Read QR codes from images, screenshots, clipboard or camera.",
@@ -36,10 +36,10 @@ export const qrReaderPageContent = {
         "Read QR codes from images, screenshots, clipboard or your camera. Processing stays in your browser.",
     },
     seo: {
-      title: "Online QR Code Reader | Tools Manager",
+      title: "Online QR Code Reader | QodeForge",
       description:
         "Scan QR codes from images, screenshots, clipboard or camera directly in the browser without uploading files.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/qr-reader",
+      canonical: "https://qodeforge.ir/tools/qr-reader",
       ogTitle: "Online QR Code Reader",
       ogDescription:
         "Read QR codes from images, screenshots, clipboard or camera.",
@@ -57,3 +57,4 @@ export function useQrReaderPageContent() {
 export function getQrReaderSeo(locale: "fa" | "en"): SeoContent {
   return qrReaderPageContent[locale].seo;
 }
+

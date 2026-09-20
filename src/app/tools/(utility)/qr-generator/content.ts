@@ -20,10 +20,10 @@ export const qrGeneratorContent = {
         "برای آدرس سایت، متن، شماره تلفن یا هر داده‌ی دلخواه یک QR Code قابل اسکن بساز و آن را به‌صورت تصویر باکیفیت دانلود کن.",
     },
     seo: {
-      title: "ابزار ساخت QR Code آنلاین | Tools Manager",
+      title: "ابزار ساخت QR Code آنلاین | QodeForge",
       description:
         "برای لینک سایت، شبکه‌های اجتماعی، Wi‑Fi یا متن ساده یک QR Code خوانا بساز، رنگ و اندازه آن را تنظیم کن و خروجی PNG دانلود کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/qr-generator",
+      canonical: "https://qodeforge.ir/tools/qr-generator",
       ogTitle: "ساخت QR Code تحت‌وب برای انواع داده",
       ogDescription:
         "بدون نصب برنامه، کد QR بساز و در کارت ویزیت، پوستر، سایت یا شبکه‌های اجتماعی استفاده کن.",
@@ -39,10 +39,10 @@ export const qrGeneratorContent = {
         "Create scannable QR codes for URLs, plain text, phone numbers or other data and download them as high‑quality images.",
     },
     seo: {
-      title: "Online QR code generator | Tools Manager",
+      title: "Online QR code generator | QodeForge",
       description:
         "Build readable QR codes for websites, social profiles, Wi‑Fi or plain text, customize colors and size and download as PNG.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/qr-generator",
+      canonical: "https://qodeforge.ir/tools/qr-generator",
       ogTitle: "Web-based QR code generator for any data",
       ogDescription:
         "Create QR codes without installing apps and use them on business cards, posters, websites or social media.",
@@ -67,3 +67,4 @@ export function useQrGeneratorPageContent() {
 export function getQrGeneratorSeo(locale: "fa" | "en"): SeoContent {
   return qrGeneratorContent[locale].seo;
 }
+

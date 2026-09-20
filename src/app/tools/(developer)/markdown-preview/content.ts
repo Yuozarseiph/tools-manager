@@ -21,10 +21,10 @@ export const markdownContent = {
         "متن Markdown را در مرورگر بنویس یا بچسبان، پیش‌نمایش زنده را ببین و خروجی نهایی را برای مستندات، README و وبلاگ‌ها استفاده کن.",
     },
     seo: {
-      title: "ویرایشگر Markdown آنلاین | Tools Manager",
+      title: "ویرایشگر Markdown آنلاین | QodeForge",
       description:
         "یک ویرایشگر ساده و کاربردی برای نوشتن و پیش‌نمایش Markdown در مرورگر، مناسب برای README، مستندات و محتوای فنی.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/markdown",
+      canonical: "https://qodeforge.ir/tools/markdown",
       ogTitle: "ویرایشگر و پیش‌نمایشگر Markdown در مرورگر",
       ogDescription:
         "Markdown بنویس، پیش‌نمایش رندر شده را ببین و متن را برای استفاده در GitHub، بلاگ یا مستندات کپی کن؛ بدون نیاز به نصب ابزار اضافی.",
@@ -40,10 +40,10 @@ export const markdownContent = {
         "Write or paste Markdown in your browser, see a live preview and reuse the output for docs, READMEs and blog posts.",
     },
     seo: {
-      title: "Markdown editor online | Tools Manager",
+      title: "Markdown editor online | QodeForge",
       description:
         "A simple, focused editor for writing and previewing Markdown directly in the browser, ideal for technical content and documentation.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/markdown",
+      canonical: "https://qodeforge.ir/tools/markdown",
       ogTitle: "In‑browser Markdown editor and previewer",
       ogDescription:
         "Compose Markdown, inspect the rendered preview and copy the result for GitHub, blogs or documentation without installing extra tools.",
@@ -71,3 +71,4 @@ export function useMarkdownPageContent() {
 export function getMarkdownSeo(locale: "fa" | "en"): SeoContent {
   return markdownContent[locale].seo;
 }
+

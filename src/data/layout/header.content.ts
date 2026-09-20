@@ -10,8 +10,8 @@ export const HeaderContent = {
     download: "دانلود",
     home: "خانه",
     brand: {
-      nameMain: "Tools",
-      nameAccent: "Manager",
+      nameMain: "Qode",
+      nameAccent: "Forge",
     },
   } as const,
 
@@ -24,8 +24,8 @@ export const HeaderContent = {
     download: "Download",
     home: "Home",
     brand: {
-      nameMain: "Tools",
-      nameAccent: "Manager",
+      nameMain: "Qode",
+      nameAccent: "Forge",
     },
   } as const,
 };

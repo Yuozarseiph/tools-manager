@@ -20,10 +20,10 @@ export const wordToPdfContent = {
         "فایل‌های Word خود را بارگذاری کن تا در مرورگر به PDF تبدیل شوند، بدون نیاز به نصب نرم‌افزار و با حفظ حداکثری ساختار و استایل.",
     },
     seo: {
-      title: "ابزار تبدیل Word به PDF آنلاین | Tools Manager",
+      title: "ابزار تبدیل Word به PDF آنلاین | QodeForge",
       description:
         "فایل‌های DOC و DOCX را به‌صورت امن و سریع به PDF تبدیل کن، محتوای فارسی و انگلیسی را پشتیبانی می‌کند و خروجی آماده چاپ یا ارسال می‌دهد.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/word-to-pdf",
+      canonical: "https://qodeforge.ir/tools/word-to-pdf",
       ogTitle: "مبدل تحت‌وب Word به PDF",
       ogDescription:
         "بدون نصب آفیس یا نرم‌افزار اضافی، فایل‌های Word را مستقیم در مرورگر به PDF تبدیل کن و خروجی نهایی را دانلود کن.",
@@ -39,10 +39,10 @@ export const wordToPdfContent = {
         "Upload your Word files to convert them to PDF directly in the browser, keeping the layout and styles as much as possible.",
     },
     seo: {
-      title: "Word to PDF converter online | Tools Manager",
+      title: "Word to PDF converter online | QodeForge",
       description:
         "Securely and quickly turn DOC and DOCX files into PDFs, with support for Persian and English content and print‑ready output.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/word-to-pdf",
+      canonical: "https://qodeforge.ir/tools/word-to-pdf",
       ogTitle: "In‑browser Word to PDF converter",
       ogDescription:
         "Convert Word documents to PDF without installing Office or extra software and download the final result instantly.",
@@ -67,3 +67,4 @@ export function useWordToPdfPageContent() {
 export function getWordToPdfSeo(locale: "fa" | "en"): SeoContent {
   return wordToPdfContent[locale].seo;
 }
+

@@ -740,7 +740,7 @@ export async function convertPdfToWord(
     report(options.onProgress, "building", 0, 1);
 
     const wordDocument = new Document({
-      creator: "Tools Manager",
+      creator: "QodeForge",
       title: file.name.replace(/\.pdf$/i, ""),
       description: "Converted from PDF to DOCX locally in the browser.",
       sections: [
@@ -783,3 +783,4 @@ export async function convertPdfToWord(
     } catch {}
   }
 }
+

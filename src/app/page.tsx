@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen font-sans ${theme.bg}`}>
-      <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-4 sm:px-6 lg:px-8">
+      <main className="w-full pb-16">
         <HeroSection />
         <ToolsGrid />
       </main>

@@ -12,7 +12,7 @@ export const qrGeneratorContent = {
     inputs: {
       link: {
         label: "آدرس URL",
-        placeholder: "https://toolsmanager.yuozarseiph.top",
+        placeholder: "https://qodeforge.ir",
       },
       text: {
         label: "متن",
@@ -113,7 +113,7 @@ export const qrGeneratorContent = {
     inputs: {
       link: {
         label: "URL Address",
-        placeholder: "https://toolsmanager.yuozarseiph.top",
+        placeholder: "https://qodeforge.ir",
       },
       text: {
         label: "Text",
@@ -211,3 +211,4 @@ export function useQrGeneratorContent() {
   const { locale } = useLanguage();
   return qrGeneratorContent[locale];
 }
+

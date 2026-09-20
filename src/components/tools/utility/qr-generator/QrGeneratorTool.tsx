@@ -29,7 +29,7 @@ export default function QrGeneratorTool() {
   // Content Type
   const [contentType, setContentType] = useState<QrContentType>("link");
   const [linkUrl, setLinkUrl] = useState(
-    "https://toolsmanager.yuozarseiph.top",
+    "https://qodeforge.ir",
   );
   const [plainText, setPlainText] = useState("");
   const [wifiSsid, setWifiSsid] = useState("");
@@ -87,7 +87,7 @@ export default function QrGeneratorTool() {
   const getQrValue = useCallback(() => {
     switch (contentType) {
       case "link":
-        return linkUrl || "https://toolsmanager.yuozarseiph.top";
+        return linkUrl || "https://qodeforge.ir";
       case "text":
         return plainText || " ";
       case "wifi":
@@ -97,7 +97,7 @@ export default function QrGeneratorTool() {
           emailSubject,
         )}&body=${encodeURIComponent(emailBody)}`;
       default:
-        return linkUrl || "https://toolsmanager.yuozarseiph.top";
+        return linkUrl || "https://qodeforge.ir";
     }
   }, [
     contentType,
@@ -779,3 +779,4 @@ export default function QrGeneratorTool() {
     </div>
   );
 }
+

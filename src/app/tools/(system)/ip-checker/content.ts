@@ -20,10 +20,10 @@ export const ipCheckerContent = {
         "آی‌پی عمومی خود را ببین، موقعیت جغرافیایی تقریبی، ISP و منطقه‌ی زمانی‌ات را بررسی کن؛ همه‌ی پردازش‌ها در مرورگر انجام می‌شود.",
     },
     seo: {
-      title: "ابزار نمایش IP و اطلاعات شبکه آنلاین | Tools Manager",
+      title: "ابزار نمایش IP و اطلاعات شبکه آنلاین | QodeForge",
       description:
         "آدرس IP عمومی، موقعیت تقریبی، سرویس‌دهنده اینترنت و منطقه زمانی خود را ببین و برای عیب‌یابی شبکه یا بررسی تنظیمات امنیتی استفاده کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/ip-checker",
+      canonical: "https://qodeforge.ir/tools/ip-checker",
       ogTitle: "نمایش‌دهنده تحت‌وب IP و اطلاعات اتصال",
       ogDescription:
         "به‌سرعت آی‌پی عمومی، شهر/کشور، ISP و سایر جزئیات شبکه را در مرورگر مشاهده کن و از وضعیت اتصال خود آگاه شو.",
@@ -39,10 +39,10 @@ export const ipCheckerContent = {
         "See your public IP address, approximate geolocation, ISP and timezone details directly in your browser.",
     },
     seo: {
-      title: "Online IP and network info checker | Tools Manager",
+      title: "Online IP and network info checker | QodeForge",
       description:
         "Check your public IP address, approximate location, internet provider and timezone to debug networking issues or review security settings.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/ip-checker",
+      canonical: "https://qodeforge.ir/tools/ip-checker",
       ogTitle: "Web-based IP and connection info viewer",
       ogDescription:
         "Quickly inspect your public IP, city/country, ISP and other connection details in the browser.",
@@ -67,3 +67,4 @@ export function useIPCheckerPageContent() {
 export function getIPCheckerSeo(locale: "fa" | "en"): SeoContent {
   return ipCheckerContent[locale].seo;
 }
+

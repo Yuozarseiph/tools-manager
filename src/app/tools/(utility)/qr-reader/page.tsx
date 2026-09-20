@@ -26,14 +26,14 @@ export const metadata: Metadata = {
 function buildJsonLd() {
   const provider = {
     "@type": "Organization",
-    name: "Tools Manager",
-    url: "https://toolsmanager.yuozarseip.top",
+    name: "QodeForge",
+    url: "https://qodeforge.ir",
   };
 
   return [fa, en].map((item) => ({
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: item.title.replace(/\s*\|\s*Tools Manager$/, ""),
+    name: item.title.replace(/\s*\|\s*QodeForge$/, ""),
     description: item.description,
     url: item.canonical,
     applicationCategory: item.applicationCategory ?? "UtilitiesApplication",
@@ -53,3 +53,4 @@ export default function Page() {
     </div>
   );
 }
+

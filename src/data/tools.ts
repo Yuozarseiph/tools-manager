@@ -392,7 +392,7 @@ export const TOOLS: Tool[] = [
   {
     id: "emerald-forge",
     Icon: Gamepad,
-    href: "https://minigame.yuozarseiph.top/",
+    href: "https://minigame.qodeforge.ir/",
     status: "active",
     category: "game",
     badgeKey: "tools.items.emerald-forge.badge",

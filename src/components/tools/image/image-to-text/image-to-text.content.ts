@@ -54,7 +54,7 @@ export const imageToTextContent = {
     noText: "متنی در تصویر شناسایی نشد.",
     error: "در استخراج متن خطایی رخ داد.",
     privacy:
-      "پردازش OCR در مرورگر انجام می‌شود و تصویر انتخابی به سرور Tools Manager ارسال نمی‌شود.",
+      "پردازش OCR در مرورگر انجام می‌شود و تصویر انتخابی به سرور QodeForge ارسال نمی‌شود.",
   },
   en: {
     language: "Text language",
@@ -109,7 +109,7 @@ export const imageToTextContent = {
     noText: "No text was detected in the image.",
     error: "An error occurred while extracting text.",
     privacy:
-      "OCR runs in your browser and the selected image is not uploaded to the Tools Manager server.",
+      "OCR runs in your browser and the selected image is not uploaded to the QodeForge server.",
   },
 };
 
@@ -119,3 +119,4 @@ export function useImageToTextContent(): ImageToTextToolContent {
   const { locale } = useLanguage();
   return imageToTextContent[locale];
 }
+

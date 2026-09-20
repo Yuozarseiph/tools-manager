@@ -21,10 +21,10 @@ export const base64Content = {
         "متن ساده را به Base64 تبدیل کن یا خروجی Base64 را به متن قابل خواندن برگردان؛ همه در مرورگر و بدون ارسال به سرور.",
     },
     seo: {
-      title: "ابزار Base64 آنلاین | Tools Manager",
+      title: "ابزار Base64 آنلاین | QodeForge",
       description:
         "رمزگذاری و رمزگشایی Base64 برای متن و داده‌ها، مناسب برای توسعه‌دهندگان و کار با APIها، بدون نیاز به نصب نرم‌افزار.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/base64",
+      canonical: "https://qodeforge.ir/tools/base64",
       ogTitle: "مبدل آنلاین Base64 (Encode/Decode)",
       ogDescription:
         "رشته‌های متنی را به Base64 تبدیل کن یا آن‌ها را به‌سرعت از Base64 به متن اصلی برگردان، با رابط کاربری ساده و واکنش‌گرا.",
@@ -40,10 +40,10 @@ export const base64Content = {
         "Convert plain text to Base64 or decode Base64 strings back to readable text directly in your browser.",
     },
     seo: {
-      title: "Online Base64 tool | Tools Manager",
+      title: "Online Base64 tool | QodeForge",
       description:
         "Encode and decode Base64 for text and data, ideal for developers and API work, without installing any software.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/base64",
+      canonical: "https://qodeforge.ir/tools/base64",
       ogTitle: "Online Base64 converter (Encode / Decode)",
       ogDescription:
         "Quickly convert strings to Base64 or decode Base64 back to the original text with a clean, responsive UI.",
@@ -71,3 +71,4 @@ export function useBase64PageContent() {
 export function getBase64Seo(locale: "fa" | "en"): SeoContent {
   return base64Content[locale].seo;
 }
+

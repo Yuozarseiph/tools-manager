@@ -18,8 +18,9 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="py-12 text-center sm:py-16 lg:py-20">
-      <div className="mx-auto max-w-3xl">
+    <section className={`relative -mt-[4.5rem] flex w-full items-center justify-center overflow-hidden border-0 px-5 pb-14 pt-28 text-center shadow-sm sm:px-10 sm:pb-20 lg:pb-24 ${theme.card}`}>
+      <div className="pointer-events-none absolute inset-x-1/4 top-0 h-32 rounded-full opacity-20 blur-3xl" style={{ background: "var(--app-accent)" }} />
+      <div className="relative mx-auto max-w-3xl">
         <h1
           className={`text-4xl font-black leading-[1.12] tracking-[-0.035em] sm:text-5xl lg:text-6xl ${theme.text}`}
         >

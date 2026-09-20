@@ -133,9 +133,9 @@ export default function DownloadPage() {
   const links = {
     pwa: "/",
     windowsSetup:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.3.1/Tools.Manager-Setup-26.3.1.exe",
+      "https://github.com/Yuozarseiph/qodeforge/releases/download/26.3.1/QodeForge-Setup-26.3.1.exe",
     windowsPortable:
-      "https://github.com/Yuozarseiph/tools-manager/releases/download/26.3.1/Tools.Manager-Portable-26.3.1.exe",
+      "https://github.com/Yuozarseiph/qodeforge/releases/download/26.3.1/QodeForge-Portable-26.3.1.exe",
   };
 
   return (
@@ -281,3 +281,4 @@ export default function DownloadPage() {
     </div>
   );
 }
+

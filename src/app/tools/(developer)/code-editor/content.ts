@@ -18,10 +18,10 @@ export const codeEditorContent = {
         "ویرایشگر کد حرفه‌ای با Monaco Editor، پشتیبانی از HTML/CSS/JS/TS، پوشه‌بندی، AutoSave و ذخیره در مرورگر.",
     },
     seo: {
-      title: "ویرایشگر کد آنلاین | Code Editor | Tools Manager",
+      title: "ویرایشگر کد آنلاین | Code Editor | QodeForge",
       description:
         "ویرایشگر کد آنلاین با Monaco Editor. پشتیبانی از HTML، CSS، JavaScript، TypeScript و Python. ذخیره خودکار، پوشه‌بندی، export و import پروژه.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/code-editor",
+      canonical: "https://qodeforge.ir/tools/code-editor",
       applicationCategory: "DeveloperApplication",
       inLanguage: "fa-IR",
     } satisfies SeoContent,
@@ -33,10 +33,10 @@ export const codeEditorContent = {
         "Professional code editor with Monaco Editor, HTML/CSS/JS/TS support, folder management, AutoSave and browser storage.",
     },
     seo: {
-      title: "Online Code Editor | Tools Manager",
+      title: "Online Code Editor | QodeForge",
       description:
         "Online code editor powered by Monaco Editor. Supports HTML, CSS, JavaScript, TypeScript and Python. Auto-save, folders, export and import projects.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/code-editor",
+      canonical: "https://qodeforge.ir/tools/code-editor",
       applicationCategory: "DeveloperApplication",
       inLanguage: "en-US",
     } satisfies SeoContent,
@@ -58,3 +58,4 @@ export function useCodeEditorPageContent() {
 export function getCodeEditorSeo(locale: "fa" | "en"): SeoContent {
   return codeEditorContent[locale].seo;
 }
+

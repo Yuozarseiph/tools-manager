@@ -82,6 +82,9 @@
 
 body {
   font-family: var(--font-vazir), ui-sans-serif, system-ui, sans-serif;
+  background: var(--app-bg);
+  color: var(--app-text);
+  text-rendering: optimizeLegibility;
 }
 html,
 body {
@@ -116,4 +119,53 @@ html::-webkit-scrollbar-thumb:hover {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Shared interaction language for every tool page. */
+.tool-layout-shell a[href="/"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: var(--app-card);
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--app-accent) 8%, transparent);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.tool-layout-shell a[href="/"]:hover {
+  transform: translateY(-1px);
+  border-color: var(--app-ring);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--app-accent) 14%, transparent);
+}
+
+.tool-layout-shell label:has(input[type="file"]) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 3.25rem;
+  border: 1px dashed var(--app-ring);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--app-secondary-bg) 58%, transparent);
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.tool-layout-shell label:has(input[type="file"]):hover {
+  border-color: var(--app-accent);
+  background: var(--app-secondary-bg);
+  transform: translateY(-1px);
+}
+
+.tool-layout-shell input[type="file"] {
+  cursor: pointer;
+}
+::selection {
+  background: color-mix(in srgb, var(--app-accent) 18%, transparent);
 }

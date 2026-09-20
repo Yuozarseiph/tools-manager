@@ -20,10 +20,10 @@ export const userAgentContent = {
         "اطلاعات کامل User Agent، مرورگر، سیستم‌عامل، نوع دستگاه و وضعیت اتصال خود را در مرورگر ببین و برای دیباگ یا تست ریسپانسیو از آن استفاده کن.",
     },
     seo: {
-      title: "ابزار نمایش User Agent و اطلاعات دستگاه آنلاین | Tools Manager",
+      title: "ابزار نمایش User Agent و اطلاعات دستگاه آنلاین | QodeForge",
       description:
         "رشته‌ی User Agent، مرورگر، سیستم‌عامل، رزولوشن صفحه، پشتیبانی کوکی و وضعیت آنلاین بودن خود را بررسی کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/user-agent",
+      canonical: "https://qodeforge.ir/tools/user-agent",
       ogTitle: "نمایش‌دهنده تحت‌وب User Agent و مشخصات سیستم",
       ogDescription:
         "برای اشکال‌زدایی، گزارش باگ یا تنظیمات سازگاری، اطلاعات کامل مرورگر و دستگاه خود را به‌صورت ساختاریافته مشاهده کن.",
@@ -39,10 +39,10 @@ export const userAgentContent = {
         "Inspect your full User Agent string, browser, operating system, device type and connection status directly in your browser.",
     },
     seo: {
-      title: "Online User Agent & device info viewer | Tools Manager",
+      title: "Online User Agent & device info viewer | QodeForge",
       description:
         "Check your User Agent string, browser, OS, screen size, cookie support and online status for debugging or compatibility reports.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/user-agent",
+      canonical: "https://qodeforge.ir/tools/user-agent",
       ogTitle: "Web-based User Agent and system info viewer",
       ogDescription:
         "Quickly see structured information about your browser and device to help with debugging, bug reports or responsive testing.",
@@ -67,3 +67,4 @@ export function useUserAgentPageContent() {
 export function getUserAgentSeo(locale: "fa" | "en"): SeoContent {
   return userAgentContent[locale].seo;
 }
+

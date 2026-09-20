@@ -92,7 +92,7 @@ export default function PdfMerger() {
       if (msg.type === "done") {
         download(
           new Uint8Array(msg.buffer),
-          `merged-toolsmanager-${Date.now()}.pdf`,
+          `merged-qodeforge-${Date.now()}.pdf`,
           "application/pdf"
         );
         cleanup();
@@ -256,3 +256,4 @@ export default function PdfMerger() {
     </div>
   );
 }
+

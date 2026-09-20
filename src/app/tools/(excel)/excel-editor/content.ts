@@ -21,10 +21,10 @@ export const excelEditorContent = {
         "فایل‌های Excel یا CSV را در مرورگر باز کن، ردیف‌ها را ویرایش و اضافه یا حذف کن و در نهایت خروجی به‌روز را دوباره به‌صورت Excel دانلود کن.",
     },
     seo: {
-      title: "ویرایشگر Excel و CSV آنلاین | Tools Manager",
+      title: "ویرایشگر Excel و CSV آنلاین | QodeForge",
       description:
         "جدول‌های Excel و CSV را مستقیماً در مرورگر ویرایش کن، ردیف‌ها را مدیریت کن و بدون نصب نرم‌افزار، نسخهٔ جدید فایل را ذخیره کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-editor",
+      canonical: "https://qodeforge.ir/tools/excel-editor",
       ogTitle: "ویرایشگر تحت‌وب برای فایل‌های Excel و CSV",
       ogDescription:
         "فایل‌های جدولی را آپلود کن، داده‌ها را اصلاح کن و خروجی را برای استفاده در گزارش‌ها و سیستم‌های دیگر به‌سرعت دریافت کن.",
@@ -40,10 +40,10 @@ export const excelEditorContent = {
         "Open Excel or CSV files in your browser, edit rows and cells, then download an updated Excel file without installing any software.",
     },
     seo: {
-      title: "Excel and CSV editor online | Tools Manager",
+      title: "Excel and CSV editor online | QodeForge",
       description:
         "Edit Excel and CSV tables directly in the browser, manage rows and values, and save a fresh file for use in reports and systems.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/excel-editor",
+      canonical: "https://qodeforge.ir/tools/excel-editor",
       ogTitle: "Web-based editor for Excel and CSV files",
       ogDescription:
         "Upload tabular data, fix and adjust values, then export a clean Excel file ready for reporting or further processing.",
@@ -71,3 +71,4 @@ export function useExcelEditorPageContent() {
 export function getExcelEditorSeo(locale: "fa" | "en"): SeoContent {
   return excelEditorContent[locale].seo;
 }
+

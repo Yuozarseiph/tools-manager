@@ -36,15 +36,15 @@ export const metadata: Metadata = {
 function buildJsonLd() {
   const baseProvider = {
     "@type": "Organization",
-    name: "Tools Manager",
-    url: "https://toolsmanager.yuozarseip.top",
+    name: "QodeForge",
+    url: "https://qodeforge.ir",
   };
 
   return [
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      name: fa.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      name: fa.title.replace(/\s*\|\s*QodeForge$/, ""),
       description: fa.description,
       url: fa.canonical,
       applicationCategory: fa.applicationCategory ?? "ProductivityApplication",
@@ -54,7 +54,7 @@ function buildJsonLd() {
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      name: en.title.replace(/\s*\|\s*Tools Manager$/, ""),
+      name: en.title.replace(/\s*\|\s*QodeForge$/, ""),
       description: en.description,
       url: en.canonical,
       applicationCategory: en.applicationCategory ?? "ProductivityApplication",
@@ -79,3 +79,4 @@ export default function Page() {
     </div>
   );
 }
+

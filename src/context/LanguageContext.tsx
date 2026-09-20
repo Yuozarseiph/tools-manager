@@ -13,7 +13,7 @@ import {
 const commonTranslations = {
   fa: {
     common: {
-      appName: "Tools Manager",
+      appName: "QodeForge",
       loading: "در حال بارگذاری...",
       error: "خطایی رخ داد",
     },
@@ -29,7 +29,7 @@ const commonTranslations = {
   },
   en: {
     common: {
-      appName: "Tools Manager",
+      appName: "QodeForge",
       loading: "Loading...",
       error: "An error occurred",
     },
@@ -104,3 +104,4 @@ export function useLanguage() {
   if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
   return ctx;
 }
+

@@ -20,10 +20,10 @@ export const passwordGeneratorContent = {
         "رمزهای عبور تصادفی و قدرتمند بساز یا رمز فعلی‌ات را وارد کن تا سطح امنیت آن را تحلیل کنیم و پیشنهادهای بهبود را ببینی.",
     },
     seo: {
-      title: "ابزار تولید و تحلیل رمز عبور آنلاین | Tools Manager",
+      title: "ابزار تولید و تحلیل رمز عبور آنلاین | QodeForge",
       description:
         "پسوردهای امن با حروف بزرگ و کوچک، اعداد و نمادها تولید کن، قدرت آن‌ها را بسنج و برای حساب‌های مهمت از رمزهای منحصربه‌فرد استفاده کن.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/password-generator",
+      canonical: "https://qodeforge.ir/tools/password-generator",
       ogTitle: "تولیدکننده و آنالیزر تحت‌وب رمز عبور",
       ogDescription:
         "در مرورگر خود پسوردهای قوی بساز، آن‌ها را ارزیابی کن و بدون ذخیره‌سازی روی سرور، برای اکانت‌هایت استفاده کن.",
@@ -39,10 +39,10 @@ export const passwordGeneratorContent = {
         "Generate random, secure passwords or analyze an existing one to see its strength and get suggestions for improvement.",
     },
     seo: {
-      title: "Password generator and strength analyzer | Tools Manager",
+      title: "Password generator and strength analyzer | QodeForge",
       description:
         "Create secure passwords with uppercase, lowercase, numbers and symbols, check their strength and keep unique credentials for important accounts.",
-      canonical: "https://toolsmanager.yuozarseip.top/tools/password-generator",
+      canonical: "https://qodeforge.ir/tools/password-generator",
       ogTitle: "In‑browser password generator & analyzer",
       ogDescription:
         "Generate and evaluate strong passwords directly in your browser, with no server storage of your secrets.",
@@ -67,3 +67,4 @@ export function usePasswordGeneratorPageContent() {
 export function getPasswordGeneratorSeo(locale: "fa" | "en"): SeoContent {
   return passwordGeneratorContent[locale].seo;
 }
+

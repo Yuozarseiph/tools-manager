@@ -124,7 +124,7 @@ const ToolCard = memo(function ToolCard({
 
   return (
     <article
-      className={`group relative h-full rounded-[20px] border transition-shadow hover:shadow-sm ${theme.card} ${theme.border}`}
+      className={`group relative h-full rounded-[24px] border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${theme.card} ${theme.border}`}
     >
       <Link
         href={tool.href}
@@ -501,7 +501,7 @@ export default function ToolsGrid() {
     ];
 
   return (
-    <section id="tools-workspace" className="scroll-mt-24 space-y-5 pb-20">
+    <section id="tools-workspace" className="mx-auto w-full max-w-7xl scroll-mt-24 space-y-7 px-4 pb-20 pt-8 sm:px-6 sm:pt-10 lg:px-8">
       <PinnedSection
         pinnedTools={pinnedToolsList}
         onRemove={removePin}
@@ -511,13 +511,23 @@ export default function ToolsGrid() {
         theme={theme}
         uiText={uiText}
         locale={locale}
+        layoutControls={
+          <LayoutControls
+            mode="pinned"
+            toolsLayout={layoutSettings.toolsLayout}
+            pinnedLayout={layoutSettings.pinnedLayout}
+            onToolsLayoutChange={handleToolsLayoutChange}
+            onPinnedLayoutChange={handlePinnedLayoutChange}
+            theme={theme}
+            locale={locale}
+          />
+        }
       />
 
       <div
-        className={`rounded-[22px] border p-3 sm:p-4 ${theme.card} ${theme.border}`}
+        className="p-0"
       >
-        <div className="grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div className="relative">
+        <div className="relative">
             <label htmlFor="tools-search" className="sr-only">
               {uiText.searchLabel}
             </label>
@@ -557,20 +567,21 @@ export default function ToolsGrid() {
                 <X size={14} aria-hidden="true" />
               </button>
             )}
-          </div>
-
-          <LayoutControls
-            toolsLayout={layoutSettings.toolsLayout}
-            pinnedLayout={layoutSettings.pinnedLayout}
-            onToolsLayoutChange={handleToolsLayoutChange}
-            onPinnedLayoutChange={handlePinnedLayoutChange}
-            theme={theme}
-            locale={locale}
-          />
         </div>
+      </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <div ref={categoryDropdownRef} className="relative">
+      <div className="flex flex-wrap items-center gap-2">
+        <LayoutControls
+          mode="tools"
+          toolsLayout={layoutSettings.toolsLayout}
+          pinnedLayout={layoutSettings.pinnedLayout}
+          onToolsLayoutChange={handleToolsLayoutChange}
+          onPinnedLayoutChange={handlePinnedLayoutChange}
+          theme={theme}
+          locale={locale}
+        />
+
+        <div ref={categoryDropdownRef} className="relative">
             <button
               type="button"
               onClick={() => setShowCategoryDropdown((value) => !value)}
@@ -645,15 +656,14 @@ export default function ToolsGrid() {
                 </div>
               </div>
             )}
-          </div>
+        </div>
 
-          <span
+        <span
             className={`rounded-full px-3 py-2 text-xs font-bold ${theme.secondary} ${theme.textMuted}`}
             aria-live="polite"
           >
             {filteredTools.length}
-          </span>
-        </div>
+        </span>
       </div>
 
       <div className={`grid ${getGridClass(layoutSettings.toolsLayout)}`}>
