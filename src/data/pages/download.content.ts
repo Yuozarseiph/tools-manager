@@ -4,7 +4,7 @@ export const downloadContent = {
     hero: {
       title: "دانلود QodeForge",
       lead: "نسخه مناسب دستگاه خود را انتخاب کنید. نسخه وب بدون نصب در دسترس است و نسخه Windows را می‌توانید به‌صورت Setup یا Portable دریافت کنید.",
-      badge: "نسخه وب: 26.4.1",
+      badge: "نسخه وب: 26.4.2",
     },
 
     cards: {
@@ -13,7 +13,7 @@ export const downloadContent = {
         desc: "مستقیماً در مرورگر اجرا می‌شود و در مرورگرهای پشتیبانی‌شده می‌توانید آن را مانند یک برنامه روی دستگاه نصب کنید.",
         cta: "باز کردن QodeForge",
         hint: "برای نصب PWA از گزینه Install یا Add to Home Screen مرورگر استفاده کنید.",
-        version: "26.4.1",
+        version: "26.4.2",
       },
 
       windows: {
@@ -56,7 +56,7 @@ export const downloadContent = {
     hero: {
       title: "Download QodeForge",
       lead: "Choose the version that fits your device. The web app works without installation, while Windows is available as both Setup and Portable builds.",
-      badge: "Web version: 26.4.1",
+      badge: "Web version: 26.4.2",
     },
 
     cards: {
@@ -65,7 +65,7 @@ export const downloadContent = {
         desc: "Runs directly in your browser and can be installed like an app on supported browsers and devices.",
         cta: "Open QodeForge",
         hint: "Use your browser's Install or Add to Home Screen option to install the PWA.",
-        version: "26.4.1",
+        version: "26.4.2",
       },
 
       windows: {

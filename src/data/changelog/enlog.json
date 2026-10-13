@@ -1,5 +1,41 @@
 [
   {
+    "version": "26.4.2",
+    "date": "October 14, 2026",
+    "type": "update",
+    "changes": [
+      {
+        "category": "added",
+        "items": [
+          "Added usage guides, FAQs, input limitations, breadcrumbs, and related-tool links to tool pages",
+          "Added category pages for direct access to PDF, image, developer, and other tool groups",
+          "Added Markdown guides and llms.txt / llms-full.txt catalogues so AI agents can read tool content",
+          "Added browser-local word count, Base64, hashing, and unit conversion functions for agents, with optional WebMCP support on compatible browsers"
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Introduced separate /fa and /en routes with matching initial content, titles, descriptions, language, and direction while preserving access to legacy URLs",
+          "Improved canonical and hreflang metadata, generated the sitemap from active tools with source modification dates, and added structured data to pages",
+          "Added dedicated 1200 × 630 tool sharing images and large social preview cards",
+          "Rendered every tool link in the initial HTML of the existing main list and made full documentation and changelog text crawlable",
+          "Improved independent loading of tool interfaces and reduced unnecessary initial font loading",
+          "Clarified local processing, network requests, contact-form delivery, and browser-stored data in the privacy policy"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Fixed mixed Persian/English metadata and repeated brand names in page titles",
+          "Fixed input labels, icon control names, focus management, and keyboard use in uploads and dialogs; added Persian and Arabic digit support to calculators",
+          "Corrected text contrast in light and dark themes, enabled browser zoom, and respected reduced-motion preferences",
+          "Removed the duplicate tool directory from the home page while retaining SEO data without an extra visible section"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.4.1",
     "date": "September 20, 2026",
     "type": "update",
