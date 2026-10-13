@@ -30,7 +30,9 @@
           "Fixed mixed Persian/English metadata and repeated brand names in page titles",
           "Fixed input labels, icon control names, focus management, and keyboard use in uploads and dialogs; added Persian and Arabic digit support to calculators",
           "Corrected text contrast in light and dark themes, enabled browser zoom, and respected reduced-motion preferences",
-          "Removed the duplicate tool directory from the home page while retaining SEO data without an extra visible section"
+          "Preserved the existing home-page tool list and design while improving crawlable links and SEO data",
+          "Fixed the mobile home header so the hero background continues behind it without moving the hero content",
+          "Kept category, layout, and tool selection menus within the viewport, with opaque backgrounds and scrolling for long menus; improved theme and mobile More menu backgrounds"
         ]
       }
     ]
