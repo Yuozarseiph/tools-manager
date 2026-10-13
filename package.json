@@ -6,11 +6,12 @@
     "copy-pdf-worker": "node scripts/copy-pdf-worker.mjs",
     "predev": "node scripts/copy-pdf-worker.mjs",
     "dev": "next dev --webpack",
-    "prebuild": "node scripts/copy-pdf-worker.mjs",
+    "prebuild": "node scripts/tool-constraints.mjs && node scripts/page-dates.mjs && node scripts/copy-pdf-worker.mjs",
     "build": "next build --webpack",
-    "postbuild": "node scripts/copy-htaccess.mjs",
+    "postbuild": "node scripts/copy-htaccess.mjs && node scripts/export-seo.mjs",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify-seo": "node scripts/verify-seo.mjs"
   },
   "dependencies": {
     "@babel/parser": "^7.28.5",
@@ -102,8 +103,8 @@
     "@types/webpack": "^5.28.5",
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
+    "parse5": "^7.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
 }
-

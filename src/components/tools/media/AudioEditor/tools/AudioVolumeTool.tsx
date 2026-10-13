@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Upload, Volume2, Download, Play, Pause, Info } from "lucide-react";
@@ -310,7 +311,7 @@ export default function AudioVolumeTool() {
           {content.ui.volume.upload.button}
         </button>
 
-        <input
+        <AccessibleInput
           ref={fileInputRef}
           type="file"
           accept="audio/*"
@@ -350,7 +351,7 @@ export default function AudioVolumeTool() {
 
           {/* Seek + transport */}
           <div className="space-y-3">
-            <input
+            <AccessibleInput
               type="range"
               min={0}
               max={duration || 0}
@@ -404,7 +405,7 @@ export default function AudioVolumeTool() {
 
             <div className="flex flex-col md:flex-row gap-4 md:items-center">
               <div className="flex-1 space-y-1">
-                <div className="flex justify-between text-[11px]">
+                <div className="flex justify-between text-xs">
                   <span className={theme.textMuted}>
                     {content.ui.volume.controls.gainLabel}
                   </span>
@@ -414,7 +415,7 @@ export default function AudioVolumeTool() {
                   </span>
                 </div>
 
-                <input
+                <AccessibleInput
                   type="range"
                   min={-24}
                   max={24}
@@ -427,7 +428,7 @@ export default function AudioVolumeTool() {
               </div>
 
               <label className="flex items-center gap-2 text-xs">
-                <input
+                <AccessibleInput hasVisibleLabel
                   type="checkbox"
                   checked={normalize}
                   onChange={(e) => setNormalize(e.target.checked)}
@@ -442,7 +443,7 @@ export default function AudioVolumeTool() {
 
           {/* Export */}
           <div className="flex flex-wrap gap-3">
-            <button
+            <button data-testid="download-result"
               onClick={handleDownloadProcessed}
               disabled={disableControls || isExporting}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${

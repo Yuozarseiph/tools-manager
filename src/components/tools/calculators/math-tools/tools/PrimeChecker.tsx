@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -63,7 +64,7 @@ export default function PrimeChecker() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.prime.labels.enterNumber}
         </label>
-        <input
+        <AccessibleInput numeric fieldLabel={content.prime.labels.enterNumber}
           type="number"
           value={num}
           onChange={(e) => setNum(e.target.value)}
@@ -80,7 +81,7 @@ export default function PrimeChecker() {
       </button>
 
       {result && (
-        <div
+        <div role="status" aria-live="polite"
           className={`p-6 rounded-xl border-2 text-center ${
             result.isPrime
               ? "border-[var(--app-success-border)] bg-[var(--app-success-bg)]"

@@ -1,4 +1,6 @@
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -204,12 +206,12 @@ function FilterSlider({
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className={`text-[11px] font-bold ${labelClass}`}>{label}</span>
-        <span className={`text-[10px] font-mono ${valueClass}`} dir="ltr">
+        <span className={`text-xs font-bold ${labelClass}`}>{label}</span>
+        <span className={`text-xs font-mono ${valueClass}`} dir="ltr">
           {display}
         </span>
       </div>
-      <input
+      <AccessibleInput
         type="range"
         min={min}
         max={max}
@@ -406,7 +408,7 @@ export default function ImageEditModal({
   const toolBtnClass = `${theme.border} ${theme.text} hover:opacity-75`;
 
   return (
-    <div
+    <div role="dialog" aria-modal="true" aria-label="Image Edit Modal"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/70"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -428,19 +430,19 @@ export default function ImageEditModal({
               — {item.displayLabel}
             </span>
             <span
-              className={`hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded border ${theme.border} ${theme.textMuted}`}
+              className={`hidden sm:inline text-xs font-mono px-1.5 py-0.5 rounded border ${theme.border} ${theme.textMuted}`}
               dir="ltr"
             >
               {W}×{H}
             </span>
           </div>
-          <button
+          <AccessibleButton purpose="close"
             type="button"
             onClick={onClose}
             className={`p-1.5 rounded-lg hover:opacity-70 ${theme.textMuted}`}
           >
             <X size={18} />
-          </button>
+          </AccessibleButton>
         </div>
 
         <div className="p-4 md:p-6">
@@ -489,7 +491,7 @@ export default function ImageEditModal({
                   </div>
                   {/* Size badge */}
                   <div
-                    className="absolute -top-7 left-0 px-1.5 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono"
+                    className="absolute -top-7 left-0 px-1.5 py-0.5 rounded bg-black/70 text-white text-xs font-mono"
                     dir="ltr"
                   >
                     {Math.round(crop.w)}×{Math.round(crop.h)}
@@ -545,7 +547,7 @@ export default function ImageEditModal({
                 <Maximize size={12} /> {t.fullImage}
               </button>
             </div>
-            <p className={`text-[10px] mt-2 ${theme.textMuted}`}>
+            <p className={`text-xs mt-2 ${theme.textMuted}`}>
               {t.cropHint}
             </p>
           </div>

@@ -1,0 +1,46 @@
+// app/tools/(presentation)/html-to-pptx/HtmlToPptx.tsx
+"use client";
+import dynamic from "next/dynamic";
+
+import Link from "@/components/LocalizedLink";
+import { ArrowRight, Presentation } from "lucide-react";
+
+import { useThemeColors } from "@/hooks/useThemeColors";
+const HtmlToPptxTool = dynamic(() => import("@/components/tools/presentation/html-to-pptx/HtmlToPptx"));
+import { useHtmlToPptxPageContent } from "./content";
+import { useLanguage } from "@/context/LanguageContext";
+
+export default function HtmlToPptxClient() {
+  const theme = useThemeColors();
+  const { locale } = useLanguage();
+  const page = useHtmlToPptxPageContent();
+
+  return (
+    <div className={`min-h-screen flex flex-col ${theme.bg}`}>
+      <div className="max-w-5xl mx-auto px-6 pt-10 w-full">
+        <Link
+          href="/"
+          className={`inline-flex items-center text-sm font-medium mb-6 hover:opacity-70 transition-opacity ${theme.textMuted}`}
+        >
+          <ArrowRight size={16} className="ml-1" />
+          {locale === "fa" ? "بازگشت به خانه" : "Back to home"}
+        </Link>
+
+        <div className="flex items-center gap-4 mb-2">
+          <div className={`p-3 rounded-xl ${theme.primary}`}>
+            <Presentation size={24} className="text-white" />
+          </div>
+          <h1 className={`text-3xl font-bold ${theme.text}`}>{page.title}</h1>
+        </div>
+
+        <p className={`max-w-2xl leading-relaxed mb-8 ${theme.textMuted}`}>
+          {page.description}
+        </p>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 pb-20 w-full flex-1">
+        <HtmlToPptxTool />
+      </div>
+    </div>
+  );
+}

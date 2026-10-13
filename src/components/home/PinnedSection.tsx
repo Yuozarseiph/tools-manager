@@ -2,7 +2,7 @@
 
 import { memo, useState } from "react";
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/components/LocalizedLink";
 import {
   Download,
   HelpCircle,
@@ -92,7 +92,7 @@ const PinnedCard = memo(function PinnedCard({
 
         <span
           className={`max-w-full truncate font-bold ${theme.text} ${
-            minimal ? "text-xs" : "text-[10px]"
+            minimal ? "text-xs" : "text-xs"
           }`}
         >
           {tool.title}
@@ -210,7 +210,7 @@ export const PinnedSection = memo(function PinnedSection({
                   {uiText.pinnedTitle}
                 </h2>
                 <span
-                  className={`rounded-full px-2 py-1 text-[10px] font-black ${theme.secondary} ${theme.accent}`}
+                  className={`rounded-full px-2 py-1 text-xs font-black ${theme.secondary} ${theme.accent}`}
                 >
                   {pinnedTools.length}
                 </span>

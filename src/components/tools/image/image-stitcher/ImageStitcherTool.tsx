@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -218,7 +219,7 @@ export default function ImageStitcherTool() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <input
+      <AccessibleInput
         ref={inputRef}
         type="file"
         accept="image/*"
@@ -255,7 +256,7 @@ export default function ImageStitcherTool() {
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.gap} — {gap}px
           </label>
-          <input
+          <AccessibleInput
             type="range"
             min={0}
             max={80}
@@ -269,7 +270,7 @@ export default function ImageStitcherTool() {
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.bg}
           </label>
-          <input
+          <AccessibleInput fieldLabel={t.bg}
             type="color"
             value={bg}
             onChange={(e) => setBg(e.target.value)}
@@ -283,7 +284,7 @@ export default function ImageStitcherTool() {
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.quality} — {Math.round(quality * 100)}%
           </label>
-          <input
+          <AccessibleInput
             type="range"
             min={0.4}
             max={1}
@@ -309,7 +310,7 @@ export default function ImageStitcherTool() {
         <UploadCloud size={32} className={theme.accent} />
         <span className={`font-bold ${theme.text}`}>{t.dropTitle}</span>
         <span className={`text-xs ${theme.textMuted}`}>{t.dropHint}</span>
-        <span className={`text-[11px] ${theme.textMuted}`}>
+        <span className={`text-xs ${theme.textMuted}`}>
           {items.length}/{MAX}
         </span>
       </button>
@@ -342,7 +343,7 @@ export default function ImageStitcherTool() {
                   {it.el.naturalWidth}×{it.el.naturalHeight}px
                 </p>
                 {it.crop && (
-                  <span className="text-[10px] text-[var(--app-success-text)] font-medium">
+                  <span className="text-xs text-[var(--app-success-text)] font-medium">
                     {t.cropped}
                   </span>
                 )}
@@ -411,7 +412,7 @@ export default function ImageStitcherTool() {
         <div className="mt-8">
           <div className="flex items-center justify-between mb-3">
             <h3 className={`font-bold ${theme.text}`}>{t.resultTitle}</h3>
-            <button
+            <button data-testid="download-result"
               onClick={doDownload}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}
             >
@@ -422,7 +423,7 @@ export default function ImageStitcherTool() {
             className={`max-h-[70vh] overflow-auto rounded-xl border ${theme.border}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={resultUrl} alt="result" className="w-full h-auto block" />
+            <AccessiblePreview purpose="output" src={resultUrl} alt="result" className="w-full h-auto block" />
           </div>
         </div>
       )}
@@ -472,7 +473,7 @@ function IconBtn({
   theme: any;
 }) {
   return (
-    <button
+    <button aria-label={title}
       onClick={onClick}
       disabled={disabled}
       title={title}

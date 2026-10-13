@@ -1,5 +1,6 @@
 // components/tools/excel/excel-viewer/ExcelViewerTool.tsx
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent, useRef } from "react";
 import * as XLSX from "xlsx";
@@ -185,10 +186,10 @@ export default function ExcelViewerTool() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
             {rows.length === 0 ? (
-              <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-bold rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 whitespace-nowrap">
+              <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-bold rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 whitespace-nowrap">
                 <UploadCloud size={20} />
                 <span>{content.ui.upload.buttonInitial}</span>
-                <input
+                <AccessibleInput hasVisibleLabel
                   type="file"
                   accept=".xlsx, .xls, .csv"
                   className="hidden"
@@ -198,7 +199,7 @@ export default function ExcelViewerTool() {
             ) : (
               <>
                 <div className="flex items-center gap-1 bg-white dark:bg-white/5 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <button
+                  <button aria-label={content.ui.toolbar.zoomOutTitle}
                     onClick={() => setZoomLevel((z) => Math.max(50, z - 10))}
                     className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-md transition-colors"
                     title={content.ui.toolbar.zoomOutTitle}
@@ -208,7 +209,7 @@ export default function ExcelViewerTool() {
                   <span className="text-xs font-mono w-10 text-center">
                     {zoomLevel}%
                   </span>
-                  <button
+                  <button aria-label={content.ui.toolbar.zoomInTitle}
                     onClick={() => setZoomLevel((z) => Math.min(200, z + 10))}
                     className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-md transition-colors"
                     title={content.ui.toolbar.zoomInTitle}
@@ -217,7 +218,7 @@ export default function ExcelViewerTool() {
                   </button>
                 </div>
 
-                <button
+                <button aria-label={content.ui.toolbar.fullscreenTitle}
                   onClick={toggleFullscreen}
                   className={`p-2 rounded-lg border hover:bg-white dark:hover:bg-white/10 transition-colors ${theme.border} ${theme.text}`}
                   title={content.ui.toolbar.fullscreenTitle}
@@ -233,14 +234,14 @@ export default function ExcelViewerTool() {
                   className={`h-6 w-px mx-1 ${theme.border} bg-gray-300 dark:bg-gray-700`}
                 />
 
-                <button
+                <button aria-label={content.ui.toolbar.csvTitle}
                   onClick={downloadCSV}
                   className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-success-bg)] dark:hover:bg-[var(--app-success-bg)] transition-colors text-[var(--app-success-text)] border-[var(--app-success-border)]"
                   title={content.ui.toolbar.csvTitle}
                 >
                   <FileText size={16} /> CSV
                 </button>
-                <button
+                <button aria-label={content.ui.toolbar.jsonTitle}
                   onClick={downloadJSON}
                   className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-warning-bg)] dark:hover:bg-[var(--app-warning-bg)] transition-colors text-[var(--app-warning-text)] border-[var(--app-warning-border)]"
                   title={content.ui.toolbar.jsonTitle}
@@ -248,7 +249,7 @@ export default function ExcelViewerTool() {
                   <FileJson size={16} /> JSON
                 </button>
 
-                <button
+                <button aria-label={content.ui.toolbar.closeTitle}
                   onClick={handleReset}
                   className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] dark:hover:bg-[var(--app-error-bg)] rounded-lg transition-colors ml-auto md:ml-0"
                   title={content.ui.toolbar.closeTitle}
@@ -265,7 +266,7 @@ export default function ExcelViewerTool() {
                 size={16}
                 className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme.textMuted} group-focus-within:text-[var(--app-accent)] transition-colors`}
               />
-              <input
+              <AccessibleInput
                 type="text"
                 placeholder={content.ui.search.placeholder}
                 value={searchQuery}
@@ -290,7 +291,7 @@ export default function ExcelViewerTool() {
                 className={`text-xs px-3 py-1 rounded-md whitespace-nowrap transition-all font-medium border ${
                   activeSheet === name
                     ? "bg-[var(--app-primary-bg)] border-[var(--app-primary-bg)] text-white"
-                    : `${theme.secondary} border-transparent ${theme.text} hover:bg-black/5 dark:hover:bg白/10 opacity-70 hover:opacity-100`
+                    : `${theme.secondary} border-transparent ${theme.text} hover:bg-black/5 dark:hover:bg白/10 opacity-100 hover:opacity-100`
                 }`}
               >
                 {name}
@@ -313,7 +314,7 @@ export default function ExcelViewerTool() {
                   className={`sticky top-0 z-10 shadow-sm ${theme.secondary} ${theme.text}`}
                 >
                   <tr>
-                    <th className="p-3 font-bold border-b w-12 text-center opacity-50 text-[0.8em]">
+                    <th className="p-3 font-bold border-b w-12 text-center opacity-100 text-[0.8em]">
                       #
                     </th>
                     {headers.map((header) => (
@@ -379,7 +380,7 @@ export default function ExcelViewerTool() {
               {content.ui.empty.title}
             </h4>
             <p
-              className={`text-sm max-w-md leading-relaxed opacity-70 ${theme.textMuted}`}
+              className={`text-sm max-w-md leading-relaxed opacity-100 ${theme.textMuted}`}
             >
               {content.ui.empty.description}
             </p>

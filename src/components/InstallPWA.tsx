@@ -63,7 +63,7 @@ export default function InstallPWA() {
   const helper = content.install.helper;
 
   return (
-    <button
+    <button data-testid="download-result"
       onClick={handleInstallClick}
       className={`
         fixed z-40

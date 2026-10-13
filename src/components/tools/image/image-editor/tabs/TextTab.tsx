@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -546,9 +547,9 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
               + متن
             </button>
 
-            <label className="px-2 py-1 rounded-lg text-xs bg-slate-800 text-slate-100 hover:bg-slate-700 cursor-pointer">
+            <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="px-2 py-1 rounded-lg text-xs bg-slate-800 text-slate-100 hover:bg-slate-700 cursor-pointer">
               + تصویر
-              <input
+              <AccessibleInput hasVisibleLabel
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,image/avif"
                 multiple
@@ -577,7 +578,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                 <span className="truncate text-xs">
                   {isTextObject(o) ? o.text || "(متن خالی)" : `🖼 ${o.name}`}
                 </span>
-                <span className="text-[10px] opacity-70">
+                <span className="text-xs opacity-70">
                   {Math.round(o.x)}, {Math.round(o.y)}
                 </span>
               </button>
@@ -614,7 +615,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
         {/* آپلود فونت دلخواه */}
         <div className="space-y-1 text-xs pt-1 border-t border-slate-700/50 mt-2">
           <label className={theme.textMuted}>فونت دلخواه (TTF/OTF/WOFF)</label>
-          <input
+          <AccessibleInput fieldLabel="فونت دلخواه (TTF/OTF/WOFF)"
             type="file"
             accept=".ttf,.otf,.woff,.woff2"
             onChange={handleFontUpload}
@@ -627,7 +628,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
             {/* Scale مشترک */}
             <div className="text-xs pt-2 border-t border-slate-700/50 mt-2">
               <label className={theme.textMuted}>مقیاس (Scale)</label>
-              <input
+              <AccessibleInput fieldLabel="مقیاس (Scale)"
                 type="range"
                 min={10}
                 max={300}
@@ -648,7 +649,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                   <label className={theme.textMuted}>
                     {content.ui.textTab.content}
                   </label>
-                  <textarea
+                  <AccessibleTextarea fieldLabel={content.ui.textTab.content}
                     value={selected.text}
                     onChange={(e) =>
                       updateSelected((prev) =>
@@ -668,7 +669,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.fontFamily}
                     </label>
-                    <select
+                    <AccessibleSelect fieldLabel={content.ui.textTab.fontFamily}
                       value={selected.fontFamily}
                       onChange={(e) =>
                         updateSelected((prev) =>
@@ -684,13 +685,13 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                           {font}
                         </option>
                       ))}
-                    </select>
+                    </AccessibleSelect>
                   </div>
                   <div>
                     <label className={theme.textMuted}>
                       {content.ui.textTab.fontSize}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.fontSize}
                       type="number"
                       min={8}
                       max={300}
@@ -715,7 +716,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.fontWeight}
                     </label>
-                    <select
+                    <AccessibleSelect fieldLabel={content.ui.textTab.fontWeight}
                       value={selected.fontWeight}
                       onChange={(e) =>
                         updateSelected((prev) =>
@@ -734,7 +735,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                       <option value="600">600</option>
                       <option value="700">700</option>
                       <option value="900">900</option>
-                    </select>
+                    </AccessibleSelect>
                   </div>
                 </div>
 
@@ -744,7 +745,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.color}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.color}
                       type="color"
                       value={selected.color}
                       onChange={(e) =>
@@ -761,7 +762,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.strokeColor}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.strokeColor}
                       type="color"
                       value={selected.strokeColor}
                       onChange={(e) =>
@@ -779,7 +780,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                   <label className={theme.textMuted}>
                     {content.ui.textTab.strokeWidth}
                   </label>
-                  <input
+                  <AccessibleInput fieldLabel={content.ui.textTab.strokeWidth}
                     type="range"
                     min={0}
                     max={20}
@@ -804,7 +805,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.shadowColor}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.shadowColor}
                       type="color"
                       value={selected.shadowColor}
                       onChange={(e) =>
@@ -821,7 +822,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.shadowBlur}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.shadowBlur}
                       type="range"
                       min={0}
                       max={40}
@@ -846,7 +847,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.shadowOffsetX}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.shadowOffsetX}
                       type="range"
                       min={-50}
                       max={50}
@@ -868,7 +869,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                     <label className={theme.textMuted}>
                       {content.ui.textTab.shadowOffsetY}
                     </label>
-                    <input
+                    <AccessibleInput fieldLabel={content.ui.textTab.shadowOffsetY}
                       type="range"
                       min={-50}
                       max={50}

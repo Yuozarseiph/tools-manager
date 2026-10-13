@@ -1,4 +1,6 @@
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -193,7 +195,7 @@ export default function ExpenseManager() {
             </button>
           </div>
 
-          <input
+          <AccessibleInput numeric
             type="number"
             placeholder={content.common.amount}
             value={formData.amount}
@@ -203,7 +205,7 @@ export default function ExpenseManager() {
             className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
           />
 
-          <select
+          <AccessibleSelect
             value={formData.category}
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
@@ -218,9 +220,9 @@ export default function ExpenseManager() {
                 </option>
               )
             )}
-          </select>
+          </AccessibleSelect>
 
-          <input
+          <AccessibleInput
             type="text"
             placeholder={content.common.description}
             value={formData.description}
@@ -230,7 +232,7 @@ export default function ExpenseManager() {
             className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
           />
 
-          <input
+          <AccessibleInput
             type="date"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
@@ -321,12 +323,12 @@ export default function ExpenseManager() {
                   </p>
                   <p className={`text-xs ${theme.textMuted}`}>{t.date}</p>
                 </div>
-                <button
+                <AccessibleButton purpose="delete"
                   onClick={() => deleteTransaction(t.id)}
                   className="p-2 hover:bg-[var(--app-error-bg)] rounded-lg transition-colors"
                 >
                   <Trash2 size={18} className="text-[var(--app-error-text)]" />
-                </button>
+                </AccessibleButton>
               </div>
             ))
           )}

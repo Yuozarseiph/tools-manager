@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -124,7 +125,10 @@ export default function EquationSolver() {
               degree === 2 ? "x²" : "x"
             )}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.equation.labels.coefficientA.replace(
+              "{var}",
+              degree === 2 ? "x²" : "x"
+            )}
             type="number"
             value={a}
             onChange={(e) => setA(e.target.value)}
@@ -141,7 +145,12 @@ export default function EquationSolver() {
                 : content.equation.labels.constant
             )}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.equation.labels.coefficientB.replace(
+              "{type}",
+              degree === 2
+                ? content.equation.labels.coefficientX
+                : content.equation.labels.constant
+            )}
             type="number"
             value={b}
             onChange={(e) => setB(e.target.value)}
@@ -154,7 +163,7 @@ export default function EquationSolver() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {content.equation.labels.coefficientC}
             </label>
-            <input
+            <AccessibleInput numeric fieldLabel={content.equation.labels.coefficientC}
               type="number"
               value={c}
               onChange={(e) => setC(e.target.value)}
@@ -173,7 +182,7 @@ export default function EquationSolver() {
       </button>
 
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <p className={`text-sm ${theme.textMuted} mb-2`}>
             {content.common.result}:
           </p>

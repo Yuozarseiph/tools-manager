@@ -1,5 +1,8 @@
 // components/tools/pdf/pdf-merge/PdfMerger.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -121,7 +124,7 @@ export default function PdfMerger() {
     <div
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
-      <div
+      <AccessibleDropzone
         {...getRootProps()}
         className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
         ${
@@ -130,9 +133,9 @@ export default function PdfMerger() {
             : `${theme.border} hover:border-[var(--app-accent)]`
         }
         ${theme.bg}
-        ${isProcessing ? "opacity-60 pointer-events-none" : ""}`}
+        ${isProcessing ? "opacity-100 pointer-events-none" : ""}`}
       >
-        <input {...getInputProps()} />
+        <AccessibleInput {...getInputProps()} />
         <div className="flex flex-col items-center gap-4">
           <div className={`p-4 rounded-full ${theme.secondary}`}>
             <FileUp size={32} className={theme.accent} />
@@ -151,9 +154,9 @@ export default function PdfMerger() {
             </p>
           </div>
         </div>
-      </div>
+      </AccessibleDropzone>
 
-      {error && <div className="mt-4 text-sm text-[var(--app-error-text)]">{error}</div>}
+      {error && <div role="alert" className="mt-4 text-sm text-[var(--app-error-text)]">{error}</div>}
 
       <AnimatePresence>
         {files.length > 0 && (
@@ -201,13 +204,13 @@ export default function PdfMerger() {
                     </div>
                   </div>
 
-                  <button
+                  <AccessibleButton purpose="delete"
                     onClick={() => handleRemoveFile(idx)}
                     disabled={isProcessing}
-                    className="p-2 text-zinc-400 hover:text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors disabled:opacity-40"
+                    className="p-2 text-[var(--app-text-muted)] hover:text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors disabled:opacity-40"
                   >
                     <Trash2 size={18} />
-                  </button>
+                  </AccessibleButton>
                 </motion.div>
               ))}
             </div>
@@ -231,13 +234,13 @@ export default function PdfMerger() {
           </button>
         )}
 
-        <button
+        <button data-testid="download-result"
           onClick={handleMerge}
           disabled={files.length < 2 || isProcessing}
           className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98]
           ${
             files.length < 2
-              ? "bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-800"
+              ? "bg-zinc-300 text-[var(--app-text-muted)] cursor-not-allowed dark:bg-zinc-800"
               : theme.primary
           }`}
         >

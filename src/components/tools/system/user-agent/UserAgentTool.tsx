@@ -216,7 +216,7 @@ export default function UserAgentTool() {
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
               copied
                 ? "bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
-                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-zinc-800"
+                : "bg-zinc-100 dark:bg-zinc-800 text-[var(--app-text-muted)] hover:text-zinc-800"
             }`}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -357,7 +357,7 @@ function InfoCard({
       <div className={`p-4 rounded-2xl ${bgColor} ${color} mb-1`}>
         <Icon size={32} />
       </div>
-      <h4 className={`text-xs font-bold opacity-60 ${theme.textMuted}`}>
+      <h4 className={`text-xs font-bold opacity-100 ${theme.textMuted}`}>
         {title}
       </h4>
       <div className={`text-xl font-black ${theme.text}`}>{value}</div>

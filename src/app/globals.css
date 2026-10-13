@@ -4,6 +4,35 @@
 /* فعال‌سازی dark mode با کلاس (برای تعویض دستی) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--app-accent);
+  outline-offset: 3px;
+}
+.skip-link {
+  position: fixed; inset-inline-start: 1rem; top: -5rem; z-index: 1000;
+  padding: .75rem 1rem; border-radius: .75rem;
+  background: var(--app-card); color: var(--app-text);
+}
+.skip-link:focus { top: 1rem; }
+.seo-guide { color: var(--app-text); line-height: 1.9; }
+.seo-guide a { text-decoration: underline; text-underline-offset: .2em; }
+button[aria-label] { min-width: 44px; min-height: 44px; }
+input::placeholder, textarea::placeholder {
+  color: var(--app-text-muted); opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="hover:scale"]:hover, [class*="hover:-translate"]:hover {
+    scale: none !important;
+    translate: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* ۱. متغیرهای CSS مخصوص تم روشن (پیش‌فرض)                            */
 /* ------------------------------------------------------------------ */
@@ -11,7 +40,7 @@
   --app-bg: #f7f5f1;                 /* warm off-white, tinted by sand */
   --app-card: rgba(255, 255, 255, 0.85);
   --app-text: #00203d;              /* deep navy text */
-  --app-text-muted: #5b6b7a;         /* muted slate-navy */
+  --app-text-muted: #4a5967;         /* readable on the tinted header background */
   --app-border: #e4ddd0;            /* soft sand border */
   --app-accent: #003260;            /* brand navy */
   --app-accent-hover: #002448;      /* darker navy */
@@ -145,6 +174,7 @@ html::-webkit-scrollbar-thumb:hover {
 }
 
 .tool-layout-shell label:has(input[type="file"]) {
+  color: var(--app-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,6 +186,8 @@ html::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
+
+.tool-layout-shell label:has(input[type="file"]) :is(span, p) { color: inherit; }
 
 .tool-layout-shell label:has(input[type="file"]):hover {
   border-color: var(--app-accent);

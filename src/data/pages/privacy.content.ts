@@ -6,7 +6,7 @@ export const privacyContent = {
     hero: {
       title: "سیاست حفظ حریم خصوصی",
       lead: "در کد فورج (QodeForge)، حفاظت از حریم خصوصی شما یک قابلیت اضافی نیست؛ بلکه اصل بنیادین طراحی این پلتفرم است. ما متعهد به شفافیت کامل در نحوه برخورد با داده‌ها هستیم.",
-      lastUpdated: "آخرین بروزرسانی: ۱۲ آذر ۱۴۰۴",
+      lastUpdated: "آخرین بروزرسانی: ۲۱ مهر ۱۴۰۵",
     },
     principle1: {
       title: "اصل شماره یک: پردازش محلی و بدون سرور",
@@ -14,15 +14,15 @@ export const privacyContent = {
         "کد فورج هیچ سرور بک‌اند (Back-end) برای پردازش، ذخیره یا تحلیل فایل‌های کاربران ندارد. برخلاف بسیاری از سرویس‌های آنلاین که اطلاعات کاربران را به سرورهای خود منتقل می‌کنند، در اینجا:",
       points: {
         noUpload: "فایل‌های شما هرگز آپلود نمی‌شوند",
-        noLeaveDevice: "هیچ داده‌ای از دستگاه شما خارج نمی‌شود",
-        allInBrowser: "تمام پردازش‌ها ۱۰۰٪ در مرورگر شماست",
+        noLeaveDevice: "استثناهای شبکه: بررسی IP، دریافت فایل از URL، بارگذاری مدل‌ها و فرم تماس",
+        allInBrowser: "پردازش فایل‌های انتخاب‌شده در مرورگر انجام می‌شود",
         onlyCpuRam: "فقط از CPU و RAM شما استفاده می‌شود",
       },
     },
     noData: {
       files: {
         title: "هیچ فایلی ذخیره نمی‌شود",
-        body: "فایل‌های شما (PDF، تصویر، متن و...) تنها به‌صورت موقت در حافظه رم (RAM) مرورگر پردازش شده و بلافاصله پس از پایان عملیات، از حافظه پاک می‌شوند. هیچ نسخه‌ای ذخیره، آرشیو یا منتقل نمی‌گردد.",
+        body: "QodeForge فایل‌های انتخاب‌شده برای پردازش محلی را روی سرور خود ذخیره نمی‌کند. فایل‌ها تا زمان نیاز در حافظه مرورگر باقی می‌مانند؛ زمان آزادسازی حافظه را مرورگر تعیین می‌کند. فایل‌های ویرایشگر کد و تراکنش‌های مدیریت هزینه در Local Storage ذخیره می‌شوند و با پاک‌سازی داده‌های مرورگر قابل حذف‌اند.",
       },
       account: {
         title: "هیچ حساب کاربری وجود ندارد",
@@ -32,17 +32,17 @@ export const privacyContent = {
           noEmail: "ایمیل درخواست نمی‌شود",
           noPassword: "رمز عبور وجود ندارد",
         },
-        anonymous: "شما کاملاً ناشناس هستید.",
+        anonymous: "برای ابزارهای محلی حساب کاربری لازم نیست. میزبان سایت و سرویس‌های خارجی می‌توانند IP درخواست‌های شبکه را دریافت کنند.",
       },
     },
     cookies: {
       title: "کوکی‌ها و Local Storage",
       noTrackingTitle: "عدم استفاده از کوکی‌های ردیاب",
       noTrackingBody:
-        "ما از کوکی‌ها برای رهگیری کاربران، تحلیل رفتار، پروفایل‌سازی یا تبلیغات استفاده نمی‌کنیم.",
+        "کد برنامه برای ابزارهای محلی کوکی ردیابی تنظیم نمی‌کند. بررسی IP از سرویس‌های خارجی استفاده می‌کند؛ فرم تماس پیام و اطلاعات واردشده را از طریق EmailJS ارسال می‌کند. این سرویس‌ها سیاست حریم خصوصی خود را دارند.",
       localTitle: "استفاده محدود از Local Storage",
       localIntro:
-        "داده‌های محدودی برای تنظیمات ظاهری، زبان و ابزارهای انتخابی در مرورگر ذخیره می‌شوند:",
+        "تنظیمات ظاهری، زبان، پین‌ها، فایل‌های ویرایشگر کد و تراکنش‌های مدیریت هزینه در مرورگر ذخیره می‌شوند:",
       themeTitle: "انتخاب تم (Theme)",
       themeBody:
         "برای حفظ تجربه کاربری بهتر، تم، زبان و تنظیمات ابزارهای انتخابی شما در حافظه مرورگر ذخیره می‌شوند تا در مراجعه‌های بعدی همان تجربه نمایش داده شود. این داده‌ها اطلاعات شخصی نیستند و به هیچ سروری ارسال نمی‌شوند.",
@@ -74,7 +74,7 @@ export const privacyContent = {
     hero: {
       title: "Privacy policy",
       lead: "At QodeForge, privacy is not an optional feature; it is a core design principle. We are fully committed to being transparent about how we handle data.",
-      lastUpdated: "Last updated: Dec 2, 2025",
+      lastUpdated: "Last updated: October 13, 2026",
     },
     principle1: {
       title: "Principle #1: Local, serverless processing",
@@ -82,15 +82,15 @@ export const privacyContent = {
         "QodeForge has no backend servers for processing, storing or analyzing user files. Unlike many online services that send your data to their servers, here:",
       points: {
         noUpload: "Your files are never uploaded",
-        noLeaveDevice: "No data leaves your device",
-        allInBrowser: "All processing happens 100% in your browser",
+        noLeaveDevice: "Network exceptions: IP lookup, URL imports, model downloads and the contact form",
+        allInBrowser: "Selected files are processed in your browser",
         onlyCpuRam: "Only your CPU and RAM are used",
       },
     },
     noData: {
       files: {
         title: "No files are stored",
-        body: "Your files (PDFs, images, text, etc.) are processed temporarily in browser memory (RAM) and cleared immediately after the operation finishes. No copies are stored, archived or transferred.",
+        body: "QodeForge does not store files selected for local processing on its server. Files remain in browser memory while needed; the browser controls memory cleanup. Code editor files and expense-manager transactions are saved in local storage and can be deleted by clearing browser data.",
       },
       account: {
         title: "No user accounts",
@@ -100,17 +100,17 @@ export const privacyContent = {
           noEmail: "No email requested",
           noPassword: "No passwords",
         },
-        anonymous: "You remain completely anonymous.",
+        anonymous: "Local tools do not require an account. The site host and external services can receive the IP address of network requests.",
       },
     },
     cookies: {
       title: "Cookies and local storage",
       noTrackingTitle: "No tracking cookies",
       noTrackingBody:
-        "We do not use cookies to track users, analyze behavior, build profiles or serve ads.",
+        "The application code does not set tracking cookies for local tools. IP lookup uses external services; the contact form sends the entered message and contact details through EmailJS. Those services have their own privacy policies.",
       localTitle: "Limited use of local storage",
       localIntro:
-        "A small amount of data is stored locally for appearance, language and selected-tool preferences:",
+        "Appearance, language, pins, code editor files and expense-manager transactions are stored locally in the browser:",
       themeTitle: "Theme selection",
       themeBody:
         "To provide a better experience, your selected theme, language and tool preferences are stored in the browser so the same experience is used next time. This is not personal data and is never sent to any server.",

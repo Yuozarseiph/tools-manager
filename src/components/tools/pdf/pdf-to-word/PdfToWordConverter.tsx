@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -179,7 +180,7 @@ export default function PdfToWordConverter() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <input
+      <AccessibleInput
         ref={inputRef}
         type="file"
         accept="application/pdf,.pdf"
@@ -249,7 +250,7 @@ export default function PdfToWordConverter() {
             </button>
           ))}
         </div>
-        <p className={`text-[10px] mt-1.5 ${theme.textMuted}`}>
+        <p className={`text-xs mt-1.5 ${theme.textMuted}`}>
           {quality === "fast"
             ? t.controls.qualityFastHint
             : quality === "balanced"
@@ -263,7 +264,7 @@ export default function PdfToWordConverter() {
           <label className={`block text-xs font-bold mb-2 ${theme.textMuted}`}>
             {t.controls.pageRange}
           </label>
-          <input
+          <AccessibleInput fieldLabel={t.controls.pageRange}
             value={pageRange}
             onChange={(e) => {
               setPageRange(e.target.value);
@@ -274,7 +275,7 @@ export default function PdfToWordConverter() {
             placeholder={t.controls.pageRangePlaceholder}
             className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none disabled:opacity-50 ${theme.border} ${theme.bg} ${theme.text}`}
           />
-          <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+          <p className={`text-xs mt-1 ${theme.textMuted}`}>
             {t.controls.pageRangeHint}
           </p>
         </div>
@@ -286,6 +287,8 @@ export default function PdfToWordConverter() {
           <button
             type="button"
             disabled={busy || mode === "layout"}
+            aria-label={t.controls.includeImages}
+            aria-pressed={includeImages}
             onClick={() => {
               setIncludeImages((value) => !value);
               resetResult();
@@ -304,7 +307,7 @@ export default function PdfToWordConverter() {
               />
             </span>
           </button>
-          <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+          <p className={`text-xs mt-1 ${theme.textMuted}`}>
             {t.controls.includeImagesHint}
           </p>
         </div>
@@ -348,7 +351,7 @@ export default function PdfToWordConverter() {
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label={t.file.remove}
               type="button"
               disabled={busy}
               onClick={resetAll}
@@ -362,7 +365,7 @@ export default function PdfToWordConverter() {
       )}
 
       {error && (
-        <div className="mt-4 p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
+        <div role="alert" className="mt-4 p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
           <AlertCircle className="text-[var(--app-error-text)] shrink-0 mt-0.5" size={19} />
           <p className="text-sm text-[var(--app-error-text)]">{error}</p>
         </div>
@@ -389,7 +392,7 @@ export default function PdfToWordConverter() {
 
       {file && !result && (
         <div className="mt-4 flex gap-3">
-          <button
+          <button data-testid="download-result"
             type="button"
             onClick={convert}
             disabled={busy || inspecting}
@@ -420,19 +423,19 @@ export default function PdfToWordConverter() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center mb-4">
             <div className={`rounded-xl border p-3 ${theme.border} ${theme.bg}`}>
               <div className={`font-bold ${theme.text}`}>{result.convertedPages}</div>
-              <div className={`text-[10px] mt-1 ${theme.textMuted}`}>{t.result.convertedPages}</div>
+              <div className={`text-xs mt-1 ${theme.textMuted}`}>{t.result.convertedPages}</div>
             </div>
             <div className={`rounded-xl border p-3 ${theme.border} ${theme.bg}`}>
               <div className={`font-bold ${theme.text}`}>{result.textCharacters.toLocaleString()}</div>
-              <div className={`text-[10px] mt-1 ${theme.textMuted}`}>{t.result.textCharacters}</div>
+              <div className={`text-xs mt-1 ${theme.textMuted}`}>{t.result.textCharacters}</div>
             </div>
             <div className={`rounded-xl border p-3 ${theme.border} ${theme.bg}`}>
               <div className={`font-bold ${theme.text}`}>{result.embeddedImages}</div>
-              <div className={`text-[10px] mt-1 ${theme.textMuted}`}>{t.result.images}</div>
+              <div className={`text-xs mt-1 ${theme.textMuted}`}>{t.result.images}</div>
             </div>
             <div className={`rounded-xl border p-3 ${theme.border} ${theme.bg}`}>
               <div className={`font-bold ${theme.text}`}>{result.imageFallbackPages}</div>
-              <div className={`text-[10px] mt-1 ${theme.textMuted}`}>{t.result.fallbackPages}</div>
+              <div className={`text-xs mt-1 ${theme.textMuted}`}>{t.result.fallbackPages}</div>
             </div>
           </div>
 
@@ -443,7 +446,7 @@ export default function PdfToWordConverter() {
           )}
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button
+            <button data-testid="download-result"
               type="button"
               onClick={handleDownload}
               className={`flex-1 px-5 py-3 rounded-xl font-bold inline-flex items-center justify-center gap-2 ${theme.primary}`}

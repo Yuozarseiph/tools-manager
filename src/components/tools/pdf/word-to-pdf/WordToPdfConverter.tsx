@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -385,7 +386,7 @@ export default function WordToPdfConverter() {
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <input
+              <AccessibleInput
                 type="file"
                 accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileSelect}
@@ -425,7 +426,7 @@ export default function WordToPdfConverter() {
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label={content.ui.file.removeTitle}
                   onClick={resetAll}
                   disabled={isConverting}
                   className="text-[var(--app-error-text)] hover:opacity-80 p-2 disabled:opacity-50"
@@ -437,7 +438,7 @@ export default function WordToPdfConverter() {
             )}
 
             {error && (
-              <div className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
+              <div role="alert" className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
                 <AlertCircle
                   size={20}
                   className="text-[var(--app-error-text)] flex-shrink-0 mt-0.5"
@@ -471,7 +472,7 @@ export default function WordToPdfConverter() {
             {selectedFile && (
               <div className="space-y-3">
                 {progressStep !== "success" && (
-                  <button
+                  <button data-testid="download-result"
                     onClick={convertToPdf}
                     disabled={isConverting || !isPreviewReady}
                     className={`w-full px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -485,7 +486,7 @@ export default function WordToPdfConverter() {
 
                 {pdfBlobUrl && progressStep === "success" && (
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <button
+                    <button data-testid="download-result"
                       onClick={handleManualDownload}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${theme.primary}`}
                     >

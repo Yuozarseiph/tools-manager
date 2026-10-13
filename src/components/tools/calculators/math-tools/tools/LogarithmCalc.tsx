@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -86,7 +87,7 @@ export default function LogarithmCalc() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.logarithm.labels.number}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.logarithm.labels.number}
             type="number"
             value={num}
             onChange={(e) => setNum(e.target.value)}
@@ -99,7 +100,7 @@ export default function LogarithmCalc() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {content.logarithm.labels.base}
             </label>
-            <input
+            <AccessibleInput numeric fieldLabel={content.logarithm.labels.base}
               type="number"
               value={base}
               onChange={(e) => setBase(e.target.value)}
@@ -131,7 +132,7 @@ export default function LogarithmCalc() {
       </button>
 
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <p className={`text-xl font-bold text-center ${theme.text}`}>
             {result}
           </p>

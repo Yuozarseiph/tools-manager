@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea, AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -60,7 +61,7 @@ export default function HTMLToText() {
           <Code2 size={16} />
           {content.htmlToText.htmlInput}
         </label>
-        <textarea
+        <AccessibleTextarea
           value={htmlInput}
           onChange={(e) => setHtmlInput(e.target.value)}
           rows={10}
@@ -72,7 +73,7 @@ export default function HTMLToText() {
       {/* Options */}
       <div className="flex flex-wrap gap-4">
         <label className="flex items-center gap-2 cursor-pointer">
-          <input
+          <AccessibleInput hasVisibleLabel
             type="checkbox"
             checked={removeLinks}
             onChange={(e) => setRemoveLinks(e.target.checked)}
@@ -81,7 +82,7 @@ export default function HTMLToText() {
           <span className={theme.text}>{content.htmlToText.removeLinks}</span>
         </label>
         <label className="flex items-center gap-2 cursor-pointer">
-          <input
+          <AccessibleInput hasVisibleLabel
             type="checkbox"
             checked={preserveFormatting}
             onChange={(e) => setPreserveFormatting(e.target.checked)}
@@ -121,7 +122,7 @@ export default function HTMLToText() {
               {copied ? content.common.copied : content.common.copy}
             </button>
           </div>
-          <textarea
+          <AccessibleTextarea
             value={textOutput}
             readOnly
             rows={10}

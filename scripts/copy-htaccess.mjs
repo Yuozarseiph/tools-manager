@@ -1,8 +1,8 @@
 import { access, copyFile } from "node:fs/promises";
-import { constants } from "node:fs";
+import { constants, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-const source = resolve(process.cwd(), ".htaccess");
+const source = resolve(process.cwd(), existsSync(".htaccess") ? ".htaccess" : "scripts/static-host.htaccess");
 const destination = resolve(process.cwd(), "out", ".htaccess");
 
 try {

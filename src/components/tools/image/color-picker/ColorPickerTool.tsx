@@ -1,5 +1,8 @@
 // components/tools/image/color-picker/ColorPickerTool.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessiblePreview, AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
@@ -373,11 +376,11 @@ export default function ColorPickerTool() {
           className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}
         >
           {!image ? (
-            <div
+            <AccessibleDropzone
               {...getRootProps()}
               className={`text-center cursor-pointer p-10 w-full h-full flex items-center justify-center transition-all duration-200 min-h-[400px] ${isDragActive ? "scale-95" : ""}`}
             >
-              <input {...getInputProps()} />
+              <AccessibleInput {...getInputProps()} />
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -393,10 +396,10 @@ export default function ColorPickerTool() {
                   {content.ui.upload.dropSubtitle}
                 </p>
               </motion.div>
-            </div>
+            </AccessibleDropzone>
           ) : (
             <div className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4">
-              <img
+              <AccessiblePreview purpose="input"
                 ref={imageRef}
                 src={image}
                 alt="Target"
@@ -451,12 +454,12 @@ export default function ColorPickerTool() {
           )}
 
           {image && (
-            <button
+            <AccessibleButton purpose="delete"
               onClick={resetImage}
               className={`absolute top-4 right-4 p-2 rounded-xl shadow-lg transition-all hover:scale-105 ${theme.card} border ${theme.border}`}
             >
               <Trash2 size={18} className="text-[var(--app-error-text)]" />
-            </button>
+            </AccessibleButton>
           )}
         </div>
 
@@ -509,14 +512,14 @@ export default function ColorPickerTool() {
                   <Palette size={18} /> {content.ui.palette.title}
                 </h3>
                 <div className="flex gap-2">
-                  <button
+                  <button aria-label={content.ui.palette.generateComplementaryTitle}
                     onClick={generateComplementary}
                     className={`p-2 rounded-lg transition hover:${theme.secondary}`}
                     title={content.ui.palette.generateComplementaryTitle}
                   >
                     <Shuffle size={16} className={theme.accent} />
                   </button>
-                  <button
+                  <button aria-label={content.ui.palette.downloadCssTitle} data-testid="download-result"
                     onClick={exportToCss}
                     className={`p-2 rounded-lg transition hover:${theme.secondary}`}
                     title={content.ui.palette.downloadCssTitle}
@@ -622,7 +625,7 @@ export default function ColorPickerTool() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}

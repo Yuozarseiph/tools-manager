@@ -1,5 +1,6 @@
 // components/tools/pdf/text-to-pdf/TextToPdfTool.tsx
 "use client";
+import { AccessibleSelect, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import {
@@ -115,7 +116,7 @@ export default function TextToPdfTool() {
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
             <Type size={18} className={theme.textMuted} />
-            <select
+            <AccessibleSelect
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
               className={`bg-transparent border rounded px-3 py-1.5 outline-none cursor-pointer ${theme.border} ${theme.text}`}
@@ -129,13 +130,13 @@ export default function TextToPdfTool() {
                   {size}pt
                 </option>
               ))}
-            </select>
+            </AccessibleSelect>
           </div>
 
           <div className={`w-px h-6 ${theme.border} border-r`} />
 
           <div className="flex items-center gap-1">
-            <button
+            <button aria-label={content.ui.toolbar.alignLeftTitle}
               onClick={() => setAlignment("left")}
               className={`p-2 rounded transition-all ${
                 alignment === "left"
@@ -146,7 +147,7 @@ export default function TextToPdfTool() {
             >
               <AlignLeft size={18} />
             </button>
-            <button
+            <button aria-label={content.ui.toolbar.alignCenterTitle}
               onClick={() => setAlignment("center")}
               className={`p-2 rounded transition-all ${
                 alignment === "center"
@@ -157,7 +158,7 @@ export default function TextToPdfTool() {
             >
               <AlignCenter size={18} />
             </button>
-            <button
+            <button aria-label={content.ui.toolbar.alignRightTitle}
               onClick={() => setAlignment("right")}
               className={`p-2 rounded transition-all ${
                 alignment === "right"
@@ -171,7 +172,7 @@ export default function TextToPdfTool() {
           </div>
         </div>
 
-        <button
+        <button data-testid="download-result"
           onClick={generatePdf}
           disabled={!text.trim() || isGenerating}
           className={`px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-all disabled:opacity-50 ${theme.primary}`}
@@ -190,7 +191,7 @@ export default function TextToPdfTool() {
       </div>
 
       <div className="relative">
-        <textarea
+        <AccessibleTextarea
           dir="auto"
           value={text}
           onChange={(e) => setText(e.target.value)}

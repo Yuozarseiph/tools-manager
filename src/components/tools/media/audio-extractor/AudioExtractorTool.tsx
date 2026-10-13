@@ -1,5 +1,7 @@
 // components/tools/media/audio-extractor/AudioExtractorTool.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
@@ -238,7 +240,7 @@ export default function AudioExtractorTool() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div
+            <AccessibleDropzone
               {...getRootProps()}
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
               ${
@@ -247,10 +249,10 @@ export default function AudioExtractorTool() {
                   : `${theme.border} hover:border-[var(--app-accent)]`
               }
               ${theme.bg}
-              ${!isFFmpegLoaded ? "opacity-50 pointer-events-none" : ""}
+              ${!isFFmpegLoaded ? "pointer-events-none" : ""}
               `}
             >
-              <input {...getInputProps()} />
+              <AccessibleInput {...getInputProps()} />
               <div className="flex flex-col items-center gap-4">
                 <div
                   className={`p-4 rounded-full ${
@@ -271,7 +273,7 @@ export default function AudioExtractorTool() {
                   </p>
                 </div>
               </div>
-            </div>
+            </AccessibleDropzone>
           </motion.div>
         ) : (
           <motion.div
@@ -319,7 +321,7 @@ export default function AudioExtractorTool() {
                   </div>
                 </div>
               </div>
-              <button
+              <button aria-label={content.ui.buttons.clear}
                 onClick={handleClear}
                 disabled={isProcessing}
                 className={`p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors disabled:opacity-50`}
@@ -349,7 +351,7 @@ export default function AudioExtractorTool() {
                       }`}
                   >
                     <div className="font-bold">{fmt.label}</div>
-                    <div className="text-xs opacity-70 mt-1">{fmt.desc}</div>
+                    <div className="text-xs mt-1">{fmt.desc}</div>
                   </button>
                 ))}
               </div>
@@ -387,7 +389,7 @@ export default function AudioExtractorTool() {
 
             {/* پیشرفت */}
             {isProcessing && (
-              <div className="space-y-3">
+              <div role="status" aria-live="polite" className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className={theme.text}>
                     {content.ui.status.processing}
@@ -420,7 +422,7 @@ export default function AudioExtractorTool() {
 
             {/* خطا */}
             {error && (
-              <div
+              <div role="alert"
                 className={`flex items-center gap-3 p-4 rounded-xl border ${theme.note.errorBorder} ${theme.note.errorBg}`}
               >
                 <XCircle className={theme.note.errorText} size={20} />
@@ -461,7 +463,7 @@ export default function AudioExtractorTool() {
                   )}
                 </button>
               ) : (
-                <button
+                <button data-testid="download-result"
                   onClick={handleDownload}
                   className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] ${theme.primary}`}
                 >

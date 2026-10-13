@@ -1,5 +1,6 @@
 // components/tools/presentation/html-to-pptx/HtmlToPptx.tsx
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import {
   useEffect,
@@ -816,10 +817,10 @@ export default function HtmlToPptxTool() {
             <Upload className="w-4 h-4" />
             <span>{content.ui.upload.title}</span>
           </label>
-          <p className={`text-[11px] sm:text-xs mb-2 ${theme.textMuted}`}>
+          <p className={`text-xs sm:text-xs mb-2 ${theme.textMuted}`}>
             {content.ui.upload.subtitle}
           </p>
-          <input
+          <AccessibleInput
             type="file"
             accept=".html,.htm,text/html"
             onChange={handleFileSelect}
@@ -833,7 +834,7 @@ export default function HtmlToPptxTool() {
             <FileText className="w-4 h-4" />
             <span>{content.ui.editor.title}</span>
           </label>
-          <textarea
+          <AccessibleTextarea
             value={htmlSource}
             onChange={(e) => setHtmlSource(e.target.value)}
             placeholder={content.ui.editor.placeholder}
@@ -841,7 +842,7 @@ export default function HtmlToPptxTool() {
             dir="ltr"
             spellCheck={false}
           />
-          <p className={`mt-1 text-[10px] sm:text-xs ${theme.textMuted}`}>
+          <p className={`mt-1 text-xs sm:text-xs ${theme.textMuted}`}>
             {content.ui.editor.hint}
           </p>
         </div>
@@ -891,7 +892,7 @@ export default function HtmlToPptxTool() {
             >
               📏 {content.ui.labels.fontSize}: {baseFontSize}pt
             </label>
-            <input
+            <AccessibleInput
               type="range"
               min="10"
               max="24"
@@ -906,7 +907,7 @@ export default function HtmlToPptxTool() {
             >
               ↕️ {content.ui.labels.lineSpacing}: {lineSpacing.toFixed(1)}
             </label>
-            <input
+            <AccessibleInput
               type="range"
               min="1"
               max="2.5"
@@ -925,7 +926,7 @@ export default function HtmlToPptxTool() {
           <div className="flex items-center gap-2">
             <Palette className="w-4 h-4" />
             <span className="text-xs">{content.ui.labels.primaryColor}</span>
-            <input
+            <AccessibleInput fieldLabel={content.ui.labels.primaryColor}
               type="color"
               value={
                 presetTheme === "custom"
@@ -938,7 +939,7 @@ export default function HtmlToPptxTool() {
               }}
               className="w-8 h-8 rounded-md border cursor-pointer bg-transparent"
             />
-            <span className="text-[10px] font-mono">
+            <span className="text-xs font-mono">
               {presetTheme === "custom"
                 ? customPrimary
                 : `#${activeTheme.primary}`}
@@ -947,7 +948,7 @@ export default function HtmlToPptxTool() {
           <div className="flex items-center gap-2">
             <Palette className="w-4 h-4" />
             <span className="text-xs">{content.ui.labels.accentColor}</span>
-            <input
+            <AccessibleInput fieldLabel={content.ui.labels.accentColor}
               type="color"
               value={
                 presetTheme === "custom"
@@ -960,7 +961,7 @@ export default function HtmlToPptxTool() {
               }}
               className="w-8 h-8 rounded-md border cursor-pointer bg-transparent"
             />
-            <span className="text-[10px] font-mono">
+            <span className="text-xs font-mono">
               {presetTheme === "custom"
                 ? customAccent
                 : `#${activeTheme.accent}`}
@@ -969,7 +970,7 @@ export default function HtmlToPptxTool() {
           <div className="flex items-center gap-2">
             <ImageIcon className="w-4 h-4" />
             <label className="flex items-center gap-1 text-xs cursor-pointer">
-              <input
+              <AccessibleInput hasVisibleLabel
                 type="checkbox"
                 checked={includeImages}
                 onChange={(e) => setIncludeImages(e.target.checked)}
@@ -988,7 +989,7 @@ export default function HtmlToPptxTool() {
             >
               {content.ui.filename.label}
             </label>
-            <input
+            <AccessibleInput fieldLabel={content.ui.filename.label}
               type="text"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
@@ -1001,7 +1002,7 @@ export default function HtmlToPptxTool() {
             >
               {content.ui.labels.footerText}
             </label>
-            <input
+            <AccessibleInput fieldLabel={content.ui.labels.footerText}
               type="text"
               value={footerText}
               onChange={(e) => setFooterText(e.target.value)}
@@ -1094,7 +1095,7 @@ export default function HtmlToPptxTool() {
                   <div className={`text-lg font-bold ${item.color}`}>
                     {item.value}
                   </div>
-                  <div className="text-[10px] text-gray-500">{item.label}</div>
+                  <div className="text-xs text-gray-500">{item.label}</div>
                 </div>
               ))}
             </div>
@@ -1103,7 +1104,7 @@ export default function HtmlToPptxTool() {
 
         {/* Error */}
         {error && (
-          <div className="mt-3 flex items-start gap-2 text-xs rounded-lg border px-3 py-2 bg-[var(--app-error-bg)] border-[var(--app-error-border)] text-[var(--app-error-text)]">
+          <div role="alert" className="mt-3 flex items-start gap-2 text-xs rounded-lg border px-3 py-2 bg-[var(--app-error-bg)] border-[var(--app-error-border)] text-[var(--app-error-text)]">
             <AlertCircle className="w-4 h-4 mt-[2px] flex-shrink-0" />
             <p>{error}</p>
           </div>
@@ -1120,7 +1121,7 @@ export default function HtmlToPptxTool() {
             </div>
             {progressMessage && (
               <p
-                className={`text-[11px] sm:text-xs flex items-center gap-1 ${theme.textMuted}`}
+                className={`text-xs sm:text-xs flex items-center gap-1 ${theme.textMuted}`}
               >
                 {progressStep === "success" && <span>🎉</span>}
                 {progressMessage}

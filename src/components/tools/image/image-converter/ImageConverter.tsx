@@ -1,5 +1,8 @@
 // components/tools/developer/image-converter/ImageConverter.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, type ChangeEvent } from "react";
 import { useDropzone } from "react-dropzone";
@@ -196,7 +199,7 @@ export default function ImageConverter() {
     >
       {/* آپلودر (دیوایس / درگ‌درآپ) */}
       {files.length === 0 ? (
-        <div
+        <AccessibleDropzone
           {...getRootProps()}
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
           ${
@@ -206,7 +209,7 @@ export default function ImageConverter() {
           }
           ${theme.bg}`}
         >
-          <input {...getInputProps()} />
+          <AccessibleInput {...getInputProps()} />
           <div className="flex flex-col items-center gap-4">
             <div className={`p-4 rounded-full ${theme.secondary}`}>
               <FileUp size={32} className={theme.accent} />
@@ -218,7 +221,7 @@ export default function ImageConverter() {
               {content.ui.upload.dropSubtitle}
             </p>
           </div>
-        </div>
+        </AccessibleDropzone>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -250,13 +253,13 @@ export default function ImageConverter() {
                     />
 
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <button
+                      <AccessibleButton purpose="delete"
                         onClick={() => removeFile(file.id)}
                         className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-full transition-transform hover:scale-110"
                         type="button"
                       >
                         <Trash2 size={20} />
-                      </button>
+                      </AccessibleButton>
                     </div>
                   </div>
 
@@ -270,13 +273,13 @@ export default function ImageConverter() {
                     </p>
                   </div>
 
-                  <button
+                  <AccessibleButton purpose="close"
                     onClick={() => removeFile(file.id)}
                     className="absolute top-2 left-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg md:hidden"
                     type="button"
                   >
                     <X size={14} />
-                  </button>
+                  </AccessibleButton>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -288,7 +291,7 @@ export default function ImageConverter() {
             type="button"
             className={`w-full py-3 rounded-xl border-2 border-dashed font-medium transition ${theme.border} ${theme.text} hover:border-[var(--app-accent)]`}
           >
-            <input {...getInputProps()} />
+            <AccessibleInput {...getInputProps()} />
             {content.ui.upload.addMore} ({files.length}/20{" "}
             {content.ui.upload.counterSuffix})
           </button>
@@ -316,7 +319,7 @@ export default function ImageConverter() {
                     }`}
                 >
                   <div className="font-bold">{fmt.label}</div>
-                  <div className="text-xs opacity-70 mt-1">{fmt.desc}</div>
+                  <div className="text-xs opacity-100 mt-1">{fmt.desc}</div>
                 </button>
               ))}
             </div>
@@ -335,7 +338,7 @@ export default function ImageConverter() {
                   {quality}%
                 </span>
               </div>
-              <input
+              <AccessibleInput
                 type="range"
                 min="10"
                 max="100"
@@ -343,7 +346,7 @@ export default function ImageConverter() {
                 onChange={(e) => setQuality(Number(e.target.value))}
                 className="w-full accent-[var(--app-accent)]"
               />
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex justify-between text-xs text-[var(--app-text-muted)]">
                 <span>{content.ui.quality.low}</span>
                 <span>{content.ui.quality.high}</span>
               </div>
@@ -352,7 +355,7 @@ export default function ImageConverter() {
 
           {/* دکمه‌های اکشن */}
           <div className="space-y-3">
-            <button
+            <button data-testid="download-result"
               onClick={handleConvert}
               disabled={isProcessing}
               type="button"
@@ -393,7 +396,7 @@ export default function ImageConverter() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>

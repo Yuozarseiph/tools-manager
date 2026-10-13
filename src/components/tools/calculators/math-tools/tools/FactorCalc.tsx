@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -47,7 +48,7 @@ export default function FactorCalc() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.common.enterNumber}
         </label>
-        <input
+        <AccessibleInput numeric fieldLabel={content.common.enterNumber}
           type="number"
           value={num}
           onChange={(e) => setNum(e.target.value)}

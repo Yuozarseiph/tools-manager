@@ -230,7 +230,7 @@ const getNodeStyle = (type: string, data: CustomNodeData, theme: any) => {
       synchronized: isDark ? "text-purple-400" : "text-purple-600",
     };
 
-    return iconColors[type] || (isDark ? "text-gray-400" : "text-gray-600");
+    return iconColors[type] || (isDark ? "text-[var(--app-text-muted)]" : "text-gray-600");
   };
 
   return {
@@ -391,12 +391,12 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
 
             <div className="flex items-center gap-1">
               {depth > 0 && (
-                <span className="text-xs px-2 py-1 rounded bg-black/5 dark:bg-white/10 opacity-60">
+                <span className="text-xs px-2 py-1 rounded bg-black/5 dark:bg-white/10 opacity-100">
                   L{depth}
                 </span>
               )}
               {lineNumber && (
-                <span className="text-xs px-2 py-1 rounded bg-black/5 dark:bg-white/10 opacity-60">
+                <span className="text-xs px-2 py-1 rounded bg-black/5 dark:bg-white/10 opacity-100">
                   #{lineNumber}
                 </span>
               )}
@@ -422,7 +422,7 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
                 <span className={`text-xs font-medium ${theme.textMuted}`}>
                   Params:
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-[var(--app-text-muted)]">
                   ({parameters.length})
                 </span>
               </div>
@@ -443,8 +443,8 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
                   <span
                     className={`text-xs px-2 py-1 rounded ${
                       isDark
-                        ? "bg-white/10 text-gray-400"
-                        : "bg-black/5 text-gray-500"
+                        ? "bg-white/10 text-[var(--app-text-muted)]"
+                        : "bg-black/5 text-[var(--app-text-muted)]"
                     }`}
                   >
                     +{parameters.length - 4}
@@ -456,7 +456,7 @@ const CustomGraphNode = ({ data, selected }: CustomNodeProps) => {
         </div>
 
         {isExpandable && (
-          <button
+          <button aria-label={isExpanded ? "Collapse" : "Expand"}
             onClick={() => setIsExpanded(!isExpanded)}
             className={`ml-2 p-1 rounded ${
               isDark ? "hover:bg-white/10" : "hover:bg-black/5"

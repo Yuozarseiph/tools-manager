@@ -1,4 +1,6 @@
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { Upload, Download, X, FileImage } from "lucide-react";
@@ -137,7 +139,7 @@ export default function ImageToPdfConverter() {
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-300 cursor-pointer ${colors.border} hover:border-opacity-70`}
       >
-        <input
+        <AccessibleInput
           type="file"
           accept="image/*"
           multiple
@@ -165,7 +167,7 @@ export default function ImageToPdfConverter() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}
@@ -222,12 +224,12 @@ export default function ImageToPdfConverter() {
                     {content.ui.list.sizeUnit}
                   </p>
                 </div>
-                <button
+                <AccessibleButton purpose="close"
                   onClick={() => removeImage(index)}
                   className="flex-shrink-0 text-[var(--app-error-text)] hover:opacity-80 p-1"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </AccessibleButton>
               </div>
             ))}
           </div>
@@ -254,7 +256,7 @@ export default function ImageToPdfConverter() {
             <FileImage className="h-6 w-6" />
             <span className="font-medium">{content.ui.result.ready}</span>
           </div>
-          <button
+          <button data-testid="download-result"
             onClick={downloadPdf}
             className={`w-full py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${colors.primary}`}
           >

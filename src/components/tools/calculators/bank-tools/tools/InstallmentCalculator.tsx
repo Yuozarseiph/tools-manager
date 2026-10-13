@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -44,7 +45,7 @@ export default function InstallmentCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.installment.labels.cashPrice}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.installment.labels.cashPrice}
             type="number"
             value={cashPrice}
             onChange={(e) => setCashPrice(e.target.value)}
@@ -55,7 +56,7 @@ export default function InstallmentCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.installment.labels.downPayment}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.installment.labels.downPayment}
             type="number"
             value={downPayment}
             onChange={(e) => setDownPayment(e.target.value)}
@@ -66,7 +67,7 @@ export default function InstallmentCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.installment.labels.numberOfInstallments}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.installment.labels.numberOfInstallments}
             type="number"
             value={numberOfInstallments}
             onChange={(e) => setNumberOfInstallments(e.target.value)}
@@ -77,7 +78,7 @@ export default function InstallmentCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.installment.labels.interestRate}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.installment.labels.interestRate}
             type="number"
             value={interestRate}
             onChange={(e) => setInterestRate(e.target.value)}
@@ -95,7 +96,7 @@ export default function InstallmentCalculator() {
 
       {/* Results */}
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div role="status" aria-live="polite" className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
             <p className={`text-sm ${theme.textMuted} mb-1`}>
               {content.installment.labels.monthlyInstallment}
@@ -126,7 +127,7 @@ export default function InstallmentCalculator() {
 
       {/* Comparison */}
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <h4 className={`font-bold mb-3 ${theme.text}`}>
             {content.installment.modes.compare}
           </h4>

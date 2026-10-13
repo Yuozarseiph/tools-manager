@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -90,7 +91,7 @@ export default function TextToHex() {
       {mode === "toHex" && (
         <div className="flex flex-wrap gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
+            <AccessibleInput hasVisibleLabel
               type="checkbox"
               checked={uppercase}
               onChange={(e) => setUppercase(e.target.checked)}
@@ -99,7 +100,7 @@ export default function TextToHex() {
             <span className={theme.text}>{content.textToHex.uppercase}</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
+            <AccessibleInput hasVisibleLabel
               type="checkbox"
               checked={prefix}
               onChange={(e) => setPrefix(e.target.checked)}
@@ -116,7 +117,7 @@ export default function TextToHex() {
           {content.textToHex.textInput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToHex.textInput}
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             rows={4}
@@ -140,7 +141,7 @@ export default function TextToHex() {
           {content.textToHex.hexOutput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToHex.hexOutput}
             value={hexOutput}
             onChange={(e) => setHexOutput(e.target.value)}
             rows={4}

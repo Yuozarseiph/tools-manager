@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import {
@@ -301,14 +302,14 @@ export default function QrGeneratorTool() {
 
           {/* Download Buttons */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <button
+            <button data-testid="download-result"
               onClick={() => downloadQr("png")}
               className={`flex-1 py-2.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm sm:text-base ${theme.primary} text-white shadow-lg hover:shadow-xl transition-all active:scale-95`}
             >
               <Download size={18} />
               {content.buttons.downloadPng}
             </button>
-            <button
+            <button data-testid="download-result"
               onClick={() => downloadQr("svg")}
               className={`flex-1 py-2.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm sm:text-base ${theme.secondary} ${theme.text} shadow-lg hover:shadow-xl transition-all active:scale-95`}
             >
@@ -392,7 +393,7 @@ export default function QrGeneratorTool() {
               <label className={`text-xs sm:text-sm font-medium ${theme.text}`}>
                 {content.inputs.link.label}
               </label>
-              <input
+              <AccessibleInput fieldLabel={content.inputs.link.label}
                 type="url"
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
@@ -407,7 +408,7 @@ export default function QrGeneratorTool() {
               <label className={`text-xs sm:text-sm font-medium ${theme.text}`}>
                 {content.inputs.text.label}
               </label>
-              <textarea
+              <AccessibleTextarea fieldLabel={content.inputs.text.label}
                 value={plainText}
                 onChange={(e) => setPlainText(e.target.value)}
                 rows={3}
@@ -425,7 +426,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.wifi.ssid.label}
                 </label>
-                <input
+                <AccessibleInput fieldLabel={content.inputs.wifi.ssid.label}
                   type="text"
                   value={wifiSsid}
                   onChange={(e) => setWifiSsid(e.target.value)}
@@ -439,7 +440,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.wifi.password.label}
                 </label>
-                <input
+                <AccessibleInput fieldLabel={content.inputs.wifi.password.label}
                   type="text"
                   value={wifiPassword}
                   onChange={(e) => setWifiPassword(e.target.value)}
@@ -453,7 +454,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.wifi.encryption.label}
                 </label>
-                <select
+                <AccessibleSelect fieldLabel={content.inputs.wifi.encryption.label}
                   value={wifiEncryption}
                   onChange={(e) => setWifiEncryption(e.target.value)}
                   className={`w-full p-2.5 sm:p-3 rounded-xl border text-sm ${theme.border} ${theme.bg} ${theme.text}`}
@@ -467,7 +468,7 @@ export default function QrGeneratorTool() {
                   <option value="nopass">
                     {content.inputs.wifi.encryption.nopass}
                   </option>
-                </select>
+                </AccessibleSelect>
               </div>
             </div>
           )}
@@ -480,7 +481,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.email.address.label}
                 </label>
-                <input
+                <AccessibleInput fieldLabel={content.inputs.email.address.label}
                   type="email"
                   value={emailAddress}
                   onChange={(e) => setEmailAddress(e.target.value)}
@@ -494,7 +495,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.email.subject.label}
                 </label>
-                <input
+                <AccessibleInput fieldLabel={content.inputs.email.subject.label}
                   type="text"
                   value={emailSubject}
                   onChange={(e) => setEmailSubject(e.target.value)}
@@ -508,7 +509,7 @@ export default function QrGeneratorTool() {
                 >
                   {content.inputs.email.body.label}
                 </label>
-                <textarea
+                <AccessibleTextarea fieldLabel={content.inputs.email.body.label}
                   value={emailBody}
                   onChange={(e) => setEmailBody(e.target.value)}
                   rows={2}
@@ -563,14 +564,14 @@ export default function QrGeneratorTool() {
                 <div
                   className={`flex items-center gap-2 p-2 rounded-xl border ${theme.bg} ${theme.border}`}
                 >
-                  <input
+                  <AccessibleInput fieldLabel={content.styling.fgColor}
                     type="color"
                     value={fgColor}
                     onChange={(e) => setFgColor(e.target.value)}
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg cursor-pointer border-0"
                   />
                   <span
-                    className={`text-[10px] sm:text-xs font-mono ${theme.text}`}
+                    className={`text-xs sm:text-xs font-mono ${theme.text}`}
                   >
                     {fgColor}
                   </span>
@@ -585,14 +586,14 @@ export default function QrGeneratorTool() {
                 <div
                   className={`flex items-center gap-2 p-2 rounded-xl border ${theme.bg} ${theme.border}`}
                 >
-                  <input
+                  <AccessibleInput fieldLabel={content.styling.bgColor}
                     type="color"
                     value={bgColor}
                     onChange={(e) => setBgColor(e.target.value)}
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg cursor-pointer border-0"
                   />
                   <span
-                    className={`text-[10px] sm:text-xs font-mono ${theme.text}`}
+                    className={`text-xs sm:text-xs font-mono ${theme.text}`}
                   >
                     {bgColor}
                   </span>
@@ -611,7 +612,7 @@ export default function QrGeneratorTool() {
                   {content.styling.quietZone.unit}
                 </span>
               </div>
-              <input
+              <AccessibleInput
                 type="range"
                 min="0"
                 max="100"
@@ -620,7 +621,7 @@ export default function QrGeneratorTool() {
                 onChange={(e) => setQuietZone(Number(e.target.value))}
                 className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg accent-[var(--app-accent)]"
               />
-              <p className={`text-[10px] sm:text-xs ${theme.textMuted}`}>
+              <p className={`text-xs sm:text-xs ${theme.textMuted}`}>
                 {content.styling.quietZone.hint}
               </p>
             </div>
@@ -636,7 +637,7 @@ export default function QrGeneratorTool() {
                   {content.styling.size.unit}
                 </span>
               </div>
-              <input
+              <AccessibleInput
                 type="range"
                 min="256"
                 max="2048"
@@ -657,7 +658,7 @@ export default function QrGeneratorTool() {
                   <button
                     key={style}
                     onClick={() => setDotStyle(style)}
-                    className={`flex-shrink-0 py-2 px-3 rounded-lg text-[10px] sm:text-xs font-medium transition-all whitespace-nowrap ${
+                    className={`flex-shrink-0 py-2 px-3 rounded-lg text-xs sm:text-xs font-medium transition-all whitespace-nowrap ${
                       dotStyle === style
                         ? `${theme.primary} text-white`
                         : `${theme.bg} ${theme.text} border ${theme.border}`
@@ -679,7 +680,7 @@ export default function QrGeneratorTool() {
                   <button
                     key={style}
                     onClick={() => setCornerStyle(style)}
-                    className={`py-2 px-2 sm:px-3 rounded-lg text-[10px] sm:text-xs font-medium transition-all whitespace-nowrap ${
+                    className={`py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-xs font-medium transition-all whitespace-nowrap ${
                       cornerStyle === style
                         ? `${theme.primary} text-white`
                         : `${theme.bg} ${theme.text} border ${theme.border}`
@@ -704,12 +705,12 @@ export default function QrGeneratorTool() {
             </h3>
 
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-              <label
+              <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                 className={`cursor-pointer px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium border flex items-center gap-2 ${theme.bg} ${theme.border} ${theme.text} hover:opacity-80 transition-opacity`}
               >
                 <ImageIcon size={16} />
                 {content.logo.selectButton}
-                <input
+                <AccessibleInput hasVisibleLabel
                   type="file"
                   accept="image/jpeg,image/png,image/svg+xml"
                   className="hidden"
@@ -727,7 +728,7 @@ export default function QrGeneratorTool() {
               )}
             </div>
 
-            <p className={`text-[10px] sm:text-xs mb-3 ${theme.textMuted}`}>
+            <p className={`text-xs sm:text-xs mb-3 ${theme.textMuted}`}>
               {content.logo.hint}
             </p>
 
@@ -740,7 +741,7 @@ export default function QrGeneratorTool() {
                     {content.logo.sizeUnit}
                   </span>
                 </div>
-                <input
+                <AccessibleInput
                   type="range"
                   min={0.1}
                   max={0.4}
@@ -764,7 +765,7 @@ export default function QrGeneratorTool() {
             <Settings size={14} />
             {content.tips.title}
           </h4>
-          <ul className={`space-y-1 text-[10px] sm:text-xs ${theme.textMuted}`}>
+          <ul className={`space-y-1 text-xs sm:text-xs ${theme.textMuted}`}>
             <li className="flex items-start gap-1.5">
               <span className="text-[var(--app-accent)] flex-shrink-0">•</span>
               <span>{content.tips.tip1}</span>

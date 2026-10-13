@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -241,7 +242,7 @@ export default function AudioTrimTool() {
           {content.ui.trim.upload.button}
         </button>
 
-        <input
+        <AccessibleInput
           ref={fileInputRef}
           type="file"
           accept="audio/*"
@@ -285,7 +286,7 @@ export default function AudioTrimTool() {
 
           {/* اسلایدر زمان + پخش کل */}
           <div className="space-y-3">
-            <input
+            <AccessibleInput
               type="range"
               min={0}
               max={duration || 0}
@@ -358,7 +359,7 @@ export default function AudioTrimTool() {
                     </span>
                     <span className={theme.text}>{formatTime(startTime)}</span>
                   </div>
-                  <input
+                  <AccessibleInput
                     type="range"
                     min={0}
                     max={endTime || duration || 0}
@@ -371,7 +372,7 @@ export default function AudioTrimTool() {
                     className="w-full"
                   />
                 </div>
-                <input
+                <AccessibleInput
                   type="number"
                   min={0}
                   max={duration || 0}
@@ -392,7 +393,7 @@ export default function AudioTrimTool() {
                     </span>
                     <span className={theme.text}>{formatTime(endTime)}</span>
                   </div>
-                  <input
+                  <AccessibleInput
                     type="range"
                     min={startTime}
                     max={duration || 0}
@@ -405,7 +406,7 @@ export default function AudioTrimTool() {
                     className="w-full"
                   />
                 </div>
-                <input
+                <AccessibleInput
                   type="number"
                   min={0}
                   max={duration || 0}
@@ -434,7 +435,7 @@ export default function AudioTrimTool() {
                 )})`}
               </button>
 
-              <button
+              <button data-testid="download-result"
                 onClick={handleDownloadSelection}
                 disabled={
                   disableControls ||
@@ -475,7 +476,7 @@ export default function AudioTrimTool() {
               {/* Fade In */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs">
-                  <input
+                  <AccessibleInput hasVisibleLabel
                     type="checkbox"
                     checked={fadeInEnabled}
                     onChange={(e) => setFadeInEnabled(e.target.checked)}
@@ -488,7 +489,7 @@ export default function AudioTrimTool() {
 
                 <div className="grid gap-2 grid-cols-[1fr_auto] items-center">
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
+                    <div className="flex justify-between text-xs">
                       <span className={theme.textMuted}>
                         {content.ui.trim.fade.fadeInDurationLabel}
                       </span>
@@ -496,7 +497,7 @@ export default function AudioTrimTool() {
                         {fadeInDuration.toFixed(2)}s
                       </span>
                     </div>
-                    <input
+                    <AccessibleInput
                       type="range"
                       min={0.1}
                       max={Math.max(0.5, selectionDuration || 1)}
@@ -511,7 +512,7 @@ export default function AudioTrimTool() {
                       className="w-full"
                     />
                   </div>
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={0.1}
                     max={selectionDuration || 10}
@@ -533,7 +534,7 @@ export default function AudioTrimTool() {
               {/* Fade Out */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs">
-                  <input
+                  <AccessibleInput hasVisibleLabel
                     type="checkbox"
                     checked={fadeOutEnabled}
                     onChange={(e) => setFadeOutEnabled(e.target.checked)}
@@ -546,7 +547,7 @@ export default function AudioTrimTool() {
 
                 <div className="grid gap-2 grid-cols-[1fr_auto] items-center">
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
+                    <div className="flex justify-between text-xs">
                       <span className={theme.textMuted}>
                         {content.ui.trim.fade.fadeOutDurationLabel}
                       </span>
@@ -554,7 +555,7 @@ export default function AudioTrimTool() {
                         {fadeOutDuration.toFixed(2)}s
                       </span>
                     </div>
-                    <input
+                    <AccessibleInput
                       type="range"
                       min={0.1}
                       max={Math.max(0.5, selectionDuration || 1)}
@@ -569,7 +570,7 @@ export default function AudioTrimTool() {
                       className="w-full"
                     />
                   </div>
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={0.1}
                     max={selectionDuration || 10}

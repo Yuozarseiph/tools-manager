@@ -1,5 +1,6 @@
 // components/tools/developer/markdown/MarkdownTool.tsx
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -37,14 +38,14 @@ export default function MarkdownTool() {
             {content.ui.editor.title}
           </span>
           <div className="flex gap-2">
-            <button
+            <button aria-label={content.ui.buttons.clear}
               onClick={() => setMarkdown("")}
               className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors"
               title={content.ui.buttons.clear}
             >
               <Trash2 size={16} />
             </button>
-            <button
+            <button aria-label={content.ui.buttons.copy}
               onClick={handleCopy}
               className={`p-2 rounded-lg transition-colors ${
                 copied
@@ -57,7 +58,7 @@ export default function MarkdownTool() {
             </button>
           </div>
         </div>
-        <textarea
+        <AccessibleTextarea
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
           className={`flex-1 w-full p-6 resize-none focus:outline-none font-mono text-sm leading-relaxed bg-transparent ${theme.text}`}
@@ -145,7 +146,7 @@ export default function MarkdownTool() {
               color: inherit;
             }
             .markdown-body a {
-              color: #3b82f6;
+              color: var(--app-accent);
               text-decoration: underline;
             }
             .markdown-body hr {

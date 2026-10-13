@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -141,7 +142,7 @@ export default function Fibonacci() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.fibonacci.labels.count}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.fibonacci.labels.count}
             type="number"
             value={count}
             onChange={(e) => setCount(e.target.value)}
@@ -157,7 +158,7 @@ export default function Fibonacci() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.fibonacci.labels.nthTerm}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.fibonacci.labels.nthTerm}
             type="number"
             value={nthTerm}
             onChange={(e) => setNthTerm(e.target.value)}
@@ -172,7 +173,7 @@ export default function Fibonacci() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.fibonacci.labels.checkNumber}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.fibonacci.labels.checkNumber}
             type="number"
             value={checkNum}
             onChange={(e) => setCheckNum(e.target.value)}
@@ -191,7 +192,7 @@ export default function Fibonacci() {
 
       {/* Results */}
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           {Array.isArray(result) ? (
             <>
               <div className="flex justify-between items-center mb-3">

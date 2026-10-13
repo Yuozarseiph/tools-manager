@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef } from "react";
 import {
@@ -344,7 +345,7 @@ export default function AudioWaveformEqTool() {
           {ui.uploadBtn}
         </button>
 
-        <input
+        <AccessibleInput
           ref={fileInputRef}
           type="file"
           accept="audio/*"
@@ -460,7 +461,7 @@ export default function AudioWaveformEqTool() {
               </p>
             </div>
 
-            <input
+            <AccessibleInput
               className="w-full mt-3"
               type="range"
               min={SEG_GAIN_MIN}
@@ -472,7 +473,7 @@ export default function AudioWaveformEqTool() {
             />
 
             <div className="flex flex-wrap gap-2 mt-3">
-              <button
+              <button data-testid="download-result"
                 onClick={tool.exportSelectionWav}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
@@ -486,7 +487,7 @@ export default function AudioWaveformEqTool() {
                 {ui.exportSel}
               </button>
 
-              <button
+              <button data-testid="download-result"
                 onClick={tool.exportFullWavSelectionOnly}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
@@ -538,7 +539,7 @@ export default function AudioWaveformEqTool() {
                           }${b.gainDb.toFixed(1)} dB`}
                         >
                           <div
-                            className={`text-[11px] font-mono ${theme.text}`}
+                            className={`text-xs font-mono ${theme.text}`}
                           >
                             {b.gainDb > 0 ? "+" : ""}
                             {b.gainDb.toFixed(0)}
@@ -566,7 +567,7 @@ export default function AudioWaveformEqTool() {
                           </div>
 
                           <div
-                            className={`text-[10px] leading-none ${theme.textMuted}`}
+                            className={`text-xs leading-none ${theme.textMuted}`}
                           >
                             {b.label.replace("Hz", "")}
                           </div>
@@ -578,7 +579,7 @@ export default function AudioWaveformEqTool() {
               </div>
             </div>
 
-            <p className={`text-[11px] ${theme.textMuted}`}>
+            <p className={`text-xs ${theme.textMuted}`}>
               EQ and Volume only apply to the exported file.
             </p>
           </div>

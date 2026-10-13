@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -292,7 +293,7 @@ export default function QrReaderTool() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <div className="space-y-4">
-        <input
+        <AccessibleInput
           ref={inputRef}
           type="file"
           accept="image/*,.jpg,.jpeg,.png,.webp"
@@ -342,7 +343,7 @@ export default function QrReaderTool() {
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3 text-[var(--app-error-text)]">
+          <div role="alert" className="p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3 text-[var(--app-error-text)]">
             <AlertCircle size={19} className="shrink-0 mt-0.5" />
             <span className="text-sm">{error}</span>
           </div>
@@ -389,7 +390,7 @@ export default function QrReaderTool() {
         </div>
 
         {result && (
-          <div className={`rounded-2xl border overflow-hidden ${theme.card} ${theme.border}`}>
+          <div role="status" aria-live="polite" className={`rounded-2xl border overflow-hidden ${theme.card} ${theme.border}`}>
             <div className={`px-4 py-3 border-b flex items-center justify-between gap-3 ${theme.border}`}>
               <div>
                 <p className={`text-sm font-bold ${theme.text}`}>{t.result}</p>

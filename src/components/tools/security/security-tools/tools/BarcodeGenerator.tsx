@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, useRef } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -64,7 +65,7 @@ export default function BarcodeGenerator() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.barcodeGenerator.inputText}
         </label>
-        <input
+        <AccessibleInput fieldLabel={content.barcodeGenerator.inputText}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -77,7 +78,7 @@ export default function BarcodeGenerator() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.barcodeGenerator.barcodeType}
         </label>
-        <select
+        <AccessibleSelect fieldLabel={content.barcodeGenerator.barcodeType}
           value={barcodeType}
           onChange={(e) => setBarcodeType(e.target.value)}
           className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
@@ -89,7 +90,7 @@ export default function BarcodeGenerator() {
               </option>
             )
           )}
-        </select>
+        </AccessibleSelect>
       </div>
 
       {/* Settings */}
@@ -98,7 +99,7 @@ export default function BarcodeGenerator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.barcodeGenerator.width}
           </label>
-          <input
+          <AccessibleInput fieldLabel={content.barcodeGenerator.width}
             type="number"
             value={width}
             onChange={(e) => setWidth(e.target.value)}
@@ -111,7 +112,7 @@ export default function BarcodeGenerator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.barcodeGenerator.height}
           </label>
-          <input
+          <AccessibleInput fieldLabel={content.barcodeGenerator.height}
             type="number"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
@@ -124,7 +125,7 @@ export default function BarcodeGenerator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.barcodeGenerator.backgroundColor}
           </label>
-          <input
+          <AccessibleInput fieldLabel={content.barcodeGenerator.backgroundColor}
             type="color"
             value={backgroundColor}
             onChange={(e) => setBackgroundColor(e.target.value)}
@@ -135,7 +136,7 @@ export default function BarcodeGenerator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.barcodeGenerator.lineColor}
           </label>
-          <input
+          <AccessibleInput fieldLabel={content.barcodeGenerator.lineColor}
             type="color"
             value={lineColor}
             onChange={(e) => setLineColor(e.target.value)}
@@ -146,7 +147,7 @@ export default function BarcodeGenerator() {
 
       {/* Display Value Toggle */}
       <label className="flex items-center gap-2 cursor-pointer">
-        <input
+        <AccessibleInput hasVisibleLabel
           type="checkbox"
           checked={displayValue}
           onChange={(e) => setDisplayValue(e.target.checked)}
@@ -162,7 +163,7 @@ export default function BarcodeGenerator() {
         className={`p-6 rounded-xl border ${theme.border} ${theme.bg} flex flex-col items-center gap-4`}
       >
         <canvas ref={canvasRef} />
-        <button
+        <button data-testid="download-result"
           onClick={downloadBarcode}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold ${theme.primary} text-white`}
         >

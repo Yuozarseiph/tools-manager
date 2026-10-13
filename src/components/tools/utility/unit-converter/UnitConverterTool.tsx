@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ArrowLeftRight, Copy, Check, Search } from "lucide-react";
@@ -89,7 +90,7 @@ export default function UnitConverterTool() {
           size={16}
           className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? "right-3" : "left-3"} ${theme.textMuted}`}
         />
-        <input
+        <AccessibleInput
           type="text"
           value={catSearch}
           onChange={(e) => setCatSearch(e.target.value)}
@@ -129,7 +130,7 @@ export default function UnitConverterTool() {
           <label className={`text-sm font-bold ${theme.textMuted}`}>
             {ui.amountLabel}
           </label>
-          <input
+          <AccessibleInput fieldLabel={ui.amountLabel}
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -145,7 +146,7 @@ export default function UnitConverterTool() {
         </div>
 
         {/* Swap */}
-        <button
+        <button aria-label={ui.swap}
           onClick={handleSwap}
           title={ui.swap}
           className={`mx-auto flex justify-center p-3 rounded-full transition-transform hover:rotate-180 duration-300 ${theme.secondary}`}
@@ -164,7 +165,7 @@ export default function UnitConverterTool() {
           >
             <span className="truncate flex-1">{result || "..."}</span>
             {result && (
-              <button
+              <button aria-label={copied ? ui.copied : ui.copy}
                 onClick={handleCopy}
                 title={copied ? ui.copied : ui.copy}
                 className={`shrink-0 p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/10`}

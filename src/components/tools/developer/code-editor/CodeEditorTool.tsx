@@ -1,5 +1,6 @@
 // components/tools/developer/code-editor/CodeEditorTool.tsx
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { useCallback, useState, useEffect } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useFileSystem } from "./hooks/useFileSystem";
@@ -140,7 +141,15 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
       <div className="flex-1 flex overflow-hidden relative">
         {/* Desktop sidebar toggle */}
         {!isMobile && (
-          <button
+          <button aria-label={
+              isFa
+                ? isSidebarOpen
+                  ? "بستن منو"
+                  : "باز کردن منو"
+                : isSidebarOpen
+                  ? "Close sidebar"
+                  : "Open sidebar"
+            }
             onClick={() => setIsSidebarOpen((prev) => !prev)}
             className="absolute top-2 left-2 z-20 p-1.5 rounded-lg bg-[var(--app-card)] border shadow-md hover:shadow-lg transition-all"
             style={{ borderColor: "var(--app-border)" }}
@@ -170,13 +179,13 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
 
         {/* Mobile open sidebar button */}
         {isMobile && !isSidebarOpen && (
-          <button
+          <AccessibleButton purpose="action"
             onClick={() => setIsSidebarOpen(true)}
             className="absolute top-2 left-2 z-20 p-2 rounded-xl bg-[var(--app-card)] border shadow-lg active:scale-95 transition-transform"
             style={{ borderColor: "var(--app-border)" }}
           >
             <Menu size={18} style={{ color: "var(--app-text-muted)" }} />
-          </button>
+          </AccessibleButton>
         )}
 
         {/* Sidebar */}
@@ -207,7 +216,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
               >
                 {isFa ? "فایل‌ها" : "Explorer"}
               </span>
-              <button
+              <AccessibleButton purpose="action"
                 onClick={() => setIsSidebarOpen(false)}
                 className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
@@ -215,7 +224,7 @@ export default function CodeEditorTool({ locale }: CodeEditorToolProps) {
                   size={18}
                   style={{ color: "var(--app-text-muted)" }}
                 />
-              </button>
+              </AccessibleButton>
             </div>
           )}
 

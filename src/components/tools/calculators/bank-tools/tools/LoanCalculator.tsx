@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -153,7 +154,7 @@ export default function LoanCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.loan.labels.loanAmount}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.loan.labels.loanAmount}
             type="number"
             value={loanAmount}
             onChange={(e) => setLoanAmount(e.target.value)}
@@ -164,7 +165,7 @@ export default function LoanCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.loan.labels.interestRate}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.loan.labels.interestRate}
             type="number"
             value={interestRate}
             onChange={(e) => setInterestRate(e.target.value)}
@@ -175,7 +176,7 @@ export default function LoanCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.loan.labels.loanTerm}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.loan.labels.loanTerm}
             type="number"
             value={loanTerm}
             onChange={(e) => setLoanTerm(e.target.value)}
@@ -229,7 +230,7 @@ export default function LoanCalculator() {
             <h3 className={`font-bold ${theme.text}`}>
               {content.loan.labels.paymentSchedule}
             </h3>
-            <button
+            <button data-testid="download-result"
               onClick={exportToCSV}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg ${theme.secondary} ${theme.text} hover:opacity-80`}
             >

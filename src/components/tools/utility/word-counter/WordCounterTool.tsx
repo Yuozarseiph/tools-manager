@@ -1,5 +1,6 @@
 // components/tools/writing/word-counter/WordCounterTool.tsx
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, useMemo } from "react";
 import { Trash2, Copy, Check, Clock, AlignLeft } from "lucide-react";
@@ -69,7 +70,7 @@ export default function WordCounterTool() {
             {content.ui.editor.title}
           </span>
           <div className="flex gap-2">
-            <button
+            <button aria-label={content.ui.buttons.clearTitle}
               onClick={() => setText("")}
               className="p-1.5 hover:bg-[var(--app-error-bg)] text-[var(--app-error-text)] rounded-lg transition-colors"
               title={content.ui.buttons.clearTitle}
@@ -87,7 +88,7 @@ export default function WordCounterTool() {
             </button>
           </div>
         </div>
-        <textarea
+        <AccessibleTextarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={content.ui.editor.placeholder}

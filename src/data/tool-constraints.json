@@ -1,0 +1,229 @@
+{
+  "bank": {
+    "acceptedFormats": []
+  },
+  "math-tools": {
+    "acceptedFormats": []
+  },
+  "base64": {
+    "acceptedFormats": []
+  },
+  "code-editor": {
+    "acceptedFormats": []
+  },
+  "code-visualizer": {
+    "acceptedFormats": []
+  },
+  "json-formatter": {
+    "acceptedFormats": [
+      ".json"
+    ]
+  },
+  "markdown-preview": {
+    "acceptedFormats": []
+  },
+  "excel-chart": {
+    "acceptedFormats": [
+      ".xlsx",
+      ".xls",
+      ".csv"
+    ]
+  },
+  "excel-editor": {
+    "acceptedFormats": [
+      ".xlsx",
+      ".xls",
+      ".csv"
+    ]
+  },
+  "excel-viewer": {
+    "acceptedFormats": [
+      ".xlsx",
+      ".xls",
+      ".csv"
+    ]
+  },
+  "background-remover": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "color-picker": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "image-compressor": {
+    "acceptedFormats": [
+      "image/*",
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".webp"
+    ],
+    "maxFiles": 1
+  },
+  "image-converter": {
+    "acceptedFormats": [
+      "image/*",
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".webp",
+      ".gif",
+      ".bmp",
+      ".tiff",
+      ".svg",
+      ".avif"
+    ],
+    "maxFiles": 20
+  },
+  "image-editor": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "image-resizer": {
+    "acceptedFormats": [
+      "image/*",
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".webp",
+      ".gif",
+      ".bmp"
+    ],
+    "maxFiles": 1
+  },
+  "image-stitcher": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "image-to-pdf": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "image-to-svg": {
+    "acceptedFormats": [
+      "image/*",
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp"
+    ]
+  },
+  "image-to-text": {
+    "acceptedFormats": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp"
+    ]
+  },
+  "audio-editor": {
+    "acceptedFormats": []
+  },
+  "audio-extractor": {
+    "acceptedFormats": [
+      "video/*",
+      ".mp4",
+      ".avi",
+      ".mov",
+      ".mkv",
+      ".webm",
+      ".flv",
+      ".wmv"
+    ],
+    "maxFiles": 1
+  },
+  "pdf-editor": {
+    "acceptedFormats": [
+      "application/pdf",
+      ".pdf"
+    ]
+  },
+  "pdf-merge": {
+    "acceptedFormats": [
+      "application/pdf",
+      ".pdf"
+    ]
+  },
+  "pdf-to-image": {
+    "acceptedFormats": [
+      "application/pdf",
+      ".pdf"
+    ]
+  },
+  "pdf-to-word": {
+    "acceptedFormats": [
+      "application/pdf",
+      ".pdf"
+    ]
+  },
+  "text-to-pdf": {
+    "acceptedFormats": []
+  },
+  "word-to-pdf": {
+    "acceptedFormats": [
+      ".docx",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ]
+  },
+  "html-to-pptx": {
+    "acceptedFormats": [
+      ".html",
+      ".htm",
+      "text/html"
+    ]
+  },
+  "exif-remover": {
+    "acceptedFormats": [
+      "image/*"
+    ]
+  },
+  "hash-generator": {
+    "acceptedFormats": []
+  },
+  "password-generator": {
+    "acceptedFormats": []
+  },
+  "security-tools": {
+    "acceptedFormats": []
+  },
+  "ip-checker": {
+    "acceptedFormats": []
+  },
+  "user-agent": {
+    "acceptedFormats": []
+  },
+  "date-converter": {
+    "acceptedFormats": []
+  },
+  "qr-generator": {
+    "acceptedFormats": [
+      "image/jpeg",
+      "image/png",
+      "image/svg+xml"
+    ]
+  },
+  "qr-reader": {
+    "acceptedFormats": [
+      "image/*",
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp"
+    ]
+  },
+  "unit-converter": {
+    "acceptedFormats": []
+  },
+  "word-counter": {
+    "acceptedFormats": []
+  }
+}

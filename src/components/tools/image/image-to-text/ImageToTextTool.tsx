@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -1016,7 +1017,7 @@ export default function ImageToTextTool() {
           </div>
         )}
 
-        <input
+        <AccessibleInput
           ref={inputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
@@ -1057,7 +1058,7 @@ export default function ImageToTextTool() {
                   </p>
                 </div>
               </div>
-              <button
+              <button aria-label={t.remove}
                 type="button"
                 onClick={removeFile}
                 disabled={busy}
@@ -1081,7 +1082,7 @@ export default function ImageToTextTool() {
         )}
 
         {error && (
-          <div className="p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3 text-[var(--app-error-text)]">
+          <div role="alert" className="p-4 rounded-xl border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3 text-[var(--app-error-text)]">
             <AlertCircle size={19} className="shrink-0 mt-0.5" />
             <span className="text-sm">{error}</span>
           </div>
@@ -1115,7 +1116,7 @@ export default function ImageToTextTool() {
               {busy ? t.cancel : t.extract}
             </button>
             {!busy && (
-              <button
+              <button aria-label={t.pasteImage}
                 type="button"
                 onClick={pasteImage}
                 className={`px-4 py-3 rounded-xl border ${theme.border} ${theme.card} ${theme.text}`}
@@ -1168,7 +1169,7 @@ export default function ImageToTextTool() {
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? t.copied : t.copy}
               </button>
-              <button
+              <button data-testid="download-result"
                 type="button"
                 onClick={downloadText}
                 disabled={!text}
@@ -1178,7 +1179,7 @@ export default function ImageToTextTool() {
               </button>
             </div>
           </div>
-          <textarea
+          <AccessibleTextarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={t.emptyResult}

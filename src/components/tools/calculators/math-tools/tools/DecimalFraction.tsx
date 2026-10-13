@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -95,7 +96,7 @@ export default function DecimalFraction() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.decimalFraction.labels.decimal}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.decimalFraction.labels.decimal}
             type="number"
             step="any"
             value={decimal}
@@ -110,7 +111,7 @@ export default function DecimalFraction() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {content.decimalFraction.labels.numerator}
             </label>
-            <input
+            <AccessibleInput numeric fieldLabel={content.decimalFraction.labels.numerator}
               type="number"
               value={numerator}
               onChange={(e) => setNumerator(e.target.value)}
@@ -123,7 +124,7 @@ export default function DecimalFraction() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {content.decimalFraction.labels.denominator}
             </label>
-            <input
+            <AccessibleInput numeric fieldLabel={content.decimalFraction.labels.denominator}
               type="number"
               value={denominator}
               onChange={(e) => setDenominator(e.target.value)}
@@ -142,7 +143,7 @@ export default function DecimalFraction() {
       </button>
 
       {result && (
-        <div
+        <div role="status" aria-live="polite"
           className={`p-6 rounded-xl border ${theme.border} ${theme.bg} text-center`}
         >
           <p className={`text-sm ${theme.textMuted} mb-2`}>

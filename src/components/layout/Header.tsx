@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import Link from "@/components/LocalizedLink";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { stripLocale } from "@/lib/localized-path";
 import {
   Heart,
   Book,
@@ -60,7 +61,7 @@ const mobileMoreItems = [
 
 export default function Header() {
   const theme = useThemeColors();
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname());
   const { locale, setLocale } = useLanguage();
   const content = HeaderContent[locale];
 
@@ -164,7 +165,7 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
+            <button aria-label={locale === "fa" ? "Switch to English" : "تغییر به فارسی"}
               onClick={toggleLocale}
               className={`
                 w-9 h-9 sm:w-10 sm:h-10
@@ -355,7 +356,7 @@ export default function Header() {
                     </div>
                     <span
                       className={`
-                        text-[10px] leading-tight font-semibold
+                        text-xs leading-tight font-semibold
                         truncate max-w-full
                         ${active ? "opacity-100" : "opacity-60"}
                       `}
@@ -406,7 +407,7 @@ export default function Header() {
                 </div>
                 <span
                   className={`
-                    text-[10px] leading-tight font-semibold
+                    text-xs leading-tight font-semibold
                     truncate max-w-full
                     ${moreOpen || isMoreActive ? "opacity-100" : "opacity-60"}
                   `}

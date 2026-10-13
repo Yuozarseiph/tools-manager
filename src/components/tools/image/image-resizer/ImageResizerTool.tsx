@@ -1,5 +1,7 @@
 // components/tools/image/image-resizer/ImageResizerTool.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -223,7 +225,7 @@ export default function ImageResizerTool() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div
+            <AccessibleDropzone
               {...getRootProps()}
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
               ${
@@ -234,7 +236,7 @@ export default function ImageResizerTool() {
               ${theme.bg}
               `}
             >
-              <input {...getInputProps()} />
+              <AccessibleInput {...getInputProps()} />
               <div className="flex flex-col items-center gap-4">
                 <div
                   className={`p-4 rounded-full ${
@@ -252,7 +254,7 @@ export default function ImageResizerTool() {
                   </p>
                 </div>
               </div>
-            </div>
+            </AccessibleDropzone>
           </motion.div>
         ) : (
           <motion.div
@@ -268,7 +270,7 @@ export default function ImageResizerTool() {
                 className={`relative rounded-2xl overflow-hidden border-2 ${theme.border} bg-gradient-to-br ${theme.gradient} p-1`}
               >
                 <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden">
-                  <img
+                  <AccessiblePreview purpose="preview"
                     src={preview}
                     alt="Preview"
                     className="w-full h-auto max-h-80 object-contain mx-auto"
@@ -298,7 +300,7 @@ export default function ImageResizerTool() {
                   )}
                 </div>
               </div>
-              <button
+              <button aria-label={content.ui.buttons.clear}
                 onClick={handleClear}
                 className={`p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg transition-colors`}
                 title={content.ui.buttons.clear}
@@ -326,7 +328,7 @@ export default function ImageResizerTool() {
                   {content.ui.inputs.widthLabel}
                 </label>
                 <div className="relative">
-                  <input
+                  <AccessibleInput fieldLabel={content.ui.inputs.widthLabel}
                     type="number"
                     min="1"
                     max="10000"
@@ -348,7 +350,7 @@ export default function ImageResizerTool() {
                   {content.ui.inputs.heightLabel}
                 </label>
                 <div className="relative">
-                  <input
+                  <AccessibleInput fieldLabel={content.ui.inputs.heightLabel}
                     type="number"
                     min="1"
                     max="10000"
@@ -368,7 +370,11 @@ export default function ImageResizerTool() {
 
             {/* دکمه‌های کنترل */}
             <div className="flex flex-wrap gap-3">
-              <button
+              <button aria-label={
+                  lockAspect
+                    ? content.ui.buttons.lockTitle
+                    : content.ui.buttons.unlockTitle
+                }
                 onClick={() => setLockAspect(!lockAspect)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-medium transition-all ${
                   lockAspect
@@ -388,7 +394,7 @@ export default function ImageResizerTool() {
               </button>
 
               {dimsChanged && (
-                <button
+                <button aria-label={content.ui.buttons.resetDims}
                   onClick={handleResetDims}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-medium transition-all ${theme.bg} ${theme.border} ${theme.text} hover:bg-opacity-80`}
                   title={content.ui.buttons.resetDims}
@@ -400,7 +406,7 @@ export default function ImageResizerTool() {
             </div>
 
             {/* دکمه دانلود */}
-            <button
+            <button data-testid="download-result"
               onClick={handleResize}
               disabled={!width || !height}
               className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -418,7 +424,7 @@ export default function ImageResizerTool() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}

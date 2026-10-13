@@ -1,117 +1,43 @@
 "use client";
-
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
-
-interface CustomMultiSelectProps {
-  options: string[];
-  selectedValues: string[];
-  onChange: (values: string[]) => void;
-  label?: string;
-  placeholder?: string;
-}
-
-export default function CustomMultiSelect({
-  options,
-  selectedValues,
-  onChange,
-  label,
-  placeholder = "انتخاب کنید...",
-}: CustomMultiSelectProps) {
-  const theme = useThemeColors();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+import { useLanguage } from "@/context/LanguageContext";
+interface Props { options: string[]; selectedValues: string[]; onChange: (values: string[]) => void; label?: string; placeholder?: string }
+export default function CustomMultiSelect({ options, selectedValues, onChange, label, placeholder = "انتخاب کنید..." }: Props) {
+  const theme = useThemeColors(); const { locale } = useLanguage(); const listId = useId();
+  const [isOpen, setIsOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const outside = (event: MouseEvent) => { if (!root.current?.contains(event.target as Node)) setIsOpen(false); };
+    document.addEventListener("mousedown", outside); return () => document.removeEventListener("mousedown", outside);
   }, []);
-
-  const toggleOption = (option: string) => {
-    if (selectedValues.includes(option)) {
-      onChange(selectedValues.filter((v) => v !== option));
-    } else {
-      onChange([...selectedValues, option]);
+  const toggle = (value: string) => onChange(selectedValues.includes(value) ? selectedValues.filter(item => item !== value) : [...selectedValues, value]);
+  const key = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") { event.preventDefault(); setIsOpen(false); trigger.current?.focus(); }
+    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault(); if (!isOpen) { setIsOpen(true); return; }
+      const items = [...(root.current?.querySelectorAll<HTMLButtonElement>('[role="option"]') ?? [])];
+      const current = items.indexOf(document.activeElement as HTMLButtonElement);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : event.key === "ArrowDown" ? (current + 1) % items.length : (current <= 0 ? items.length - 1 : current - 1);
+      items[next]?.focus();
     }
   };
-
-  const removeOption = (option: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onChange(selectedValues.filter((v) => v !== option));
-  };
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      {label && (
-        <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
-          {label}
-        </label>
-      )}
-
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        className={`min-h-[42px] w-full px-3 py-2 rounded-xl border cursor-pointer flex items-center justify-between flex-wrap gap-2 transition-all ${
-          theme.bg
-        } ${theme.text} ${
-          isOpen ? "border-[var(--app-accent)] ring-4 ring-[var(--app-accent)]/10" : theme.border
-        }`}
-      >
-        <div className="flex flex-wrap gap-2">
-          {selectedValues.length > 0 ? (
-            selectedValues.map((val) => (
-              <span
-                key={val}
-                className="bg-[var(--app-secondary-bg)] text-[var(--app-accent)] text-xs px-2 py-1 rounded-md flex items-center gap-1"
-              >
-                {val}
-                <X
-                  size={12}
-                  className="cursor-pointer hover:text-[var(--app-error-text)]"
-                  onClick={(e) => removeOption(val, e)}
-                />
-              </span>
-            ))
-          ) : (
-            <span className="opacity-50 text-sm">{placeholder}</span>
-          )}
-        </div>
-        <ChevronDown
-          size={16}
-          className={`transition-transform ${
-            isOpen ? "rotate-180" : ""
-          } opacity-50`}
-        />
-      </div>
-
-      {/* Dropdown List */}
-      {isOpen && (
-        <div
-          className={`absolute z-50 w-full mt-2 p-1 rounded-xl border shadow-xl max-h-60 overflow-y-auto ${theme.card} ${theme.border}`}
-        >
-          {options.map((option) => (
-            <div
-              key={option}
-              onClick={() => toggleOption(option)}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors ${
-                selectedValues.includes(option)
-                  ? "bg-[var(--app-secondary-bg)] dark:bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
-                  : `hover:bg-gray-100 dark:hover:bg-white/5 ${theme.text}`
-              }`}
-            >
-              <span>{option}</span>
-              {selectedValues.includes(option) && <Check size={16} />}
-            </div>
-          ))}
-        </div>
-      )}
+  return <div className="relative" ref={root} onKeyDown={key} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false); }}>
+    {label && <label htmlFor={`${listId}-trigger`} className={`mb-2 block text-xs font-bold ${theme.textMuted}`}>{label}</label>}
+    <div className={`flex min-h-[44px] w-full flex-wrap items-center justify-between gap-2 rounded-xl border px-3 py-2 ${theme.bg} ${theme.text} ${isOpen ? "border-[var(--app-accent)] ring-4 ring-[var(--app-accent)]/10" : theme.border}`}>
+      <div className="flex flex-wrap gap-2">{selectedValues.map(value => <span key={value} className="flex items-center gap-1 rounded-md bg-[var(--app-secondary-bg)] px-2 py-1 text-xs text-[var(--app-accent)]">
+        {value}<button type="button" className="inline-flex items-center justify-center" aria-label={locale === "fa" ? `حذف ${value}` : `Remove ${value}`} onClick={() => toggle(value)}><X size={12} aria-hidden="true" /></button>
+      </span>)}</div>
+      <button id={`${listId}-trigger`} ref={trigger} type="button" aria-label={label ?? placeholder} aria-expanded={isOpen} aria-haspopup="listbox" aria-controls={listId}
+        className="flex min-h-11 flex-1 items-center justify-between gap-2 text-start" onClick={() => setIsOpen(!isOpen)}>
+        <span className="text-sm">{selectedValues.length === 0 ? placeholder : label}</span><ChevronDown size={16} aria-hidden="true" className={isOpen ? "rotate-180" : ""} />
+      </button>
     </div>
-  );
+    {isOpen && <div id={listId} role="listbox" aria-multiselectable="true" aria-label={label ?? placeholder} className={`absolute z-50 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border p-1 shadow-xl ${theme.card} ${theme.border}`}>
+      {options.map(option => <button key={option} type="button" role="option" aria-selected={selectedValues.includes(option)} onClick={() => toggle(option)}
+        className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm ${selectedValues.includes(option) ? "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]" : theme.text}`}>
+        <span>{option}</span>{selectedValues.includes(option) && <Check size={16} aria-hidden="true" />}
+      </button>)}
+    </div>}
+  </div>;
 }

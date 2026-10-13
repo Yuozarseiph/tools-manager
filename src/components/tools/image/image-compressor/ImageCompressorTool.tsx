@@ -1,5 +1,8 @@
 // components/tools/developer/image-compressor/ImageCompressorTool.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -122,7 +125,7 @@ export default function ImageCompressorTool() {
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
       {!file ? (
-        <div
+        <AccessibleDropzone
           {...getRootProps()}
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
           ${
@@ -133,7 +136,7 @@ export default function ImageCompressorTool() {
           ${theme.bg}
           `}
         >
-          <input {...getInputProps()} />
+          <AccessibleInput {...getInputProps()} />
           <div className="flex flex-col items-center gap-4">
             <div className={`p-4 rounded-full ${theme.secondary}`}>
               <FileUp size={32} className={theme.accent} />
@@ -147,7 +150,7 @@ export default function ImageCompressorTool() {
               </p>
             )}
           </div>
-        </div>
+        </AccessibleDropzone>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -179,7 +182,7 @@ export default function ImageCompressorTool() {
                 </div>
               </div>
             </div>
-            <button
+            <AccessibleButton purpose="delete"
               onClick={() => {
                 setFile(null);
                 setCompressedFile(null);
@@ -187,7 +190,7 @@ export default function ImageCompressorTool() {
               className="p-2 text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] rounded-lg"
             >
               <Trash2 size={20} />
-            </button>
+            </AccessibleButton>
           </div>
 
           <div className={`p-6 rounded-2xl border ${theme.border} ${theme.bg}`}>
@@ -199,7 +202,7 @@ export default function ImageCompressorTool() {
                 <span>{content.ui.settings.qualityLabel}</span>
                 <span>{Math.round(quality * 100)}%</span>
               </div>
-              <input
+              <AccessibleInput
                 type="range"
                 min="0.1"
                 max="1"
@@ -224,7 +227,7 @@ export default function ImageCompressorTool() {
               )}
             </button>
 
-            <button
+            <button data-testid="download-result"
               onClick={handleDownload}
               disabled={!compressedFile}
               className={`flex-1 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] 
@@ -246,7 +249,7 @@ export default function ImageCompressorTool() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}

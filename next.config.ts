@@ -32,6 +32,7 @@ const withPWA = require("@imbios/next-pwa")({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
+  experimental: { globalNotFound: true },
   images: {
     unoptimized: true,
   },

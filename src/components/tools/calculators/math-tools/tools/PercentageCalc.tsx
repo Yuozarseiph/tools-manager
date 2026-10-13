@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -99,7 +100,9 @@ export default function PercentageCalc() {
               ? content.percentage.labels.percent
               : content.percentage.labels.firstNumber}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={mode === "percentOf" || mode === "increase" || mode === "decrease"
+              ? content.percentage.labels.percent
+              : content.percentage.labels.firstNumber}
             type="number"
             value={num1}
             onChange={(e) => setNum1(e.target.value)}
@@ -113,7 +116,9 @@ export default function PercentageCalc() {
               ? content.percentage.labels.secondNumber
               : content.percentage.labels.number}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={mode === "whatPercent"
+              ? content.percentage.labels.secondNumber
+              : content.percentage.labels.number}
             type="number"
             value={num2}
             onChange={(e) => setNum2(e.target.value)}
@@ -133,7 +138,7 @@ export default function PercentageCalc() {
 
       {/* Result */}
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <p className={`text-lg font-bold ${theme.text}`}>{result}</p>
         </div>
       )}

@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useRef, useState } from "react";
 import {
@@ -259,7 +260,7 @@ export default function PdfToImageConverter() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <input
+      <AccessibleInput
         ref={inputRef}
         type="file"
         accept="application/pdf,.pdf"
@@ -294,7 +295,7 @@ export default function PdfToImageConverter() {
           <Images size={16} /> {t.modeImages}
         </button>
       </div>
-      <p className={`text-[10px] mb-5 ${theme.textMuted}`}>
+      <p className={`text-xs mb-5 ${theme.textMuted}`}>
         {mode === "pages" ? t.modePagesHint : t.modeImagesHint}
       </p>
 
@@ -312,12 +313,12 @@ export default function PdfToImageConverter() {
           />
         </div>
         <div
-          className={format === "png" ? "opacity-50 pointer-events-none" : ""}
+          className={format === "png" ? "opacity-100 pointer-events-none" : ""}
         >
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.quality} — {Math.round(quality * 100)}%
           </label>
-          <input
+          <AccessibleInput
             type="range"
             min={0.4}
             max={1}
@@ -334,7 +335,7 @@ export default function PdfToImageConverter() {
             >
               {t.scale} — {scale}×
             </label>
-            <input
+            <AccessibleInput
               type="range"
               min={1}
               max={4}
@@ -343,7 +344,7 @@ export default function PdfToImageConverter() {
               onChange={(e) => setScale(parseFloat(e.target.value))}
               className="w-full accent-[var(--app-accent)] mt-3"
             />
-            <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+            <p className={`text-xs mt-1 ${theme.textMuted}`}>
               {t.scaleHint}
             </p>
           </div>
@@ -369,14 +370,14 @@ export default function PdfToImageConverter() {
           <label className={`text-xs font-bold mb-2 block ${theme.textMuted}`}>
             {t.pageRange}
           </label>
-          <input
+          <AccessibleInput fieldLabel={t.pageRange}
             dir="ltr"
             value={pageRange}
             onChange={(e) => setPageRange(e.target.value)}
             placeholder={t.pageRangePlaceholder}
             className={`w-full px-3 py-2 rounded-xl border text-sm focus:outline-none ${theme.border} ${theme.bg} ${theme.text}`}
           />
-          <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+          <p className={`text-xs mt-1 ${theme.textMuted}`}>
             {t.pageRangeHint}
           </p>
         </div>
@@ -407,7 +408,7 @@ export default function PdfToImageConverter() {
                 {dedupe ? "✓" : "✗"}
               </span>
             </button>
-            <p className={`text-[10px] mt-1 ${theme.textMuted}`}>
+            <p className={`text-xs mt-1 ${theme.textMuted}`}>
               {t.dedupeHint}
             </p>
           </div>
@@ -440,7 +441,7 @@ export default function PdfToImageConverter() {
       )}
 
       {error && (
-        <p className="mt-4 text-sm text-[var(--app-error-text)] font-medium text-center">
+        <p role="alert" className="mt-4 text-sm text-[var(--app-error-text)] font-medium text-center">
           {error}
         </p>
       )}
@@ -544,7 +545,7 @@ export default function PdfToImageConverter() {
                       {it.width}×{it.height}
                     </span>
                   </div>
-                  <button
+                  <button data-testid="download-result"
                     onClick={() => downloadPage(it)}
                     className={`w-full inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium ${theme.secondary} ${theme.accent} hover:opacity-80`}
                   >

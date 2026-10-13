@@ -1,4 +1,6 @@
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import {
   useState,
@@ -82,7 +84,7 @@ const EditableCell = memo(function EditableCell({
   inputRef?: (el: HTMLInputElement | null) => void;
 }) {
   return (
-    <input
+    <AccessibleInput
       ref={inputRef}
       type="text"
       value={value}
@@ -142,7 +144,7 @@ const TableRow = memo(function TableRow({
       className={`group border-b ${theme.border} hover:opacity-95 transition-opacity`}
     >
       <td
-        className={`p-3 border-r text-center text-xs opacity-60 font-mono select-none ${theme.border}`}
+        className={`p-3 border-r text-center text-xs opacity-100 font-mono select-none ${theme.border}`}
       >
         {rowNumber}
       </td>
@@ -166,7 +168,7 @@ const TableRow = memo(function TableRow({
       ))}
 
       <td className={`p-2 text-center ${theme.border}`}>
-        <button
+        <button aria-label={deleteTooltip}
           onClick={() => onDeleteRow(row.__id)}
           className={`p-1.5 rounded-md transition-colors border ${theme.note.errorBorder} ${theme.note.errorBg} ${theme.note.errorText} hover:opacity-90`}
           title={deleteTooltip}
@@ -773,14 +775,14 @@ export default function ExcelEditorTool() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-3">
             <div className="flex flex-wrap items-center gap-2 min-w-0">
               {!showTable ? (
-                <label
+                <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                   className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-all active:scale-95 ${theme.primary}`}
                 >
                   <UploadCloud size={18} />
                   <span className="text-sm font-bold">
                     {content.ui.upload.buttonInitial}
                   </span>
-                  <input
+                  <AccessibleInput hasVisibleLabel
                     ref={fileInputRef}
                     type="file"
                     accept=".xlsx, .xls, .csv"
@@ -790,7 +792,7 @@ export default function ExcelEditorTool() {
                 </label>
               ) : (
                 <>
-                  <label
+                  <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                     className={`inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-colors hover:opacity-90 ${theme.border} ${theme.text}`}
                     title={content.ui.upload.acceptHint}
                   >
@@ -798,7 +800,7 @@ export default function ExcelEditorTool() {
                     <span className="text-sm font-semibold">
                       {content.ui.upload.buttonChange}
                     </span>
-                    <input
+                    <AccessibleInput hasVisibleLabel
                       ref={fileInputRef}
                       type="file"
                       accept=".xlsx, .xls, .csv"
@@ -827,7 +829,7 @@ export default function ExcelEditorTool() {
                     </span>
                   </button>
 
-                  <button
+                  <button aria-label={content.ui.actions.undoTitle}
                     onClick={handleUndo}
                     disabled={history.length === 0}
                     className={`p-2 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 ${theme.border} ${theme.text}`}
@@ -836,7 +838,7 @@ export default function ExcelEditorTool() {
                     <Undo size={18} />
                   </button>
 
-                  <button
+                  <button aria-label={content.ui.actions.closeFileTitle}
                     onClick={handleReset}
                     className={`p-2 rounded-xl border transition-colors hover:opacity-90 ${theme.note.errorBorder} ${theme.note.errorBg} ${theme.note.errorText}`}
                     title={content.ui.actions.closeFileTitle}
@@ -844,7 +846,7 @@ export default function ExcelEditorTool() {
                     <X size={18} />
                   </button>
 
-                  <button
+                  <button aria-label={fullscreenTitle}
                     onClick={toggleFullscreen}
                     className={`p-2 rounded-xl border transition-colors hover:opacity-90 ${theme.border} ${theme.text}`}
                     title={fullscreenTitle}
@@ -864,9 +866,9 @@ export default function ExcelEditorTool() {
                 <div className="relative w-full sm:w-72 min-w-0">
                   <Search
                     size={16}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 opacity-60 ${theme.textMuted}`}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 opacity-100 ${theme.textMuted}`}
                   />
-                  <input
+                  <AccessibleInput
                     type="text"
                     placeholder={content.ui.search.placeholder}
                     value={searchInput}
@@ -954,7 +956,7 @@ export default function ExcelEditorTool() {
                 </div>
 
                 <div className="flex gap-2 mt-2">
-                  <input
+                  <AccessibleInput
                     value={filter?.value ?? ""}
                     onChange={(e) =>
                       filter && setFilter({ ...filter, value: e.target.value })
@@ -965,7 +967,7 @@ export default function ExcelEditorTool() {
                   />
 
                   {filter?.op === "between" && (
-                    <input
+                    <AccessibleInput
                       value={filter?.value2 ?? ""}
                       onChange={(e) =>
                         filter &&
@@ -1053,7 +1055,7 @@ export default function ExcelEditorTool() {
                       placeholder={content.ui.sum.modeColumn}
                     />
                   ) : (
-                    <input
+                    <AccessibleInput
                       type="number"
                       min={1}
                       max={Math.max(1, filteredSortedRows.length)}
@@ -1070,7 +1072,7 @@ export default function ExcelEditorTool() {
                   {content.ui.sum.rangeRowsTitle}
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-1">
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={1}
                     max={Math.max(1, filteredSortedRows.length)}
@@ -1079,7 +1081,7 @@ export default function ExcelEditorTool() {
                     className={inputClass}
                     placeholder={content.ui.sum.from}
                   />
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={1}
                     max={Math.max(1, filteredSortedRows.length)}
@@ -1096,7 +1098,7 @@ export default function ExcelEditorTool() {
                       {content.ui.sum.rangeColsTitle}
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-1">
-                      <input
+                      <AccessibleInput
                         type="number"
                         min={1}
                         max={Math.max(1, headers.length)}
@@ -1107,7 +1109,7 @@ export default function ExcelEditorTool() {
                         className={inputClass}
                         placeholder={content.ui.sum.from}
                       />
-                      <input
+                      <AccessibleInput
                         type="number"
                         min={1}
                         max={Math.max(1, headers.length)}
@@ -1159,7 +1161,7 @@ export default function ExcelEditorTool() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={1}
                     max={Math.max(1, filteredSortedRows.length)}
@@ -1168,7 +1170,7 @@ export default function ExcelEditorTool() {
                     className={inputClass}
                     placeholder={content.ui.export.fromRowPlaceholder}
                   />
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={1}
                     max={Math.max(1, filteredSortedRows.length)}
@@ -1235,7 +1237,7 @@ export default function ExcelEditorTool() {
                         <div className="flex items-center justify-between gap-2">
                           <span className="truncate">{header}</span>
                           {sort?.column === header && (
-                            <span className={`text-[10px] ${theme.textMuted}`}>
+                            <span className={`text-xs ${theme.textMuted}`}>
                               {sort.dir === "asc" ? "▲" : "▼"}
                             </span>
                           )}
@@ -1292,19 +1294,19 @@ export default function ExcelEditorTool() {
               </span>
 
               <div className="flex items-center justify-end gap-2">
-                <button
+                <AccessibleButton purpose="action"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={safeCurrentPage === 1}
                   className={`p-2 rounded-xl border disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
                 >
                   <ChevronRight size={18} />
-                </button>
+                </AccessibleButton>
 
                 <span className={`text-sm font-mono px-2 ${theme.text}`}>
                   {safeCurrentPage} / {Math.max(1, totalPages)}
                 </span>
 
-                <button
+                <AccessibleButton purpose="action"
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages || 1, p + 1))
                   }
@@ -1312,7 +1314,7 @@ export default function ExcelEditorTool() {
                   className={`p-2 rounded-xl border disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
                 >
                   <ChevronLeft size={18} />
-                </button>
+                </AccessibleButton>
               </div>
             </div>
           </>
@@ -1321,7 +1323,7 @@ export default function ExcelEditorTool() {
             <div className={`text-lg font-extrabold ${theme.text}`}>
               {content.ui.empty.title}
             </div>
-            <div className={`mt-2 text-sm opacity-70 ${theme.textMuted}`}>
+            <div className={`mt-2 text-sm opacity-100 ${theme.textMuted}`}>
               {content.ui.empty.description}
             </div>
           </div>

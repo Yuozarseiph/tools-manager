@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -120,7 +121,7 @@ export default function TextToBinary() {
           {content.textToBinary.textInput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToBinary.textInput}
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             rows={4}
@@ -144,7 +145,7 @@ export default function TextToBinary() {
           {content.textToBinary.binaryOutput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToBinary.binaryOutput}
             value={binaryOutput}
             onChange={(e) => setBinaryOutput(e.target.value)}
             rows={4}

@@ -1,5 +1,6 @@
 // components/tools/excel/excel-chart/ExcelChartTool.tsx
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
 import * as XLSX from "xlsx";
@@ -135,14 +136,14 @@ export default function ExcelChartTool() {
       {/* Toolbar */}
       <div className={`p-6 border-b flex flex-col gap-6 ${theme.border}`}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-medium rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 w-full sm:w-auto active:scale-95">
+          <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-medium rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 w-full sm:w-auto active:scale-95">
             <UploadCloud size={20} />
             <span>
               {data.length > 0
                 ? content.ui.upload.buttonChange
                 : content.ui.upload.buttonInitial}
             </span>
-            <input
+            <AccessibleInput hasVisibleLabel
               type="file"
               accept=".xlsx, .xls, .csv"
               className="hidden"
@@ -153,13 +154,13 @@ export default function ExcelChartTool() {
           {data.length > 0 && (
             <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-xl border border-transparent dark:border-white/5">
               {chartTypeConfigs.map((type) => (
-                <button
+                <button aria-label={type.title}
                   key={type.id}
                   onClick={() => setChartType(type.id as typeof chartType)}
                   className={`p-2 rounded-lg transition-all duration-200 relative group ${
                     chartType === type.id
                       ? "bg-white dark:bg-gray-700 text-[var(--app-accent)] shadow-sm"
-                      : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-white/5"
+                      : "text-[var(--app-text-muted)] hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-white/5"
                   }`}
                   title={type.title}
                 >
@@ -238,11 +239,11 @@ export default function ExcelChartTool() {
             className={`p-4 rounded-xl border ${theme.border} bg-gray-50/30 dark:bg-white/5 flex flex-col gap-4`}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm font-bold opacity-70">
+              <div className="flex items-center gap-2 text-sm font-bold opacity-100">
                 <Settings2 size={16} />
                 <span>{content.ui.settings.title}</span>
               </div>
-              <span className="text-xs opacity-50">
+              <span className="text-xs opacity-100">
                 {content.ui.settings.rangeSummaryPrefix}
                 {filteredData.length}
                 {content.ui.settings.rangeSummaryMiddle}
@@ -253,7 +254,7 @@ export default function ExcelChartTool() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
-                <label className="text-xs opacity-70">
+                <label className="text-xs opacity-100">
                   {content.ui.settings.rangeLabel}{" "}
                   {chartType === "pie" && (
                     <span className="text-[var(--app-warning-text)] font-bold">
@@ -262,7 +263,7 @@ export default function ExcelChartTool() {
                   )}
                 </label>
                 <div className="flex items-center gap-2">
-                  <input
+                  <AccessibleInput
                     type="number"
                     min={0}
                     max={data.length}
@@ -270,8 +271,8 @@ export default function ExcelChartTool() {
                     onChange={(e) => setStartIndex(Number(e.target.value) || 0)}
                     className={`w-20 p-1.5 text-center rounded-lg border ${theme.border} bg-transparent`}
                   />
-                  <span className="opacity-50">-</span>
-                  <input
+                  <span className="opacity-100">-</span>
+                  <AccessibleInput fieldLabel="-"
                     type="number"
                     min={0}
                     max={data.length}
@@ -284,7 +285,7 @@ export default function ExcelChartTool() {
 
               {chartType !== "pie" ? (
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between text-xs opacity-70">
+                  <div className="flex justify-between text-xs opacity-100">
                     <span className="flex items-center gap-1">
                       <Minimize2 size={12} /> {content.ui.zoom.compact}
                     </span>
@@ -292,7 +293,7 @@ export default function ExcelChartTool() {
                       <Maximize2 size={12} /> {content.ui.zoom.expanded}
                     </span>
                   </div>
-                  <input
+                  <AccessibleInput
                     type="range"
                     min={100}
                     max={500}
@@ -305,7 +306,7 @@ export default function ExcelChartTool() {
                   />
                 </div>
               ) : (
-                <div className="flex items-center justify-center text-xs text-gray-400 border rounded-lg border-dashed">
+                <div className="flex items-center justify-center text-xs text-[var(--app-text-muted)] border rounded-lg border-dashed">
                   {content.ui.zoom.pieDisabled}
                 </div>
               )}
@@ -367,7 +368,7 @@ export default function ExcelChartTool() {
             </div>
           </div>
         ) : (
-          <div className="text-center opacity-40 flex flex-col items-center animate-pulse">
+          <div className="text-center flex flex-col items-center">
             <BarChart3
               size={80}
               className="mb-6 text-gray-300 dark:text-gray-700"

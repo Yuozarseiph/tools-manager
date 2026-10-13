@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -102,7 +103,7 @@ export default function Factorial() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.factorial.labels.input}
         </label>
-        <input
+        <AccessibleInput numeric fieldLabel={content.factorial.labels.input}
           type="number"
           value={num}
           onChange={(e) => setNum(e.target.value)}
@@ -122,7 +123,7 @@ export default function Factorial() {
 
       {/* Result */}
       {result && (
-        <div
+        <div role="status" aria-live="polite"
           className={`p-4 rounded-xl border ${theme.border} ${theme.bg} space-y-4`}
         >
           {/* Steps */}

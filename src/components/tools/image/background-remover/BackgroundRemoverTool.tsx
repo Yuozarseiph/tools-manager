@@ -1,5 +1,7 @@
 // components/tools/image/background-remover/BackgroundRemoverTool.tsx
 "use client";
+import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
+import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -165,13 +167,13 @@ export default function BackgroundRemoverTool() {
         className={`rounded-3xl border overflow-hidden ${theme.bg} ${theme.border}`}
       >
         {!file ? (
-          <div
+          <AccessibleDropzone
             {...getRootProps()}
             className={`text-center cursor-pointer p-10 w-full min-h-[260px] flex items-center justify-center transition-all duration-200 ${
               isDragActive ? "scale-95" : ""
             }`}
           >
-            <input {...getInputProps()} />
+            <AccessibleInput {...getInputProps()} />
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -187,7 +189,7 @@ export default function BackgroundRemoverTool() {
                 {content.ui.upload.dropSubtitle}
               </p>
             </motion.div>
-          </div>
+          </AccessibleDropzone>
         ) : (
           <div className="p-4 space-y-4">
             <div className="flex items-center justify-between gap-3">
@@ -203,7 +205,7 @@ export default function BackgroundRemoverTool() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
+                <button aria-label={content.ui.actions.reset}
                   onClick={resetAll}
                   className={`p-2 rounded-xl shadow-sm transition-all hover:scale-105 ${theme.card} border ${theme.border}`}
                   title={content.ui.actions.reset}
@@ -221,7 +223,7 @@ export default function BackgroundRemoverTool() {
                   {content.ui.input.title}
                 </p>
                 {inputPreview && (
-                  <img
+                  <AccessiblePreview purpose="input"
                     src={inputPreview}
                     alt="Input"
                     className="w-full max-h-[360px] object-contain rounded-xl"
@@ -238,7 +240,7 @@ export default function BackgroundRemoverTool() {
                     {content.ui.output.title}
                   </p>
 
-                  <button
+                  <button aria-label="Remove background"
                     onClick={runRemoveBackground}
                     disabled={isProcessing}
                     className={`px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-2 ${
@@ -252,7 +254,7 @@ export default function BackgroundRemoverTool() {
 
                 <div className="w-full min-h-[220px] flex items-center justify-center">
                   {outputUrl ? (
-                    <img
+                    <AccessiblePreview purpose="output"
                       src={outputUrl}
                       alt="Output"
                       className="w-full max-h-[360px] object-contain rounded-xl"
@@ -279,7 +281,7 @@ export default function BackgroundRemoverTool() {
                         .replace("{size}", formatBytes(outputSize ?? 0))
                         .replace("{type}", "PNG")}
                     </p>
-                    <button
+                    <button data-testid="download-result"
                       onClick={download}
                       className={`px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-2 ${theme.secondary} ${theme.accent}`}
                     >
@@ -306,7 +308,7 @@ export default function BackgroundRemoverTool() {
           {content.ui.upload.urlHint}
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
+          <AccessibleInput
             type="url"
             value={imageUrlInput}
             onChange={(e) => setImageUrlInput(e.target.value)}

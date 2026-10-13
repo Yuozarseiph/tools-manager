@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, type ChangeEvent, type ReactNode } from "react";
 import { Wand2 } from "lucide-react";
@@ -96,7 +97,7 @@ export default function ImageEditorTool() {
         {/* ورودی فایل + URL */}
         <div className="flex flex-col items-stretch gap-2 sm:items-end">
           <div className="flex flex-wrap items-center gap-2 justify-end">
-            <input
+            <AccessibleInput
               id="image-editor-upload"
               type="file"
               accept="image/*"
@@ -111,7 +112,7 @@ export default function ImageEditorTool() {
             </label>
 
             <div className="flex items-center gap-2">
-              <input
+              <AccessibleInput fieldLabel={content.ui.editorHeader.upload}
                 type="url"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
@@ -137,7 +138,7 @@ export default function ImageEditorTool() {
             )}
           </div>
 
-          <p className={`text-[10px] leading-snug ${theme.textMuted} text-right`}>
+          <p className={`text-xs leading-snug ${theme.textMuted} text-right`}>
             {content.ui.editorHeader.urlHint}
           </p>
         </div>

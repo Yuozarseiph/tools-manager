@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
@@ -69,7 +70,7 @@ export default function HashGeneratorTool() {
         <label className={`block text-sm font-bold mb-4 ${theme.textMuted}`}>
           {content.ui.input.label}
         </label>
-        <textarea
+        <AccessibleTextarea fieldLabel={content.ui.input.label}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={content.ui.input.placeholder}
@@ -133,7 +134,7 @@ function HashRow({
   return (
     <div
       className={`relative p-4 rounded-2xl border flex flex-col gap-2 group transition-all ${
-        value ? theme.bg : "opacity-50"
+        value ? theme.bg : "opacity-100"
       } ${theme.border}`}
     >
       <div className="flex items-center justify-between">
@@ -148,7 +149,7 @@ function HashRow({
             className={`p-2 rounded-lg transition-colors ${
               isCopied
                 ? "text-[var(--app-success-text)] bg-[var(--app-success-bg)] dark:bg-[var(--app-success-bg)]"
-                : "text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                : "text-[var(--app-text-muted)] hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             {isCopied ? <Check size={16} /> : <Copy size={16} />}

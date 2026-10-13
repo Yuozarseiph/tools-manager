@@ -1,5 +1,7 @@
 // components/tools/developer/code-visualizer/CodeVisualizerTool.tsx
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import {
@@ -461,7 +463,7 @@ export default function CodeVisualizerTool() {
 
                 {(showGraph || !isMobile) && (
                   <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                    <button
+                    <button aria-label={content.ui.layout.hierarchical}
                       onClick={() => setLayoutMode("hierarchical")}
                       className={`p-1 md:p-1.5 rounded-md transition-all ${
                         layoutMode === "hierarchical"
@@ -472,7 +474,7 @@ export default function CodeVisualizerTool() {
                     >
                       <LayoutGrid size={14} className="md:w-4 md:h-4" />
                     </button>
-                    <button
+                    <button aria-label={content.ui.layout.tree}
                       onClick={() => setLayoutMode("tree")}
                       className={`p-1 md:p-1.5 rounded-md transition-all ${
                         layoutMode === "tree"
@@ -483,7 +485,7 @@ export default function CodeVisualizerTool() {
                     >
                       <Cpu size={14} className="md:w-4 md:h-4" />
                     </button>
-                    <button
+                    <button aria-label={content.ui.layout.compact}
                       onClick={() => setCompactMode(!compactMode)}
                       className={`p-1 md:p-1.5 rounded-md transition-all ${
                         compactMode
@@ -499,7 +501,7 @@ export default function CodeVisualizerTool() {
               </div>
 
               <div className="flex gap-2">
-                <button
+                <button aria-label={content.ui.actions.loadExample}
                   onClick={() => {
                     if (language === "js") setCode(sampleJavaScriptCode);
                     else if (language === "csharp") setCode(sampleCSharpCode);
@@ -511,7 +513,7 @@ export default function CodeVisualizerTool() {
                   {content.ui.actions.loadExample}
                 </button>
 
-                <button
+                <button aria-label={content.ui.actions.refresh}
                   onClick={processGraph}
                   disabled={isProcessing}
                   className={`p-1.5 md:p-2 rounded-lg ${theme.primary} flex items-center gap-1 md:gap-2 disabled:opacity-50 text-xs md:text-sm`}
@@ -528,7 +530,11 @@ export default function CodeVisualizerTool() {
                   )}
                 </button>
 
-                <button
+                <button aria-label={
+                    fullscreen
+                      ? content.ui.actions.exitFullscreen
+                      : content.ui.actions.fullscreen
+                  }
                   onClick={handleFullscreen}
                   className={`p-1.5 md:p-2 rounded-lg border ${theme.border} ${theme.card} ${theme.text}`}
                   title={
@@ -591,7 +597,7 @@ export default function CodeVisualizerTool() {
                 </div>
                 <div
                   className={`font-bold ${
-                    stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-gray-500"
+                    stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-[var(--app-text-muted)]"
                   }`}
                 >
                   {statusLabelDesktop}
@@ -608,7 +614,7 @@ export default function CodeVisualizerTool() {
               </div>
               <div
                 className={`font-bold text-sm ${
-                  stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-gray-500"
+                  stats.nodes > 0 ? "text-[var(--app-success-text)]" : "text-[var(--app-text-muted)]"
                 }`}
               >
                 {statusLabelMobile}
@@ -644,14 +650,14 @@ export default function CodeVisualizerTool() {
                 >
                   {getModeBadge()}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-[var(--app-text-muted)]">
                   {code.split("\n").length} {content.ui.editor.linesSuffix}
                 </div>
               </div>
             </div>
 
             {error && (
-              <div className="p-2 md:p-3 border-b bg-[var(--app-error-bg)] border-[var(--app-error-border)]">
+              <div role="alert" className="p-2 md:p-3 border-b bg-[var(--app-error-bg)] border-[var(--app-error-border)]">
                 <div className="flex items-center gap-2">
                   <div className="text-[var(--app-error-text)] text-xs">
                     ⚠
@@ -664,7 +670,7 @@ export default function CodeVisualizerTool() {
             )}
 
             <div className="relative flex-1 overflow-hidden">
-              <textarea
+              <AccessibleTextarea
                 value={code}
                 onChange={(e) => {
                   setCode(e.target.value);
@@ -734,7 +740,7 @@ export default function CodeVisualizerTool() {
             ) : nodes.length === 0 ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center p-4">
-                  <div className="text-3xl md:text-4xl mb-2 md:mb-4 opacity-50">
+                  <div className="text-3xl md:text-4xl mb-2 md:mb-4 opacity-100">
                     📊
                   </div>
                   <h3
@@ -827,7 +833,7 @@ export default function CodeVisualizerTool() {
             </div>
 
             {isMobile && showGraph && (
-              <button
+              <AccessibleButton purpose="action"
                 onClick={() => {
                   setShowEditor(true);
                   setShowGraph(false);
@@ -835,7 +841,7 @@ export default function CodeVisualizerTool() {
                 className={`absolute top-2 right-2 p-2 rounded-lg backdrop-blur-sm ${theme.card} border ${theme.border} shadow-sm`}
               >
                 <Smartphone size={14} />
-              </button>
+              </AccessibleButton>
             )}
           </div>
         )}

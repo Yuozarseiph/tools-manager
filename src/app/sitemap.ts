@@ -1,94 +1,14 @@
-// app/sitemap.ts
 import type { MetadataRoute } from "next";
-
+import { TOOLS } from "@/data/tools";
+import updated from "@/data/page-updated.json";
 export const dynamic = "force-static";
-
-const baseUrl = "https://qodeforge.ir";
-
+const base = "https://qodeforge.ir";
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = [
-    "",
-    "/about",
-    "/contact",
-    "/docs",
-    "/changelog",
-    "/privacy",
-    "/download",
-  ];
-
-  const toolsRoutes = [
-    // Audio
-    "/tools/audio-editor",
-    "/tools/audio-extractor",
-
-    // Calculators
-    "/tools/bank",
-    "/tools/math-tools",
-
-    // Developer
-    "/tools/base64",
-    "/tools/code-editor",
-    "/tools/code-visualizer",
-    "/tools/json-formatter",
-    "/tools/markdown-preview",
-
-    // Excel
-    "/tools/excel-chart",
-    "/tools/excel-editor",
-    "/tools/excel-viewer",
-
-    // Image
-    "/tools/background-remover",
-    "/tools/color-picker",
-    "/tools/image-compressor",
-    "/tools/image-converter",
-    "/tools/image-editor",
-    "/tools/image-resizer",
-    "/tools/image-to-pdf",
-    "/tools/image-to-svg",
-    "/tools/image-to-text",
-
-    // PDF
-    "/tools/pdf-editor",
-    "/tools/pdf-merge",
-    "/tools/text-to-pdf",
-    "/tools/word-to-pdf",
-
-    // Presentation
-    "/tools/html-to-pptx",
-
-    // Security
-    "/tools/exif-remover",
-    "/tools/hash-generator",
-    "/tools/password-generator",
-    "/tools/security-tools",
-
-    // System
-    "/tools/ip-checker",
-    "/tools/user-agent",
-
-    // Utility
-    "/tools/date-converter",
-    "/tools/qr-generator",
-    "/tools/qr-reader",
-    "/tools/unit-converter",
-    "/tools/word-counter",
-  ];
-
-  const allRoutes = [...staticRoutes, ...toolsRoutes];
-
-  const lastModified = new Date();
-
-  return allRoutes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified,
-    changeFrequency: "weekly" as const,
-    priority: route === "" ? 1 : 0.8,
-    alternates: {
-      languages: {
-        "fa-IR": `${baseUrl}${route || "/"}?lang=fa`,
-        "en-US": `${baseUrl}${route || "/"}?lang=en`,
-      },
-    },
-  }));
+  const active = TOOLS.filter(tool => tool.status === "active");
+  const paths = ["", "/about", "/contact", "/docs", "/changelog", "/privacy", "/download", "/agents",
+    ...active.filter(tool => tool.href.startsWith("/tools/")).map(tool => tool.href), ...[...new Set(active.map(tool => tool.category))].map(category => `/tools/${category}`)];
+  return (["fa", "en"] as const).flatMap(locale => paths.map(path => ({
+    url: `${base}/${locale}${path}`, lastModified: (updated as Record<string, string>)[path] ?? updated[""],
+    priority: path === "" ? 1 : 0.8, alternates: { languages: { "fa-IR": `${base}/fa${path}`, "en-US": `${base}/en${path}` } },
+  })));
 }

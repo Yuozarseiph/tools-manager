@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -132,7 +133,7 @@ export default function ResizeTab({ imageUrl, hasImage }: ResizeTabProps) {
             <label className={`block mb-1 ${theme.textMuted}`}>
               {content.ui.properties.width}
             </label>
-            <input
+            <AccessibleInput fieldLabel={content.ui.properties.width}
               type="number"
               min={1}
               value={width ?? ""}
@@ -144,7 +145,7 @@ export default function ResizeTab({ imageUrl, hasImage }: ResizeTabProps) {
             <label className={`block mb-1 ${theme.textMuted}`}>
               {content.ui.properties.height}
             </label>
-            <input
+            <AccessibleInput fieldLabel={content.ui.properties.height}
               type="number"
               min={1}
               value={height ?? ""}
@@ -156,7 +157,7 @@ export default function ResizeTab({ imageUrl, hasImage }: ResizeTabProps) {
 
         {/* حفظ نسبت */}
         <label className="inline-flex items-center gap-2 text-xs mt-1">
-          <input
+          <AccessibleInput hasVisibleLabel
             type="checkbox"
             checked={keepRatio}
             onChange={(e) => setKeepRatio(e.target.checked)}
@@ -171,9 +172,9 @@ export default function ResizeTab({ imageUrl, hasImage }: ResizeTabProps) {
           <div className="mt-3">
             <label className={`flex justify-between text-xs mb-1 ${theme.textMuted}`}>
               <span>{content.ui.resizeTab.scale}</span>
-              <span className="tabular-nums text-[11px]">{scale}%</span>
+              <span className="tabular-nums text-xs">{scale}%</span>
             </label>
-            <input
+            <AccessibleInput
               type="range"
               min={10}
               max={300}

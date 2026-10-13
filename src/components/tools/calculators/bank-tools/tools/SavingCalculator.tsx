@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -87,7 +88,7 @@ export default function SavingCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.saving.labels.initialAmount}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.saving.labels.initialAmount}
             type="number"
             value={initialAmount}
             onChange={(e) => setInitialAmount(e.target.value)}
@@ -98,7 +99,7 @@ export default function SavingCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.saving.labels.monthlyDeposit}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.saving.labels.monthlyDeposit}
             type="number"
             value={monthlyDeposit}
             onChange={(e) => setMonthlyDeposit(e.target.value)}
@@ -109,7 +110,7 @@ export default function SavingCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.saving.labels.annualReturn}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.saving.labels.annualReturn}
             type="number"
             value={annualReturn}
             onChange={(e) => setAnnualReturn(e.target.value)}
@@ -120,7 +121,7 @@ export default function SavingCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.saving.labels.period}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.saving.labels.period}
             type="number"
             value={period}
             onChange={(e) => setPeriod(e.target.value)}

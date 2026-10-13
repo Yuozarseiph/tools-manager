@@ -342,7 +342,7 @@ function MobileTrigger({ label, value, icon: Icon, onClick, theme }: any) {
     >
       <Icon size={16} className={theme.accent} aria-hidden="true" />
       <div className="min-w-0 flex-1">
-        <div className={`text-[10px] font-bold ${theme.textMuted}`}>{label}</div>
+        <div className={`text-xs font-bold ${theme.textMuted}`}>{label}</div>
         <div className={`truncate text-xs font-black ${theme.text}`}>{value}</div>
       </div>
       <ChevronDown size={13} className={theme.textMuted} aria-hidden="true" />

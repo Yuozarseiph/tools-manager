@@ -1,5 +1,6 @@
 // components/tools/developer/code-editor/components/SimpleEditor.tsx
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useRef, useEffect } from "react";
 import { Save } from "lucide-react";
@@ -68,7 +69,7 @@ export default function SimpleEditor({
             {file.name}
           </span>
           <span
-            className="px-1.5 py-0.5 rounded text-[10px]"
+            className="px-1.5 py-0.5 rounded text-xs"
             style={{
               backgroundColor: "var(--app-secondary-bg)",
               color: "var(--app-secondary-text)",
@@ -84,7 +85,7 @@ export default function SimpleEditor({
       </div>
 
       {/* Textarea */}
-      <textarea
+      <AccessibleTextarea
         ref={textareaRef}
         value={file.content}
         onChange={(e) => onContentChange(file.id, e.target.value)}

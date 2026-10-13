@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -119,12 +120,12 @@ export default function FiltersTab({ imageUrl, hasImage }: FiltersTabProps) {
                   className={`flex justify-between text-xs mb-1 ${theme.textMuted}`}
                 >
                   <span>{label}</span>
-                  <span className="tabular-nums text-[11px]">
+                  <span className="tabular-nums text-xs">
                     {filters[key]}
                     {key === "blur" ? "px" : "%"}
                   </span>
                 </label>
-                <input
+                <AccessibleInput
                   type="range"
                   min={min}
                   max={max}

@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -102,7 +103,7 @@ export default function AESEncryption() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.aesEncryption.secretKey}
         </label>
-        <input
+        <AccessibleInput fieldLabel={content.aesEncryption.secretKey}
           type="password"
           value={secretKey}
           onChange={(e) => setSecretKey(e.target.value)}
@@ -117,7 +118,7 @@ export default function AESEncryption() {
           {content.aesEncryption.plainText}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.aesEncryption.plainText}
             value={plainText}
             onChange={(e) => setPlainText(e.target.value)}
             rows={6}
@@ -140,7 +141,7 @@ export default function AESEncryption() {
           {content.aesEncryption.encryptedText}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.aesEncryption.encryptedText}
             value={encryptedText}
             onChange={(e) => setEncryptedText(e.target.value)}
             rows={6}
@@ -170,7 +171,7 @@ export default function AESEncryption() {
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 rounded-xl bg-[var(--app-error-bg)] border border-[var(--app-error-border)]">
+        <div role="alert" className="p-4 rounded-xl bg-[var(--app-error-bg)] border border-[var(--app-error-border)]">
           <p className="text-[var(--app-error-text)] text-sm">{error}</p>
         </div>
       )}

@@ -1,5 +1,6 @@
 // components/tools/calendar/date-converter/DateConverterTool.tsx
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import {
@@ -427,7 +428,7 @@ export default function DateConverterTool() {
         </div>
 
         {result && !isInvalid && (
-          <button
+          <button aria-label={copied ? uiText.copied : uiText.copy}
             type="button"
             onClick={handleCopy}
             className={`absolute bottom-4 left-4 p-2 rounded-lg border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
@@ -486,7 +487,7 @@ function InputGroup({
   return (
     <div className="space-y-1">
       <label className={`text-xs font-bold ${theme.textMuted}`}>{label}</label>
-      <input
+      <AccessibleInput fieldLabel={label}
         inputMode="numeric"
         type="text"
         value={value}
@@ -501,7 +502,7 @@ function InputGroup({
           theme.ring,
         ].join(" ")}
       />
-      {error && <p className="text-xs text-[var(--app-error-text)] mt-1 text-right">{error}</p>}
+      {error && <p role="alert" className="text-xs text-[var(--app-error-text)] mt-1 text-right">{error}</p>}
     </div>
   );
 }

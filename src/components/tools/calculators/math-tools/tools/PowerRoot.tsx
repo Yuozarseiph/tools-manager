@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -75,7 +76,9 @@ export default function PowerRoot() {
               ? content.powerRoot.labels.base
               : content.powerRoot.labels.number}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={mode === "power"
+              ? content.powerRoot.labels.base
+              : content.powerRoot.labels.number}
             type="number"
             value={base}
             onChange={(e) => setBase(e.target.value)}
@@ -89,7 +92,9 @@ export default function PowerRoot() {
               ? content.powerRoot.labels.exponent
               : content.powerRoot.labels.degree}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={mode === "power"
+              ? content.powerRoot.labels.exponent
+              : content.powerRoot.labels.degree}
             type="number"
             value={exponent}
             onChange={(e) => setExponent(e.target.value)}
@@ -107,7 +112,7 @@ export default function PowerRoot() {
       </button>
 
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <p className={`text-xl font-bold text-center ${theme.text}`}>
             {result}
           </p>

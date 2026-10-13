@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea, AccessibleSelect, AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -56,7 +57,7 @@ export default function OneTimeNote() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {content.oneTimeNote.noteContent}
             </label>
-            <textarea
+            <AccessibleTextarea fieldLabel={content.oneTimeNote.noteContent}
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               rows={8}
@@ -71,7 +72,7 @@ export default function OneTimeNote() {
               <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
                 {content.oneTimeNote.expiresIn}
               </label>
-              <select
+              <AccessibleSelect fieldLabel={content.oneTimeNote.expiresIn}
                 value={expiresIn}
                 onChange={(e) => setExpiresIn(e.target.value)}
                 className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
@@ -83,14 +84,14 @@ export default function OneTimeNote() {
                     </option>
                   )
                 )}
-              </select>
+              </AccessibleSelect>
             </div>
 
             <div>
               <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
                 {content.oneTimeNote.maxViews}
               </label>
-              <select
+              <AccessibleSelect fieldLabel={content.oneTimeNote.maxViews}
                 value={maxViews}
                 onChange={(e) => setMaxViews(e.target.value)}
                 className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
@@ -102,7 +103,7 @@ export default function OneTimeNote() {
                     </option>
                   )
                 )}
-              </select>
+              </AccessibleSelect>
             </div>
           </div>
 
@@ -116,7 +117,7 @@ export default function OneTimeNote() {
                 size={20}
                 className={`absolute right-3 top-3 ${theme.textMuted}`}
               />
-              <input
+              <AccessibleInput fieldLabel={content.oneTimeNote.password}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

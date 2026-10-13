@@ -4,15 +4,13 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
   type ReactNode,
 } from "react";
 import {
-  detectInitialLocale,
   LOCALE_STORAGE_KEY,
   type Locale,
 } from "@/lib/locale-detection";
+import { localizedPath } from "@/lib/localized-path";
 
 export type { Locale } from "@/lib/locale-detection";
 
@@ -73,18 +71,10 @@ function getByPath(obj: unknown, path: string): string {
   return typeof value === "string" ? value : path;
 }
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(FALLBACK_LOCALE);
-  const [messages, setMessages] = useState<Messages>(
-    commonTranslations[FALLBACK_LOCALE]
-  );
-
-  const applyLocale = (
-    next: Locale,
-    options: { syncUrl?: boolean } = {},
-  ) => {
-    setLocaleState(next);
-    setMessages(commonTranslations[next]);
+export function LanguageProvider({ children, initialLocale = FALLBACK_LOCALE }: { children: ReactNode; initialLocale?: Locale }) {
+  const locale = initialLocale;
+  const messages: Messages = commonTranslations[locale];
+  const applyLocale = (next: Locale) => {
 
     if (typeof window !== "undefined") {
       try {
@@ -94,21 +84,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       } catch {
         // Language switching still works when storage is unavailable.
       }
-      if (options.syncUrl ?? true) {
-        const url = new URL(window.location.href);
-        url.searchParams.set("lang", next);
-        window.history.replaceState(window.history.state, "", url);
-      }
-      document.documentElement.lang = next;
-      document.documentElement.dir = next === "fa" ? "rtl" : "ltr";
+      const url = new URL(window.location.href);
+      url.pathname = localizedPath(url.pathname, next);
+      url.searchParams.delete("lang");
+      window.location.assign(url);
     }
   };
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    applyLocale(detectInitialLocale(), { syncUrl: false });
-  }, []);
 
   const t = (path: string) => getByPath(messages, path);
 

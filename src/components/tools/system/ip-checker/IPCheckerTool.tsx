@@ -157,7 +157,7 @@ export default function IPCheckerTool() {
       <div
         className={`relative overflow-hidden p-8 rounded-3xl border shadow-lg text-center ${theme.card} ${theme.border}`}
       >
-        <button
+        <button aria-label={content.ui.main.refreshTitle}
           onClick={fetchIP}
           disabled={loading}
           className={`absolute top-4 right-4 p-2 rounded-full transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
@@ -171,7 +171,7 @@ export default function IPCheckerTool() {
         {loading ? (
           <div className="flex flex-col items-center gap-4 py-10">
             <div className="w-16 h-16 border-4 border-[var(--app-accent)] border-t-transparent rounded-full animate-spin" />
-            <p className={`text-sm animate-pulse ${theme.textMuted}`}>
+            <p role="status" className={`text-sm ${theme.textMuted}`}>
               {content.ui.main.loading}
             </p>
           </div>

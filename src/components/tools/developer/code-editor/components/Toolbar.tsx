@@ -1,5 +1,6 @@
 // components/tools/developer/code-editor/components/Toolbar.tsx
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -117,7 +118,7 @@ export default function Toolbar({
 
       {isMobile && (
         <div className="relative">
-          <button
+          <button aria-label={isFa ? "بیشتر" : "More"}
             ref={moreBtnRef}
             onClick={openMoreMenu}
             className="p-1.5 rounded transition-colors flex items-center gap-1 text-xs hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -282,10 +283,10 @@ export default function Toolbar({
       />
       {showResetConfirm ? (
         <div className="flex items-center gap-1 px-1">
-          <span className="text-[10px] text-[var(--app-error-text)] whitespace-nowrap">
+          <span className="text-xs text-[var(--app-error-text)] whitespace-nowrap">
             {isFa ? "مطمئنی؟" : "Sure?"}
           </span>
-          <button
+          <AccessibleButton purpose="action"
             onClick={() => {
               onReset();
               setShowResetConfirm(false);
@@ -293,14 +294,14 @@ export default function Toolbar({
             className="p-1 rounded bg-red-500 text-white hover:bg-red-600"
           >
             <Check size={12} />
-          </button>
-          <button
+          </AccessibleButton>
+          <AccessibleButton purpose="close"
             onClick={() => setShowResetConfirm(false)}
             className="p-1 rounded border"
             style={{ borderColor: "var(--app-border)" }}
           >
             <X size={12} style={{ color: "var(--app-text)" }} />
-          </button>
+          </AccessibleButton>
         </div>
       ) : (
         <Btn
@@ -365,7 +366,7 @@ export default function Toolbar({
           </>
         )}
         {hasUnsavedChanges && (
-          <span className="text-[var(--app-warning-text)] text-[11px] shrink-0">
+          <span className="text-[var(--app-warning-text)] text-xs shrink-0">
             ● {isFa ? "ذخیره نشده" : "Unsaved"}
           </span>
         )}
@@ -396,7 +397,7 @@ function Btn({
   children?: React.ReactNode;
 }) {
   return (
-    <button
+    <button aria-label={tooltip}
       onClick={onClick}
       className={`p-1.5 rounded transition-colors flex items-center gap-1 text-xs ${
         active

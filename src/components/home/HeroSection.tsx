@@ -14,7 +14,7 @@ export default function HeroSection() {
   const scrollToTools = () => {
     document
       .getElementById("tools-workspace")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      ?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   };
 
   return (

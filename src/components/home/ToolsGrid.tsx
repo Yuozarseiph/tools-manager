@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import {
   memo,
@@ -8,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
+import Link from "@/components/LocalizedLink";
 import {
   ArrowLeft,
   Calculator,
@@ -157,7 +158,7 @@ const ToolCard = memo(function ToolCard({
 
             {tool.badge && (
               <span
-                className={`shrink-0 rounded-full border px-2 py-1 text-[9px] font-black ${theme.border} ${theme.secondary} ${theme.accent}`}
+                className={`shrink-0 rounded-full border px-2 py-1 text-xs font-black ${theme.border} ${theme.secondary} ${theme.accent}`}
               >
                 {tool.badge}
               </span>
@@ -230,7 +231,7 @@ export default function ToolsGrid() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [visibleCount, setVisibleCount] = useState(18);
+  const [visibleCount, setVisibleCount] = useState(TOOLS.length);
   const [pinnedTools, setPinnedTools] = useState<string[]>([]);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -540,14 +541,14 @@ export default function ToolsGrid() {
               } ${theme.textMuted}`}
             />
 
-            <input
+            <AccessibleInput
               id="tools-search"
               type="search"
               value={searchQuery}
               placeholder={content.search.placeholder}
               onChange={(event) => {
                 setSearchQuery(event.target.value);
-                setVisibleCount(18);
+                setVisibleCount(TOOLS.length);
               }}
               className={`min-h-12 w-full rounded-[16px] border bg-transparent py-3 text-sm outline-none transition-colors focus:border-[var(--app-accent)] focus:ring-4 focus:ring-[var(--app-ring)] ${
                 isRTL ? "pl-11 pr-11" : "pl-11 pr-11"
@@ -632,7 +633,7 @@ export default function ToolsGrid() {
                         aria-checked={active}
                         onClick={() => {
                           setActiveCategory(category.id);
-                          setVisibleCount(18);
+                          setVisibleCount(TOOLS.length);
                           setShowCategoryDropdown(false);
                         }}
                         className={`flex min-h-16 items-center gap-2 rounded-[15px] px-3 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] ${
@@ -646,7 +647,7 @@ export default function ToolsGrid() {
                           <span className="block truncate text-xs font-black">
                             {label}
                           </span>
-                          <span className="mt-0.5 block text-[10px] opacity-70">
+                          <span className="mt-0.5 block text-xs opacity-70">
                             {count}
                           </span>
                         </span>
@@ -753,7 +754,7 @@ export default function ToolsGrid() {
             </div>
 
             {exportFormat === "file" ? (
-              <button
+              <button data-testid="download-result"
                 type="button"
                 onClick={handleExportFile}
                 className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] font-black text-white ${theme.primary}`}
@@ -763,7 +764,7 @@ export default function ToolsGrid() {
               </button>
             ) : (
               <>
-                <textarea
+                <AccessibleTextarea
                   readOnly
                   aria-label={uiText.text}
                   value={JSON.stringify(getExportData(), null, 2)}
@@ -805,7 +806,7 @@ export default function ToolsGrid() {
               {uiText.uploadFile}
             </button>
 
-            <input
+            <AccessibleInput
               ref={fileInputRef}
               type="file"
               accept=".json"
@@ -817,7 +818,7 @@ export default function ToolsGrid() {
               {uiText.or}
             </div>
 
-            <textarea
+            <AccessibleTextarea
               aria-label={uiText.pasteJson}
               placeholder={uiText.pasteJson}
               value={importText}

@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -123,15 +124,15 @@ export default function QRScanner() {
         <button
           onClick={scanning ? stopCamera : startCamera}
           className={`flex items-center justify-center gap-2 py-3 rounded-xl font-bold ${
-            scanning ? "bg-red-500" : theme.secondary
-          } text-white`}
+            scanning ? "bg-red-700 text-white" : theme.secondary
+          }`}
         >
           <Camera size={20} />
           {scanning ? "متوقف کردن" : content.qrScanner.useCamera}
         </button>
       </div>
 
-      <input
+      <AccessibleInput
         ref={fileInputRef}
         type="file"
         accept="image/*"
@@ -154,7 +155,7 @@ export default function QRScanner() {
 
       {/* Result */}
       {result && (
-        <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
+        <div role="status" aria-live="polite" className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
           <div className="flex justify-between items-center mb-2">
             <h3 className={`font-bold ${theme.text}`}>
               {content.qrScanner.result}

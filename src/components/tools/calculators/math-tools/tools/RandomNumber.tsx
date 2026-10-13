@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -58,7 +59,7 @@ export default function RandomNumber() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.random.labels.min}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.random.labels.min}
             type="number"
             value={min}
             onChange={(e) => setMin(e.target.value)}
@@ -69,7 +70,7 @@ export default function RandomNumber() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.random.labels.max}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.random.labels.max}
             type="number"
             value={max}
             onChange={(e) => setMax(e.target.value)}
@@ -80,7 +81,7 @@ export default function RandomNumber() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.random.labels.count}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.random.labels.count}
             type="number"
             value={count}
             onChange={(e) => setCount(e.target.value)}
@@ -90,7 +91,7 @@ export default function RandomNumber() {
       </div>
 
       <label className="flex items-center gap-3 cursor-pointer">
-        <input
+        <AccessibleInput hasVisibleLabel
           type="checkbox"
           checked={unique}
           onChange={(e) => setUnique(e.target.checked)}

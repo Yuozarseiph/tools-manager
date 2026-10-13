@@ -1,5 +1,7 @@
 // src/components/tools/image/image-to-svg/image-to-svg.tsx
 "use client";
+import { AccessiblePreview } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -270,7 +272,7 @@ export default function ImageToSvgConverter() {
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <input
+              <AccessibleInput
                 type="file"
                 accept="image/*,.jpg,.jpeg,.png,.webp"
                 onChange={handleFileSelect}
@@ -311,7 +313,7 @@ export default function ImageToSvgConverter() {
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label={content.ui.file.removeTitle}
                   onClick={resetAll}
                   disabled={isConverting}
                   className="text-[var(--app-error-text)] hover:opacity-80 p-2 disabled:opacity-50"
@@ -324,7 +326,7 @@ export default function ImageToSvgConverter() {
 
             {/* خطاها */}
             {error && (
-              <div className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
+              <div role="alert" className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
                 <AlertCircle
                   size={20}
                   className="text-[var(--app-error-text)] flex-shrink-0 mt-0.5"
@@ -360,7 +362,7 @@ export default function ImageToSvgConverter() {
             {selectedFile && (
               <div className="space-y-3">
                 {progressStep !== "success" && (
-                  <button
+                  <button data-testid="download-result"
                     onClick={convertToSvg}
                     disabled={isConverting}
                     className={`w-full px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -374,7 +376,7 @@ export default function ImageToSvgConverter() {
 
                 {svgBlobUrl && progressStep === "success" && (
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <button
+                    <button data-testid="download-result"
                       onClick={handleManualDownload}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${theme.primary}`}
                     >
@@ -472,7 +474,7 @@ export default function ImageToSvgConverter() {
                       {content.ui.preview.originalTitle}
                     </p>
                     {originalPreviewUrl ? (
-                      <img
+                      <AccessiblePreview purpose="input"
                         src={originalPreviewUrl}
                         alt="تصویر اصلی"
                         className="w-full max-h-[420px] object-contain rounded-lg border border-slate-200/60 bg-white"

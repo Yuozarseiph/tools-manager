@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -158,7 +159,7 @@ export default function TextToMorse() {
           {content.textToMorse.textInput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToMorse.textInput}
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             rows={4}
@@ -182,7 +183,7 @@ export default function TextToMorse() {
           {content.textToMorse.morseOutput}
         </label>
         <div className="relative">
-          <textarea
+          <AccessibleTextarea fieldLabel={content.textToMorse.morseOutput}
             value={morseOutput}
             onChange={(e) => setMorseOutput(e.target.value)}
             rows={4}

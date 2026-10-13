@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -123,11 +124,11 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
         <div className="space-y-1 text-xs">
           <label className={`flex justify-between ${theme.textMuted}`}>
             <span>زاویه چرخش</span>
-            <span className="tabular-nums text-[11px]">
+            <span className="tabular-nums text-xs">
               {angle.toFixed(0)}°
             </span>
           </label>
-          <input
+          <AccessibleInput fieldLabel={content.ui.rotateTab.title}
             type="range"
             min={-180}
             max={180}
@@ -135,7 +136,7 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
             onChange={(e) => setAngle(Number(e.target.value))}
             className="w-full"
           />
-          <input
+          <AccessibleInput fieldLabel={content.ui.rotateTab.title}
             type="number"
             min={-180}
             max={180}

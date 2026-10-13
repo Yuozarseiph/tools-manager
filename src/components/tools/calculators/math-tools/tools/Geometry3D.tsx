@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -111,7 +112,7 @@ export default function Geometry3D() {
             <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
               {field.label}
             </label>
-            <input
+            <AccessibleInput numeric fieldLabel={field.label}
               type="number"
               value={inputs[field.key] || ""}
               onChange={(e) =>

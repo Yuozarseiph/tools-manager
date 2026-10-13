@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -80,7 +81,10 @@ export default function BaseConverter() {
             fromBase.toString()
           )}
         </label>
-        <input
+        <AccessibleInput fieldLabel={content.baseConverter.labels.numberInBase.replace(
+            "{base}",
+            fromBase.toString()
+          )}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value.toUpperCase())}

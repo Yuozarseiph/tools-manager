@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleInput, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -61,7 +62,7 @@ export default function DepositCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.deposit.labels.principal}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.deposit.labels.principal}
             type="number"
             value={principal}
             onChange={(e) => setPrincipal(e.target.value)}
@@ -72,7 +73,7 @@ export default function DepositCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.deposit.labels.rate}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.deposit.labels.rate}
             type="number"
             value={rate}
             onChange={(e) => setRate(e.target.value)}
@@ -87,7 +88,7 @@ export default function DepositCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             {content.deposit.labels.duration}
           </label>
-          <input
+          <AccessibleInput numeric fieldLabel={content.deposit.labels.duration}
             type="number"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
@@ -98,7 +99,7 @@ export default function DepositCalculator() {
           <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
             &nbsp;
           </label>
-          <select
+          <AccessibleSelect fieldLabel="&nbsp;"
             value={durationType}
             onChange={(e) =>
               setDurationType(e.target.value as typeof durationType)
@@ -108,7 +109,7 @@ export default function DepositCalculator() {
             <option value="days">{content.deposit.durations.days}</option>
             <option value="months">{content.deposit.durations.months}</option>
             <option value="years">{content.deposit.durations.years}</option>
-          </select>
+          </AccessibleSelect>
         </div>
       </div>
 
@@ -145,7 +146,7 @@ export default function DepositCalculator() {
 
       {/* Results */}
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div role="status" aria-live="polite" className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
             <p className={`text-sm ${theme.textMuted} mb-1`}>
               {content.deposit.labels.finalAmount}

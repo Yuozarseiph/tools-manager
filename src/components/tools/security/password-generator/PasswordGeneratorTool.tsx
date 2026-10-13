@@ -1,5 +1,6 @@
 // components/tools/security/password-generator/PasswordGeneratorTool.tsx
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect } from "react";
 import {
@@ -117,8 +118,8 @@ export default function PasswordGeneratorTool() {
           onClick={() => setMode("generate")}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             mode === "generate"
-              ? "bg-white dark:bg-zinc-700 shadow-sm text-[var(--app-accent)]"
-              : "text-zinc-400"
+              ? "bg-white dark:bg-zinc-800 shadow-sm text-[var(--app-accent)]"
+              : "text-[var(--app-text-muted)]"
           }`}
         >
           {content.ui.tabs.generate}
@@ -127,8 +128,8 @@ export default function PasswordGeneratorTool() {
           onClick={() => setMode("analyze")}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             mode === "analyze"
-              ? "bg-white dark:bg-zinc-700 shadow-sm text-[var(--app-accent)]"
-              : "text-zinc-400"
+              ? "bg-white dark:bg-zinc-800 shadow-sm text-[var(--app-accent)]"
+              : "text-[var(--app-text-muted)]"
           }`}
         >
           {content.ui.tabs.analyze}
@@ -148,14 +149,14 @@ export default function PasswordGeneratorTool() {
             </span>
 
             <div className="flex gap-2 ml-4 shrink-0">
-              <button
+              <button aria-label={content.ui.generate.regenerateTitle}
                 onClick={generate}
                 className="p-3 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
                 title={content.ui.generate.regenerateTitle}
               >
                 <RefreshCw size={20} />
               </button>
-              <button
+              <button aria-label={content.ui.generate.copyTitle}
                 onClick={() => {
                   if (!password) return;
                   navigator.clipboard.writeText(password);
@@ -192,7 +193,7 @@ export default function PasswordGeneratorTool() {
                   {length}
                 </span>
               </div>
-              <input
+              <AccessibleInput
                 type="range"
                 min="4"
                 max="64"
@@ -225,7 +226,7 @@ export default function PasswordGeneratorTool() {
                   key={opt.key}
                   className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all hover:border-[var(--app-accent)] ${theme.bg} ${theme.border}`}
                 >
-                  <input
+                  <AccessibleInput hasVisibleLabel
                     type="checkbox"
                     checked={options[opt.key as keyof typeof options]}
                     onChange={() =>
@@ -249,16 +250,20 @@ export default function PasswordGeneratorTool() {
             <div
               className={`relative p-1 rounded-2xl border-2 transition-all focus-within:border-[var(--app-accent)] ${theme.bg} ${theme.border}`}
             >
-              <input
+              <AccessibleInput
                 type={showPass ? "text" : "password"}
                 value={userPass}
                 onChange={(e) => setUserPass(e.target.value)}
                 placeholder={content.ui.analyze.inputPlaceholder}
                 className={`w-full p-5 text-xl font-mono bg-transparent outline-none ${theme.text}`}
               />
-              <button
+              <button aria-label={
+                  showPass
+                    ? content.ui.analyze.hideTitle
+                    : content.ui.analyze.showTitle
+                }
                 onClick={() => setShowPass(!showPass)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-zinc-400 hover:text-[var(--app-accent)]"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-[var(--app-text-muted)] hover:text-[var(--app-accent)]"
                 title={
                   showPass
                     ? content.ui.analyze.hideTitle

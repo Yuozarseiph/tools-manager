@@ -1,5 +1,6 @@
 // components/tools/developer/json-formatter/JsonFormatterTool.tsx
 "use client";
+import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -144,12 +145,12 @@ export default function JsonFormatterTool() {
           className={`flex items-center justify-between px-4 py-3 border-b ${theme.border} bg-gray-50/50 dark:bg-white/5`}
         >
           <div className="flex items-center gap-2">
-            <label
+            <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
               className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]`}
             >
               <UploadCloud size={14} />
               <span>{content.ui.upload.button}</span>
-              <input
+              <AccessibleInput hasVisibleLabel
                 type="file"
                 accept=".json"
                 className="hidden"
@@ -157,21 +158,21 @@ export default function JsonFormatterTool() {
               />
             </label>
             <span
-              className={`text-[10px] font-mono opacity-60 px-2 ${theme.textMuted}`}
+              className={`text-xs font-mono opacity-100 px-2 ${theme.textMuted}`}
             >
               {input ? getSize(input) : ""}
             </span>
           </div>
 
           <div className="flex gap-1">
-            <button
+            <button aria-label={content.ui.toolbar.minify}
               onClick={() => processJson(input, "minify")}
               className={`p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-white/10 text-xs font-bold flex items-center gap-1 ${theme.textMuted}`}
               title={content.ui.toolbar.minify}
             >
               <Minimize size={14} />
             </button>
-            <button
+            <button aria-label={content.ui.toolbar.prettify}
               onClick={() => processJson(input, "prettify")}
               className={`p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-white/10 text-xs font-bold flex items-center gap-1 ${theme.textMuted}`}
               title={content.ui.toolbar.prettify}
@@ -179,7 +180,7 @@ export default function JsonFormatterTool() {
               <AlignLeft size={14} />
             </button>
             <div className="w-px h-4 mx-1 bg-gray-300 dark:bg-gray-700 self-center" />
-            <button
+            <button aria-label={content.ui.toolbar.clear}
               onClick={handleClear}
               className="p-1.5 rounded-md hover:bg-[var(--app-error-bg)] dark:hover:bg-[var(--app-error-bg)] text-[var(--app-error-text)]"
               title={content.ui.toolbar.clear}
@@ -189,7 +190,7 @@ export default function JsonFormatterTool() {
           </div>
         </div>
 
-        <textarea
+        <AccessibleTextarea
           value={input}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={content.ui.input.placeholder}
@@ -198,7 +199,7 @@ export default function JsonFormatterTool() {
         />
 
         {error && (
-          <div className="px-4 py-2 bg-[var(--app-error-bg)] dark:bg-[var(--app-error-bg)] border-t border-[var(--app-error-border)] text-[var(--app-error-text)] text-xs flex items-center gap-2">
+          <div role="alert" className="px-4 py-2 bg-[var(--app-error-bg)] dark:bg-[var(--app-error-bg)] border-t border-[var(--app-error-border)] text-[var(--app-error-text)] text-xs flex items-center gap-2">
             <AlertCircle size={14} />
             <span className="truncate">
               {content.ui.error.prefix}
@@ -222,7 +223,7 @@ export default function JsonFormatterTool() {
               ${
                 viewMode === "code"
                   ? "bg-white dark:bg-black shadow-sm text-[var(--app-accent)]"
-                  : "opacity-50 hover:opacity-100"
+                  : "opacity-100 hover:opacity-100"
               }`}
             >
               <Code size={14} /> {content.ui.tabs.code}
@@ -233,7 +234,7 @@ export default function JsonFormatterTool() {
               ${
                 viewMode === "graph"
                   ? "bg-white dark:bg-black shadow-sm text-purple-600"
-                  : "opacity-50 hover:opacity-100"
+                  : "opacity-100 hover:opacity-100"
               }`}
             >
               <Network size={14} /> {content.ui.tabs.graph}
@@ -242,11 +243,11 @@ export default function JsonFormatterTool() {
 
           <div className="flex items-center gap-2">
             <span
-              className={`text-[10px] font-mono opacity-60 hidden sm:inline-block ${theme.textMuted}`}
+              className={`text-xs font-mono opacity-100 hidden sm:inline-block ${theme.textMuted}`}
             >
               {output ? getSize(output) : ""}
             </span>
-            <button
+            <button aria-label={content.ui.output.copyTitle}
               onClick={handleCopy}
               className={`p-2 rounded-lg border transition-colors ${
                 copied
@@ -261,7 +262,7 @@ export default function JsonFormatterTool() {
                 <Copy size={16} className={theme.textMuted} />
               )}
             </button>
-            <button
+            <button aria-label={content.ui.output.downloadTitle} data-testid="download-result"
               onClick={handleDownload}
               className={`p-2 rounded-lg border hover:bg-[var(--app-secondary-bg)] hover:text-[var(--app-accent)] dark:hover:bg-[var(--app-secondary-bg)] dark:hover:text-[var(--app-accent)] transition-colors ${theme.border}`}
               title={content.ui.output.downloadTitle}
@@ -310,7 +311,7 @@ export default function JsonFormatterTool() {
                   <Controls className="bg-white text-black border-none shadow-lg" />
                 </ReactFlow>
               ) : (
-                <div className="h-full flex flex-col items-center justify-center text-zinc-500 gap-3">
+                <div className="h-full flex flex-col items-center justify-center text-[var(--app-text-muted)] gap-3">
                   <Network size={40} opacity={0.5} />
                   <p className="text-sm">{content.ui.graphView.emptyText}</p>
                 </div>

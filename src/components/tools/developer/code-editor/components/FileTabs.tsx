@@ -61,7 +61,7 @@ export default function FileTabs({
             {tab.isDirty && (
               <Circle size={8} className="fill-current opacity-40 shrink-0" />
             )}
-            <button
+            <button aria-label="Close"
               onClick={(e) => {
                 e.stopPropagation();
                 onTabClose(tab.fileId);

@@ -1,4 +1,5 @@
 "use client";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -65,7 +66,7 @@ export default function StatisticsCalc() {
         <label className={`block text-sm font-medium mb-2 ${theme.text}`}>
           {content.common.enterNumbers}
         </label>
-        <textarea
+        <AccessibleTextarea fieldLabel={content.common.enterNumbers}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           rows={3}

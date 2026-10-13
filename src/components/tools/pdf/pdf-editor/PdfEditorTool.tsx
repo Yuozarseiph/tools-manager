@@ -1,5 +1,7 @@
 // components/tools/pdf/pdf-editor/PdfEditorTool.tsx
 "use client";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -40,6 +42,7 @@ function uint8ToArrayBuffer(u8: Uint8Array<ArrayBufferLike>): ArrayBuffer {
 }
 
 export default function PdfEditorTool() {
+  const { locale } = useLanguage();
   const theme = useThemeColors();
   const content: PdfEditorToolContent = usePdfEditorContent();
 
@@ -331,7 +334,7 @@ export default function PdfEditorTool() {
             <div
               className={`border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <input
+              <AccessibleInput
                 type="file"
                 accept="application/pdf,.pdf"
                 onChange={onFileChange}
@@ -371,7 +374,7 @@ export default function PdfEditorTool() {
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label={content.ui.file.removeTitle}
                   onClick={resetAll}
                   disabled={isBusy}
                   className="text-[var(--app-error-text)] hover:opacity-80 p-2 disabled:opacity-50"
@@ -383,7 +386,7 @@ export default function PdfEditorTool() {
             )}
 
             {error && (
-              <div className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
+              <div role="alert" className="p-4 rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] flex gap-3">
                 <AlertCircle
                   size={20}
                   className="text-[var(--app-error-text)] flex-shrink-0 mt-0.5"
@@ -408,7 +411,7 @@ export default function PdfEditorTool() {
                     <button
                       type="button"
                       onClick={() => setMode("keep")}
-                      className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all ${
+                      className={`px-3 py-1 rounded-full text-xs sm:text-xs font-medium transition-all ${
                         mode === "keep"
                           ? `${theme.primary}`
                           : `${theme.card} ${theme.border} ${theme.textMuted} border`
@@ -419,7 +422,7 @@ export default function PdfEditorTool() {
                     <button
                       type="button"
                       onClick={() => setMode("remove")}
-                      className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all ${
+                      className={`px-3 py-1 rounded-full text-xs sm:text-xs font-medium transition-all ${
                         mode === "remove"
                           ? `${theme.primary}`
                           : `${theme.card} ${theme.border} ${theme.textMuted} border`
@@ -443,7 +446,7 @@ export default function PdfEditorTool() {
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button
+                  <button data-testid="download-result"
                     onClick={handleGenerate}
                     disabled={isBusy || totalPages === 0}
                     className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -535,7 +538,7 @@ export default function PdfEditorTool() {
 
               <div className="flex items-center gap-2">
                 {activeObjectUrl && (
-                  <button
+                  <button aria-label={content.ui.viewer.openInNewTabTitle}
                     type="button"
                     onClick={openInNewTab}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs border ${theme.border} ${theme.card} ${theme.textMuted} hover:opacity-80`}
@@ -549,6 +552,7 @@ export default function PdfEditorTool() {
                 <button
                   type="button"
                   onClick={() => setFullscreen((f) => !f)}
+                  aria-label={locale === "fa" ? (fullscreen ? "خروج از تمام صفحه" : "نمایش تمام صفحه") : (fullscreen ? "Exit full screen" : "Full screen")}
                   disabled={!activeObjectUrl}
                   className={`
                     inline-flex items-center justify-center
@@ -651,7 +655,7 @@ export default function PdfEditorTool() {
                           >
                             <span className="font-semibold">{page}</span>
                             {selected && (
-                              <span className="inline-flex items-center gap-1 text-[10px] text-[var(--app-accent)]">
+                              <span className="inline-flex items-center gap-1 text-xs text-[var(--app-accent)]">
                                 <Trash2 size={12} />
                                 {content.ui.viewer.selectedBadge}
                               </span>

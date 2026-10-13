@@ -1,5 +1,7 @@
 // components/tools/developer/base64/Base64Tool.tsx
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect } from "react";
 import { ArrowLeftRight, Copy, Trash2, Check, AlertCircle } from "lucide-react";
@@ -97,7 +99,7 @@ export default function Base64Tool() {
               {content.ui.input.badge}
             </div>
           </div>
-          <button
+          <AccessibleButton purpose="delete"
             onClick={() => {
               setInput("");
               setOutput("");
@@ -106,9 +108,9 @@ export default function Base64Tool() {
             className="text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)] p-2 rounded-lg transition-colors"
           >
             <Trash2 size={18} />
-          </button>
+          </AccessibleButton>
         </div>
-        <textarea
+        <AccessibleTextarea fieldLabel={inputLabel}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={inputPlaceholder}
@@ -118,7 +120,7 @@ export default function Base64Tool() {
 
       {/* دکمه جابجایی موبایل */}
       <div className="flex lg:hidden justify-center -my-3 z-10">
-        <button
+        <button aria-label={content.ui.buttons.swapTitle}
           onClick={handleSwap}
           className={`p-3 rounded-full shadow-xl ${theme.primary}`}
           title={content.ui.buttons.swapTitle}
@@ -132,7 +134,7 @@ export default function Base64Tool() {
         className={`flex flex-col rounded-3xl border overflow-hidden shadow-sm relative ${theme.card} ${theme.border}`}
       >
         {/* دکمه جابجایی دسکتاپ */}
-        <button
+        <button aria-label={content.ui.buttons.swapTitle}
           onClick={handleSwap}
           className={`hidden lg:flex absolute -right-10 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full shadow-xl transition-transform hover:scale-110 active:scale-95 ${theme.primary}`}
           title={content.ui.buttons.swapTitle}
@@ -157,7 +159,7 @@ export default function Base64Tool() {
                 ? "bg-green-500 text-white"
                 : output
                 ? theme.secondary
-                : "opacity-50 cursor-not-allowed"
+                : "opacity-100 cursor-not-allowed"
             }`}
           >
             {copied ? <Check size={16} /> : <Copy size={16} />}
@@ -166,22 +168,20 @@ export default function Base64Tool() {
         </div>
 
         <div
-          className={`flex-1 p-6 relative ${
-            theme.bg === "bg-zinc-950" ? "bg-[#111]" : "bg-zinc-50/50"
-          }`}
+          className={`flex-1 p-6 relative ${theme.bg}`}
         >
           {error ? (
-            <div className="flex flex-col items-center justify-center h-full text-[var(--app-error-text)] animate-pulse">
+            <div role="alert" className="flex flex-col items-center justify-center h-full text-[var(--app-error-text)]">
               <AlertCircle size={48} className="mb-4" />
               <p className="font-bold text-lg">{error}</p>
             </div>
           ) : (
-            <textarea
+            <AccessibleTextarea fieldLabel={outputLabel}
               readOnly
               value={output}
               className={`w-full h-full resize-none bg-transparent focus:outline-none font-mono text-lg leading-relaxed ${
                 theme.text
-              } ${!output && "opacity-50"}`}
+              } ${!output && "opacity-100"}`}
               placeholder={content.ui.output.placeholder}
             />
           )}

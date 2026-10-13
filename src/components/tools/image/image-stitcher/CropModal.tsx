@@ -1,4 +1,6 @@
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { X, Check, RotateCcw } from "lucide-react";
@@ -146,18 +148,18 @@ export default function CropModal({
   const handleStyle = "absolute w-3 h-3 bg-[var(--app-accent)] border border-white rounded-sm";
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div role="dialog" aria-modal="true" aria-label="Crop Modal" className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div
         className={`w-full max-w-lg rounded-2xl border p-4 shadow-2xl ${theme.card} ${theme.border}`}
       >
         <div className="flex items-center justify-between mb-3">
           <h3 className={`font-bold ${theme.text}`}>{labels.title}</h3>
-          <button
+          <AccessibleButton purpose="close"
             onClick={onClose}
             className={`p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 ${theme.text}`}
           >
             <X size={18} />
-          </button>
+          </AccessibleButton>
         </div>
 
         <div
@@ -165,7 +167,7 @@ export default function CropModal({
           className="relative w-full select-none touch-none bg-[repeating-conic-gradient(#e5e7eb_0%_25%,transparent_0%_50%)] bg-[length:20px_20px] rounded-lg overflow-hidden"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={src} alt="crop" className="w-full h-auto block pointer-events-none" draggable={false} />
+          <AccessiblePreview purpose="crop" src={src} alt="crop" className="w-full h-auto block pointer-events-none" draggable={false} />
           {/* Dark overlay outside selection */}
           <div className="absolute inset-0 bg-black/50 pointer-events-none" />
           {/* Selection window */}

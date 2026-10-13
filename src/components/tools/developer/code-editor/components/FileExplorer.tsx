@@ -1,5 +1,7 @@
 // components/tools/developer/code-editor/components/FileExplorer.tsx
 "use client";
+import { AccessibleButton } from "@/components/ui/AccessibleControls";
+import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useState, useRef, useCallback, useEffect } from "react";
 import {
   FolderOpen,
@@ -349,7 +351,7 @@ export default function FileExplorer({
               className="flex-1 flex items-center gap-1"
               onClick={(e) => e.stopPropagation()}
             >
-              <input
+              <AccessibleInput
                 autoFocus
                 type="text"
                 value={renameValue}
@@ -364,18 +366,18 @@ export default function FileExplorer({
                   color: "var(--app-text)",
                 }}
               />
-              <button
+              <AccessibleButton purpose="action"
                 onClick={() => handleRename(item.id)}
                 className="p-0.5 rounded hover:bg-[var(--app-success-bg)]"
               >
                 <Check size={12} className="text-[var(--app-success-text)]" />
-              </button>
-              <button
+              </AccessibleButton>
+              <AccessibleButton purpose="close"
                 onClick={onCancelRename}
                 className="p-0.5 rounded hover:bg-[var(--app-error-bg)]"
               >
                 <X size={12} className="text-[var(--app-error-text)]" />
-              </button>
+              </AccessibleButton>
             </div>
           ) : (
             <span
@@ -390,7 +392,7 @@ export default function FileExplorer({
           {isRenaming !== item.id && (
             <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
               {item.isFolder && (
-                <button
+                <button aria-label={isFa ? "فایل جدید" : "New file"}
                   onClick={(e) => {
                     e.stopPropagation();
                     onStartCreate("file", item.id);
@@ -401,7 +403,7 @@ export default function FileExplorer({
                   <Plus size={12} className="text-[var(--app-accent)]" />
                 </button>
               )}
-              <button
+              <button aria-label={isFa ? "تغییر نام" : "Rename"}
                 onClick={(e) => {
                   e.stopPropagation();
                   setRenameValue(item.name);
@@ -412,7 +414,7 @@ export default function FileExplorer({
               >
                 <Pencil size={12} className="text-[var(--app-text-muted)]" />
               </button>
-              <button
+              <button aria-label={isFa ? "حذف" : "Delete"}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (confirm(isFa ? "حذف شود؟" : "Delete?"))
@@ -457,21 +459,21 @@ export default function FileExplorer({
           {isFa ? "فایل‌ها" : "Explorer"}
         </span>
         <div className="flex items-center gap-1">
-          <button
+          <button aria-label={isFa ? "وارد کردن فایل" : "Import file"}
             onClick={() => document.getElementById("file-import")?.click()}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "وارد کردن فایل" : "Import file"}
           >
             <Upload size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
-          <button
+          <button aria-label={isFa ? "پوشه جدید" : "New folder"}
             onClick={() => onStartCreate("folder", null)}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "پوشه جدید" : "New folder"}
           >
             <FolderPlus size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
-          <button
+          <button aria-label={isFa ? "فایل جدید" : "New file"}
             onClick={() => onStartCreate("file", null)}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "فایل جدید" : "New file"}
@@ -479,7 +481,7 @@ export default function FileExplorer({
             <Plus size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
         </div>
-        <input
+        <AccessibleInput
           id="file-import"
           ref={fileInputRef}
           type="file"
@@ -498,7 +500,7 @@ export default function FileExplorer({
             size={12}
             className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
           />
-          <input
+          <AccessibleInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -518,7 +520,7 @@ export default function FileExplorer({
           style={{ borderColor: "var(--app-border)" }}
         >
           <div className="flex flex-col gap-2">
-            <input
+            <AccessibleInput
               autoFocus
               type="text"
               value={newName}
