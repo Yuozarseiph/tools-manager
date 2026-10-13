@@ -1,0 +1,63 @@
+# QodeForge tool catalogue
+
+This catalogue is intended for language models, search systems and browser agents. Every tool is available at its existing canonical URL and supports a Persian or English interface selected automatically from the visitor's language and timezone, with a manual switch in the header. Use `?lang=fa` or `?lang=en` to request a specific interface.
+
+## PDF and document tools
+
+- [Merge PDF](https://qodeforge.ir/tools/pdf-merge)
+- [PDF editor](https://qodeforge.ir/tools/pdf-editor)
+- [PDF to Word](https://qodeforge.ir/tools/pdf-to-word)
+- [PDF to image](https://qodeforge.ir/tools/pdf-to-image)
+- [Text to PDF](https://qodeforge.ir/tools/text-to-pdf)
+- [Word to PDF](https://qodeforge.ir/tools/word-to-pdf)
+
+## Image tools
+
+- [Image compressor](https://qodeforge.ir/tools/image-compressor)
+- [Image converter](https://qodeforge.ir/tools/image-converter)
+- [Image editor](https://qodeforge.ir/tools/image-editor)
+- [Image resizer](https://qodeforge.ir/tools/image-resizer)
+- [Image to PDF](https://qodeforge.ir/tools/image-to-pdf)
+- [Image to text OCR](https://qodeforge.ir/tools/image-to-text)
+- [Image to SVG](https://qodeforge.ir/tools/image-to-svg)
+- [Background remover](https://qodeforge.ir/tools/background-remover)
+- [Color picker](https://qodeforge.ir/tools/color-picker)
+- [Image stitcher](https://qodeforge.ir/tools/image-stitcher)
+- [EXIF remover](https://qodeforge.ir/tools/exif-remover)
+
+## Developer tools
+
+- [Code editor](https://qodeforge.ir/tools/code-editor)
+- [JSON formatter](https://qodeforge.ir/tools/json-formatter)
+- [Markdown preview](https://qodeforge.ir/tools/markdown-preview)
+- [Base64 encoder and decoder](https://qodeforge.ir/tools/base64)
+- [Code visualizer](https://qodeforge.ir/tools/code-visualizer)
+
+## Office and presentation tools
+
+- [Excel viewer](https://qodeforge.ir/tools/excel-viewer)
+- [Excel editor](https://qodeforge.ir/tools/excel-editor)
+- [Excel chart builder](https://qodeforge.ir/tools/excel-chart)
+- [HTML to PowerPoint](https://qodeforge.ir/tools/html-to-pptx)
+
+## Utility, security and system tools
+
+- [QR code generator](https://qodeforge.ir/tools/qr-generator)
+- [QR code reader](https://qodeforge.ir/tools/qr-reader)
+- [Word counter](https://qodeforge.ir/tools/word-counter)
+- [Unit converter](https://qodeforge.ir/tools/unit-converter)
+- [Date converter](https://qodeforge.ir/tools/date-converter)
+- [Password generator](https://qodeforge.ir/tools/password-generator)
+- [Hash generator](https://qodeforge.ir/tools/hash-generator)
+- [Security tools](https://qodeforge.ir/tools/security-tools)
+- [IP checker](https://qodeforge.ir/tools/ip-checker)
+- [User-agent inspector](https://qodeforge.ir/tools/user-agent)
+
+## Calculators
+
+- [Math tools](https://qodeforge.ir/tools/math-tools)
+- [Bank and financial tools](https://qodeforge.ir/tools/bank)
+
+## Privacy and access
+
+QodeForge is designed for client-side processing wherever the selected tool supports it. The site does not need an account for its core tools. Use the [privacy page](https://qodeforge.ir/privacy) for the current policy. The canonical site language URLs are `/fa` and `/en`.

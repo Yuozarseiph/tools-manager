@@ -1,0 +1,34 @@
+# QodeForge
+
+> QodeForge is a bilingual, privacy-friendly toolbox of free browser utilities for files, PDF, images, spreadsheets, development, security and everyday tasks.
+
+QodeForge supports Persian (fa-IR) and English (en-US). Most tools process files locally in the browser, so visitors can work without uploading sensitive content to a server.
+
+Use `?lang=fa` for the Persian interface or `?lang=en` for the English interface. Existing page paths remain canonical.
+
+## Primary pages
+
+- [Home](https://qodeforge.ir/): Browse the complete online tool catalogue.
+- [Documentation](https://qodeforge.ir/docs): Tool guides and usage notes.
+- [About](https://qodeforge.ir/about): Product purpose and privacy approach.
+- [Download](https://qodeforge.ir/download): Progressive web app installation information.
+- [Contact](https://qodeforge.ir/contact): Contact the QodeForge team.
+- [Privacy](https://qodeforge.ir/privacy): Privacy and local-processing details.
+
+## Tool categories
+
+- PDF: merge, edit, convert PDF to Word or images, create PDFs from text, Word or images.
+- Images: compress, resize, convert, edit, remove backgrounds and metadata, OCR, stitch, pick colors, and convert SVG.
+- Developer: code editor, JSON formatter, Base64, Markdown preview, and code visualizer.
+- Office: Excel and CSV viewer, editor, chart builder, and HTML to PowerPoint.
+- Utilities: QR generator and reader, word counter, date converter, and unit converter.
+- Security and system: password and hash generators, text encoders, IP checker, and user-agent inspector.
+- Calculators: math, banking, savings, loan, installment, and expense tools.
+
+## Agent and crawler access
+
+- [Sitemap](https://qodeforge.ir/sitemap.xml)
+- [Robots policy](https://qodeforge.ir/robots.txt)
+- [Full AI-readable catalogue](https://qodeforge.ir/llms-full.txt)
+
+The page also exposes browser-agent discovery tools through `document.modelContext` when the host browser supports WebMCP. Agents should prefer the visible interface and ask for confirmation before any user-impacting action.

@@ -78,9 +78,64 @@ const vazirmatn = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://qodeforge.ir"),
-  title: "QodeForge (کد فورج) - جعبه ابزار آنلاین رایگان",
+  title: "QodeForge | ابزارهای آنلاین رایگان برای فایل، تصویر، PDF و کد",
   description:
-    "ابزارهای ادغام PDF، فشرده‌سازی عکس و ابزارهای توسعه‌دهندگان به صورت کاملاً امن و سمت کلاینت.",
+    "ابزارهای آنلاین رایگان برای PDF، تصویر، فایل، صفحه‌گسترده و توسعه‌دهندگان؛ سریع، دوزبانه و با پردازش امن در مرورگر.",
+  keywords: [
+    "online tools",
+    "free PDF tools",
+    "image tools",
+    "developer tools",
+    "ابزار آنلاین",
+    "ابزار PDF",
+    "ابزارهای کاربردی فارسی",
+    "QodeForge",
+  ],
+  applicationName: "QodeForge",
+  authors: [{ name: "QodeForge" }],
+  creator: "QodeForge",
+  publisher: "QodeForge",
+  category: "technology",
+  alternates: {
+    canonical: "https://qodeforge.ir/",
+    languages: {
+      "fa-IR": "https://qodeforge.ir/?lang=fa",
+      "en-US": "https://qodeforge.ir/?lang=en",
+      "x-default": "https://qodeforge.ir/",
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: "QodeForge",
+    url: "https://qodeforge.ir/",
+    title: "QodeForge | ابزارهای آنلاین رایگان و سریع",
+    description:
+      "ابزارهای دوزبانه برای PDF، فایل، تصویر و توسعه با پردازش محلی در مرورگر.",
+    locale: "fa_IR",
+    alternateLocale: ["en_US"],
+    images: [
+      {
+        url: "/icons/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "QodeForge online tools",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "QodeForge | Free online tools",
+    description:
+      "Bilingual online tools for PDF, images, files and developers.",
+    images: ["/icons/icon-512.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -113,6 +168,46 @@ export default function RootLayout({
           <ThemeBody
             className={`${iranYekan.variable} ${vazirmatn.variable} antialiased font-sans`}
           >
+            <script
+              id="qodeforge-structured-data"
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@graph": [
+                    {
+                      "@type": "Organization",
+                      "@id": "https://qodeforge.ir/#organization",
+                      name: "QodeForge",
+                      alternateName: "کد فورج",
+                      url: "https://qodeforge.ir/",
+                      logo: "https://qodeforge.ir/icons/icon-512.png",
+                    },
+                    {
+                      "@type": "WebSite",
+                      "@id": "https://qodeforge.ir/#website",
+                      name: "QodeForge",
+                      url: "https://qodeforge.ir/",
+                      inLanguage: ["fa-IR", "en-US"],
+                      publisher: {
+                        "@id": "https://qodeforge.ir/#organization",
+                      },
+                    },
+                    {
+                      "@type": "WebApplication",
+                      "@id": "https://qodeforge.ir/#application",
+                      name: "QodeForge online tools",
+                      alternateName: "ابزارهای آنلاین QodeForge",
+                      url: "https://qodeforge.ir/",
+                      applicationCategory: "UtilitiesApplication",
+                      operatingSystem: "Any",
+                      isAccessibleForFree: true,
+                      inLanguage: ["fa-IR", "en-US"],
+                    },
+                  ],
+                }),
+              }}
+            />
             <Header />
             {children}
             <InstallPWA />

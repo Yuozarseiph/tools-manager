@@ -8,6 +8,7 @@
     "dev": "next dev --webpack",
     "prebuild": "node scripts/copy-pdf-worker.mjs",
     "build": "next build --webpack",
+    "postbuild": "node scripts/copy-htaccess.mjs",
     "start": "next start",
     "lint": "eslint"
   },

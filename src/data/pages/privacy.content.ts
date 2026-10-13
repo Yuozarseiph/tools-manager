@@ -42,10 +42,10 @@ export const privacyContent = {
         "ما از کوکی‌ها برای رهگیری کاربران، تحلیل رفتار، پروفایل‌سازی یا تبلیغات استفاده نمی‌کنیم.",
       localTitle: "استفاده محدود از Local Storage",
       localIntro:
-        "تنها داده‌ای که به‌صورت محلی ذخیره می‌شود مربوط به تنظیمات ظاهری سایت است:",
+        "داده‌های محدودی برای تنظیمات ظاهری، زبان و ابزارهای انتخابی در مرورگر ذخیره می‌شوند:",
       themeTitle: "انتخاب تم (Theme)",
       themeBody:
-        "برای حفظ تجربه کاربری بهتر، تم انتخابی شما در حافظه مرورگر ذخیره می‌شود تا در مراجعه‌های بعدی همان ظاهر نمایش داده شود. این داده اطلاعات شخصی نیست و به هیچ سروری ارسال نمی‌شود.",
+        "برای حفظ تجربه کاربری بهتر، تم، زبان و تنظیمات ابزارهای انتخابی شما در حافظه مرورگر ذخیره می‌شوند تا در مراجعه‌های بعدی همان تجربه نمایش داده شود. این داده‌ها اطلاعات شخصی نیستند و به هیچ سروری ارسال نمی‌شوند.",
     },
     security: {
       title: "امنیت داده‌ها",
@@ -110,10 +110,10 @@ export const privacyContent = {
         "We do not use cookies to track users, analyze behavior, build profiles or serve ads.",
       localTitle: "Limited use of local storage",
       localIntro:
-        "The only data stored locally is related to the site's appearance settings:",
+        "A small amount of data is stored locally for appearance, language and selected-tool preferences:",
       themeTitle: "Theme selection",
       themeBody:
-        "To provide a better experience, your selected theme is stored in the browser so the same look is used next time. This is not personal data and is never sent to any server.",
+        "To provide a better experience, your selected theme, language and tool preferences are stored in the browser so the same experience is used next time. This is not personal data and is never sent to any server.",
     },
     security: {
       title: "Data security",

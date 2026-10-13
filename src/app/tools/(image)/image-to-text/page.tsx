@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: `${fa.description} / ${en.description}`,
   alternates: {
     canonical: canonicalUrl,
-    languages: { "fa-IR": fa.canonical, "en-US": en.canonical },
+    languages: { "fa-IR": `${fa.canonical}?lang=fa`, "en-US": en.canonical },
   },
   openGraph: {
     title: `${fa.ogTitle ?? fa.title} / ${en.ogTitle ?? en.title}`,

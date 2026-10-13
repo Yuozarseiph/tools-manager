@@ -8,6 +8,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import {
+  detectInitialLocale,
+  LOCALE_STORAGE_KEY,
+  type Locale,
+} from "@/lib/locale-detection";
+
+export type { Locale } from "@/lib/locale-detection";
 
 // متن‌های عمومی و مشترک (مثل منو، فوتر و دکمه‌های عمومی)
 const commonTranslations = {
@@ -45,7 +52,6 @@ const commonTranslations = {
   },
 };
 
-export type Locale = "fa" | "en";
 type Messages = typeof commonTranslations.fa;
 
 type LanguageContextType = {
@@ -59,8 +65,12 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 const FALLBACK_LOCALE: Locale = "fa";
 
-function getByPath(obj: any, path: string): string {
-  return path.split(".").reduce((acc, key) => acc?.[key], obj) ?? path;
+function getByPath(obj: unknown, path: string): string {
+  const value = path.split(".").reduce<unknown>((acc, key) => {
+    if (typeof acc !== "object" || acc === null) return undefined;
+    return (acc as Record<string, unknown>)[key];
+  }, obj);
+  return typeof value === "string" ? value : path;
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -69,12 +79,26 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     commonTranslations[FALLBACK_LOCALE]
   );
 
-  const applyLocale = (next: Locale) => {
+  const applyLocale = (
+    next: Locale,
+    options: { syncUrl?: boolean } = {},
+  ) => {
     setLocaleState(next);
     setMessages(commonTranslations[next]);
 
     if (typeof window !== "undefined") {
-      localStorage.setItem("tm_locale", next);
+      try {
+        localStorage.setItem(LOCALE_STORAGE_KEY, next);
+        // Keep the previous key so existing visitors retain their choice.
+        localStorage.setItem("tm_locale", next);
+      } catch {
+        // Language switching still works when storage is unavailable.
+      }
+      if (options.syncUrl ?? true) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("lang", next);
+        window.history.replaceState(window.history.state, "", url);
+      }
       document.documentElement.lang = next;
       document.documentElement.dir = next === "fa" ? "rtl" : "ltr";
     }
@@ -82,10 +106,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const saved = localStorage.getItem("tm_locale") as Locale | null;
-    const initialLocale =
-      saved && ["fa", "en"].includes(saved) ? saved : FALLBACK_LOCALE;
-    applyLocale(initialLocale);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    applyLocale(detectInitialLocale(), { syncUrl: false });
   }, []);
 
   const t = (path: string) => getByPath(messages, path);

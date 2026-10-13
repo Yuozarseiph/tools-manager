@@ -84,5 +84,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified,
     changeFrequency: "weekly" as const,
     priority: route === "" ? 1 : 0.8,
+    alternates: {
+      languages: {
+        "fa-IR": `${baseUrl}${route || "/"}?lang=fa`,
+        "en-US": `${baseUrl}${route || "/"}?lang=en`,
+      },
+    },
   }));
 }

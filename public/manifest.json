@@ -1,7 +1,9 @@
 {
   "name": "QodeForge",
   "short_name": "QodeForge",
-  "description": "QodeForge — all-in-one browser-based tools for developers and everyday users",
+  "description": "Free bilingual browser tools for PDF, images, files, spreadsheets and developers",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
