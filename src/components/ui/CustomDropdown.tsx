@@ -4,6 +4,7 @@ import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, Search, X } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useViewportMenu } from "@/hooks/useViewportMenu";
 
 interface Option {
   value: string;
@@ -35,6 +36,7 @@ export default function CustomDropdown({
 }: CustomDropdownProps) {
   const theme = useThemeColors();
   const [isOpen, setIsOpen] = useState(false);
+  const panelRef = useViewportMenu(isOpen);
   const [searchQuery, setSearchQuery] = useState("");
   const listId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -142,7 +144,8 @@ export default function CustomDropdown({
         />
       </button>
       <div
-        className={`absolute z-[70] w-full mt-2 rounded-xl border shadow-xl origin-top transition-all duration-200 ease-out ${theme.card} ${theme.border} ${isOpen ? "opacity-100 scale-100 translate-y-0 visible" : "opacity-0 scale-95 -translate-y-2 invisible pointer-events-none"}`}
+        ref={panelRef}
+        className={`absolute z-[70] w-full mt-2 max-w-[calc(100vw-2rem)] rounded-xl border shadow-xl origin-top transition-all duration-200 ease-out bg-[var(--app-menu)] ${theme.border} ${isOpen ? "opacity-100 scale-100 translate-y-0 visible" : "opacity-0 scale-95 -translate-y-2 invisible pointer-events-none"}`}
       >
         {searchable && (
           <div className={`p-2 border-b ${theme.border}`}>

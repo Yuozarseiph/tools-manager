@@ -39,6 +39,7 @@ input::placeholder, textarea::placeholder {
 :root {
   --app-bg: #f7f5f1;                 /* warm off-white, tinted by sand */
   --app-card: rgba(255, 255, 255, 0.85);
+  --app-menu: #ffffff;
   --app-text: #00203d;              /* deep navy text */
   --app-text-muted: #4a5967;         /* readable on the tinted header background */
   --app-border: #e4ddd0;            /* soft sand border */
@@ -72,6 +73,7 @@ input::placeholder, textarea::placeholder {
 :root.dark {
   --app-bg: #061c30;                 /* near-navy background */
   --app-card: rgba(10, 40, 68, 0.75);
+  --app-menu: #0a2844;
   --app-text: #f3efe6;              /* warm sand-white text */
   --app-text-muted: #a9b8c4;
   --app-border: #163a52;

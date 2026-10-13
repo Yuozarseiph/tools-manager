@@ -2,6 +2,7 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useViewportMenu } from "@/hooks/useViewportMenu";
 import {
   AlignJustify,
   Check,
@@ -86,7 +87,7 @@ function MobileSheet({
       />
 
       <div
-        className={`relative w-full rounded-t-[28px] border-t p-3 shadow-2xl ${theme.card} ${theme.border}`}
+        className={`relative w-full rounded-t-[28px] border-t p-3 shadow-2xl bg-[var(--app-menu)] ${theme.border}`}
       >
         <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-current opacity-15" />
 
@@ -280,6 +281,7 @@ function Dropdown({
   locale,
 }: any) {
   const Icon = selected.icon;
+  const panelRef = useViewportMenu(open);
 
   return (
     <div className="relative">
@@ -302,7 +304,8 @@ function Dropdown({
       {open && (
         <div
           role="menu"
-          className={`absolute end-0 top-full z-50 mt-2 w-52 rounded-[20px] border p-2 shadow-xl ${theme.card} ${theme.border}`}
+          ref={panelRef}
+          className={`absolute end-0 top-full z-50 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-[20px] border p-2 shadow-xl bg-[var(--app-menu)] ${theme.border}`}
         >
           {options.map((option: any) => {
             const OptionIcon = option.icon;

@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen font-sans ${theme.bg}`}>
-      <div className="w-full pb-16">
+      <div className="flow-root w-full pb-16 sm:block">
         <HeroSection />
         <ToolsGrid />
       </div>

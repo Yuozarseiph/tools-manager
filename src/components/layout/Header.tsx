@@ -226,7 +226,7 @@ export default function Header() {
           <div
             className={`
               absolute bottom-full right-4 mb-2
-              min-w-[180px]
+              min-w-[180px] max-w-[calc(100vw-2rem)] bg-[var(--app-menu)]
               rounded-2xl
               border ${theme.border}
               backdrop-blur-sm backdrop-saturate-150
@@ -420,8 +420,8 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Spacer for mobile bottom nav */}
-      <div className="md:hidden h-[72px]" />
+      {/* Home's mobile hero extends behind the header; footer provides tab-bar clearance. */}
+      <div className={`${pathname === "/" ? "hidden sm:block" : ""} md:hidden h-[72px]`} />
     </>
   );
 }

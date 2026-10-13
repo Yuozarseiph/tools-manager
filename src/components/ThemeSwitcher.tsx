@@ -99,7 +99,7 @@ export default function ThemeSwitcher() {
             className={`
               absolute top-full mt-2 
               ${isRTL ? "left-0 origin-top-left" : "right-0 origin-top-right"}
-              min-w-[170px]
+              w-[170px] max-w-[calc(100vw-2rem)] rounded-xl border ${theme.border} bg-[var(--app-menu)] shadow-xl
               p-1.5 z-50 flex flex-col gap-1
             `}
             role="menu"

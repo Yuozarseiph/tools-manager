@@ -44,6 +44,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { TOOLS } from "@/data/tools";
 import { toolsContent } from "@/data/tools.content";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useViewportMenu } from "@/hooks/useViewportMenu";
 
 import HelpModal from "./HelpModal";
 import { LayoutControls } from "./LayoutControls";
@@ -243,6 +244,7 @@ export default function ToolsGrid() {
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [showImportHelp, setShowImportHelp] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const categoryPanelRef = useViewportMenu(showCategoryDropdown);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
@@ -606,9 +608,10 @@ export default function ToolsGrid() {
             {showCategoryDropdown && (
               <div
                 role="menu"
-                className={`absolute top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-[22px] border p-2 shadow-xl ${
-                  isRTL ? "right-0" : "left-0"
-                } ${theme.card} ${theme.border}`}
+                ref={categoryPanelRef}
+                className={`absolute top-full z-50 mt-2 max-h-[70dvh] overflow-y-auto w-[min(22rem,calc(100vw-2rem))] rounded-[22px] border p-2 shadow-xl bg-[var(--app-menu)] ${
+                  isRTL ? "left-0" : "right-0"
+                } ${theme.border}`}
               >
                 <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
                   {CATEGORIES.map((category) => {

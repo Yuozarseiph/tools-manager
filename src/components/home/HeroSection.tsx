@@ -18,7 +18,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className={`relative -mt-[4.5rem] flex w-full items-center justify-center overflow-hidden border-0 px-5 pb-14 pt-28 text-center shadow-sm sm:px-10 sm:pb-20 lg:pb-24 ${theme.card}`}>
+    <section className={`relative -mt-16 flex w-full items-center justify-center overflow-hidden border-0 px-5 pb-14 pt-44 text-center shadow-sm sm:-mt-[4.5rem] sm:px-10 sm:pb-20 sm:pt-28 lg:pb-24 ${theme.card}`}>
       <div className="pointer-events-none absolute inset-x-1/4 top-0 h-32 rounded-full opacity-20 blur-3xl" style={{ background: "var(--app-accent)" }} />
       <div className="relative mx-auto max-w-3xl">
         <h1
