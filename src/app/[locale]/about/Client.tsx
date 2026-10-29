@@ -616,7 +616,7 @@ function FAQItem({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{
-              height: { duration: 0.24, ease: "easeOut" },
+              height: { duration: 0.18, ease: [.2, .7, .2, 1] },
               opacity: { duration: 0.18, ease: "easeOut" },
             }}
             className="overflow-hidden"

@@ -1,11 +1,12 @@
 // components/tools/image/image-resizer/ImageResizerTool.tsx
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 import {
   FileUp,
   Trash2,
@@ -19,36 +20,11 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { canvasToVerifiedBlob, extensionFromImageMime, preferredRasterMime } from "@/utils/image-actions";
 import {
   useImageResizerContent,
   type ImageResizerToolContent,
-} from "./image-resizer.content"; // ✅ مسیر نسبی اصلاح شد
-
-const getSafeImageMime = (mime: string | undefined | null): string => {
-  if (!mime) return "image/png";
-  if (!mime.startsWith("image/")) return "image/png";
-  return mime;
-};
-
-const getExtFromMime = (mime: string): string => {
-  switch (mime) {
-    case "image/jpeg":
-    case "image/jpg":
-      return "jpg";
-    case "image/png":
-      return "png";
-    case "image/webp":
-      return "webp";
-    case "image/gif":
-      return "gif";
-    case "image/bmp":
-      return "bmp";
-    case "image/avif":
-      return "avif";
-    default:
-      return "png";
-  }
-};
+} from "./image-resizer.content"; //  مسیر نسبی اصلاح شد
 
 export default function ImageResizerTool() {
   const theme = useThemeColors();
@@ -124,45 +100,30 @@ export default function ImageResizerTool() {
 
   const handleResize = () => {
     if (!file || !width || !height || !preview) return;
-
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
+    if (!ctx) { alert(content.ui.alerts.error); return; }
     const img = new Image();
-
-    img.onload = () => {
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(img, 0, 0, width, height);
-
-      const safeMime = getSafeImageMime(file.type);
-      const extFromName =
-        file.name.includes(".") ? file.name.split(".").pop()!.toLowerCase() : "";
-      const knownExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "avif"];
-      const finalExt = knownExts.includes(extFromName)
-        ? extFromName
-        : getExtFromMime(safeMime);
-
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            alert(content.ui.alerts.error);
-            return;
-          }
-          download(
-            blob,
-            `resized-${width}x${height}.${finalExt}`,
-            safeMime
-          );
-        },
-        safeMime,
-        0.95
-      );
+    img.onload = async () => {
+      try {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        const mime = preferredRasterMime(file.type);
+        if (mime === "image/jpeg") {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, width, height);
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const blob = await canvasToVerifiedBlob(canvas, mime, 0.95);
+        const ext = extensionFromImageMime(blob.type);
+        download(blob, outputFilename(`resized-${width}x${height}.${ext}`), blob.type);
+      } catch {
+        alert(content.ui.alerts.error);
+      }
     };
-
+    img.onerror = () => alert(content.ui.alerts.error);
     img.src = preview;
   };
 

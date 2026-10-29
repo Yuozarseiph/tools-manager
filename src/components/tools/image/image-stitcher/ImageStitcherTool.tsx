@@ -1,4 +1,6 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -12,7 +14,7 @@ import {
   Download,
   Images,
 } from "lucide-react";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
@@ -45,6 +47,8 @@ export default function ImageStitcherTool() {
   const theme = useThemeColors();
   const t = useImageStitcherToolContent();
   const inputRef = useRef<HTMLInputElement>(null);
+  const trackedUrls = useRef(new Set<string>());
+  const aliveRef = useRef(true);
 
   const [items, setItems] = useState<Item[]>([]);
   const [format, setFormat] = useState<OutFormat>("png");
@@ -57,12 +61,14 @@ export default function ImageStitcherTool() {
   const [cropIndex, setCropIndex] = useState<number | null>(null);
   const [notice, setNotice] = useState("");
 
-  // Revoke object URLs on unmount.
+  // Track every URL independently of React state closure snapshots.
   useEffect(() => {
+    aliveRef.current = true;
     return () => {
-      items.forEach((it) => URL.revokeObjectURL(it.src));
+      aliveRef.current = false;
+      trackedUrls.current.forEach((url) => URL.revokeObjectURL(url));
+      trackedUrls.current.clear();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addFiles = useCallback(
@@ -81,12 +87,21 @@ export default function ImageStitcherTool() {
       const loaded: Item[] = [];
       for (const f of take) {
         const src = URL.createObjectURL(f);
+        trackedUrls.current.add(src);
         try {
           const el = await loadImage(src);
           loaded.push({ id: uid(), src, el, crop: null });
         } catch {
+          trackedUrls.current.delete(src);
           URL.revokeObjectURL(src);
         }
+      }
+      if (!aliveRef.current) {
+        loaded.forEach((item) => {
+          trackedUrls.current.delete(item.src);
+          URL.revokeObjectURL(item.src);
+        });
+        return;
       }
       setItems((prev) => [...prev, ...loaded]);
       setResultUrl("");
@@ -108,14 +123,17 @@ export default function ImageStitcherTool() {
   const remove = useCallback((id: string) => {
     setItems((prev) => {
       const found = prev.find((i) => i.id === id);
-      if (found) URL.revokeObjectURL(found.src);
+      if (found) {
+        trackedUrls.current.delete(found.src);
+        URL.revokeObjectURL(found.src);
+      }
       return prev.filter((i) => i.id !== id);
     });
     setResultUrl("");
   }, []);
 
   const clearAll = useCallback(() => {
-    items.forEach((it) => URL.revokeObjectURL(it.src));
+    items.forEach((it) => { trackedUrls.current.delete(it.src); URL.revokeObjectURL(it.src); });
     setItems([]);
     setResultUrl("");
     setNotice("");
@@ -200,7 +218,7 @@ export default function ImageStitcherTool() {
     if (!resultUrl) return;
     download(
       resultUrl,
-      `stitched-${Date.now()}.${format === "png" ? "png" : "jpg"}`,
+      outputFilename(`stitched-${Date.now()}.${format === "png" ? "png" : "jpg"}`),
       format === "png" ? "image/png" : "image/jpeg",
     );
   }, [resultUrl, format]);
@@ -428,7 +446,7 @@ export default function ImageStitcherTool() {
         </div>
       )}
 
-      {cropIndex !== null && items[cropIndex] && (
+      <AnimatePresence>{cropIndex !== null && items[cropIndex] && (
         <CropModal
           src={items[cropIndex].src}
           initial={items[cropIndex].crop ?? undefined}
@@ -452,7 +470,7 @@ export default function ImageStitcherTool() {
           }}
           onClose={() => setCropIndex(null)}
         />
-      )}
+    )}</AnimatePresence>
     </div>
   );
 }

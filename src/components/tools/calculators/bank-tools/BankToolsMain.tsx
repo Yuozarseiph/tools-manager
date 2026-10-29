@@ -7,7 +7,6 @@ import {
   PiggyBank,
   ShoppingCart,
   TrendingUp,
-  Wallet,
 } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -18,16 +17,14 @@ import LoanCalculator from "./tools/LoanCalculator";
 import DepositCalculator from "./tools/DepositCalculator";
 import InstallmentCalculator from "./tools/InstallmentCalculator";
 import SavingCalculator from "./tools/SavingCalculator";
-import ExpenseManager from "./tools/ExpenseManager";
 
-type ToolId = "loan" | "deposit" | "installment" | "saving" | "expense";
+type ToolId = "loan" | "deposit" | "installment" | "saving";
 
 const toolIcons: Record<ToolId, React.ReactNode> = {
   loan: <Calculator size={20} />,
   deposit: <PiggyBank size={20} />,
   installment: <ShoppingCart size={20} />,
   saving: <TrendingUp size={20} />,
-  expense: <Wallet size={20} />,
 };
 
 const toolComponents: Record<ToolId, React.FC> = {
@@ -35,7 +32,6 @@ const toolComponents: Record<ToolId, React.FC> = {
   deposit: DepositCalculator,
   installment: InstallmentCalculator,
   saving: SavingCalculator,
-  expense: ExpenseManager,
 };
 
 const toolIds: ToolId[] = [
@@ -43,7 +39,6 @@ const toolIds: ToolId[] = [
   "deposit",
   "installment",
   "saving",
-  "expense",
 ];
 
 export default function BankToolsMain() {

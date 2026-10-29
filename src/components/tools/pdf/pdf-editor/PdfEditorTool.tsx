@@ -1,5 +1,7 @@
 // components/tools/pdf/pdf-editor/PdfEditorTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -21,7 +23,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   usePdfEditorContent,
   type PdfEditorToolContent,
-} from "./pdf-editor.content"; // ✅ مسیر اصلاح شده
+} from "./pdf-editor.content"; //  مسیر اصلاح شده
 
 type EditorMode = "keep" | "remove";
 type ViewerDoc = "original" | "edited";
@@ -242,9 +244,9 @@ export default function PdfEditorTool() {
 
     const a = document.createElement("a");
     a.href = editedObjectUrl;
-    a.download = `${base}-edited.pdf`;
+    a.download = outputFilename(`${base}-edited.pdf`);
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     a.remove();
   };
 

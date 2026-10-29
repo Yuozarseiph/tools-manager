@@ -18,25 +18,24 @@ export default function HeroSection() {
   };
 
   return (
-    <section className={`relative -mt-16 flex w-full items-center justify-center overflow-hidden border-0 px-5 pb-14 pt-44 text-center shadow-sm sm:-mt-[4.5rem] sm:px-10 sm:pb-20 sm:pt-28 lg:pb-24 ${theme.card}`}>
-      <div className="pointer-events-none absolute inset-x-1/4 top-0 h-32 rounded-full opacity-20 blur-3xl" style={{ background: "var(--app-accent)" }} />
+    <section className={`relative flex w-full items-center justify-center border-b px-5 py-10 text-center sm:px-10 sm:py-12 ${theme.card} ${theme.border}`}>
       <div className="relative mx-auto max-w-3xl">
         <h1
-          className={`text-4xl font-black leading-[1.12] tracking-[-0.035em] sm:text-5xl lg:text-6xl ${theme.text}`}
+          className={`text-3xl font-extrabold leading-[1.6] sm:text-4xl lg:text-5xl ${theme.text}`}
         >
           {content.hero.titleLine1}
-          <span className={`mt-2 block ${theme.accent}`}>
+          <span className={`block ${theme.accent}`}>
             {content.hero.titleHighlight}
           </span>
         </h1>
 
         <p
-          className={`mx-auto mt-6 max-w-2xl text-base leading-8 sm:text-lg ${theme.textMuted}`}
+          className={`mx-auto mt-4 max-w-2xl text-sm leading-7 sm:text-base sm:leading-8 ${theme.textMuted}`}
         >
           {content.hero.subtitle}
         </p>
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <button
             type="button"
             onClick={scrollToTools}
@@ -48,9 +47,9 @@ export default function HeroSection() {
         </div>
 
         <div
-          className={`mx-auto mt-5 flex max-w-xl items-center justify-center gap-2 text-xs leading-6 ${theme.textMuted}`}
+          className={`mx-auto mt-4 flex max-w-xl items-center justify-center gap-2 text-xs leading-6 sm:text-sm ${theme.textMuted}`}
         >
-          <ShieldCheck size={15} className={theme.accent} aria-hidden="true" />
+          <ShieldCheck size={16} className={`shrink-0 ${theme.accent}`} aria-hidden="true" />
           <span>{content.hero.privacyNote}</span>
         </div>
       </div>

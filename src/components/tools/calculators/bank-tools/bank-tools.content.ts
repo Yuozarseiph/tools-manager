@@ -19,10 +19,6 @@ export const bankToolsUIContent = {
         name: "محاسبه پس‌انداز پول",
         desc: "محاسبه رشد پس‌انداز در طول زمان",
       },
-      expense: {
-        name: "مدیریت هزینه و درآمد",
-        desc: "پیگیری هزینه‌ها و درآمدها به سادگی",
-      },
       prices: {
         name: "قیمت سکه، طلا و ارز",
         desc: "قیمت لحظه ای سکه، طلا و ارز",
@@ -148,50 +144,6 @@ export const bankToolsUIContent = {
         annualReturn: "بازده مورد انتظار (بر اساس نوع سرمایه‌گذاری)",
       },
     },
-    expense: {
-      labels: {
-        type: "نوع",
-        income: "درآمد",
-        expense: "هزینه",
-        balance: "مانده",
-        totalIncome: "مجموع درآمد",
-        totalExpense: "مجموع هزینه",
-        netBalance: "موجودی خالص",
-        addTransaction: "افزودن تراکنش",
-        transactions: "تراکنش‌ها",
-        filter: "فیلتر",
-        all: "همه",
-        thisMonth: "این ماه",
-        thisYear: "امسال",
-        custom: "سفارشی",
-        from: "از",
-        to: "تا",
-      },
-      categories: {
-        income: {
-          salary: "حقوق",
-          business: "کسب‌وکار",
-          investment: "سرمایه‌گذاری",
-          other: "سایر",
-        },
-        expense: {
-          food: "خوراک",
-          transport: "حمل‌ونقل",
-          housing: "مسکن",
-          health: "بهداشت",
-          education: "آموزش",
-          entertainment: "سرگرمی",
-          shopping: "خرید",
-          bills: "قبوض",
-          other: "سایر",
-        },
-      },
-      hints: {
-        amount: "مبلغ تراکنش را وارد کنید",
-        description: "توضیحات اختیاری",
-        category: "دسته‌بندی تراکنش",
-      },
-    },
     prices: {
       labels: {
         gold: "طلا",
@@ -249,10 +201,6 @@ export const bankToolsUIContent = {
       saving: {
         name: "Savings Calculator",
         desc: "Calculate savings growth over time",
-      },
-      expense: {
-        name: "Expense & Income Manager",
-        desc: "Track expenses and income easily",
       },
       prices: {
         name: "Gold, Coin & Currency Prices",
@@ -378,50 +326,6 @@ export const bankToolsUIContent = {
         initialAmount: "Amount you have initially",
         monthlyDeposit: "Amount you save each month",
         annualReturn: "Expected return (based on investment type)",
-      },
-    },
-    expense: {
-      labels: {
-        type: "Type",
-        income: "Income",
-        expense: "Expense",
-        balance: "Balance",
-        totalIncome: "Total Income",
-        totalExpense: "Total Expense",
-        netBalance: "Net Balance",
-        addTransaction: "Add Transaction",
-        transactions: "Transactions",
-        filter: "Filter",
-        all: "All",
-        thisMonth: "This Month",
-        thisYear: "This Year",
-        custom: "Custom",
-        from: "From",
-        to: "To",
-      },
-      categories: {
-        income: {
-          salary: "Salary",
-          business: "Business",
-          investment: "Investment",
-          other: "Other",
-        },
-        expense: {
-          food: "Food",
-          transport: "Transport",
-          housing: "Housing",
-          health: "Health",
-          education: "Education",
-          entertainment: "Entertainment",
-          shopping: "Shopping",
-          bills: "Bills",
-          other: "Other",
-        },
-      },
-      hints: {
-        amount: "Enter transaction amount",
-        description: "Optional description",
-        category: "Transaction category",
       },
     },
     prices: {

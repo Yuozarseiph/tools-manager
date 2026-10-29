@@ -6,7 +6,8 @@ export type BlockKind =
   | "paragraph"
   | "listItem"
   | "table"
-  | "image";
+  | "image"
+  | "code";
 export type AspectRatio = "16:9" | "4:3" | "16:10";
 
 export const ASPECT_RATIO_DIMENSIONS: Record<
@@ -24,8 +25,10 @@ export interface CssSubset {
   fontSize?: number;
   fontWeight?: number;
   fontStyle?: "normal" | "italic";
+  fontFamily?: string;
   textDecoration?: string;
   textAlign?: "left" | "right" | "center";
+  direction?: "rtl" | "ltr";
   marginTop?: number;
   marginBottom?: number;
 }
@@ -39,6 +42,7 @@ export type TextRun = {
     color?: string;
     fontSize?: number;
     fontFace?: string;
+    hyperlink?: { url: string };
   };
 };
 
@@ -49,6 +53,7 @@ export interface Block {
   headingLevel?: number;
   listLevel?: number;
   listType?: "ul" | "ol";
+  listNumber?: number;
   rows?: string[][];
   colSpans?: number[][];
   rowSpans?: number[][];
@@ -225,11 +230,7 @@ function normaliseFontWeight(v?: string): number | undefined {
 function defaultCssForTag(tagName: string): CssSubset {
   const tag = tagName.toLowerCase();
   const base: CssSubset = {
-    color: "#111111",
-    fontSize: 16,
-    fontWeight: 400,
-    fontStyle: "normal",
-    textAlign: "left",
+    ...(tag === "html" || tag === "body" ? { fontSize: 16, fontWeight: 400, fontStyle: "normal" as const } : {}),
     marginTop: 0,
     marginBottom: 0,
   };
@@ -289,6 +290,8 @@ function defaultCssForTag(tagName: string): CssSubset {
 
 function pickCssSubsetFromDecls(decls: DeclMap, baseFontPx: number): CssSubset {
   const out: CssSubset = {};
+  if (decls["font-family"]) out.fontFamily = decls["font-family"].split(",")[0].trim().replace(/^["']|["']$/g, "");
+  if (decls.direction === "rtl" || decls.direction === "ltr") out.direction = decls.direction;
   if (decls["color"]) out.color = decls["color"];
   if (decls["background-color"])
     out.backgroundColor = decls["background-color"];
@@ -322,6 +325,8 @@ function pickCssSubsetFromDecls(decls: DeclMap, baseFontPx: number): CssSubset {
 
 function mergeCss(a: CssSubset, b: CssSubset): CssSubset {
   return {
+    direction: b.direction ?? a.direction,
+    fontFamily: b.fontFamily ?? a.fontFamily,
     color: b.color ?? a.color,
     backgroundColor: b.backgroundColor ?? a.backgroundColor,
     fontSize: b.fontSize ?? a.fontSize,
@@ -336,6 +341,8 @@ function mergeCss(a: CssSubset, b: CssSubset): CssSubset {
 
 function isInheritableKey(k: keyof CssSubset): boolean {
   return (
+    k === "direction" ||
+    k === "fontFamily" ||
     k === "color" ||
     k === "fontSize" ||
     k === "fontWeight" ||
@@ -349,7 +356,7 @@ function inheritCss(parent: CssSubset, local: CssSubset): CssSubset {
   (Object.keys(parent) as Array<keyof CssSubset>).forEach((k) => {
     if (!isInheritableKey(k)) return;
     const pv = parent[k];
-    if (out[k] === undefined && pv !== undefined) (out as any)[k] = pv;
+    if (out[k] === undefined && pv !== undefined) Object.assign(out, { [k]: pv });
   });
   return out;
 }
@@ -358,6 +365,7 @@ function resolveCssForElement(el: HTMLElement, ctx: CssContext): CssSubset {
   const cached = ctx.cache.get(el);
   if (cached) return cached;
   const tagDefault = defaultCssForTag(el.tagName);
+  if (el.getAttribute("dir") === "rtl" || el.getAttribute("dir") === "ltr") tagDefault.direction = el.getAttribute("dir") as "rtl" | "ltr";
   let parentResolved: CssSubset | undefined;
   if (el.parentElement)
     parentResolved = resolveCssForElement(el.parentElement, ctx);
@@ -431,10 +439,12 @@ function detectSlideTypeFromContent(
 }
 
 function shouldIgnore(node: HTMLElement): boolean {
+  if (node.hidden || /display\s*:\s*none|visibility\s*:\s*hidden/i.test(node.getAttribute("style") ?? "")) return true;
   const cls = Array.from(node.classList);
   if (cls.includes("pptx-ignore") || cls.includes("no-export")) return true;
   const tag = node.tagName.toLowerCase();
   if (
+    ["iframe", "object", "embed", "form", "template", "canvas"].includes(tag) ||
     tag === "script" ||
     tag === "style" ||
     tag === "noscript" ||
@@ -461,7 +471,9 @@ type InlineFormat = {
   italic?: boolean;
   underline?: boolean;
   colorHex?: string;
+  hyperlink?: { url: string };
   fontSizePt?: number;
+  fontFace?: string;
 };
 
 function mergeInlineFormat(
@@ -473,7 +485,9 @@ function mergeInlineFormat(
     italic: add.italic ?? base.italic,
     underline: add.underline ?? base.underline,
     colorHex: add.colorHex ?? base.colorHex,
+    hyperlink: add.hyperlink ?? base.hyperlink,
     fontSizePt: add.fontSizePt ?? base.fontSizePt,
+    fontFace: add.fontFace ?? base.fontFace,
   };
 }
 
@@ -506,6 +520,8 @@ function formatFromElement(
 ): InlineFormat {
   const tag = el.tagName.toLowerCase();
   const out: InlineFormat = {};
+  if (resolvedCss.fontFamily) out.fontFace = resolvedCss.fontFamily;
+  if (tag === "a" && /^(?:https?:|mailto:)/i.test(el.getAttribute("href") ?? "")) out.hyperlink = { url: el.getAttribute("href")! };
   if (tag === "b" || tag === "strong") out.bold = true;
   if (tag === "i" || tag === "em") out.italic = true;
   if (tag === "u" || tag === "ins") out.underline = true;
@@ -536,7 +552,9 @@ function pushRun(runs: TextRun[], text: string, fmt: InlineFormat) {
       ...(fmt.italic ? { italic: true } : {}),
       ...(fmt.underline ? { underline: true } : {}),
       ...(fmt.colorHex ? { color: fmt.colorHex } : {}),
+      ...(fmt.hyperlink ? { hyperlink: fmt.hyperlink } : {}),
       ...(fmt.fontSizePt ? { fontSize: fmt.fontSizePt } : {}),
+      ...(fmt.fontFace ? { fontFace: fmt.fontFace } : {}),
     },
   });
 }
@@ -585,7 +603,11 @@ function buildTextBlock(
 function buildListItemBlock(li: HTMLElement, ctx: CssContext): Block | null {
   const css = resolveCssForElement(li, ctx);
   const runs: TextRun[] = [];
-  collectRunsFromNode(li, runs, {}, ctx);
+  const format = formatFromElement(li, css);
+  for (const child of Array.from(li.childNodes)) {
+    if (child.nodeType === Node.TEXT_NODE) pushRun(runs, child.textContent ?? "", format);
+    else if (child instanceof HTMLElement && !["UL", "OL"].includes(child.tagName)) collectRunsFromNode(child, runs, format, ctx);
+  }
   const raw = normaliseText(runs.map((r) => r.text).join(""));
   if (!raw) return null;
   let level = 0;
@@ -595,7 +617,7 @@ function buildListItemBlock(li: HTMLElement, ctx: CssContext): Block | null {
     const t = p.tagName.toLowerCase();
     if (t === "ul" || t === "ol") {
       level++;
-      type = t as any;
+      if (level === 1) type = t as "ul" | "ol";
     }
     p = p.parentElement;
   }
@@ -604,6 +626,7 @@ function buildListItemBlock(li: HTMLElement, ctx: CssContext): Block | null {
     text: raw,
     listLevel: level || 1,
     listType: type,
+    listNumber: type === "ol" ? Number(li.parentElement?.getAttribute("start") ?? 1) + Array.from(li.parentElement?.children ?? []).filter(child => child.tagName === "LI").indexOf(li) : undefined,
     css,
   };
 }
@@ -612,8 +635,8 @@ function buildImageBlock(img: HTMLImageElement, ctx: CssContext): Block | null {
   const src = img.getAttribute("src");
   if (!src) return null;
   const css = resolveCssForElement(img, ctx);
-  let w = img.width || img.getAttribute("width");
-  let h = img.height || img.getAttribute("height");
+  const w = img.width || img.getAttribute("width");
+  const h = img.height || img.getAttribute("height");
   return {
     kind: "image",
     src,
@@ -632,13 +655,13 @@ function buildTableBlock(
   const rows: string[][] = [];
   const colSpans: number[][] = [];
   const rowSpans: number[][] = [];
-  const trs = Array.from(table.querySelectorAll("tr"));
+  const trs = Array.from(table.querySelectorAll("tr")).filter(row => row.closest("table") === table);
   if (!trs.length) return null;
   for (const tr of trs) {
     const outRow: string[] = [];
     const csRow: number[] = [];
     const rsRow: number[] = [];
-    const cells = Array.from(tr.querySelectorAll("th,td"));
+    const cells = Array.from(tr.children).filter(cell => ["TH", "TD"].includes(cell.tagName));
     for (const cell of cells) {
       const txt = normaliseText(cell.textContent ?? "");
       const colspan = Math.max(1, (cell as HTMLTableCellElement).colSpan || 1);
@@ -646,22 +669,14 @@ function buildTableBlock(
       outRow.push(txt);
       csRow.push(colspan);
       rsRow.push(rowspan);
-      for (let i = 1; i < colspan; i++) {
-        outRow.push("");
-        csRow.push(0);
-        rsRow.push(0);
-      }
+
     }
     rows.push(outRow);
     colSpans.push(csRow);
     rowSpans.push(rsRow);
   }
   if (!rows.length) return null;
-  const maxCols = Math.max(...rows.map((r) => r.length));
-  const norm = rows.map((r) =>
-    r.length < maxCols ? r.concat(Array(maxCols - r.length).fill("")) : r,
-  );
-  return { kind: "table", rows: norm, colSpans, rowSpans, css };
+  return { kind: "table", rows, colSpans, rowSpans, css };
 }
 
 // ============ Smart Block Collection ============
@@ -673,6 +688,7 @@ function collectBlocks(
   const walk = (node: HTMLElement) => {
     if (shouldIgnore(node)) return;
     const tag = node.tagName.toLowerCase();
+    if (tag === "pre") { slide.blocks.push({ kind: "code", text: node.textContent ?? "", css: resolveCssForElement(node, ctx) }); return; }
     if (tag === "table") {
       const b = buildTableBlock(node as HTMLTableElement, ctx);
       if (b) slide.blocks.push(b);
@@ -695,15 +711,20 @@ function collectBlocks(
     if (tag === "p") {
       const b = buildTextBlock("paragraph", node, undefined, ctx);
       if (b) slide.blocks.push(b);
+      for (const image of Array.from(node.querySelectorAll("img"))) { const block = buildImageBlock(image, ctx); if (block) slide.blocks.push(block); }
       return;
     }
     if (tag === "li") {
       const b = buildListItemBlock(node, ctx);
       if (b) slide.blocks.push(b);
+      for (const nested of Array.from(node.children).filter(child => ["UL", "OL"].includes(child.tagName))) walk(nested as HTMLElement);
       return;
     }
-    const children = Array.from(node.children) as HTMLElement[];
-    for (const child of children) walk(child);
+    if (!node.children.length && node.textContent?.trim()) { const block = buildTextBlock("paragraph", node, undefined, ctx); if (block) slide.blocks.push(block); return; }
+    for (const child of Array.from(node.childNodes)) {
+      if (child instanceof HTMLElement) walk(child);
+      else if (child.nodeType === Node.TEXT_NODE && child.textContent?.trim()) slide.blocks.push({ kind: "paragraph", text: child.textContent.trim(), css: resolveCssForElement(node, ctx) });
+    }
   };
   walk(root);
 }
@@ -721,7 +742,7 @@ export function parseHtmlToSlides(html: string): SlideModel[] {
   // Check for explicit slides first
   const explicitSlides = Array.from(
     root.querySelectorAll<HTMLElement>(".slide, [data-slide]"),
-  );
+  ).filter(element => !element.parentElement?.closest(".slide, [data-slide]"));
   if (explicitSlides.length > 0) {
     for (const el of explicitSlides) {
       const type =
@@ -741,7 +762,11 @@ export function parseHtmlToSlides(html: string): SlideModel[] {
   }
 
   // Smart auto-detection
-  const children = Array.from(root.children) as HTMLElement[];
+  const children = Array.from(root.childNodes).flatMap(node => {
+    if (node instanceof HTMLElement) return [node];
+    if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) { const element = doc.createElement("p"); element.textContent = node.textContent; return [element]; }
+    return [];
+  });
   let currentSlide: SlideModel | null = null;
   const MAX_BLOCKS_PER_SLIDE = 8;
   const MAX_TEXT_LENGTH_PER_SLIDE = 2000;

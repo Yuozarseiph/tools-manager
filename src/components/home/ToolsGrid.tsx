@@ -1,5 +1,8 @@
 "use client";
+import { usePanelPresence } from "@/hooks/usePanelPresence";
+
 import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
+import { normaliseOutputName } from "@/lib/output-name";
 
 import {
   memo,
@@ -25,13 +28,13 @@ import {
   HelpCircle,
   Image as ImageIcon,
   Landmark,
-  MonitorSmartphone,
   Music,
   Palette,
   Pin,
   PinOff,
   Presentation,
   Search,
+  Sparkles,
   ShieldCheck,
   SlidersHorizontal,
   Table,
@@ -60,6 +63,7 @@ import {
 
 const CATEGORIES = [
   { id: "all", icon: Grid },
+  { id: "ai", icon: Sparkles },
   { id: "pdf", icon: FileText },
   { id: "image", icon: ImageIcon },
   { id: "developer", icon: Code2 },
@@ -70,7 +74,6 @@ const CATEGORIES = [
   { id: "powerpoint", icon: Presentation },
   { id: "calculator", icon: Calculator },
   { id: "banking", icon: Landmark },
-  { id: "system", icon: MonitorSmartphone },
   { id: "graphics", icon: Palette },
   { id: "game", icon: Gamepad2 },
 ] as const;
@@ -80,6 +83,9 @@ type ExportData = {
   exportDate: string;
   version: string;
 };
+
+const availableToolIds = new Set(TOOLS.map(tool => tool.id));
+const availablePins = (pins: unknown[]) => [...new Set(pins.filter((id): id is string => typeof id === "string" && availableToolIds.has(id)))];
 
 const getGridClass = (layout: ToolsLayoutMode): string => {
   switch (layout) {
@@ -94,7 +100,7 @@ const getGridClass = (layout: ToolsLayoutMode): string => {
     case "grid-3":
       return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
     case "grid-4":
-      return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3";
+      return "grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4";
     default:
       return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
   }
@@ -126,12 +132,12 @@ const ToolCard = memo(function ToolCard({
 
   return (
     <article
-      className={`group relative h-full rounded-[24px] border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${theme.card} ${theme.border}`}
+      className={`tool-card group relative h-full min-w-0 rounded-lg border transition-colors duration-200 ${theme.card} ${theme.border}`}
     >
       <Link
         href={tool.href}
         className={`flex h-full rounded-[20px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
-          list ? "items-start gap-3 p-3.5 pe-14" : "flex-col p-4"
+          list ? "items-start gap-3 p-4 pe-16" : "flex-col p-5"
         } ${
           tool.status === "coming-soon"
             ? "pointer-events-none opacity-50 grayscale"
@@ -150,26 +156,26 @@ const ToolCard = memo(function ToolCard({
         </div>
 
         <div className={`min-w-0 flex-1 ${list ? "" : "mt-4"}`}>
-          <div className="flex min-w-0 items-center gap-2">
+          <div className="flex min-w-0 flex-col items-start gap-2">
             <h2
-              className={`min-w-0 truncate text-sm font-black sm:text-[15px] ${theme.text}`}
+              className={`min-w-0 text-base font-bold leading-7 ${theme.text}`}
             >
               {tool.title}
             </h2>
 
-            {tool.badge && (
+            {content.categories[tool.category] && (
               <span
-                className={`shrink-0 rounded-full border px-2 py-1 text-xs font-black ${theme.border} ${theme.secondary} ${theme.accent}`}
+                className={`max-w-full rounded-md border px-2 py-1 text-xs font-semibold leading-5 ${theme.border} ${theme.secondary} ${theme.accent}`}
               >
-                {tool.badge}
+                {content.categories[tool.category]}
               </span>
             )}
           </div>
 
           {!compact && (
             <p
-              className={`mt-2 text-xs leading-6 ${theme.textMuted} ${
-                list ? "" : "line-clamp-2"
+              className={`mt-3 text-sm leading-7 ${theme.textMuted} ${
+                list ? "" : "line-clamp-3"
               }`}
             >
               {tool.description}
@@ -179,12 +185,12 @@ const ToolCard = memo(function ToolCard({
 
         {!list && (
           <div
-            className={`mt-5 flex items-center justify-between border-t pt-3 text-xs font-black ${theme.border} ${theme.accent}`}
+            className={`mt-5 flex items-center justify-between border-t pt-3 text-sm font-bold ${theme.border} ${theme.accent}`}
           >
             <span>{content.item.cta}</span>
             <ArrowLeft
               size={14}
-              className={isRTL ? "rotate-180" : ""}
+              className={isRTL ? "" : "rotate-180"}
               aria-hidden="true"
             />
           </div>
@@ -204,12 +210,10 @@ const ToolCard = memo(function ToolCard({
               ? `پین کردن ${tool.title}`
               : `Pin ${tool.title}`
         }
-        className={`absolute top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+        className={`tool-pin absolute top-3 z-10 flex h-11 w-11 items-center justify-center rounded-lg ${
           isRTL ? "left-3" : "right-3"
         } ${
-          isPinned
-            ? "bg-amber-500/15 text-amber-500"
-            : `${theme.secondary} ${theme.textMuted}`
+          theme.textMuted
         }`}
       >
         {isPinned ? (
@@ -237,6 +241,7 @@ export default function ToolsGrid() {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [exportFormat, setExportFormat] = useState<"file" | "text">("file");
+  const [exportName, setExportName] = useState("");
   const [copied, setCopied] = useState(false);
   const [importText, setImportText] = useState("");
   const [layoutSettings, setLayoutSettings] =
@@ -244,7 +249,10 @@ export default function ToolsGrid() {
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [showImportHelp, setShowImportHelp] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const categoryPanelRef = useViewportMenu(showCategoryDropdown);
+  const categoryPresence = usePanelPresence(showCategoryDropdown);
+  const exportPresence = usePanelPresence(showExportModal);
+  const importPresence = usePanelPresence(showImportModal);
+  const categoryPanelRef = useViewportMenu(categoryPresence.present);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
@@ -279,7 +287,7 @@ export default function ToolsGrid() {
       const savedPins = localStorage.getItem("tm_pinned_tools");
       if (savedPins) {
         const data = JSON.parse(savedPins);
-        setPinnedTools(data.pinnedTools || []);
+        setPinnedTools(availablePins(Array.isArray(data.pinnedTools) ? data.pinnedTools : []));
       }
     } catch (error) {
       console.error("Failed to load settings:", error);
@@ -441,11 +449,11 @@ export default function ToolsGrid() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `pinned-tools-${new Date().toISOString().split("T")[0]}.json`;
+    anchor.download = normaliseOutputName(exportName, `pinned-tools-${new Date().toISOString().split("T")[0]}.json`);
     anchor.click();
     URL.revokeObjectURL(url);
     setShowExportModal(false);
-  }, [getExportData]);
+  }, [getExportData, exportName]);
 
   const handleCopyToClipboard = useCallback(async () => {
     await navigator.clipboard.writeText(
@@ -465,7 +473,7 @@ export default function ToolsGrid() {
         try {
           const data = JSON.parse(loadEvent.target?.result as string);
           if (data.pinnedTools && Array.isArray(data.pinnedTools)) {
-            const unique = [...new Set(data.pinnedTools as string[])];
+            const unique = availablePins(data.pinnedTools);
             setPinnedTools(unique);
             savePinnedTools(unique);
             setShowImportModal(false);
@@ -483,7 +491,7 @@ export default function ToolsGrid() {
     try {
       const data = JSON.parse(importText);
       if (data.pinnedTools && Array.isArray(data.pinnedTools)) {
-        const unique = [...new Set(data.pinnedTools as string[])];
+        const unique = availablePins(data.pinnedTools);
         setPinnedTools(unique);
         savePinnedTools(unique);
         setImportText("");
@@ -504,7 +512,7 @@ export default function ToolsGrid() {
     ];
 
   return (
-    <section id="tools-workspace" className="mx-auto w-full max-w-7xl scroll-mt-24 space-y-7 px-4 pb-20 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+    <section id="tools-workspace" aria-label={locale === "fa" ? "فهرست ابزارها" : "Tools directory"} className="mx-auto w-full max-w-7xl scroll-mt-20 space-y-5 px-4 pb-12 pt-6 sm:px-6 sm:pt-8 lg:px-8">
       <PinnedSection
         pinnedTools={pinnedToolsList}
         onRemove={removePin}
@@ -528,9 +536,9 @@ export default function ToolsGrid() {
       />
 
       <div
-        className="p-0"
+        className="tools-toolbar"
       >
-        <div className="relative">
+        <div className="tools-search-field relative">
             <label htmlFor="tools-search" className="sr-only">
               {uiText.searchLabel}
             </label>
@@ -538,13 +546,15 @@ export default function ToolsGrid() {
             <Search
               size={18}
               aria-hidden="true"
-              className={`pointer-events-none absolute top-1/2 -translate-y-1/2 ${
+              className={`pointer-events-none absolute z-10 top-1/2 -translate-y-1/2 ${
                 isRTL ? "right-4" : "left-4"
               } ${theme.textMuted}`}
             />
 
             <AccessibleInput
               id="tools-search"
+              hasVisibleLabel
+              style={{ paddingInline: "2.75rem" }}
               type="search"
               value={searchQuery}
               placeholder={content.search.placeholder}
@@ -562,7 +572,7 @@ export default function ToolsGrid() {
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className={`absolute top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+                className={`absolute z-10 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
                   isRTL ? "left-2.5" : "right-2.5"
                 } ${theme.secondary} ${theme.textMuted}`}
                 aria-label={isRTL ? "پاک کردن جستجو" : "Clear search"}
@@ -571,9 +581,7 @@ export default function ToolsGrid() {
               </button>
             )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="tools-filters">
         <LayoutControls
           mode="tools"
           toolsLayout={layoutSettings.toolsLayout}
@@ -590,10 +598,13 @@ export default function ToolsGrid() {
               onClick={() => setShowCategoryDropdown((value) => !value)}
               aria-expanded={showCategoryDropdown}
               aria-haspopup="menu"
-              className={`flex min-h-11 items-center gap-2 rounded-[15px] border px-3.5 text-xs font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setShowCategoryDropdown(false);
+              }}
+              className={`ui-control flex min-h-12 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold ${theme.card} ${theme.text}`}
             >
               <SlidersHorizontal size={15} className={theme.accent} aria-hidden="true" />
-              <span className={theme.textMuted}>{uiText.category}</span>
+              <span className={`hidden sm:inline ${theme.textMuted}`}>{uiText.category}</span>
               <ActiveCategoryIcon size={15} className={theme.accent} aria-hidden="true" />
               <span>{activeCategoryLabel}</span>
               <ChevronDown
@@ -605,15 +616,22 @@ export default function ToolsGrid() {
               />
             </button>
 
-            {showCategoryDropdown && (
+            {categoryPresence.present && (
               <div
                 role="menu"
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    setShowCategoryDropdown(false);
+                    categoryDropdownRef.current?.querySelector("button")?.focus();
+                  }
+                }}
+                {...categoryPresence.attributes}
                 ref={categoryPanelRef}
-                className={`absolute top-full z-50 mt-2 max-h-[70dvh] overflow-y-auto w-[min(22rem,calc(100vw-2rem))] rounded-[22px] border p-2 shadow-xl bg-[var(--app-menu)] ${
+                className={`absolute top-full z-50 mt-2 max-h-[70dvh] overflow-y-auto category-menu w-[min(22rem,calc(100vw-2rem))] rounded-[22px] border p-2 shadow-xl bg-[var(--app-menu)] ${
                   isRTL ? "left-0" : "right-0"
                 } ${theme.border}`}
               >
-                <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+                <div className="grid grid-cols-2 gap-1">
                   {CATEGORIES.map((category) => {
                     const Icon = category.icon;
                     const active = activeCategory === category.id;
@@ -639,18 +657,18 @@ export default function ToolsGrid() {
                           setVisibleCount(TOOLS.length);
                           setShowCategoryDropdown(false);
                         }}
-                        className={`flex min-h-16 items-center gap-2 rounded-[15px] px-3 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] ${
+                        className={`flex min-h-11 items-center gap-2 rounded-lg px-2 py-2 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] ${
                           active
                             ? `${theme.secondary} ${theme.accent}`
-                            : `${theme.textMuted} hover:bg-black/5 dark:hover:bg-white/5`
+                            : `${theme.text} hover:bg-black/5 dark:hover:bg-white/5`
                         }`}
                       >
-                        <Icon size={17} aria-hidden="true" />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-xs font-black">
+                        <Icon className="shrink-0" size={17} aria-hidden="true" />
+                        <span className="flex min-w-0 flex-1 items-center gap-2">
+                          <span className="block whitespace-normal text-xs font-semibold leading-5">
                             {label}
                           </span>
-                          <span className="mt-0.5 block text-xs opacity-70">
+                          <span className="ms-auto shrink-0 text-xs text-[var(--app-text-muted)]">
                             {count}
                           </span>
                         </span>
@@ -662,13 +680,12 @@ export default function ToolsGrid() {
             )}
         </div>
 
-        <span
-            className={`rounded-full px-3 py-2 text-xs font-bold ${theme.secondary} ${theme.textMuted}`}
-            aria-live="polite"
-          >
-            {filteredTools.length}
-        </span>
       </div>
+      </div>
+
+      <p className="tools-result-count" role="status" aria-live="polite" aria-atomic="true">
+        {filteredTools.length.toLocaleString(locale === "fa" ? "fa-IR" : "en-US")} {locale === "fa" ? "ابزار در دسترس" : "tools available"}
+      </p>
 
       <div className={`grid ${getGridClass(layoutSettings.toolsLayout)}`}>
         {visibleTools.length > 0 ? (
@@ -718,8 +735,9 @@ export default function ToolsGrid() {
         </div>
       )}
 
-      {showExportModal && (
+      {exportPresence.present && (
         <SettingsModal
+          presence={exportPresence.attributes}
           title={uiText.exportTitle}
           onClose={() => setShowExportModal(false)}
           theme={theme}
@@ -757,6 +775,11 @@ export default function ToolsGrid() {
             </div>
 
             {exportFormat === "file" ? (
+              <>
+              <label className={`block space-y-2 text-sm ${theme.text}`}>
+                <span>{locale === "fa" ? "نام فایل خروجی (اختیاری)" : "Output filename (optional)"}</span>
+                <AccessibleInput value={exportName} onChange={event => setExportName(event.target.value)} maxLength={160} placeholder={locale === "fa" ? "نام خودکار؛ پسوند JSON خودکار اضافه می‌شود" : "Automatic name; JSON extension is added automatically"} className={`w-full rounded-xl border px-3 py-2 ${theme.border} ${theme.bg} ${theme.text}`} dir="auto" />
+              </label>
               <button data-testid="download-result"
                 type="button"
                 onClick={handleExportFile}
@@ -765,6 +788,7 @@ export default function ToolsGrid() {
                 <Download size={17} aria-hidden="true" />
                 {uiText.downloadJson}
               </button>
+              </>
             ) : (
               <>
                 <AccessibleTextarea
@@ -788,8 +812,9 @@ export default function ToolsGrid() {
         </SettingsModal>
       )}
 
-      {showImportModal && (
+      {importPresence.present && (
         <SettingsModal
+          presence={importPresence.attributes}
           title={uiText.importTitle}
           onClose={() => {
             setShowImportModal(false);
@@ -861,6 +886,7 @@ export default function ToolsGrid() {
 }
 
 function SettingsModal({
+  presence,
   title,
   onClose,
   children,
@@ -868,6 +894,7 @@ function SettingsModal({
   locale,
   onHelp,
 }: {
+  presence: ReturnType<typeof usePanelPresence>["attributes"];
   title: string;
   onClose: () => void;
   children: React.ReactNode;
@@ -887,6 +914,7 @@ function SettingsModal({
     <div
       className="fixed inset-0 z-[150] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] sm:items-center"
       role="dialog"
+      {...presence}
       aria-modal="true"
       aria-labelledby="settings-modal-title"
       onClick={onClose}

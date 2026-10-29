@@ -2,7 +2,7 @@
 "use client";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import {
   FolderOpen,
   FolderClosed,
@@ -17,7 +17,6 @@ import {
   Upload,
   Search,
   FolderPlus,
-  GripVertical,
 } from "lucide-react";
 import { VirtualFile, SUPPORTED_LANGUAGES, SupportedLanguage } from "../types";
 import CustomDropdown from "@/components/ui/CustomDropdown";
@@ -109,14 +108,12 @@ export default function FileExplorer({
   };
 
   const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onImportFile(file, null);
-      e.target.value = "";
-    }
+    const imported = Array.from(e.target.files || []);
+    for (const file of imported) onImportFile(file, null);
+    e.target.value = "";
   };
 
-  // 🖱️ Desktop Drag & Drop
+  //  Desktop Drag & Drop
   const handleDragStart = (e: React.DragEvent, fileId: string) => {
     e.dataTransfer.setData("text/plain", fileId);
     e.dataTransfer.effectAllowed = "move";
@@ -175,7 +172,7 @@ export default function FileExplorer({
     setDraggedItem(null);
   };
 
-  // 👆 Touch Drag & Drop (Mobile)
+  //  Touch Drag & Drop (Mobile)
   const handleTouchStart = (e: React.TouchEvent, itemId: string) => {
     const touch = e.touches[0];
     touchDragRef.current = {
@@ -203,7 +200,7 @@ export default function FileExplorer({
       e.preventDefault();
       const elem = document.elementFromPoint(touch.clientX, touch.clientY);
       const folderElem = elem?.closest("[data-drop-target]");
-      // ✅ FIX: Convert undefined to null to match useState<string | null>
+      //  FIX: Convert undefined to null to match useState<string | null>
       const targetId = folderElem?.getAttribute("data-drop-target") ?? null;
       setDragOverFolder(targetId);
     }
@@ -216,7 +213,7 @@ export default function FileExplorer({
         const touch = e.changedTouches[0];
         const elem = document.elementFromPoint(touch.clientX, touch.clientY);
         const folderElem = elem?.closest("[data-drop-target]");
-        // ✅ FIX: Convert undefined to null
+        //  FIX: Convert undefined to null
         const targetId = folderElem?.getAttribute("data-drop-target") ?? null;
 
         if (targetId !== null && targetId !== state.itemId) {
@@ -250,29 +247,51 @@ export default function FileExplorer({
     };
   }, [handleTouchMove, handleTouchEnd]);
 
-  const getChildren = (parentId: string | null) => {
-    let children = files.filter((f) => f.parentId === parentId);
-    if (searchQuery) {
-      children = children.filter((f) =>
-        f.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
+  const visibleIds = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return null;
+    const ids = new Set<string>();
+    for (const file of files) {
+      if (!file.name.toLowerCase().includes(query)) continue;
+      ids.add(file.id);
+      const parents = new Set<string>();
+      let parent = file.parentId;
+      while (parent && !parents.has(parent)) {
+        parents.add(parent);
+        ids.add(parent);
+        parent = files.find((item) => item.id === parent)?.parentId ?? null;
+      }
     }
-    return children.sort((a, b) => {
-      if (a.isFolder && !b.isFolder) return -1;
-      if (!a.isFolder && b.isFolder) return 1;
-      return a.name.localeCompare(b.name);
-    });
-  };
+    return ids;
+  }, [files, searchQuery]);
+
+  // Build the tree once per data/search change, not once for every nested folder.
+  const childrenByParent = useMemo(() => {
+    const groups = new Map<string | null, VirtualFile[]>();
+    for (const item of files) {
+      if (visibleIds && !visibleIds.has(item.id)) continue;
+      const group = groups.get(item.parentId) ?? [];
+      group.push(item);
+      groups.set(item.parentId, group);
+    }
+    for (const group of groups.values()) group.sort((a, b) =>
+      a.isFolder !== b.isFolder ? (a.isFolder ? -1 : 1) : a.name.localeCompare(b.name)
+    );
+    return groups;
+  }, [files, visibleIds]);
+  const getChildren = (parentId: string | null) => childrenByParent.get(parentId) ?? [];
 
   const languageOptions = Object.entries(SUPPORTED_LANGUAGES).map(
     ([key, val]) => ({
       value: key,
-      label: `${val.icon} ${val.name} (${val.ext})`,
+      label: `${val.name} (${val.ext})`,
     }),
   );
 
-  const renderTree = (parentId: string | null, depth: number = 0) => {
-    const children = getChildren(parentId);
+  const renderTree = (parentId: string | null, depth: number = 0, ancestors = new Set<string>()) => {
+    // Imported workspace metadata may be malformed; never recurse forever.
+    if (depth > 64) return null;
+    const children = getChildren(parentId).filter((item) => !ancestors.has(item.id));
     return children.map((item) => (
       <div
         key={item.id}
@@ -283,22 +302,32 @@ export default function FileExplorer({
         data-drop-target={item.isFolder ? item.id : undefined}
       >
         <div
-          className={`group flex items-center gap-1 px-2 py-1 rounded cursor-pointer transition-colors ${
+          className={`qf-editor-tree-row group flex items-center gap-1 rounded cursor-pointer transition-colors ${
             activeFileId === item.id
               ? "bg-[var(--app-secondary-bg)]"
               : dragOverFolder === item.id
                 ? "bg-[var(--app-success-bg)] ring-2 ring-[var(--app-success-border)]"
                 : "hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
-          style={{ paddingLeft: `${depth * 16 + 8}px` }}
+          style={{ paddingLeft: `${depth * 15 + 9}px` }}
+          title={item.name}
           onClick={() => {
             if (item.isFolder) onToggleFolder(item.id);
             else onFileClick(item.id);
           }}
           onDoubleClick={() => {
-            if (!item.isFolder) {
-              setRenameValue(item.name);
-              onStartRename(item.id);
+            if (!item.isFolder) onFileClick(item.id);
+          }}
+          role="treeitem"
+          tabIndex={0}
+          aria-expanded={item.isFolder ? (expandedFolders.has(item.id) || !!searchQuery.trim()) : undefined}
+          aria-label={item.name}
+          onKeyDown={(e) => {
+            if (e.target !== e.currentTarget) return;
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              if (item.isFolder) onToggleFolder(item.id);
+              else onFileClick(item.id);
             }
           }}
           onDragOver={(e) =>
@@ -307,13 +336,10 @@ export default function FileExplorer({
           onDragLeave={handleDragLeave}
           onDrop={(e) => (item.isFolder ? handleDrop(e, item.id) : undefined)}
         >
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-            <GripVertical size={12} className="text-[var(--app-text-muted)]" />
-          </span>
 
           {item.isFolder && (
             <span className="shrink-0">
-              {expandedFolders.has(item.id) ? (
+              {expandedFolders.has(item.id) || !!searchQuery.trim() ? (
                 <ChevronDown
                   size={14}
                   className="text-[var(--app-text-muted)]"
@@ -328,7 +354,7 @@ export default function FileExplorer({
           )}
 
           {item.isFolder ? (
-            expandedFolders.has(item.id) ? (
+            expandedFolders.has(item.id) || !!searchQuery.trim() ? (
               <FolderOpen size={14} className="text-amber-500 shrink-0" />
             ) : (
               <FolderClosed size={14} className="text-amber-500 shrink-0" />
@@ -374,30 +400,30 @@ export default function FileExplorer({
               </AccessibleButton>
               <AccessibleButton purpose="close"
                 onClick={onCancelRename}
-                className="p-0.5 rounded hover:bg-[var(--app-error-bg)]"
+                className="qf-editor-icon-button rounded hover:bg-[var(--app-error-bg)]"
               >
                 <X size={12} className="text-[var(--app-error-text)]" />
               </AccessibleButton>
             </div>
           ) : (
             <span
-              className="flex-1 text-xs truncate"
+              className="qf-editor-tree-name flex-1 text-xs truncate"
               style={{ color: "var(--app-text)" }}
             >
               {item.name}
             </span>
           )}
 
-          {/* ✅ Mobile: Always visible | Desktop: Hover only */}
+          {/*  Mobile: Always visible | Desktop: Hover only */}
           {isRenaming !== item.id && (
-            <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
+            <div className="qf-editor-tree-actions flex items-center gap-0.5 shrink-0">
               {item.isFolder && (
                 <button aria-label={isFa ? "فایل جدید" : "New file"}
                   onClick={(e) => {
                     e.stopPropagation();
                     onStartCreate("file", item.id);
                   }}
-                  className="p-0.5 rounded hover:bg-[var(--app-secondary-bg)]"
+                  className="qf-editor-icon-button rounded hover:bg-[var(--app-secondary-bg)]"
                   title={isFa ? "فایل جدید" : "New file"}
                 >
                   <Plus size={12} className="text-[var(--app-accent)]" />
@@ -409,7 +435,7 @@ export default function FileExplorer({
                   setRenameValue(item.name);
                   onStartRename(item.id);
                 }}
-                className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700"
+                className="qf-editor-icon-button rounded hover:bg-slate-200 dark:hover:bg-slate-700"
                 title={isFa ? "تغییر نام" : "Rename"}
               >
                 <Pencil size={12} className="text-[var(--app-text-muted)]" />
@@ -420,7 +446,7 @@ export default function FileExplorer({
                   if (confirm(isFa ? "حذف شود؟" : "Delete?"))
                     onDeleteItem(item.id);
                 }}
-                className="p-0.5 rounded hover:bg-[var(--app-error-bg)]"
+                className="qf-editor-icon-button rounded hover:bg-[var(--app-error-bg)]"
                 title={isFa ? "حذف" : "Delete"}
               >
                 <Trash2 size={12} className="text-[var(--app-error-text)]" />
@@ -429,8 +455,8 @@ export default function FileExplorer({
           )}
         </div>
         {item.isFolder &&
-          expandedFolders.has(item.id) &&
-          renderTree(item.id, depth + 1)}
+          (expandedFolders.has(item.id) || !!searchQuery.trim()) &&
+          renderTree(item.id, depth + 1, new Set([...ancestors, item.id]))}
       </div>
     ));
   };
@@ -461,21 +487,21 @@ export default function FileExplorer({
         <div className="flex items-center gap-1">
           <button aria-label={isFa ? "وارد کردن فایل" : "Import file"}
             onClick={() => document.getElementById("file-import")?.click()}
-            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="qf-editor-icon-button rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "وارد کردن فایل" : "Import file"}
           >
             <Upload size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
           <button aria-label={isFa ? "پوشه جدید" : "New folder"}
             onClick={() => onStartCreate("folder", null)}
-            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="qf-editor-icon-button rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "پوشه جدید" : "New folder"}
           >
             <FolderPlus size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
           <button aria-label={isFa ? "فایل جدید" : "New file"}
             onClick={() => onStartCreate("file", null)}
-            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="qf-editor-icon-button rounded hover:bg-slate-100 dark:hover:bg-slate-800"
             title={isFa ? "فایل جدید" : "New file"}
           >
             <Plus size={14} style={{ color: "var(--app-text-muted)" }} />
@@ -485,9 +511,10 @@ export default function FileExplorer({
           id="file-import"
           ref={fileInputRef}
           type="file"
+          multiple
           onChange={handleFileImport}
           className="hidden"
-          accept=".js,.ts,.jsx,.tsx,.html,.css,.json,.md,.py,.txt"
+          accept=".js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.md,.py,.txt,.php,.java,.cpp,.c,.cs,.go,.rs,.sql,.xml,.yaml,.yml,.sh"
         />
       </div>
 
@@ -577,7 +604,9 @@ export default function FileExplorer({
 
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto p-1"
+        className="qf-editor-tree-scroll flex-1 overflow-auto p-1"
+        role="tree"
+        aria-label={isFa ? "فایل‌ها و پوشه‌های پروژه" : "Project files and folders"}
         data-drop-target="root"
         style={{ touchAction: isTouchDragging ? "none" : "auto" }}
         onDragOver={(e) => handleDragOver(e, null)}
@@ -586,7 +615,7 @@ export default function FileExplorer({
         {renderTree(null)}
         {getChildren(null).length === 0 && !searchQuery && (
           <div className="text-center py-8">
-            <div className="text-3xl mb-2">📂</div>
+            <FolderOpen className="mx-auto mb-2 h-8 w-8" aria-hidden="true" />
             <p className="text-xs" style={{ color: "var(--app-text-muted)" }}>
               {isFa ? "فایلی وجود ندارد" : "No files yet"}
             </p>

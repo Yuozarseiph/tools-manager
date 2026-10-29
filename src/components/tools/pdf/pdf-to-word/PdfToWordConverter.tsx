@@ -1,4 +1,5 @@
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +15,7 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { usePdfToWordToolContent } from "./pdf-to-word.content";
@@ -164,7 +165,7 @@ export default function PdfToWordConverter() {
 
   const handleDownload = useCallback(() => {
     if (!result) return;
-    download(result.blob, `${fileBase}.docx`, DOCX_MIME);
+    download(result.blob, outputFilename(`${fileBase}.docx`), DOCX_MIME);
   }, [fileBase, result]);
 
   useEffect(() => () => abortRef.current?.abort(), []);

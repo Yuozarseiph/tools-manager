@@ -1,4 +1,5 @@
 "use client";
+import { usePanelPresence } from "@/hooks/usePanelPresence";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -8,7 +9,8 @@ interface Props { options: string[]; selectedValues: string[]; onChange: (values
 export default function CustomMultiSelect({ options, selectedValues, onChange, label, placeholder = "انتخاب کنید..." }: Props) {
   const theme = useThemeColors(); const { locale } = useLanguage(); const listId = useId();
   const [isOpen, setIsOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null);
-  const panelRef = useViewportMenu(isOpen);
+  const presence = usePanelPresence(isOpen);
+  const panelRef = useViewportMenu(presence.present);
   useEffect(() => {
     const outside = (event: MouseEvent) => { if (!root.current?.contains(event.target as Node)) setIsOpen(false); };
     document.addEventListener("mousedown", outside); return () => document.removeEventListener("mousedown", outside);
@@ -35,7 +37,7 @@ export default function CustomMultiSelect({ options, selectedValues, onChange, l
         <span className="text-sm">{selectedValues.length === 0 ? placeholder : label}</span><ChevronDown size={16} aria-hidden="true" className={isOpen ? "rotate-180" : ""} />
       </button>
     </div>
-    {isOpen && <div ref={panelRef} id={listId} role="listbox" aria-multiselectable="true" aria-label={label ?? placeholder} className={`absolute z-50 mt-2 max-h-60 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border p-1 shadow-xl bg-[var(--app-menu)] ${theme.border}`}>
+    {presence.present && <div {...presence.attributes} ref={panelRef} id={listId} role="listbox" aria-multiselectable="true" aria-label={label ?? placeholder} className={`absolute z-50 mt-2 max-h-60 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border p-1 shadow-xl bg-[var(--app-menu)] ${theme.border}`}>
       {options.map(option => <button key={option} type="button" role="option" aria-selected={selectedValues.includes(option)} onClick={() => toggle(option)}
         className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm ${selectedValues.includes(option) ? "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]" : theme.text}`}>
         <span>{option}</span>{selectedValues.includes(option) && <Check size={16} aria-hidden="true" />}

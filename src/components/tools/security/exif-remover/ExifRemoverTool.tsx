@@ -1,5 +1,7 @@
 // components/tools/security/exif-remover/ExifRemoverTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
@@ -203,8 +205,8 @@ export default function ExifRemoverTool() {
     if (!outputBlob) return;
     const a = document.createElement("a");
     a.href = outputUrl ?? "";
-    a.download = "image-no-exif.jpg";
-    a.click();
+    a.download = outputFilename("image-no-exif.jpg");
+    void saveFile(a.href, a.download);
   };
 
   return (

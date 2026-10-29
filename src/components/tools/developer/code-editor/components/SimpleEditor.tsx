@@ -1,5 +1,7 @@
 // components/tools/developer/code-editor/components/SimpleEditor.tsx
 "use client";
+import { FileText } from "lucide-react";
+
 import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useRef, useEffect } from "react";
@@ -33,7 +35,7 @@ export default function SimpleEditor({
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-3 px-6 max-w-md">
-          <div className="text-5xl">📝</div>
+          <FileText className="mx-auto h-12 w-12 opacity-60" aria-hidden="true" />
           <h3
             className="text-lg font-bold"
             style={{ color: "var(--app-text)" }}
@@ -52,6 +54,7 @@ export default function SimpleEditor({
 
   const lang =
     SUPPORTED_LANGUAGES[file.language as keyof typeof SUPPORTED_LANGUAGES];
+  const LanguageIcon = lang?.icon ?? FileText;
 
   return (
     <div className="flex-1 flex flex-col" style={{ direction: "ltr" }}>
@@ -64,7 +67,7 @@ export default function SimpleEditor({
         }}
       >
         <div className="flex items-center gap-2">
-          <span>{lang?.icon || "📄"}</span>
+          <LanguageIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="font-medium" style={{ color: "var(--app-text)" }}>
             {file.name}
           </span>

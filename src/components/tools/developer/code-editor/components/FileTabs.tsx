@@ -1,7 +1,7 @@
-// components/tools/developer/code-editor/components/FileTabs.tsx
 "use client";
-import { X, Circle } from "lucide-react";
-import { VirtualFile, EditorTab, SUPPORTED_LANGUAGES } from "../types";
+
+import { FileText, X } from "lucide-react";
+import { EditorTab, SUPPORTED_LANGUAGES, VirtualFile } from "../types";
 
 interface FileTabsProps {
   files: VirtualFile[];
@@ -9,67 +9,30 @@ interface FileTabsProps {
   activeFileId: string | null;
   onTabClick: (fileId: string) => void;
   onTabClose: (fileId: string) => void;
-  theme: any;
+  locale?: string;
+  theme?: unknown;
 }
 
-export default function FileTabs({
-  files,
-  tabs,
-  activeFileId,
-  onTabClick,
-  onTabClose,
-}: FileTabsProps) {
-  if (tabs.length === 0) return null;
-
+export default function FileTabs({ files, tabs, activeFileId, onTabClick, onTabClose, locale }: FileTabsProps) {
+  const isFa = locale === "fa";
   return (
-    <div
-      className="flex items-center overflow-x-auto border-b scrollbar-hide"
-      style={{
-        borderColor: "var(--app-border)",
-        backgroundColor: "var(--app-bg)",
-      }}
-    >
+    <div className="qf-editor-tabs" role="tablist" aria-label={isFa ? "فایل‌های باز" : "Open files"}>
       {tabs.map((tab) => {
-        const file = files.find((f) => f.id === tab.fileId);
+        const file = files.find((item) => item.id === tab.fileId && !item.isFolder);
         if (!file) return null;
-
-        const isActive = tab.fileId === activeFileId;
-        const lang =
-          SUPPORTED_LANGUAGES[
-            file.language as keyof typeof SUPPORTED_LANGUAGES
-          ];
-
+        const Icon = SUPPORTED_LANGUAGES[file.language as keyof typeof SUPPORTED_LANGUAGES]?.icon ?? FileText;
+        const active = tab.fileId === activeFileId;
         return (
-          <div
-            key={tab.fileId}
-            onClick={() => onTabClick(tab.fileId)}
-            className="group flex items-center gap-1.5 px-3 py-2 text-xs cursor-pointer border-r shrink-0 transition-colors select-none"
-            style={{
-              backgroundColor: isActive ? "var(--app-card)" : "transparent",
-              borderRightColor: "var(--app-border)",
-              color: isActive ? "var(--app-accent)" : "var(--app-text-muted)",
-              borderTop: isActive
-                ? "2px solid var(--app-accent)"
-                : "2px solid transparent",
-              marginBottom: isActive ? "-1px" : "0",
-            }}
-          >
-            <span className="text-sm">{lang?.icon || "📄"}</span>
-            <span className="max-w-[120px] truncate font-medium">
-              {file.name}
-            </span>
-            {tab.isDirty && (
-              <Circle size={8} className="fill-current opacity-40 shrink-0" />
-            )}
-            <button aria-label="Close"
-              onClick={(e) => {
-                e.stopPropagation();
-                onTabClose(tab.fileId);
-              }}
-              className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0"
-              title="Close"
-            >
-              <X size={12} />
+          <div key={tab.fileId} className={`qf-editor-tab ${active ? "is-active" : ""}`}>
+            <button type="button" role="tab" aria-selected={active} aria-label={file.name}
+              onClick={() => onTabClick(tab.fileId)} className="qf-editor-tab-select" title={file.name}>
+              <Icon size={15} aria-hidden="true" />
+              <span className="truncate">{file.name}</span>
+              {tab.isDirty && <span className="qf-editor-dirty" aria-label={isFa ? "ذخیره نشده" : "Unsaved"} />}
+            </button>
+            <button type="button" className="qf-editor-tab-close" aria-label={`${isFa ? "بستن" : "Close"} ${file.name}`}
+              onClick={() => onTabClose(tab.fileId)} title={isFa ? "بستن تب" : "Close tab"}>
+              <X size={14} />
             </button>
           </div>
         );

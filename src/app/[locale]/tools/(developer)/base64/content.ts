@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 تعریف Type برای SEO
+//  تعریف Type برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -30,7 +30,7 @@ export const base64Content = {
         "رشته‌های متنی را به Base64 تبدیل کن یا آن‌ها را به‌سرعت از Base64 به متن اصلی برگردان، با رابط کاربری ساده و واکنش‌گرا.",
       applicationCategory: "DeveloperApplication",
       inLanguage: "fa-IR",
-    } satisfies SeoContent, // 🔥 اضافه شد
+    } satisfies SeoContent, //  اضافه شد
   },
 
   en: {
@@ -49,25 +49,25 @@ export const base64Content = {
         "Quickly convert strings to Base64 or decode Base64 back to the original text with a clean, responsive UI.",
       applicationCategory: "DeveloperApplication",
       inLanguage: "en-US",
-    } satisfies SeoContent, // 🔥 اضافه شد
+    } satisfies SeoContent, //  اضافه شد
   },
 };
 
 export type Base64Content = typeof base64Content.fa;
 
-// 🔥 Custom hook برای استفاده در کامپوننت‌های Client
+//  Custom hook برای استفاده در کامپوننت‌های Client
 export function useBase64Content() {
   const { locale } = useLanguage();
   return base64Content[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useBase64PageContent() {
   const content = useBase64Content();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (بدون hook - برای page.tsx)
+//  تابع برای دریافت SEO (بدون hook - برای page.tsx)
 export function getBase64Seo(locale: "fa" | "en"): SeoContent {
   return base64Content[locale].seo;
 }

@@ -1,11 +1,33 @@
-Options -Indexes
+# QodeForge static export (Apache 2.4 / LiteSpeed).
+# Routing belongs here; child .htaccess files only add response headers.
+Options -Indexes -MultiViews
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
+
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
+
+AddType text/markdown .md
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # QODEFORGE_LEGACY_REDIRECTS
+
+  # Negotiate Markdown before the existing-file and HTML rules, in both locales.
+  RewriteCond %{HTTP_ACCEPT} text/markdown [NC]
+  RewriteCond %{DOCUMENT_ROOT}/$1/tools/$2.md -f
+  RewriteRule ^(fa|en)/tools/([^/]+?)(?:\.html)?/?$ /$1/tools/$2.md [L]
+
+  # Serve assets, explicit .html/.md and Next.js navigation payloads unchanged.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
-  RewriteCond %{REQUEST_URI} !\.html$ [NC]
+
+  # A route may have BOTH foo.html AND foo/ (OG images / Next.js payloads).
+  # Resolve HTML even when the requested path is an existing directory.
+  # The optional slash also handles previously cached directory redirects.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.+?)/?$ /$1.html [L]
 </IfModule>

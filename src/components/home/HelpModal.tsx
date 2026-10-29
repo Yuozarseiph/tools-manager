@@ -1,4 +1,6 @@
 "use client";
+import { usePanelPresence } from "@/hooks/usePanelPresence";
+
 
 import { useEffect } from "react";
 import { X } from "lucide-react";
@@ -31,7 +33,8 @@ export default function HelpModal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  const presence = usePanelPresence(isOpen);
+  if (!presence.present) return null;
 
   const content = helpContent[locale as "fa" | "en"][type];
 
@@ -39,6 +42,7 @@ export default function HelpModal({
     <div
       className="fixed inset-0 z-[200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] sm:items-center"
       role="dialog"
+      {...presence.attributes}
       aria-modal="true"
       aria-labelledby="help-dialog-title"
       onClick={onClose}

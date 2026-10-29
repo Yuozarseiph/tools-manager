@@ -16,7 +16,7 @@ export default function CodeVisualizerClient() {
   const { locale } = useLanguage();
   const page = useCodeVisualizerPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

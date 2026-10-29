@@ -22,6 +22,7 @@ export const passwordGeneratorContent = {
       },
       generate: {
         lengthLabel: "طول رمز عبور",
+        secureRandomUnavailable: "تولید رمز امن در این مرورگر در دسترس نیست. اتصال امن (HTTPS) را بررسی کنید.",
         options: {
           uppercase: "شامل حروف بزرگ انگلیسی (A-Z)",
           lowercase: "شامل حروف کوچک انگلیسی (a-z)",
@@ -74,6 +75,7 @@ export const passwordGeneratorContent = {
       },
       generate: {
         lengthLabel: "Password length",
+        secureRandomUnavailable: "Secure random generation is unavailable. Check that the site uses HTTPS.",
         options: {
           uppercase: "Include uppercase letters (A-Z)",
           lowercase: "Include lowercase letters (a-z)",

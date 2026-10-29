@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
@@ -31,7 +33,7 @@ export default function LoanCalculator() {
 
   const calculate = () => {
     const principal = parseFloat(loanAmount);
-    const ratePercent = parseFloat(interestRate); // ✅ تبدیل به number
+    const ratePercent = parseFloat(interestRate); //  تبدیل به number
     const rate = ratePercent / 100 / 12;
     const term = parseInt(loanTerm);
 
@@ -68,7 +70,7 @@ export default function LoanCalculator() {
       }
     } else {
       // سود ثابت (Fixed Interest)
-      totalInterest = principal * (ratePercent / 100) * (term / 12); // ✅ استفاده از ratePercent
+      totalInterest = principal * (ratePercent / 100) * (term / 12); //  استفاده از ratePercent
       totalPayment = principal + totalInterest;
       monthlyPayment = totalPayment / term;
       const principalPerMonth = principal / term;
@@ -118,8 +120,8 @@ export default function LoanCalculator() {
     });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "loan-schedule.csv";
-    link.click();
+    link.download = outputFilename("loan-schedule.csv");
+    void saveFile(link.href, link.download);
   };
 
   return (
@@ -216,7 +218,7 @@ export default function LoanCalculator() {
             <p className={`text-sm ${theme.textMuted} mb-1`}>
               {content.loan.labels.totalInterest}
             </p>
-            <p className={`text-2xl font-bold text-orange-500`}>
+            <p className={`text-2xl font-bold text-[var(--app-warning-text)]`}>
               {summary.totalInterest.toLocaleString()} {content.common.currency}
             </p>
           </div>
@@ -269,7 +271,7 @@ export default function LoanCalculator() {
                     <td className={`p-2 ${theme.text}`}>
                       {row.principal.toLocaleString()}
                     </td>
-                    <td className={`p-2 text-orange-500`}>
+                    <td className={`p-2 text-[var(--app-warning-text)]`}>
                       {row.interest.toLocaleString()}
                     </td>
                     <td className={`p-2 ${theme.textMuted}`}>

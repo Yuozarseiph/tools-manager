@@ -44,7 +44,7 @@ export const base64ToolContent = {
   en: {
     id: "base64",
     category: "developer",
-    title: "Text ↔ Base64 converter",
+    title: "Text  /  Base64 converter",
     description:
       "Convert plain text to Base64 and back with full UTF-8 support.",
     features: [

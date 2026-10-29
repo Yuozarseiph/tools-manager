@@ -1,5 +1,7 @@
 // components/tools/developer/code-editor/hooks/useFileSystem.ts
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
@@ -12,7 +14,21 @@ import {
   SupportedLanguage,
 } from "../types";
 
-const generateId = () => Math.random().toString(36).substring(2, 11);
+const generateId = () => globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).substring(2, 11);
+
+const persistVirtualFiles = (files: VirtualFile[]) => {
+  try {
+    const virtual = files.filter((f) => !f.fileHandle && !f.dirHandle);
+    if (virtual.length) localStorage.setItem(STORAGE_KEY, JSON.stringify(virtual));
+    else localStorage.removeItem(STORAGE_KEY);
+    return true;
+  } catch (error) {
+    console.error("Unable to save editor workspace", error);
+    return false;
+  }
+};
+
+const validItemName = (name: string) => !!name.trim() && name !== "." && name !== ".." && !/[\\/]/.test(name);
 
 const isFileSystemSupported = () => {
   return typeof window !== "undefined" && "showDirectoryPicker" in window;
@@ -37,6 +53,8 @@ export function useFileSystem() {
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const initialized = useRef(false);
   const fileHandleMapRef = useRef<Map<string, FileSystemFileHandle>>(new Map());
+  const dirtyIdsRef = useRef<Set<string>>(new Set());
+  const revisionsRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     if (initialized.current) return;
@@ -45,10 +63,12 @@ export function useFileSystem() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsedFiles: VirtualFile[] = JSON.parse(saved);
+        if (!Array.isArray(parsedFiles) || !parsedFiles.every((f) => f && typeof f.id === "string" && typeof f.name === "string" && typeof f.content === "string")) throw new Error("Invalid editor workspace data");
         setFiles(parsedFiles);
+        // Do not expand thousands of nested directories on initial load.
         const folderIds = new Set<string>();
         parsedFiles.forEach((f) => {
-          if (f.isFolder) folderIds.add(f.id);
+          if (f.isFolder && f.parentId === null) folderIds.add(f.id);
         });
         setExpandedFolders(folderIds);
       }
@@ -61,18 +81,41 @@ export function useFileSystem() {
 
   const forceSave = useCallback(() => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    // Only save virtual files (not disk files)
-    const virtualFiles = files.filter((f) => !f.fileHandle);
-    if (virtualFiles.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
+    const saved = persistVirtualFiles(files);
+    if (saved) {
+      for (const file of files) if (!file.fileHandle) dirtyIdsRef.current.delete(file.id);
+      setTabs((prev) => prev.map((tab) => ({ ...tab, isDirty: dirtyIdsRef.current.has(tab.fileId) })));
+      setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
+      window.dispatchEvent(new CustomEvent("files-saved"));
+    } else {
+      alert("Unable to save workspace. Browser storage may be full. Download your files before leaving.");
     }
-    setHasUnsavedChanges(false);
-    window.dispatchEvent(new CustomEvent("files-saved"));
-  }, [files]);
+    const handle = activeFileId ? fileHandleMapRef.current.get(activeFileId) : null;
+    if (handle && activeFileId) {
+      const current = files.find((f) => f.id === activeFileId);
+      if (current && dirtyIdsRef.current.has(activeFileId)) {
+        const revision = revisionsRef.current.get(current.id) ?? 0;
+        void (async () => {
+          try {
+            const writable = await handle.createWritable();
+            await writable.write(current.content);
+            await writable.close();
+            if (revisionsRef.current.get(current.id) === revision) dirtyIdsRef.current.delete(current.id);
+            setTabs((prev) => prev.map((t) => t.fileId === current.id ? { ...t, isDirty: dirtyIdsRef.current.has(current.id) } : t));
+            setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
+          } catch (error) {
+            console.error("Save to disk failed", error);
+            alert("Could not save the file to disk. Check file permissions.");
+          }
+        })();
+      }
+    }
+  }, [files, activeFileId]);
 
   const activeFile = files.find((f) => f.id === activeFileId) || null;
 
   const openFolder = useCallback(async () => {
+    if (dirtyIdsRef.current.size && !window.confirm("You have unsaved changes. Replace the current workspace?")) return;
     if (!isFileSystemSupported()) {
       alert(
         "Your browser doesn't support the File System API. Try Chrome or Edge.",
@@ -83,20 +126,25 @@ export function useFileSystem() {
       const handle = await (window as any).showDirectoryPicker({
         mode: "readwrite",
       });
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       setDirectoryHandle(handle);
+      fileHandleMapRef.current.clear();
       const loadedFiles: VirtualFile[] = [];
+      let bytesLoaded = 0;
+      let capped = false;
 
       const readDirectory = async (
         dirHandle: FileSystemDirectoryHandle,
         parentId: string | null = null,
       ) => {
         for await (const entry of (dirHandle as any).values()) {
+          if (loadedFiles.length >= 1000 || bytesLoaded >= 32 * 1024 * 1024) {capped = true;break;}
           if (entry.kind === "file") {
             try {
               const fileHandle = entry as FileSystemFileHandle;
               const file = await fileHandle.getFile();
 
-              if (file.size > MAX_FILE_SIZE) {
+              if (file.size > MAX_FILE_SIZE || file.size + bytesLoaded > 32 * 1024 * 1024 || /\.(png|jpg|jpeg|gif|webp|avif|ico|svgz|woff2?|ttf|eot|mp[34]|zip|pdf|exe|dll|wasm|bin|sqlite|lock)$/i.test(entry.name)) {
                 console.warn(
                   `Skipping large file: ${entry.name} (${file.size} bytes)`,
                 );
@@ -104,6 +152,7 @@ export function useFileSystem() {
               }
 
               const content = await file.text();
+              bytesLoaded += file.size;
               const ext =
                 "." + (entry.name.split(".").pop()?.toLowerCase() || "txt");
 
@@ -149,6 +198,7 @@ export function useFileSystem() {
               console.error(`Error reading file ${entry.name}:`, error);
             }
           } else if (entry.kind === "directory") {
+            if (["node_modules", ".git", ".next", "dist", "build", ".cache"].includes(entry.name)) continue;
             const folderId = generateId();
             const folderHandle = entry as FileSystemDirectoryHandle;
             loadedFiles.push({
@@ -168,11 +218,28 @@ export function useFileSystem() {
       };
 
       await readDirectory(handle);
+      if (capped) alert("Large folder: only the first 1,000 entries / 32MB of text were loaded. Other files remain untouched.");
       setFiles(loadedFiles);
+      revisionsRef.current.clear();
+      dirtyIdsRef.current.clear();
+      setHasUnsavedChanges(false);
+      setTabs([]);
+      // Show a compact project tree, expanding just the ancestors of the active file.
+      const first = loadedFiles.find((f) => !f.isFolder);
+      const expanded = new Set<string>();
+      let folderId = first?.parentId;
+      const seen = new Set<string>();
+      while (folderId && !seen.has(folderId)) {
+        seen.add(folderId);
+        expanded.add(folderId);
+        folderId = loadedFiles.find((f) => f.id === folderId)?.parentId ?? null;
+      }
+      setExpandedFolders(expanded);
+      setActiveFileId(null);
 
       if (loadedFiles.length > 0) {
         const firstFile = loadedFiles.find((f) => !f.isFolder);
-        if (firstFile) setActiveFileId(firstFile.id);
+        if (firstFile) {setActiveFileId(firstFile.id); setTabs([{fileId: firstFile.id, isDirty: false}]);}
       }
     } catch (error) {
       if ((error as Error).name !== "AbortError") {
@@ -188,22 +255,27 @@ export function useFileSystem() {
       const fileHandle = fileHandleMapRef.current.get(fileId);
       if (fileHandle) {
         try {
+          const revision = revisionsRef.current.get(fileId) ?? 0;
           const writable = await fileHandle.createWritable();
           await writable.write(file.content);
           await writable.close();
-          setHasUnsavedChanges(false);
+          if (revisionsRef.current.get(fileId) === revision) dirtyIdsRef.current.delete(fileId);
+          setTabs((prev) => prev.map((tab) => tab.fileId === fileId ? {...tab, isDirty: dirtyIdsRef.current.has(fileId)} : tab));
+          setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
           window.dispatchEvent(new CustomEvent("files-saved"));
           return;
         } catch (error) {
           console.error("Failed to write to file handle:", error);
+          alert("Could not save to disk. The file was not marked as saved.");
+          return;
         }
       }
       const blob = new Blob([file.content], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = file.name;
-      a.click();
+      a.download = outputFilename(file.name);
+      void saveFile(a.href, a.download);
       URL.revokeObjectURL(url);
     },
     [files],
@@ -211,49 +283,62 @@ export function useFileSystem() {
 
   const saveAllToDisk = useCallback(async () => {
     if (!directoryHandle) {
-      const data = JSON.stringify(files, null, 2);
+      const data = JSON.stringify(files.map(({ fileHandle, dirHandle, ...rest }) => rest), null, 2);
       const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `project-${Date.now()}.json`;
-      a.click();
+      a.download = outputFilename(`project-${Date.now()}.json`);
+      void saveFile(a.href, a.download);
       URL.revokeObjectURL(url);
       return;
     }
-    const savePromises = files
-      .filter((f) => !f.isFolder)
-      .map(async (file) => {
+    const diskFiles = files.filter((f) => !f.isFolder && fileHandleMapRef.current.has(f.id));
+    const savePromises = diskFiles.map(async (file) => {
+        const revision = revisionsRef.current.get(file.id) ?? 0;
         const handle = fileHandleMapRef.current.get(file.id);
         if (handle) {
           try {
             const writable = await handle.createWritable();
             await writable.write(file.content);
             await writable.close();
-            return true;
+            return revision === (revisionsRef.current.get(file.id) ?? 0);
           } catch (error) {
             return false;
           }
         }
         return false;
       });
-    await Promise.all(savePromises);
-    setHasUnsavedChanges(false);
-    window.dispatchEvent(new CustomEvent("files-saved"));
+    const results = await Promise.all(savePromises);
+    diskFiles.forEach((f, index) => {
+      if (results[index]) dirtyIdsRef.current.delete(f.id);
+    });
+    setTabs((prev) => prev.map((t) => ({ ...t, isDirty: dirtyIdsRef.current.has(t.fileId) })));
+    setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
+    if (results.some((ok) => !ok)) alert("Some files could not be saved. Check disk permissions.");
+    else window.dispatchEvent(new CustomEvent("files-saved"));
   }, [files, directoryHandle]);
 
   const createFileInFolder = useCallback(
     async (name: string, language: string, parentId: string | null) => {
+      if (!validItemName(name)) {alert("Invalid file name.");return;}
       if (!directoryHandle) {
         createItem(name, language, parentId, false);
         return;
       }
+      const finalName = name.includes(".") ? name : name + (SUPPORTED_LANGUAGES[language as SupportedLanguage]?.ext || ".txt");
+      if (files.some((f) => f.parentId === parentId && f.name.toLowerCase() === finalName.toLowerCase())) {alert("A file with this name already exists.");return;}
       try {
-        const parentFile = parentId
-          ? files.find((f) => f.id === parentId)
-          : null;
+        const parentFile = parentId ? files.find((f) => f.id === parentId) : null;
         const parentHandle = parentFile?.dirHandle || directoryHandle;
-        const fileHandle = await (parentHandle as any).getFileHandle(name, {
+        try {
+          await (parentHandle as FileSystemDirectoryHandle).getFileHandle(finalName);
+          alert("The file already exists on disk. Open it instead of overwriting it.");
+          return;
+        } catch (error) {
+          if ((error as DOMException).name !== "NotFoundError") throw error;
+        }
+        const fileHandle = await (parentHandle as any).getFileHandle(finalName, {
           create: true,
         });
         const writable = await fileHandle.createWritable();
@@ -262,7 +347,7 @@ export function useFileSystem() {
 
         const newFile: VirtualFile = {
           id: generateId(),
-          name,
+          name: finalName,
           language,
           content: "",
           parentId,
@@ -277,7 +362,8 @@ export function useFileSystem() {
         setActiveFileId(newFile.id);
         setIsCreating(null);
       } catch (error) {
-        createItem(name, language, parentId, false);
+        console.error("Cannot create disk file",error);
+        alert("Cannot create this file on disk. Check permissions.");
       }
     },
     [files, directoryHandle],
@@ -285,15 +371,22 @@ export function useFileSystem() {
 
   const createFolderInFolder = useCallback(
     async (name: string, parentId: string | null) => {
+      if (!validItemName(name)) {alert("Invalid folder name.");return;}
       if (!directoryHandle) {
         createItem(name, "folder", parentId, true);
         return;
       }
+      if (files.some((f) => f.parentId === parentId && f.name.toLowerCase() === name.toLowerCase())) {alert("A folder with this name already exists.");return;}
       try {
-        const parentFile = parentId
-          ? files.find((f) => f.id === parentId)
-          : null;
+        const parentFile = parentId ? files.find((f) => f.id === parentId) : null;
         const parentHandle = parentFile?.dirHandle || directoryHandle;
+        try {
+          await (parentHandle as FileSystemDirectoryHandle).getDirectoryHandle(name);
+          alert("This folder already exists on disk.");
+          return;
+        } catch (error) {
+          if ((error as DOMException).name !== "NotFoundError") throw error;
+        }
         const dirHandle = await (parentHandle as any).getDirectoryHandle(name, {
           create: true,
         });
@@ -314,7 +407,8 @@ export function useFileSystem() {
           setExpandedFolders((prev) => new Set([...prev, parentId]));
         setIsCreating(null);
       } catch (error) {
-        createItem(name, "folder", parentId, true);
+        console.error("Cannot create disk folder",error);
+        alert("Cannot create this folder on disk. Check permissions.");
       }
     },
     [files, directoryHandle],
@@ -327,12 +421,14 @@ export function useFileSystem() {
       parentId: string | null,
       isFolder: boolean,
     ) => {
+      if (!validItemName(name)) { alert("Invalid file or folder name."); return; }
       let finalName = name;
       if (!isFolder && !name.includes(".")) {
         const ext =
           SUPPORTED_LANGUAGES[language as SupportedLanguage]?.ext || ".txt";
         finalName = name + ext;
       }
+      if (files.some((f) => f.parentId === parentId && f.name.toLowerCase() === finalName.toLowerCase())) {alert("A file or folder with that name already exists.");return;}
       const newFile: VirtualFile = {
         id: generateId(),
         name: finalName,
@@ -343,12 +439,10 @@ export function useFileSystem() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       setFiles((prev) => {
         const updated = [...prev, newFile];
-        const virtualFiles = updated.filter((f) => !f.fileHandle);
-        if (virtualFiles.length > 0) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
-        }
+        persistVirtualFiles(updated);
         return updated;
       });
       if (parentId) setExpandedFolders((prev) => new Set([...prev, parentId]));
@@ -358,61 +452,51 @@ export function useFileSystem() {
       }
       setIsCreating(null);
     },
-    [],
+    [files],
   );
 
-  const deleteItem = useCallback(
-    (fileId: string) => {
-      setFiles((prev) => {
-        const idsToDelete = new Set<string>();
-        const collectIds = (id: string) => {
-          idsToDelete.add(id);
-          prev
-            .filter((f) => f.parentId === id)
-            .forEach((f) => collectIds(f.id));
-        };
-        collectIds(fileId);
-        const updated = prev.filter((f) => !idsToDelete.has(f.id));
-        const virtualFiles = updated.filter((f) => !f.fileHandle);
-        if (virtualFiles.length > 0) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-        return updated;
-      });
-      setTabs((prev) => {
-        const remaining = prev.filter((t) => t.fileId !== fileId);
-        if (activeFileId === fileId) {
-          setActiveFileId(
-            remaining.length > 0
-              ? remaining[remaining.length - 1].fileId
-              : null,
-          );
-        }
-        return remaining;
-      });
-    },
-    [activeFileId],
-  );
+  const deleteItem = useCallback((fileId: string) => {
+    const ids = new Set<string>();
+    const collect = (id: string) => {
+      ids.add(id);
+      files.filter((f) => f.parentId === id).forEach((f) => collect(f.id));
+    };
+    collect(fileId);
+    if ([...ids].some((id) => dirtyIdsRef.current.has(id)) &&
+        !window.confirm("These files have unsaved changes. Remove them from the editor?")) return;
+    if ([...ids].some((id) => fileHandleMapRef.current.has(id) || files.find((f) => f.id === id)?.dirHandle) &&
+        !window.confirm("Remove from editor? The original files on disk will not be deleted.")) return;
+    setFiles((prev) => {
+      const updated = prev.filter((f) => !ids.has(f.id));
+      persistVirtualFiles(updated);
+      return updated;
+    });
+    ids.forEach((id) => {dirtyIdsRef.current.delete(id);fileHandleMapRef.current.delete(id);revisionsRef.current.delete(id)});
+    setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    const remaining = tabs.filter((t) => !ids.has(t.fileId));
+    setTabs(remaining);
+    if (activeFileId && ids.has(activeFileId)) setActiveFileId(remaining.at(-1)?.fileId ?? null);
+  }, [files, tabs, activeFileId]);
 
   const renameItem = useCallback((fileId: string, newName: string) => {
+    const item = files.find((f) => f.id === fileId);
+    if (!item || !validItemName(newName)) return;
+    if (item.fileHandle || item.dirHandle) {alert("Renaming disk-backed files is not available in this browser editor.");setIsRenaming(null);return;}
+    if (files.some((f) => f.id !== fileId && f.parentId === item.parentId && f.name.toLowerCase() === newName.toLowerCase())) {alert("A file with that name already exists.");return;}
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     setFiles((prev) => {
-      const updated = prev.map((f) =>
-        f.id === fileId
-          ? { ...f, name: newName, updatedAt: new Date().toISOString() }
-          : f,
-      );
-      const virtualFiles = updated.filter((f) => !f.fileHandle);
-      if (virtualFiles.length > 0) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
-      }
+      const updated = prev.map((f) => f.id === fileId ? { ...f, name: newName, updatedAt: new Date().toISOString() } : f);
+      persistVirtualFiles(updated);
       return updated;
     });
     setIsRenaming(null);
-  }, []);
+  }, [files]);
 
   const moveItem = useCallback((fileId: string, newParentId: string | null) => {
+    const item = files.find((f) => f.id === fileId);
+    if (item?.fileHandle || item?.dirHandle || (newParentId && files.find((f) => f.id === newParentId)?.dirHandle)) {alert("Moving files inside disk-backed folders is not supported here.");return;}
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     setFiles((prev) => {
       if (fileId === newParentId) return prev;
       const idsToCheck = new Set<string>();
@@ -427,38 +511,31 @@ export function useFileSystem() {
           ? { ...f, parentId: newParentId, updatedAt: new Date().toISOString() }
           : f,
       );
-      const virtualFiles = updated.filter((f) => !f.fileHandle);
-      if (virtualFiles.length > 0) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
-      }
+      persistVirtualFiles(updated);
       return updated;
     });
     if (newParentId)
       setExpandedFolders((prev) => new Set([...prev, newParentId]));
-  }, []);
+  }, [files]);
 
   const updateContent = useCallback((fileId: string, content: string) => {
+    dirtyIdsRef.current.add(fileId);
+    revisionsRef.current.set(fileId, (revisionsRef.current.get(fileId) ?? 0) + 1);
     setHasUnsavedChanges(true);
-    setTabs((prev) =>
-      prev.map((t) => (t.fileId === fileId ? { ...t, isDirty: true } : t)),
-    );
+    setTabs((prev) => prev.map((t) => t.fileId === fileId ? { ...t, isDirty: true } : t));
     setFiles((prev) => {
-      const updated = prev.map((f) =>
-        f.id === fileId
-          ? { ...f, content, updatedAt: new Date().toISOString() }
-          : f,
-      );
+      const updated = prev.map((f) => f.id === fileId ? { ...f, content, updatedAt: new Date().toISOString() } : f);
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       saveTimeoutRef.current = setTimeout(() => {
-        const virtualFiles = updated.filter((f) => !f.fileHandle);
-        if (virtualFiles.length > 0) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(virtualFiles));
+        const saved = persistVirtualFiles(updated);
+        if (saved) {
+          for (const file of updated) if (!file.fileHandle) dirtyIdsRef.current.delete(file.id);
+          setHasUnsavedChanges(dirtyIdsRef.current.size > 0);
+          setTabs((open) => open.map((t) => ({ ...t, isDirty: dirtyIdsRef.current.has(t.fileId) })));
+          window.dispatchEvent(new CustomEvent("files-saved"));
+        } else {
+          setHasUnsavedChanges(true);
         }
-        setHasUnsavedChanges(false);
-        setTabs((prev2) =>
-          prev2.map((t) => (t.fileId === fileId ? { ...t, isDirty: false } : t)),
-        );
-        window.dispatchEvent(new CustomEvent("files-saved"));
       }, AUTO_SAVE_DELAY);
       return updated;
     });
@@ -471,7 +548,7 @@ export function useFileSystem() {
       setActiveFileId(fileId);
       setTabs((prev) => {
         if (prev.find((t) => t.fileId === fileId)) return prev;
-        return [...prev, { fileId, isDirty: false }];
+        return [...prev, { fileId, isDirty: dirtyIdsRef.current.has(fileId) }];
       });
     },
     [files],
@@ -501,7 +578,7 @@ export function useFileSystem() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const content = e.target?.result as string;
-        const ext = "." + (file.name.split(".").pop() || "txt");
+        const ext = "." + (file.name.split(".").pop() || "txt").toLowerCase();
         let language = "plaintext";
         Object.entries(SUPPORTED_LANGUAGES).forEach(([key, val]) => {
           if (val.ext === ext) language = key;
@@ -516,6 +593,7 @@ export function useFileSystem() {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
+        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
         setFiles((prev) => {
           const updated = [...prev, newFile];
           const virtualFiles = updated.filter((f) => !f.fileHandle);
@@ -535,13 +613,13 @@ export function useFileSystem() {
   );
 
   const exportAll = useCallback(() => {
-    const data = JSON.stringify(files, null, 2);
+    const data = JSON.stringify(files.map(({ fileHandle, dirHandle, ...rest }) => rest), null, 2);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `project-${Date.now()}.json`;
-    a.click();
+    a.download = outputFilename(`project-${Date.now()}.json`);
+    void saveFile(a.href, a.download);
     URL.revokeObjectURL(url);
   }, [files]);
 
@@ -553,8 +631,8 @@ export function useFileSystem() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = file.name;
-      a.click();
+      a.download = outputFilename(file.name);
+      void saveFile(a.href, a.download);
       URL.revokeObjectURL(url);
     },
     [files],
@@ -577,6 +655,10 @@ export function useFileSystem() {
     setIsCreating(null);
     setIsRenaming(null);
     setDirectoryHandle(null);
+    dirtyIdsRef.current.clear();
+    revisionsRef.current.clear();
+    setHasUnsavedChanges(false);
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     fileHandleMapRef.current.clear();
   }, []);
 
@@ -609,8 +691,8 @@ export function useFileSystem() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${folder.name}.md`;
-      a.click();
+      a.download = outputFilename(`${folder.name}.md`);
+      void saveFile(a.href, a.download);
       URL.revokeObjectURL(url);
     },
     [files],

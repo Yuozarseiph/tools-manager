@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 Type مشترک برای SEO
+//  Type مشترک برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -55,19 +55,19 @@ export const colorPickerContent = {
 
 export type ColorPickerContent = typeof colorPickerContent.fa;
 
-// 🔥 Hook برای استفاده در کامپوننت Client
+//  Hook برای استفاده در کامپوننت Client
 export function useColorPickerContent() {
   const { locale } = useLanguage();
   return colorPickerContent[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useColorPickerPageContent() {
   const content = useColorPickerContent();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (برای page.tsx)
+//  تابع برای دریافت SEO (برای page.tsx)
 export function getColorPickerSeo(locale: "fa" | "en"): SeoContent {
   return colorPickerContent[locale].seo;
 }

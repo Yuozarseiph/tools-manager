@@ -1,8 +1,12 @@
 // components/tools/presentation/html-to-pptx/HtmlToPptx.tsx
 "use client";
-import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
+import { saveFile } from "@/lib/file-export";
+import { LoaderCircle, CircleCheck, Ruler, ArrowUpDown, Type, Ratio } from "lucide-react";
+
+import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import {
+  useRef,
   useEffect,
   useMemo,
   useState,
@@ -28,13 +32,16 @@ import {
 import {
   parseHtmlToSlides,
   getPresentationStats,
-  ASPECT_RATIO_DIMENSIONS,
-  type SlideModel,
-  type Block,
   type AspectRatio,
-  type TextRun,
 } from "./HtmlParser";
+import { decodeText } from "@/lib/decode-text";
+import { useLanguage } from "@/context/LanguageContext";
+import { readLocalFile, startActivity } from "@/lib/transfer";
+import { exportEditable, type ExportSettings } from "./pptx-export";
+import { presentationHtml, type InputFormat } from "./presentation-source";
+import { exportVisual } from "./pptx-visual";
 import CustomDropdown from "@/components/ui/CustomDropdown";
+import { normaliseOutputName } from "@/lib/output-name";
 
 type ProgressStep =
   | "idle"
@@ -51,7 +58,7 @@ type PresetTheme =
   | "forest"
   | "sunset"
   | "custom";
-type SlideTransition = "none" | "fade" | "slide" | "zoom" | "flip" | "rotate";
+
 
 // ============ THEME DEFINITIONS ============
 interface ThemeColors {
@@ -214,6 +221,8 @@ const PRESET_THEMES: Record<PresetTheme, ThemeColors> = {
 // ============ FONTS ============
 const FONT_FAMILIES: Record<string, string> = {
   default: "",
+  vazirmatn: "Vazirmatn",
+  iranyekan: "IRANYekanX",
   calibri: "Calibri",
   arial: "Arial",
   tahoma: "Tahoma",
@@ -226,17 +235,6 @@ const FONT_FAMILIES: Record<string, string> = {
   montserrat: "Montserrat",
 };
 
-// ============ TRANSITIONS ============
-const TRANSITION_MAP: Record<SlideTransition, any> = {
-  none: undefined,
-  fade: { type: "fade" },
-  slide: { type: "push", direction: "left" },
-  zoom: { type: "zoom" },
-  flip: { type: "flip" },
-  rotate: { type: "rotate" },
-};
-
-// ============ HELPERS ============
 function cssColorToHex(color?: string): string | undefined {
   if (!color) return undefined;
   color = color.trim();
@@ -261,313 +259,22 @@ function cssColorToHex(color?: string): string | undefined {
 }
 
 function normaliseFileName(name: string): string {
-  const trimmed = name.trim() || "presentation";
-  return trimmed.toLowerCase().endsWith(".pptx") ? trimmed : `${trimmed}.pptx`;
-}
-
-function extractBgClass(classString: string): string | undefined {
-  const parts = (classString || "").split(/\s+/).filter(Boolean);
-  return parts.find((c) => c.startsWith("bg-"));
-}
-
-function normaliseRuns(runs: TextRun[] | undefined): TextRun[] | undefined {
-  if (!runs?.length) return undefined;
-  const out: TextRun[] = [];
-  for (const r of runs) {
-    const text = (r.text ?? "").toString();
-    if (!text) continue;
-    const prev = out[out.length - 1];
-    const prevOpts = JSON.stringify(prev?.options ?? {});
-    const curOpts = JSON.stringify(r.options ?? {});
-    if (prev && prevOpts === curOpts) {
-      prev.text += text;
-    } else {
-      out.push({ text, options: r.options ? { ...r.options } : undefined });
-    }
-  }
-  return out.length ? out : undefined;
-}
-
-// ============ IMAGE HELPERS ============
-async function loadImageDataUrl(src: string): Promise<string | null> {
-  try {
-    if (src.startsWith("data:")) return src;
-    const response = await fetch(src, { mode: "cors" });
-    if (!response.ok) return null;
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    return null;
-  }
-}
-
-function getImageDimensions(
-  imageBlock: Block,
-  dataUrl: string,
-  slideWidth: number,
-  margin: number,
-): Promise<{ width: number; height: number }> {
-  return new Promise((resolve) => {
-    const img = new window.Image();
-    img.onload = () => {
-      const dpi = 96;
-      let w = imageBlock.width
-        ? imageBlock.width / dpi
-        : img.naturalWidth / dpi;
-      let h = imageBlock.height
-        ? imageBlock.height / dpi
-        : img.naturalHeight / dpi;
-      const maxW = slideWidth - 2 * margin;
-      if (w > maxW) {
-        const ratio = maxW / w;
-        w = maxW;
-        h *= ratio;
-      }
-      resolve({ width: w, height: h });
-    };
-    img.onerror = () => resolve({ width: 4, height: 3 });
-    img.src = dataUrl;
-  });
-}
-
-// ============ SLIDE RENDERER ============
-async function renderSlide(
-  pptx: any,
-  slideModel: SlideModel,
-  slideIndex: number,
-  totalSlides: number,
-  theme: ThemeColors,
-  footerText: string | undefined,
-  includeImages: boolean,
-  fontFace: string | undefined,
-  baseFontSize: number,
-  lineSpacing: number,
-  aspectRatio: AspectRatio,
-  transition: SlideTransition,
-): Promise<void> {
-  const dims = ASPECT_RATIO_DIMENSIONS[aspectRatio];
-  const SW = dims.width;
-  const SH = dims.height;
-  const TM = 0.55;
-  const BM = 0.55;
-  const SM = 0.65;
-  const isTitleSlide = slideModel.type === "title";
-  const isSectionSlide = slideModel.type === "section";
-  const isEndSlide = slideModel.type === "end";
-  const isSpecialSlide = isTitleSlide || isSectionSlide || isEndSlide;
-
-  const createSlide = () => {
-    const slide = pptx.addSlide();
-    if (transition && TRANSITION_MAP[transition])
-      slide.transition = TRANSITION_MAP[transition];
-
-    // Background
-    if (isSpecialSlide) {
-      slide.background = { color: theme.primary };
-    } else {
-      slide.background = { color: theme.background };
-    }
-
-    // Decorative line for special slides
-    if (isTitleSlide || isSectionSlide) {
-      slide.addShape(pptx.ShapeType.rect, {
-        x: SM,
-        y: SH - BM - 0.12,
-        w: SW - SM * 2,
-        h: 0.015,
-        fill: { color: theme.accent },
-      });
-    }
-
-    // Slide number
-    slide.addText(`${slideIndex} / ${totalSlides}`, {
-      x: SW - 1.4,
-      y: SH - 0.4,
-      w: 1.2,
-      h: 0.28,
-      fontSize: 6,
-      color: theme.slideNumberColor,
-      align: "right",
-      fontFace: fontFace || "Calibri",
-    });
-
-    // Footer
-    const footerToShow = isSpecialSlide ? footerText : footerText || "";
-    if (footerToShow) {
-      slide.addText(footerToShow, {
-        x: SM,
-        y: SH - 0.4,
-        w: SW - SM * 2 - 1.4,
-        h: 0.28,
-        fontSize: 6,
-        color: theme.footerColor,
-        align: "left",
-        fontFace: fontFace || "Calibri",
-      });
-    }
-
-    return slide;
-  };
-
-  let slide = createSlide();
-  let cursorY = TM + (isTitleSlide ? 0.8 : isSectionSlide ? 0.5 : 0.1);
-
-  const headingColor = isSpecialSlide ? theme.textOnPrimary : theme.primary;
-  const bodyColor = isSpecialSlide ? theme.textOnPrimary : theme.textOnContent;
-  const effectiveSpacing = lineSpacing * 0.25;
-
-  const ensureSpace = (neededHeight: number) => {
-    if (cursorY + neededHeight > SH - BM - 0.5) {
-      slide = createSlide();
-      cursorY = TM + 0.1;
-    }
-  };
-
-  for (const block of slideModel.blocks) {
-    // Image
-    if (block.kind === "image" && includeImages && block.src) {
-      const imageDataUrl = await loadImageDataUrl(block.src);
-      if (imageDataUrl) {
-        const { width, height } = await getImageDimensions(
-          block,
-          imageDataUrl,
-          SW,
-          SM,
-        );
-        ensureSpace(height + 0.25);
-        slide.addImage({
-          data: imageDataUrl,
-          x: SM,
-          y: cursorY,
-          w: width,
-          h: height,
-          rounding: 0.08,
-        });
-        cursorY += height + 0.25;
-      }
-      continue;
-    }
-
-    // Table
-    if (block.kind === "table" && block.rows && block.rows.length) {
-      const estimatedHeight = Math.min(4, 0.38 * block.rows.length + 0.5);
-      ensureSpace(estimatedHeight);
-      const tableData = block.rows.map((row, rowIndex) =>
-        row.map((cellText) => ({
-          text: cellText ?? "",
-          options: {
-            bold: rowIndex === 0,
-            fontSize: baseFontSize * 0.65,
-            color: rowIndex === 0 ? theme.tableHeaderText : bodyColor,
-            fill:
-              rowIndex === 0
-                ? theme.tableHeaderBg
-                : rowIndex % 2 === 0
-                  ? theme.tableRowEven
-                  : theme.tableRowOdd,
-            fontFace: fontFace || "Calibri",
-            align: "center",
-            valign: "middle",
-            border: { type: "solid", color: theme.tableBorder, pt: 0.5 },
-          },
-        })),
-      );
-      slide.addTable(tableData as any, {
-        x: SM,
-        y: cursorY,
-        w: SW - SM * 2,
-        border: { type: "solid", color: theme.tableBorder, pt: 0.5 },
-        rowH: 0.32,
-        autoPage: false,
-      });
-      cursorY += estimatedHeight + 0.2;
-      continue;
-    }
-
-    // Text blocks
-    let height = 0.45;
-    if (block.kind === "heading") height = 0.7;
-    if (block.kind === "paragraph") height = 0.55;
-    if (block.kind === "listItem") height = 0.4;
-
-    ensureSpace(height);
-
-    // List item
-    if (block.kind === "listItem" && block.text) {
-      const level = block.listLevel ?? 1;
-      const indent = SM + (level - 1) * 0.3;
-      slide.addText(block.text, {
-        x: indent,
-        y: cursorY,
-        w: SW - indent - SM,
-        h: height,
-        fontSize: baseFontSize * 0.8,
-        color: bodyColor,
-        bullet: { type: block.listType === "ol" ? "number" : "bullet" },
-        fontFace: fontFace || "Calibri",
-        lineSpacing: effectiveSpacing,
-        autoFit: true,
-      });
-      cursorY += height + 0.06;
-      continue;
-    }
-
-    // Heading & Paragraph
-    const runs = normaliseRuns(block.runs);
-    const textValue = runs?.length ? (runs as any) : (block.text ?? "");
-    if (!textValue) continue;
-
-    if (block.kind === "heading") {
-      const level = block.headingLevel ?? 1;
-      const fontSize =
-        [
-          0,
-          baseFontSize * 2.4,
-          baseFontSize * 1.9,
-          baseFontSize * 1.6,
-          baseFontSize * 1.3,
-          baseFontSize * 1.1,
-          baseFontSize,
-        ][level] || baseFontSize;
-      slide.addText(textValue, {
-        x: isSpecialSlide ? SW * 0.1 : SM,
-        y: cursorY,
-        w: isSpecialSlide ? SW * 0.8 : SW - SM * 2,
-        h: height,
-        fontSize,
-        bold: true,
-        color: headingColor,
-        fontFace: fontFace || "Calibri",
-        lineSpacing: effectiveSpacing,
-        align: isSpecialSlide ? "center" : "left",
-        autoFit: true,
-      });
-    } else if (block.kind === "paragraph") {
-      slide.addText(textValue, {
-        x: SM,
-        y: cursorY,
-        w: SW - SM * 2,
-        h: height,
-        fontSize: baseFontSize,
-        color: bodyColor,
-        fontFace: fontFace || "Calibri",
-        lineSpacing: effectiveSpacing,
-        autoFit: true,
-      });
-    }
-
-    cursorY += height + 0.06;
-  }
+  return normaliseOutputName(name, "presentation.pptx");
 }
 
 // ============ MAIN COMPONENT ============
 export default function HtmlToPptxTool() {
   const theme = useThemeColors();
+  const { locale } = useLanguage(); const fa = locale === "fa";
+  const [inputFormat, setInputFormat] = useState<InputFormat>("auto");
+  const [exportMode, setExportMode] = useState<"editable" | "visual">("editable");
+  const [direction, setDirection] = useState<ExportSettings["direction"]>("auto");
+  const [preserveStyles, setPreserveStyles] = useState(true), [allowRemoteImages, setAllowRemoteImages] = useState(false), [showNumbers, setShowNumbers] = useState(true), [notes, setNotes] = useState(false);
+  const [margin, setMargin] = useState(.55), [imageScale, setImageScale] = useState(1), [author, setAuthor] = useState("QodeForge");
+  const [actualProgress, setActualProgress] = useState({ done: 0, total: 0 });
+  const [resultInfo, setResultInfo] = useState<{ slides: number; size: number; warnings: string[] } | null>(null);
+  const convertController = useRef<AbortController | null>(null), conversionTask = useRef<ReturnType<typeof startActivity> | null>(null);
+  useEffect(() => () => { convertController.current?.abort(); conversionTask.current?.fail(new DOMException("Cancelled", "AbortError")); }, []);
   const content: HtmlToPptxToolContent = useHtmlToPptxContent();
 
   // State
@@ -582,41 +289,17 @@ export default function HtmlToPptxTool() {
   const [baseFontSize, setBaseFontSize] = useState(16);
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
   const [lineSpacing, setLineSpacing] = useState(1.5);
-  const [slideTransition, setSlideTransition] =
-    useState<SlideTransition>("fade");
+
 
   const [isConverting, setIsConverting] = useState(false);
   const [progressStep, setProgressStep] = useState<ProgressStep>("idle");
   const [error, setError] = useState("");
-  const [previewInfo, setPreviewInfo] = useState<any>(null);
+  const [previewInfo, setPreviewInfo] = useState<ReturnType<typeof getPresentationStats> | null>(null);
 
   const hasContent = !!htmlSource.trim();
   const showProgress = progressStep !== "idle";
   const progressMessage =
     progressStep === "idle" ? "" : content.ui.progress[progressStep];
-
-  const progressWidth = (() => {
-    switch (progressStep) {
-      case "preparing":
-        return "20%";
-      case "loadingImages":
-        return "50%";
-      case "exporting":
-        return "85%";
-      case "success":
-        return "100%";
-      default:
-        return "0%";
-    }
-  })();
-
-  const primaryBg = useMemo(
-    () =>
-      extractBgClass(theme.primary) ||
-      extractBgClass(theme.secondary) ||
-      "bg-[var(--app-primary-bg)]",
-    [theme.primary, theme.secondary],
-  );
 
   // Get active theme
   const activeTheme = useMemo(() => {
@@ -634,31 +317,34 @@ export default function HtmlToPptxTool() {
   const updatePreview = useCallback(
     (html: string) => {
       try {
-        const slides = parseHtmlToSlides(html);
+        const slides = parseHtmlToSlides(presentationHtml(html, inputFormat));
         const stats = getPresentationStats(slides);
         setPreviewInfo(stats);
         setError("");
-      } catch (err: any) {
+      } catch (err) {
         setPreviewInfo(null);
-        if (html.trim()) setError(err?.message || content.ui.errors.unknown);
+        if (html.trim()) setError(err instanceof Error ? err.message : content.ui.errors.unknown);
       }
     },
-    [content.ui.errors.unknown],
+    [content.ui.errors.unknown, inputFormat],
   );
 
   useEffect(() => {
-    if (hasContent) updatePreview(htmlSource);
-    else setPreviewInfo(null);
-  }, [htmlSource, updatePreview]);
+    setResultInfo(null);
+    const timer = setTimeout(() => { if (hasContent && htmlSource.length <= 2000000) updatePreview(htmlSource); else setPreviewInfo(null); }, 300);
+    return () => clearTimeout(timer);
+  }, [htmlSource, updatePreview, hasContent]);
 
   // File upload
   const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { setError(fa ? "حداکثر حجم HTML هشت مگابایت است." : "Maximum HTML file size is 8 MB."); return; }
     const lower = file.name.toLowerCase();
     if (
       !lower.endsWith(".html") &&
       !lower.endsWith(".htm") &&
+      !lower.endsWith(".md") && !lower.endsWith(".markdown") && !lower.endsWith(".txt") &&
       file.type !== "text/html"
     ) {
       setError(content.ui.errors.invalidType);
@@ -666,76 +352,43 @@ export default function HtmlToPptxTool() {
     }
     setError("");
     setFileName(
-      (file.name.replace(/\.(html?|txt)$/i, "") || "presentation") + ".pptx",
+      (file.name.replace(/\.(html?|txt|md|markdown)$/i, "") || "presentation") + ".pptx",
     );
     try {
-      const text = await file.text();
+      const text = decodeText(await readLocalFile(file));
       if (!text.trim()) {
         setError(content.ui.errors.emptyContent);
         return;
       }
-      const bodyMatch = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-      setHtmlSource(bodyMatch ? bodyMatch[1] : text);
-    } catch (err: any) {
-      setError(`${content.ui.errors.genericPrefix} ${err?.message || err}`);
+      setHtmlSource(text);
+    } catch (err) {
+      setError(`${content.ui.errors.genericPrefix} ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
-  // Convert
+  // Convert with real progress, bounded pagination and cancellation.
   const handleConvert = async () => {
     if (!hasContent || isConverting) return;
-    setIsConverting(true);
-    setError("");
-    setProgressStep("preparing");
-
+    if (htmlSource.length > 2000000) { setError(fa ? "حداکثر طول HTML دو میلیون نویسه است." : "HTML must not exceed 2 million characters."); return; }
+    const controller = new AbortController(); convertController.current = controller;
+    setIsConverting(true); setError(""); setResultInfo(null); setProgressStep("preparing"); setActualProgress({ done: 0, total: 0 });
+    const task = startActivity(fa ? "ساخت پاورپوینت" : "PowerPoint export", "process", undefined, () => controller.abort()); conversionTask.current = task;
     try {
-      const PptxGenJS = await import("pptxgenjs").then(
-        (mod: any) => mod.default ?? mod,
-      );
-      const pptx = new PptxGenJS();
-      pptx.layout =
-        aspectRatio === "4:3"
-          ? "LAYOUT_4x3"
-          : aspectRatio === "16:10"
-            ? "LAYOUT_16x10"
-            : "LAYOUT_16x9";
-      pptx.author = "HTML to PPTX Converter";
-      pptx.title = fileName.replace(".pptx", "");
-
-      const slideModels = parseHtmlToSlides(htmlSource);
-      if (!slideModels.length) throw new Error(content.ui.errors.noSlides);
-
-      const finalFontFace = FONT_FAMILIES[fontFamily] || undefined;
-
-      if (includeImages) setProgressStep("loadingImages");
-      else setProgressStep("exporting");
-
-      for (let i = 0; i < slideModels.length; i++) {
-        await renderSlide(
-          pptx,
-          slideModels[i],
-          i + 1,
-          slideModels.length,
-          activeTheme,
-          footerText || undefined,
-          includeImages,
-          finalFontFace,
-          baseFontSize,
-          lineSpacing,
-          aspectRatio,
-          slideTransition,
-        );
-      }
-
+      const source = presentationHtml(htmlSource, inputFormat);
+      const slides = parseHtmlToSlides(source);
+      if (!slides.length) throw new Error(content.ui.errors.noSlides);
+      if (slides.length > 100 || slides.reduce((sum, slide) => sum + slide.blocks.length, 0) > 5000) throw new Error(fa ? "حداکثر ۱۰۰ بخش ورودی و ۵۰۰۰ بلوک مجاز است." : "Limit: 100 input sections and 5,000 blocks.");
+      const settings: ExportSettings = { aspectRatio, fontFace: FONT_FAMILIES[fontFamily] || (fa ? "Tahoma" : "Arial"), fontSize: baseFontSize, lineSpacing, direction, margin, preserveStyles, includeImages, allowRemoteImages, showNumbers, footer: footerText, title: fileName.replace(/\.pptx$/i, ""), author, notes, theme: activeTheme };
       setProgressStep("exporting");
-      await pptx.writeFile({ fileName: normaliseFileName(fileName) });
-      setProgressStep("success");
-    } catch (err: any) {
-      setError(`${content.ui.errors.genericPrefix} ${err?.message || err}`);
-      setProgressStep("idle");
-    } finally {
-      setIsConverting(false);
-    }
+      const onProgress = (done: number, total: number) => { if (!controller.signal.aborted) { setActualProgress({ done, total }); task.progress(done, total); } };
+      const result = exportMode === "editable" ? await exportEditable(slides, settings, controller.signal, onProgress) : await exportVisual(source, settings, imageScale, controller.signal, onProgress);
+      controller.signal.throwIfAborted();
+      void saveFile(result.blob, normaliseFileName(fileName));
+      setResultInfo({ slides: result.slides, size: result.blob.size, warnings: result.warnings }); setProgressStep("success"); task.finish();
+    } catch (error) {
+      task.fail(error); setProgressStep("idle");
+      if (!controller.signal.aborted) setError(`${content.ui.errors.genericPrefix} ${error instanceof Error ? error.message : String(error)}`);
+    } finally { setIsConverting(false); }
   };
 
   useEffect(() => {
@@ -766,6 +419,8 @@ export default function HtmlToPptxTool() {
       { value: "calibri", label: content.ui.fonts.calibri },
       { value: "arial", label: content.ui.fonts.arial },
       { value: "tahoma", label: content.ui.fonts.tahoma },
+      { value: "vazirmatn", label: "Vazirmatn" },
+      { value: "iranyekan", label: "IRANYekanX" },
       { value: "timesNewRoman", label: content.ui.fonts.timesNewRoman },
       { value: "georgia", label: content.ui.fonts.georgia },
       { value: "verdana", label: content.ui.fonts.verdana },
@@ -786,17 +441,7 @@ export default function HtmlToPptxTool() {
     [content.ui.aspectRatios],
   );
 
-  const transitionOptions = useMemo(
-    () => [
-      { value: "none", label: content.ui.transitions.none },
-      { value: "fade", label: content.ui.transitions.fade },
-      { value: "slide", label: content.ui.transitions.slide },
-      { value: "zoom", label: content.ui.transitions.zoom },
-      { value: "flip", label: content.ui.transitions.flip },
-      { value: "rotate", label: content.ui.transitions.rotate },
-    ],
-    [content.ui.transitions],
-  );
+
 
   return (
     <div className="space-y-4">
@@ -822,7 +467,8 @@ export default function HtmlToPptxTool() {
           </p>
           <AccessibleInput
             type="file"
-            accept=".html,.htm,text/html"
+            accept=".html,.htm,.md,.markdown,.txt,text/html,text/markdown"
+            disabled={isConverting}
             onChange={handleFileSelect}
             className={`block w-full text-xs sm:text-sm cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[var(--app-secondary-bg)] file:text-[var(--app-accent)] hover:file:opacity-90 ${theme.text}`}
           />
@@ -835,6 +481,7 @@ export default function HtmlToPptxTool() {
             <span>{content.ui.editor.title}</span>
           </label>
           <AccessibleTextarea
+            disabled={isConverting}
             value={htmlSource}
             onChange={(e) => setHtmlSource(e.target.value)}
             placeholder={content.ui.editor.placeholder}
@@ -851,7 +498,8 @@ export default function HtmlToPptxTool() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
           <div>
             <CustomDropdown
-              label={`🎭 ${content.ui.labels.presetTheme}`}
+              label={content.ui.labels.presetTheme}
+              labelIcon={Palette}
               options={themeOptions}
               value={presetTheme}
               onChange={(v) => setPresetTheme(v as PresetTheme)}
@@ -860,7 +508,8 @@ export default function HtmlToPptxTool() {
           </div>
           <div>
             <CustomDropdown
-              label={`🔤 ${content.ui.labels.fontFamily}`}
+              label={content.ui.labels.fontFamily}
+              labelIcon={Type}
               options={fontOptions}
               value={fontFamily}
               onChange={setFontFamily}
@@ -870,7 +519,8 @@ export default function HtmlToPptxTool() {
           </div>
           <div>
             <CustomDropdown
-              label={`📐 ${content.ui.labels.aspectRatio}`}
+              label={content.ui.labels.aspectRatio}
+              labelIcon={Ratio}
               options={aspectRatioOptions}
               value={aspectRatio}
               onChange={(v) => setAspectRatio(v as AspectRatio)}
@@ -878,19 +528,10 @@ export default function HtmlToPptxTool() {
             />
           </div>
           <div>
-            <CustomDropdown
-              label={`🔄 ${content.ui.labels.slideTransition}`}
-              options={transitionOptions}
-              value={slideTransition}
-              onChange={(v) => setSlideTransition(v as SlideTransition)}
-              searchable={false}
-            />
-          </div>
-          <div>
             <label
               className={`text-xs font-medium mb-1 block ${theme.textMuted}`}
             >
-              📏 {content.ui.labels.fontSize}: {baseFontSize}pt
+              <Ruler className="me-1 inline h-4 w-4" aria-hidden="true" /> {content.ui.labels.fontSize}: {baseFontSize}pt
             </label>
             <AccessibleInput
               type="range"
@@ -905,7 +546,7 @@ export default function HtmlToPptxTool() {
             <label
               className={`text-xs font-medium mb-1 block ${theme.textMuted}`}
             >
-              ↕️ {content.ui.labels.lineSpacing}: {lineSpacing.toFixed(1)}
+              <ArrowUpDown className="me-1 inline h-4 w-4" aria-hidden="true" /> {content.ui.labels.lineSpacing}: {lineSpacing.toFixed(1)}
             </label>
             <AccessibleInput
               type="range"
@@ -919,6 +560,21 @@ export default function HtmlToPptxTool() {
           </div>
         </div>
 
+        <div className="guide-note mb-5 text-sm">{fa ? "خروجی قابل‌ویرایش ساختار متن، جدول و تصویر را حفظ می‌کند؛ CSS پیچیده، انیمیشن و JavaScript به اشیای پاورپوینت تبدیل نمی‌شوند. حالت تصویری برای حفظ ظاهر مناسب‌تر است، اما متن اسلاید در آن قابل‌ویرایش نیست. فونت انتخابی باید روی دستگاه مقصد نصب باشد." : "Editable output preserves text, tables and images; complex CSS, animations and JavaScript are not converted into PowerPoint objects. Visual mode favors appearance, with non-editable slide text. The chosen font must be installed on the destination device."}</div>
+        <fieldset disabled={isConverting} className="mb-5 grid gap-4 rounded-2xl border border-[var(--app-border)] p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <legend className="px-2 text-sm font-bold">{fa ? "تنظیمات دقیق خروجی" : "Export settings"}</legend>
+          <label className="ai-field">{fa ? "فرمت ورودی" : "Input format"}<AccessibleSelect hasVisibleLabel fieldLabel={fa ? "فرمت ورودی" : "Input format"} className="ai-input" value={inputFormat} onChange={event => setInputFormat(event.target.value as InputFormat)}><option value="auto">{fa ? "تشخیص خودکار" : "Auto-detect"}</option><option value="html">HTML</option><option value="markdown">Markdown</option></AccessibleSelect></label>
+          <label className="ai-field">{fa ? "نوع خروجی" : "Output mode"}<AccessibleSelect hasVisibleLabel fieldLabel={fa ? "نوع خروجی" : "Output mode"} className="ai-input" value={exportMode} onChange={event => setExportMode(event.target.value as "editable" | "visual")}><option value="editable">{fa ? "ساختار قابل‌ویرایش" : "Editable structure"}</option><option value="visual">{fa ? "تصویری، حفظ چیدمان" : "Visual layout"}</option></AccessibleSelect></label>
+          <label className="ai-field">{fa ? "جهت متن" : "Text direction"}<AccessibleSelect hasVisibleLabel fieldLabel={fa ? "جهت متن" : "Text direction"} className="ai-input" value={direction} onChange={event => setDirection(event.target.value as ExportSettings["direction"])}><option value="auto">{fa ? "تشخیص خودکار" : "Auto-detect"}</option><option value="rtl">RTL · فارسی</option><option value="ltr">LTR · English</option></AccessibleSelect></label>
+          <label className="ai-field">{fa ? "حاشیه اسلاید (اینچ؛ حالت قابل‌ویرایش)" : "Slide margin (inches; editable mode)"}<input className="ai-input" type="number" min={.2} max={1} step={.05} value={margin} onChange={event => setMargin(Math.min(1, Math.max(.2, Number(event.target.value))))} /></label>
+          <label className="ai-field">{fa ? "کیفیت حالت تصویری" : "Visual quality"}<AccessibleSelect hasVisibleLabel fieldLabel={fa ? "کیفیت حالت تصویری" : "Visual quality"} className="ai-input" value={imageScale} onChange={event => setImageScale(Number(event.target.value))}><option value={1}>{fa ? "استاندارد، حجم کمتر" : "Standard, smaller file"}</option><option value={2}>{fa ? "دو برابر، حجم بیشتر" : "2×, larger file"}</option></AccessibleSelect></label>
+          <label className="ai-field">{fa ? "نام سازنده فایل" : "Author"}<input className="ai-input" value={author} onChange={event => setAuthor(event.target.value)} /></label>
+          <label className="ai-option"><input type="checkbox" checked={preserveStyles} onChange={event => setPreserveStyles(event.target.checked)} />{fa ? "حفظ فونت و رنگ CSS در خروجی قابل‌ویرایش" : "Preserve CSS sizes and colors in editable mode"}</label>
+          <label className="ai-option"><input type="checkbox" checked={showNumbers} onChange={event => setShowNumbers(event.target.checked)} />{fa ? "شماره‌گذاری نهایی اسلایدها" : "Number final slides"}</label>
+          <label className="ai-option"><input type="checkbox" checked={notes} onChange={event => setNotes(event.target.checked)} />{fa ? "افزودن متن به یادداشت اسلاید" : "Include text in speaker notes"}</label>
+          <label className="ai-option"><input type="checkbox" checked={allowRemoteImages} onChange={event => setAllowRemoteImages(event.target.checked)} />{fa ? "اجازه دریافت تصاویر خارجی (نیازمند CORS)" : "Allow remote image downloads (requires CORS)"}</label>
+        </fieldset>
+        {exportMode === "visual" && <p className="guide-copy mb-4 text-xs">{fa ? "حالت تصویری از استایل خود HTML استفاده می‌کند؛ تم، حاشیه و اندازه متن مربوط به حالت قابل‌ویرایش‌اند. صفحه‌های بلند به چند اسلاید تقسیم می‌شوند؛ برای کنترل مرزها از بخش‌های دارای class=slide استفاده کنید." : "Visual mode uses the HTML's own styles; theme, margin and text size apply to editable output. Long pages are sliced into slides; use class=slide sections to control boundaries."}</p>}
         {/* Colors */}
         <div
           className={`grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 p-3 rounded-lg ${presetTheme === "custom" ? "border-2 border-[var(--app-accent)] bg-[var(--app-secondary-bg)]" : ""}`}
@@ -981,21 +637,8 @@ export default function HtmlToPptxTool() {
           </div>
         </div>
 
-        {/* Filename & Footer */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div>
-            <label
-              className={`text-xs font-medium mb-1 block ${theme.textMuted}`}
-            >
-              {content.ui.filename.label}
-            </label>
-            <AccessibleInput fieldLabel={content.ui.filename.label}
-              type="text"
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              className={`w-full rounded-lg border px-3 py-2 text-xs ${theme.card} ${theme.border} ${theme.text} focus:ring-2 focus:ring-[var(--app-ring)]`}
-            />
-          </div>
+        {/* Slide footer; filename is selected when the prepared file is saved. */}
+        <div className="mb-4">
           <div>
             <label
               className={`text-xs font-medium mb-1 block ${theme.textMuted}`}
@@ -1026,7 +669,7 @@ export default function HtmlToPptxTool() {
               }`}
           >
             {isConverting ? (
-              <span className="animate-pulse">⏳</span>
+              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
             ) : (
               <FileDown className="w-4 h-4" />
             )}
@@ -1102,6 +745,8 @@ export default function HtmlToPptxTool() {
           </div>
         )}
 
+        {isConverting && <button className="ai-button mt-3" onClick={() => convertController.current?.abort()}>{fa ? "لغو تبدیل" : "Cancel export"}</button>}
+        {resultInfo && <div role="status" className="guide-note mt-4 block"><p>{fa ? "خروجی آماده شد:" : "Export ready:"} {resultInfo.slides} {fa ? "اسلاید" : "slides"} · {(resultInfo.size / 1024).toFixed(1)} KB</p>{resultInfo.warnings.length > 0 && <details className="mt-2"><summary className="cursor-pointer">{fa ? "منابع حذف‌شده یا در دسترس نبودند" : "Skipped or unavailable resources"} ({resultInfo.warnings.length})</summary><ul className="mt-2 max-h-40 overflow-auto text-xs">{resultInfo.warnings.map((warning, index) => <li key={index} dir="auto">{warning}</li>)}</ul></details>}</div>}
         {/* Error */}
         {error && (
           <div role="alert" className="mt-3 flex items-start gap-2 text-xs rounded-lg border px-3 py-2 bg-[var(--app-error-bg)] border-[var(--app-error-border)] text-[var(--app-error-text)]">
@@ -1113,18 +758,13 @@ export default function HtmlToPptxTool() {
         {/* Progress */}
         {showProgress && (
           <div className="mt-3 space-y-1">
-            <div className="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${primaryBg}`}
-                style={{ width: progressWidth }}
-              />
-            </div>
+            <progress className="task-progress" max={100} value={progressStep === "success" ? 100 : actualProgress.total ? Math.min(99, actualProgress.done / actualProgress.total * 100) : undefined} aria-label={fa ? "پیشرفت تبدیل" : "Export progress"} />
             {progressMessage && (
               <p
                 className={`text-xs sm:text-xs flex items-center gap-1 ${theme.textMuted}`}
               >
-                {progressStep === "success" && <span>🎉</span>}
-                {progressMessage}
+                {progressStep === "success" && <CircleCheck className="h-4 w-4" aria-hidden="true" />}
+                {progressMessage} {actualProgress.total ? `(${actualProgress.done}/${actualProgress.total})` : ""}
               </p>
             )}
           </div>

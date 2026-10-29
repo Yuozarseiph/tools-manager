@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
@@ -22,7 +24,7 @@ import {
   applyFadeOut,
 } from "@/utils/audio-actions";
 
-// ✅ مسیر اصلاح شده برای دسترسی به فایل محتوا
+//  مسیر اصلاح شده برای دسترسی به فایل محتوا
 import {
   useAudioEditorContent,
   type AudioEditorToolContent,
@@ -170,9 +172,9 @@ export default function AudioTrimTool() {
       const a = document.createElement("a");
       a.href = url;
       const baseName = fileName.replace(/\.[^/.]+$/, "") || "audio";
-      a.download = `${baseName}-trimmed.wav`;
+      a.download = outputFilename(`${baseName}-trimmed.wav`);
       document.body.appendChild(a);
-      a.click();
+      void saveFile(a.href, a.download);
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {

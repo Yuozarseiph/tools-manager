@@ -1,4 +1,6 @@
 "use client";
+import { outputFilename } from "@/lib/output-name";
+import { saveFile } from "@/lib/file-export";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
@@ -429,7 +431,8 @@ export default function ExcelEditorTool() {
     const ws = XLSX.utils.json_to_sheet(clean);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, `edited_${fileName || "file.xlsx"}`);
+    const data = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    void saveFile(new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), outputFilename(`edited_${(fileName || "file").replace(/\.[^/.]+$/, "")}.xlsx`));
   };
 
   const handleReset = () => {

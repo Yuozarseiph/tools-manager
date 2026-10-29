@@ -17,12 +17,12 @@ export const securityToolsContent = {
     page: {
       title: "ابزارهای امنیتی و تبدیل",
       description:
-        "اسکن QR Code، ساخت بارکد، رمزنگاری AES، یادداشت یکبارمصرف، تبدیل HTML به متن، متن به مورس، متن به باینری و متن به هگز - همه در یک مکان.",
+        "اسکن QR Code، ساخت بارکد، رمزنگاری AES، تبدیل HTML به متن، متن به مورس، متن به باینری و متن به هگز - همه در یک مکان.",
     },
     seo: {
       title: "ابزارهای امنیتی و تبدیل آنلاین | QodeForge",
       description:
-        "اسکن کد QR، ساخت بارکد، رمزنگاری AES، یادداشت موقت، تبدیل HTML، کد مورس، باینری و هگزادسیمال به صورت رایگان.",
+        "اسکن کد QR، ساخت بارکد، رمزنگاری AES، تبدیل HTML، کد مورس، باینری و هگزادسیمال به صورت رایگان.",
       canonical: "https://qodeforge.ir/tools/security-tools",
       ogTitle: "ابزارهای امنیتی و تبدیل (Security & Conversion Tools)",
       ogDescription:
@@ -36,12 +36,12 @@ export const securityToolsContent = {
     page: {
       title: "Security & Conversion Tools",
       description:
-        "QR Code scanner, barcode generator, AES encryption, one-time note, HTML to text, text to morse, text to binary and text to hex - all in one place.",
+        "QR Code scanner, barcode generator, AES encryption, HTML to text, text to morse, text to binary and text to hex - all in one place.",
     },
     seo: {
       title: "Online Security & Conversion Tools | QodeForge",
       description:
-        "QR scanner, barcode generator, AES encryption, temporary note, HTML converter, morse code, binary and hexadecimal converters for free.",
+        "QR scanner, barcode generator, AES encryption, HTML converter, morse code, binary and hexadecimal converters for free.",
       canonical: "https://qodeforge.ir/tools/security-tools",
       ogTitle: "Security & Conversion Tools",
       ogDescription:

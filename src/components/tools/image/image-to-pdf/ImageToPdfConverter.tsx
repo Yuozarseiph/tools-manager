@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
@@ -91,8 +93,8 @@ export default function ImageToPdfConverter() {
     if (!pdfUrl) return;
     const link = document.createElement("a");
     link.href = pdfUrl;
-    link.download = "converted-images.pdf";
-    link.click();
+    link.download = outputFilename("converted-images.pdf");
+    void saveFile(link.href, link.download);
   };
 
   // لود تصویر از URL (دانلود با اینترنت خود کاربر، فقط در مرورگر به PDF تبدیل می‌شود)

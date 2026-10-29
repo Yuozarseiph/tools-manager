@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useMathToolsUIContent } from "../math-tools.content";
+import { calculateBinary, type MathOperator } from "@/lib/safe-calculator";
 
 export default function CalculatorTool() {
   const theme = useThemeColors();
@@ -11,52 +12,78 @@ export default function CalculatorTool() {
   const [equation, setEquation] = useState("");
   const [isNewNumber, setIsNewNumber] = useState(true);
 
+  const [pending, setPending] = useState<{ value: number; op: MathOperator } | null>(null);
+  const MAX_DIGITS = 18;
+  const format = (value: number) => String(value);
+  const fail = () => {
+    setDisplay("Error");
+    setEquation("");
+    setPending(null);
+    setIsNewNumber(true);
+  };
+
   const handleNumber = (num: string) => {
-    if (isNewNumber) {
+    if (isNewNumber || display === "Error") {
       setDisplay(num);
       setIsNewNumber(false);
-    } else {
+    } else if (display.replace(/[^0-9]/g, "").length < MAX_DIGITS) {
       setDisplay(display === "0" ? num : display + num);
     }
   };
 
-  const handleOperator = (op: string) => {
-    setEquation(display + " " + op + " ");
+  const handleOperator = (op: MathOperator) => {
+    const n = Number(display);
+    if (!Number.isFinite(n)) return fail();
+    let first = n;
+    if (pending && !isNewNumber) {
+      const intermediate = calculateBinary(pending.value, pending.op, n);
+      if (intermediate === null) return fail();
+      first = intermediate;
+      setDisplay(format(first));
+    } else if (pending) {
+      first = pending.value;
+    }
+    setPending({ value: first, op });
+    setEquation(`${first} ${op} `);
     setIsNewNumber(true);
   };
 
   const handleEqual = () => {
-    try {
-      const fullEquation = equation + display;
-      const result = eval(fullEquation.replace(/×/g, "*").replace(/÷/g, "/"));
-      setDisplay(String(result));
-      setEquation("");
-      setIsNewNumber(true);
-    } catch {
-      setDisplay("Error");
-      setIsNewNumber(true);
-    }
+    if (!pending || isNewNumber) return;
+    const result = calculateBinary(pending.value, pending.op, Number(display));
+    if (result === null) return fail();
+    setDisplay(format(result));
+    setEquation("");
+    setPending(null);
+    setIsNewNumber(true);
   };
 
   const handleClear = () => {
     setDisplay("0");
     setEquation("");
+    setPending(null);
     setIsNewNumber(true);
   };
 
   const handleDecimal = () => {
-    if (!display.includes(".")) {
-      setDisplay(display + ".");
+    if (isNewNumber || display === "Error") {
+      setDisplay("0.");
       setIsNewNumber(false);
+    } else if (!display.includes(".")) {
+      setDisplay(display + ".");
     }
   };
 
   const handlePercent = () => {
-    setDisplay(String(parseFloat(display) / 100));
+    const value = Number(display) / 100;
+    if (!Number.isFinite(value)) return fail();
+    setDisplay(format(value));
   };
 
   const handlePlusMinus = () => {
-    setDisplay(String(parseFloat(display) * -1));
+    const value = -Number(display);
+    if (!Number.isFinite(value)) return fail();
+    setDisplay(format(value));
   };
 
   const Button = ({

@@ -1,0 +1,142 @@
+# QodeForge /en/tools/.htaccess
+# Routing and Markdown negotiation are handled by the root .htaccess.
+<IfModule mod_headers.c>
+<FilesMatch "\.(html|md)$">
+  Header merge Vary Accept
+</FilesMatch>
+<Files "file-to-markdown.html">
+  Header set Link "<https://qodeforge.ir/en/tools/file-to-markdown.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "project-to-markdown.html">
+  Header set Link "<https://qodeforge.ir/en/tools/project-to-markdown.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "text-cleaner.html">
+  Header set Link "<https://qodeforge.ir/en/tools/text-cleaner.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "text-chunker.html">
+  Header set Link "<https://qodeforge.ir/en/tools/text-chunker.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "chat-to-markdown.html">
+  Header set Link "<https://qodeforge.ir/en/tools/chat-to-markdown.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "text-diff.html">
+  Header set Link "<https://qodeforge.ir/en/tools/text-diff.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "sensitive-data-redactor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/sensitive-data-redactor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-compressor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-compressor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "pdf-merge.html">
+  Header set Link "<https://qodeforge.ir/en/tools/pdf-merge.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "background-remover.html">
+  Header set Link "<https://qodeforge.ir/en/tools/background-remover.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "word-to-pdf.html">
+  Header set Link "<https://qodeforge.ir/en/tools/word-to-pdf.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "pdf-to-word.html">
+  Header set Link "<https://qodeforge.ir/en/tools/pdf-to-word.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-to-pdf.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-to-pdf.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "pdf-to-image.html">
+  Header set Link "<https://qodeforge.ir/en/tools/pdf-to-image.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-stitcher.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-stitcher.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "qr-generator.html">
+  Header set Link "<https://qodeforge.ir/en/tools/qr-generator.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "qr-reader.html">
+  Header set Link "<https://qodeforge.ir/en/tools/qr-reader.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "pdf-editor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/pdf-editor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-editor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-editor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "text-to-pdf.html">
+  Header set Link "<https://qodeforge.ir/en/tools/text-to-pdf.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-resizer.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-resizer.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "word-counter.html">
+  Header set Link "<https://qodeforge.ir/en/tools/word-counter.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-converter.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-converter.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-to-text.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-to-text.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "unit-converter.html">
+  Header set Link "<https://qodeforge.ir/en/tools/unit-converter.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "date-converter.html">
+  Header set Link "<https://qodeforge.ir/en/tools/date-converter.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "audio-extractor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/audio-extractor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "excel-viewer.html">
+  Header set Link "<https://qodeforge.ir/en/tools/excel-viewer.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "excel-editor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/excel-editor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "excel-chart.html">
+  Header set Link "<https://qodeforge.ir/en/tools/excel-chart.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "html-to-pptx.html">
+  Header set Link "<https://qodeforge.ir/en/tools/html-to-pptx.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "color-picker.html">
+  Header set Link "<https://qodeforge.ir/en/tools/color-picker.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "image-to-svg.html">
+  Header set Link "<https://qodeforge.ir/en/tools/image-to-svg.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "password-generator.html">
+  Header set Link "<https://qodeforge.ir/en/tools/password-generator.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "exif-remover.html">
+  Header set Link "<https://qodeforge.ir/en/tools/exif-remover.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "hash-generator.html">
+  Header set Link "<https://qodeforge.ir/en/tools/hash-generator.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "security-tools.html">
+  Header set Link "<https://qodeforge.ir/en/tools/security-tools.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "code-editor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/code-editor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "json-formatter.html">
+  Header set Link "<https://qodeforge.ir/en/tools/json-formatter.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "markdown-preview.html">
+  Header set Link "<https://qodeforge.ir/en/tools/markdown-preview.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "base64.html">
+  Header set Link "<https://qodeforge.ir/en/tools/base64.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "code-visualizer.html">
+  Header set Link "<https://qodeforge.ir/en/tools/code-visualizer.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "audio-editor.html">
+  Header set Link "<https://qodeforge.ir/en/tools/audio-editor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "math-tools.html">
+  Header set Link "<https://qodeforge.ir/en/tools/math-tools.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "bank.html">
+  Header set Link "<https://qodeforge.ir/en/tools/bank.md>; rel=alternate; type=text/markdown"
+</Files>
+</IfModule>

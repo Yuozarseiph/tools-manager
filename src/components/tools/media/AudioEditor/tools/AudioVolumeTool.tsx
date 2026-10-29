@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -270,9 +272,9 @@ export default function AudioVolumeTool() {
       const a = document.createElement("a");
       a.href = url;
       const baseName = fileName.replace(/\.[^/.]+$/, "") || "audio-volume";
-      a.download = `${baseName}-volume.wav`;
+      a.download = outputFilename(`${baseName}-volume.wav`);
       document.body.appendChild(a);
-      a.click();
+      void saveFile(a.href, a.download);
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {

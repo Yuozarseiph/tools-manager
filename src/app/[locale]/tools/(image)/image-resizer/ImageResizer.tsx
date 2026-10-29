@@ -16,7 +16,7 @@ export default function ImageResizerClient() {
   const { locale } = useLanguage();
   const page = useImageResizerPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

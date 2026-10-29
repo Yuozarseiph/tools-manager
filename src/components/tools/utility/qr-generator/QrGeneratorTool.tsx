@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
@@ -18,6 +20,7 @@ import QRCodeStyling from "qr-code-styling";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useQrGeneratorContent } from "./qr-generator.content";
+import { useLanguage } from "@/context/LanguageContext";
 
 type QrContentType = "link" | "text" | "wifi" | "email";
 type DotStyle = "square" | "dots" | "rounded" | "classy" | "extraRounded";
@@ -26,6 +29,9 @@ type CornerStyle = "square" | "dot" | "extraRounded";
 export default function QrGeneratorTool() {
   const theme = useThemeColors();
   const content = useQrGeneratorContent();
+  const { locale } = useLanguage();
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
 
   // Content Type
   const [contentType, setContentType] = useState<QrContentType>("link");
@@ -221,37 +227,38 @@ export default function QrGeneratorTool() {
   };
 
   const downloadQr = async (format: "png" | "svg") => {
-    if (!qrCodeRef.current) return;
+    if (!qrCodeRef.current || exporting) return;
+    const qr = qrCodeRef.current;
+    setExporting(true);
+    setExportError("");
 
     try {
       const finalSize = size + quietZone * 2;
 
-      qrCodeRef.current.update({
+      qr.update({
         width: finalSize,
         height: finalSize,
         margin: quietZone,
       });
 
-      if (format === "png") {
-        await qrCodeRef.current.download({
-          name: `qrcode-${Date.now()}`,
-          extension: "png",
-        });
-      } else {
-        await qrCodeRef.current.download({
-          name: `qrcode-${Date.now()}`,
-          extension: "svg",
-        });
-      }
-
-      // Restore preview size
-      qrCodeRef.current.update({
+      const data = await qr.getRawData(format);
+      if (!(data instanceof Blob)) throw new Error("QR export did not produce a browser Blob");
+      const url = URL.createObjectURL(data);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = outputFilename(`qrcode-${Date.now()}.${format}`);
+      void saveFile(anchor.href, anchor.download);
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+    } catch (err) {
+      console.error("Download error:", err);
+      setExportError(locale === "fa" ? "ساخت فایل QR ممکن نشد؛ تنظیمات و تصویر لوگو را بررسی کنید." : "Could not export the QR code. Check the settings and logo image.");
+    } finally {
+      qr.update({
         width: qrPreviewSize,
         height: qrPreviewSize,
         margin: 0,
       });
-    } catch (err) {
-      console.error("Download error:", err);
+      setExporting(false);
     }
   };
 
@@ -304,6 +311,8 @@ export default function QrGeneratorTool() {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <button data-testid="download-result"
               onClick={() => downloadQr("png")}
+              disabled={exporting}
+              aria-busy={exporting}
               className={`flex-1 py-2.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm sm:text-base ${theme.primary} text-white shadow-lg hover:shadow-xl transition-all active:scale-95`}
             >
               <Download size={18} />
@@ -311,6 +320,8 @@ export default function QrGeneratorTool() {
             </button>
             <button data-testid="download-result"
               onClick={() => downloadQr("svg")}
+              disabled={exporting}
+              aria-busy={exporting}
               className={`flex-1 py-2.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm sm:text-base ${theme.secondary} ${theme.text} shadow-lg hover:shadow-xl transition-all active:scale-95`}
             >
               <Download size={18} />
@@ -318,6 +329,7 @@ export default function QrGeneratorTool() {
             </button>
           </div>
 
+          {exportError && <p role="alert" className="mt-3 text-sm text-[var(--app-error-text)]">{exportError}</p>}
           <p className={`text-xs text-center mt-3 ${theme.textMuted}`}>
             {content.preview.note}
           </p>

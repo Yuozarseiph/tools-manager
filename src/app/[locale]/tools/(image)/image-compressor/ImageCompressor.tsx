@@ -16,7 +16,7 @@ export default function ImageCompressorClient() {
   const { locale } = useLanguage();
   const page = useImageCompressorPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

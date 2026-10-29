@@ -7,7 +7,6 @@ import {
   QrCode,
   Barcode,
   Lock,
-  FileText,
   Code2,
   Radio,
   Binary,
@@ -21,7 +20,6 @@ import { useSecurityToolsUIContent } from "./security-tools.content";
 import QRScanner from "./tools/QRScanner";
 import BarcodeGenerator from "./tools/BarcodeGenerator";
 import AESEncryption from "./tools/AESEncryption";
-import OneTimeNote from "./tools/OneTimeNote";
 import HTMLToText from "./tools/HTMLToText";
 import TextToMorse from "./tools/TextToMorse";
 import TextToBinary from "./tools/TextToBinary";
@@ -31,7 +29,6 @@ type ToolId =
   | "qrScanner"
   | "barcodeGenerator"
   | "aesEncryption"
-  | "oneTimeNote"
   | "htmlToText"
   | "textToMorse"
   | "textToBinary"
@@ -41,7 +38,6 @@ const toolIcons: Record<ToolId, React.ReactNode> = {
   qrScanner: <QrCode size={20} />,
   barcodeGenerator: <Barcode size={20} />,
   aesEncryption: <Lock size={20} />,
-  oneTimeNote: <FileText size={20} />,
   htmlToText: <Code2 size={20} />,
   textToMorse: <Radio size={20} />,
   textToBinary: <Binary size={20} />,
@@ -52,7 +48,6 @@ const toolComponents: Record<ToolId, React.FC> = {
   qrScanner: QRScanner,
   barcodeGenerator: BarcodeGenerator,
   aesEncryption: AESEncryption,
-  oneTimeNote: OneTimeNote,
   htmlToText: HTMLToText,
   textToMorse: TextToMorse,
   textToBinary: TextToBinary,
@@ -63,7 +58,6 @@ const toolIds: ToolId[] = [
   "qrScanner",
   "barcodeGenerator",
   "aesEncryption",
-  "oneTimeNote",
   "htmlToText",
   "textToMorse",
   "textToBinary",

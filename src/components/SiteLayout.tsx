@@ -2,9 +2,12 @@ import type { Viewport } from "next";
 import localFont from "next/font/local";
 import "@/app/globals.css";
 import type { Locale } from "@/lib/locale-detection";
+import { PanelMotionProvider } from "@/components/ui/PanelMotion";
+import ActivityCenter from "@/components/ui/ActivityCenter";
+import ExportDialog from "@/components/ui/ExportDialog";
 import Accessibility from "@/components/Accessibility";
 import AgentTools from "@/components/AgentTools";
-import LanguageSuggestion from "@/components/LanguageSuggestion";
+import LocalePreferenceGuard from "@/components/LocalePreferenceGuard";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ThemeBody from "@/components/ThemeBody";
 import InstallPWA from "@/components/InstallPWA";
@@ -86,6 +89,12 @@ export default function SiteLayout({
 }>) {
   return (
     <html lang={locale} dir={locale === "fa" ? "rtl" : "ltr"} suppressHydrationWarning>
+      <head>
+        <script
+          id="qodeforge-theme"
+          dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('app-theme');var d=['royal-blue-dark','ruby-red-dark','emerald-green-dark','classic-dark','secret-purple'].includes(t);document.documentElement.classList.toggle('dark',d);document.documentElement.style.colorScheme=d?'dark':'light'}catch{}` }}
+        />
+      </head>
       <ThemeProvider>
         <LanguageProvider initialLocale={locale}>
           <ThemeBody
@@ -122,13 +131,17 @@ export default function SiteLayout({
               }}
             />
             <a className="skip-link" href="#main-content">{locale === "fa" ? "پرش به محتوای اصلی" : "Skip to main content"}</a>
+            <PanelMotionProvider>
             <Header />
-            <LanguageSuggestion />
+            <LocalePreferenceGuard />
             <main id="main-content" tabIndex={-1}>{children}</main>
+            <ActivityCenter />
+            <ExportDialog />
             <Accessibility />
             <AgentTools />
             <InstallPWA />
             <Footer />
+            </PanelMotionProvider>
           </ThemeBody>
         </LanguageProvider>
       </ThemeProvider>

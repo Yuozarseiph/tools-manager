@@ -1,5 +1,7 @@
 // components/tools/image/background-remover/BackgroundRemoverTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
@@ -12,6 +14,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
 import { useBackgroundRemoverContent } from "./background-remover.content";
 
+import { startActivity, downloadBlob } from "@/lib/transfer";
 import { removeBackground } from "@imgly/background-removal";
 
 type DataUrl = string | null;
@@ -33,6 +36,11 @@ export default function BackgroundRemoverTool() {
   const { locale } = useLanguage();
   const content = useBackgroundRemoverContent();
 
+  const runId = useRef(0);
+  const outputRef = useRef<string | null>(null);
+  const processTask = useRef<ReturnType<typeof startActivity> | null>(null);
+  const downloads = useRef(new Map<string, ReturnType<typeof startActivity>>());
+  const [processingError, setProcessingError] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [inputPreview, setInputPreview] = useState<DataUrl>(null);
   const [outputUrl, setOutputUrl] = useState<DataUrl>(null);
@@ -49,45 +57,60 @@ export default function BackgroundRemoverTool() {
     return { size: file.size, type: file.type || "-" };
   }, [file]);
 
-  const cleanupOutput = () => {
-    if (outputUrl) {
-      URL.revokeObjectURL(outputUrl);
+  const cleanupOutput = useCallback(() => {
+    if (outputRef.current) {
+      URL.revokeObjectURL(outputRef.current);
+      outputRef.current = null;
       setOutputUrl(null);
     }
-  };
+  }, []);
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     cleanupOutput();
     setFile(null);
     setInputPreview(null);
     setOutputUrl(null);
     setOutputSize(null);
     setImageUrlInput("");
-  };
+  }, [cleanupOutput]);
 
   useEffect(() => {
-    return () => cleanupOutput();
-  }, []);
+    const resources = downloads.current;
+    return () => { runId.current = -1; cleanupOutput(); processTask.current?.fail(new DOMException("Cancelled", "AbortError")); resources.forEach(task => task.fail(new DOMException("Cancelled", "AbortError"))); };
+  }, [cleanupOutput]);
 
   const runRemoveBackground = useCallback(async () => {
-    if (!file) return;
+    if (!file || isProcessing) return;
+    const currentRun = ++runId.current;
+    downloads.current.clear();
+    setProcessingError("");
+    processTask.current = startActivity(locale === "fa" ? "حذف پس‌زمینه" : "Background removal", "process");
     setIsProcessing(true);
     cleanupOutput();
     setFirstRun(false);
 
     try {
-      const result = await removeBackground(file);
+      const result = await removeBackground(file, { progress: (key, loaded, total) => {
+        if (currentRun !== runId.current) return;
+        if (key.startsWith("fetch:")) {
+          if (!downloads.current.has(key)) downloads.current.set(key, startActivity(key.slice(6), "download", total));
+          const task = downloads.current.get(key)!; task.progress(loaded, total);
+          if (total > 0 && loaded >= total) task.finish();
+        } else processTask.current?.progress(loaded, total, key);
+      } });
+      if (currentRun !== runId.current) return;
       const blob = new Blob([result], { type: "image/png" });
       setOutputSize(blob.size);
       const url = URL.createObjectURL(blob);
-      setOutputUrl(url);
+      outputRef.current = url; setOutputUrl(url);
+      processTask.current?.finish();
     } catch (e) {
       console.error(e);
-      alert(content.ui.errors.processingFailed);
+      if (currentRun === runId.current) { setProcessingError(content.ui.errors.processingFailed); processTask.current?.fail(e); downloads.current.forEach(task => task.fail(e)); }
     } finally {
-      setIsProcessing(false);
+      if (currentRun === runId.current) setIsProcessing(false);
     }
-  }, [file, content.ui.errors.processingFailed]);
+  }, [file, isProcessing, locale, cleanupOutput, content.ui.errors.processingFailed]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/*": [] },
@@ -111,7 +134,7 @@ export default function BackgroundRemoverTool() {
         });
         setInputPreview(dataUrl);
       },
-      [content.ui.errors.notImage]
+      [content.ui.errors.notImage, resetAll]
     ),
   });
 
@@ -121,10 +144,7 @@ export default function BackgroundRemoverTool() {
 
     setIsAddingFromUrl(true);
     try {
-      const res = await fetch(url, { mode: "cors" });
-      if (!res.ok) throw new Error("Fetch failed");
-
-      const blob = await res.blob();
+      const blob = await downloadBlob(url, locale === "fa" ? "دریافت تصویر" : "Downloading image");
       if (!blob.type.startsWith("image/")) throw new Error("Not image");
 
       const ext = blob.type.includes("png")
@@ -156,12 +176,13 @@ export default function BackgroundRemoverTool() {
     if (!outputUrl) return;
     const a = document.createElement("a");
     a.href = outputUrl;
-    a.download = "background-removed.png";
-    a.click();
+    a.download = outputFilename("background-removed.png");
+    void saveFile(a.href, a.download);
   };
 
   return (
     <div className="space-y-6">
+      {processingError && <p role="alert" className="rounded-xl bg-[var(--app-error-bg)] p-4 text-[var(--app-error-text)]">{processingError}</p>}
       {/* Upload card */}
       <div
         className={`rounded-3xl border overflow-hidden ${theme.bg} ${theme.border}`}

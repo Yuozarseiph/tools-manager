@@ -16,7 +16,7 @@ export default function ImageConverterClient() {
   const { locale } = useLanguage();
   const page = useImageConverterPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

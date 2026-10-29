@@ -1,13 +1,15 @@
 // components/tools/media/audio-extractor/AudioExtractorTool.tsx
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
-import download from "downloadjs";
+import { readLocalFile, downloadResource, startActivity } from "@/lib/transfer";
+import { useLanguage } from "@/context/LanguageContext";
+import { saveFile as download } from "@/lib/file-export";
 
 import {
   FileUp,
@@ -33,6 +35,12 @@ type AudioFormat = "mp3" | "wav" | "ogg" | "m4a";
 
 export default function AudioExtractorTool() {
   const theme = useThemeColors();
+  const { locale } = useLanguage();
+  const fa = locale === "fa";
+  const [isLoadingEngine, setIsLoadingEngine] = useState(false);
+  const loadingController = useRef<AbortController | null>(null);
+  const extractionTask = useRef<ReturnType<typeof startActivity> | null>(null);
+  const alive = useRef(true);
   const content: AudioExtractorToolContent = useAudioExtractorContent();
 
   const [file, setFile] = useState<File | null>(null);
@@ -48,42 +56,36 @@ export default function AudioExtractorTool() {
   const ffmpegRef = useRef<FFmpeg | null>(null);
 
   useEffect(() => {
-    loadFFmpeg();
+    alive.current = true;
+    return () => { alive.current = false; loadingController.current?.abort(); ffmpegRef.current?.terminate(); extractionTask.current?.fail(new DOMException("Cancelled", "AbortError")); };
   }, []);
 
   const loadFFmpeg = async () => {
-    if (typeof window === "undefined") return;
-
+    if (isLoadingEngine || isFFmpegLoaded) return;
+    const controller = new AbortController(); loadingController.current = controller;
+    setIsLoadingEngine(true); setError("");
+    const urls: string[] = [];
+    const ffmpeg = new FFmpeg(); ffmpegRef.current = ffmpeg;
     try {
-      // @ts-ignore
-      const ffmpeg = new FFmpeg();
-
-      ffmpeg.on("log", ({ message }: { message: string }) => {
-        console.log(message);
-      });
-
-      ffmpeg.on("progress", ({ progress: prog }: { progress: number }) => {
-        setProgress(Math.round(prog * 100));
-      });
-
-      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-      await ffmpeg.load({
-        coreURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.js`,
-          "text/javascript"
-        ),
-        wasmURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.wasm`,
-          "application/wasm"
-        ),
-      });
-
-      ffmpegRef.current = ffmpeg;
-      setIsFFmpegLoaded(true);
-    } catch (err) {
-      console.error("Failed to load FFmpeg:", err);
-      setError("خطا در بارگذاری FFmpeg");
-    }
+      ffmpeg.on("progress", ({ progress: value }: { progress: number }) => { const percent = Math.min(99, Math.max(0, Math.round(value * 100))); setProgress(percent); extractionTask.current?.progress(percent, 100); });
+      const baseURL = "/runtime/ffmpeg-v0.12.10";
+      const core = await downloadResource(`${baseURL}/ffmpeg-core.js`, "FFmpeg · JavaScript", controller.signal);
+      const wasm = await downloadResource(`${baseURL}/ffmpeg-core.wasm`, "FFmpeg · WebAssembly", controller.signal);
+      controller.signal.throwIfAborted();
+      const coreURL = URL.createObjectURL(new Blob([core], { type: "text/javascript" }));
+      const wasmURL = URL.createObjectURL(new Blob([wasm], { type: "application/wasm" })); urls.push(coreURL, wasmURL);
+      await ffmpeg.load({ coreURL, wasmURL });
+      controller.signal.throwIfAborted();
+      if (alive.current) setIsFFmpegLoaded(true);
+    } catch {
+      ffmpeg.terminate();
+      if (alive.current && !controller.signal.aborted) setError(fa ? "دریافت یا راه‌اندازی موتور ناموفق بود؛ دوباره تلاش کنید." : "Engine download or initialization failed; please retry.");
+    } finally { urls.forEach(url => URL.revokeObjectURL(url)); if (alive.current) setIsLoadingEngine(false); }
+  };
+  const cancelOperation = () => {
+    loadingController.current?.abort(); ffmpegRef.current?.terminate(); ffmpegRef.current = null;
+    extractionTask.current?.fail(new DOMException("Cancelled", "AbortError"));
+    setIsFFmpegLoaded(false); setIsLoadingEngine(false); setIsProcessing(false); setProgress(0);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -94,6 +96,7 @@ export default function AudioExtractorTool() {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const videoFile = acceptedFiles[0];
+        if (videoFile.size > 250 * 1024 * 1024) { setError(fa ? "حداکثر حجم ویدئو ۲۵۰ مگابایت است." : "Maximum video size is 250 MB."); return; }
         setFile(videoFile);
         setExtractedAudio(null);
         setError("");
@@ -106,6 +109,7 @@ export default function AudioExtractorTool() {
           setDuration(`${mins}:${secs.toString().padStart(2, "0")}`);
           URL.revokeObjectURL(video.src);
         };
+        video.onerror = () => URL.revokeObjectURL(video.src);
         video.src = URL.createObjectURL(videoFile);
       }
     },
@@ -122,7 +126,7 @@ export default function AudioExtractorTool() {
   };
 
   const handleExtract = async () => {
-    if (!file || !isFFmpegLoaded || !ffmpegRef.current) return;
+    if (!file || !isFFmpegLoaded || !ffmpegRef.current || isProcessing) return;
 
     setIsProcessing(true);
     setProgress(0);
@@ -130,15 +134,16 @@ export default function AudioExtractorTool() {
     setExtractedAudio(null);
 
     const ffmpeg = ffmpegRef.current;
+    extractionTask.current = startActivity(fa ? "استخراج صدا" : "Audio extraction", "process", 100, cancelOperation);
 
     try {
       const inputName = "input.mp4";
       const outputName = `output.${format}`;
 
-      await ffmpeg.writeFile(inputName, await fetchFile(file));
+      await ffmpeg.writeFile(inputName, new Uint8Array(await readLocalFile(file)));
 
       const bitrate = getBitrate();
-      const args = ["-i", inputName];
+      const args = ["-y", "-i", inputName];
 
       if (format === "mp3") {
         args.push("-vn", "-acodec", "libmp3lame", "-ab", bitrate, outputName);
@@ -150,19 +155,19 @@ export default function AudioExtractorTool() {
         args.push("-vn", "-acodec", "aac", "-ab", bitrate, outputName);
       }
 
-      await ffmpeg.exec(args);
+      const exitCode = await ffmpeg.exec(args);
+      if (exitCode !== 0) throw new Error("FFMPEG_FAILED");
 
       const data = await ffmpeg.readFile(outputName);
-      // کپی کردن به یک Uint8Array استاندارد جدید
-      // @ts-ignore
-      const uint8 = new Uint8Array(data.length);
-      // @ts-ignore
-      uint8.set(data as Uint8Array);
+      if (typeof data === "string") throw new Error("INVALID_AUDIO_OUTPUT");
+      const uint8 = new Uint8Array(data);
       const blob = new Blob([uint8], { type: `audio/${format}` });
       setExtractedAudio(blob);
+      extractionTask.current?.progress(100, 100); extractionTask.current?.finish();
+      await ffmpeg.deleteFile(inputName); await ffmpeg.deleteFile(outputName);
     } catch (err) {
       console.error("Extraction error:", err);
-      setError(content.ui.status.error);
+      if (ffmpegRef.current === ffmpeg) { setError(content.ui.status.error); extractionTask.current?.fail(err); }
     } finally {
       setIsProcessing(false);
       setProgress(0);
@@ -172,7 +177,7 @@ export default function AudioExtractorTool() {
   const handleDownload = () => {
     if (!extractedAudio || !file) return;
     const fileName = file.name.replace(/\.[^/.]+$/, "") + `.${format}`;
-    download(extractedAudio, fileName, `audio/${format}`);
+    download(extractedAudio, outputFilename(fileName), `audio/${format}`);
   };
 
   const handleClear = () => {
@@ -218,7 +223,9 @@ export default function AudioExtractorTool() {
     <div
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
-      {!isFFmpegLoaded && (
+      {!isFFmpegLoaded && !isLoadingEngine && <div className="mb-5 space-y-3"><p className="text-sm">{fa ? "موتور تبدیل فقط با انتخاب شما دریافت می‌شود. حجم و سرعت واقعی در پنل انتقال نمایش داده می‌شود." : "Download the conversion engine when needed. Real size and speed appear in the transfer panel."}</p><button className="ai-button ai-primary" onClick={loadFFmpeg}>{fa ? "دریافت موتور / تلاش مجدد" : "Download engine / retry"}</button></div>}
+      {(isLoadingEngine || isProcessing) && <button className="ai-button mb-4" onClick={cancelOperation}>{fa ? "لغو عملیات" : "Cancel operation"}</button>}
+      {isLoadingEngine && (
         <div
           className={`flex items-center gap-3 p-4 rounded-xl border mb-6 ${theme.note.infoBorder} ${theme.note.infoBg}`}
         >

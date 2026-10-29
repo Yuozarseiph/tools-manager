@@ -16,7 +16,7 @@ export default function ImageToPdfClient() {
   const { locale } = useLanguage();
   const page = useImageToPdfPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

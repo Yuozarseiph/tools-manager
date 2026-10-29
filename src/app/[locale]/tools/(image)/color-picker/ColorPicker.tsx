@@ -16,7 +16,7 @@ export default function ColorPickerClient() {
   const { locale } = useLanguage();
   const page = useColorPickerPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

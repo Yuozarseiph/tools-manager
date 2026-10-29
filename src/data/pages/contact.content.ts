@@ -4,7 +4,7 @@ export const contactContent = {
   fa: {
     back: "بازگشت به خانه",
     hero: {
-      title: "تماس با ما 👋",
+      title: "تماس با ما ",
       lead: "اگر درباره این پروژه سوال، پیشنهاد یا گزارشی دارید، خوشحال می‌شویم از طریق این صفحه با ما در ارتباط باشید.",
     },
     supportEmail: {
@@ -44,7 +44,7 @@ export const contactContent = {
   en: {
     back: "Back to home",
     hero: {
-      title: "Contact us 👋",
+      title: "Contact us ",
       lead: "If you have questions, suggestions, or reports related to this project, feel free to reach out using this page.",
     },
     supportEmail: {

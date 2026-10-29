@@ -1,4 +1,5 @@
 "use client";
+import { usePanelPresence } from "@/hooks/usePanelPresence";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import {
@@ -39,6 +40,7 @@ export default function DocsClient() {
     () => docs[0]?.id ?? null,
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobilePresence = usePanelPresence(isMobileMenuOpen);
   const [searchQuery, setSearchQuery] = useState("");
 
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -282,10 +284,11 @@ export default function DocsClient() {
             </button>
           </div>
 
-          {isMobileMenuOpen && (
+          {mobilePresence.present && (
             <div
               className="fixed inset-0 z-[100] flex items-end bg-black/45 backdrop-blur-[2px] lg:hidden"
               role="dialog"
+              {...mobilePresence.attributes}
               aria-modal="true"
               aria-label={pageContent.ui.sidebar.mobileTitle}
             >

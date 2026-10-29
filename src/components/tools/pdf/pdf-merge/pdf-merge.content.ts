@@ -29,8 +29,11 @@ export const pdfMergeContent = {
       buttons: {
         mergeAndDownload: "ادغام و دانلود PDF",
         processing: "در حال ادغام فایل‌ها...",
+        cancel: "لغو ادغام",
       },
       alerts: {
+        cancelled: "ادغام لغو شد.",
+        timeout: "زمان پردازش تمام شد؛ لطفاً با فایل‌های کوچک‌تر تلاش کنید.",
         error:
           "در هنگام ادغام فایل‌های PDF مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
       },
@@ -68,8 +71,11 @@ export const pdfMergeContent = {
       buttons: {
         mergeAndDownload: "Merge & download PDF",
         processing: "Merging PDF files...",
+        cancel: "Cancel merge",
       },
       alerts: {
+        cancelled: "Merge cancelled.",
+        timeout: "Merge timed out. Try smaller PDF files.",
         error:
           "Something went wrong while merging PDF files. Please try again.",
       },

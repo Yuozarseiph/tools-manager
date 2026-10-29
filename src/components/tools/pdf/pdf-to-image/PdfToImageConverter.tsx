@@ -1,4 +1,6 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useRef, useState } from "react";
@@ -14,7 +16,7 @@ import {
   Layers,
   Images,
 } from "lucide-react";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { usePdfToImageToolContent } from "./pdf-to-image.content";
@@ -195,7 +197,7 @@ export default function PdfToImageConverter() {
     (p: ToolImage) => {
       download(
         p.dataUrl,
-        `${baseName}-${p.fileLabel}.${EXT[format]}`,
+        outputFilename(`${baseName}-${p.fileLabel}.${EXT[format]}`, p.fileLabel),
         MIME[format],
       );
     },
@@ -207,11 +209,11 @@ export default function PdfToImageConverter() {
     setZipping(true);
     try {
       const entries = items.map((it) => ({
-        name: `${baseName}-${it.fileLabel}.${EXT[format]}`,
+        name: outputFilename(`${baseName}-${it.fileLabel}.${EXT[format]}`, it.fileLabel),
         data: dataUrlToBytes(it.dataUrl),
       }));
       const blob = buildZip(entries);
-      download(blob, `${baseName}-images.zip`, "application/zip");
+      download(blob, outputFilename(`${baseName}-images.zip`), "application/zip");
     } catch (err) {
       console.error("[pdf-to-image][zip]", err);
       // Fallback: sequential downloads.
@@ -558,7 +560,7 @@ export default function PdfToImageConverter() {
         </>
       )}
 
-      {editing && (
+      <AnimatePresence>{editing && (
         <ImageEditModal
           key={editing.id}
           item={editing}
@@ -567,7 +569,7 @@ export default function PdfToImageConverter() {
           onClose={() => setEditing(null)}
           onSave={handleEditSave}
         />
-      )}
+      )}</AnimatePresence>
     </div>
   );
 }

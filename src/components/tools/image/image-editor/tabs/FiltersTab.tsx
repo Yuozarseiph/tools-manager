@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
@@ -83,8 +85,8 @@ export default function FiltersTab({ imageUrl, hasImage }: FiltersTabProps) {
     if (!canvasRef.current) return;
     const link = document.createElement("a");
     link.href = canvasRef.current.toDataURL("image/png");
-    link.download = "filtered-image.png";
-    link.click();
+    link.download = outputFilename("filtered-image.png");
+    void saveFile(link.href, link.download);
   };
 
   return (

@@ -1,48 +1,19 @@
-// components/tools/developer/code-editor/components/Editor.tsx
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { Code2 } from "lucide-react";
 import {
-  useRef,
-  useEffect,
-  useCallback,
-  useState,
-  lazy,
-  Suspense,
-} from "react";
-import {
-  EditorView,
-  keymap,
-  lineNumbers,
-  highlightActiveLine,
-  highlightSpecialChars,
-  drawSelection,
-  rectangularSelection,
-  crosshairCursor,
-  placeholder,
+  EditorView, keymap, lineNumbers, highlightActiveLine, highlightSpecialChars,
+  drawSelection, rectangularSelection, placeholder,
 } from "@codemirror/view";
-import { EditorState } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import {
-  defaultKeymap,
-  history,
-  historyKeymap,
-  indentWithTab,
-} from "@codemirror/commands";
-import {
-  syntaxHighlighting,
-  defaultHighlightStyle,
-  bracketMatching,
-  indentOnInput,
-  foldGutter,
-  foldKeymap,
-  StreamLanguage,
+  syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput,
+  foldGutter, foldKeymap, StreamLanguage,
 } from "@codemirror/language";
-import {
-  autocompletion,
-  completionKeymap,
-  closeBrackets,
-  closeBracketsKeymap,
-} from "@codemirror/autocomplete";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
+import { openSearchPanel, searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { lintKeymap } from "@codemirror/lint";
 import { javascript } from "@codemirror/lang-javascript";
 import { html } from "@codemirror/lang-html";
@@ -51,266 +22,167 @@ import { json } from "@codemirror/lang-json";
 import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { VirtualFile, SUPPORTED_LANGUAGES } from "../types";
+import { VirtualFile } from "../types";
 import "../code-editor.css";
 
-// Lazy load language extensions
-let cachedExtensions: Record<string, any> = {};
+type LanguageExtension = Extension;
+const languageCache = new Map<string, LanguageExtension>();
 
-async function loadLanguageExtension(language: string) {
-  if (cachedExtensions[language]) return cachedExtensions[language];
-
-  let ext;
+async function loadLanguage(language: string): Promise<LanguageExtension> {
+  const cached = languageCache.get(language);
+  if (cached) return cached;
+  let extension: LanguageExtension;
   switch (language) {
-    case "javascript":
-      ext = javascript();
-      break;
-    case "typescript":
-      ext = javascript({ typescript: true });
-      break;
-    case "jsx":
-      ext = javascript({ jsx: true });
-      break;
-    case "tsx":
-      ext = javascript({ jsx: true, typescript: true });
-      break;
-    case "html":
-      ext = html();
-      break;
-    case "css":
-    case "scss":
-      ext = css();
-      break;
-    case "json":
-      ext = json();
-      break;
-    case "markdown":
-      ext = markdown();
-      break;
-    case "python":
-      ext = python();
-      break;
-    case "php": {
-      const { php } = await import("@codemirror/lang-php");
-      ext = php();
-      break;
-    }
-    case "java": {
-      const { java } = await import("@codemirror/lang-java");
-      ext = java();
-      break;
-    }
-    case "cpp":
-    case "c":
-    case "csharp":
-    case "go": {
-      const { cpp } = await import("@codemirror/lang-cpp");
-      ext = cpp();
-      break;
-    }
-    case "rust": {
-      const { rust } = await import("@codemirror/lang-rust");
-      ext = rust();
-      break;
-    }
-    case "sql": {
-      const { sql } = await import("@codemirror/lang-sql");
-      ext = sql();
-      break;
-    }
-    case "xml": {
-      const { xml } = await import("@codemirror/lang-xml");
-      ext = xml();
-      break;
-    }
-    case "yaml": {
-      const { yaml } = await import("@codemirror/legacy-modes/mode/yaml");
-      ext = StreamLanguage.define(yaml);
-      break;
-    }
-    case "shell":
-    case "dockerfile": {
-      const { shell } = await import("@codemirror/legacy-modes/mode/shell");
-      ext = StreamLanguage.define(shell);
-      break;
-    }
-    default:
-      ext = javascript();
+    case "javascript": extension = javascript(); break;
+    case "typescript": extension = javascript({ typescript: true }); break;
+    case "jsx": extension = javascript({ jsx: true }); break;
+    case "tsx": extension = javascript({ jsx: true, typescript: true }); break;
+    case "html": extension = html(); break;
+    case "css": case "scss": extension = css(); break;
+    case "json": extension = json(); break;
+    case "markdown": extension = markdown(); break;
+    case "python": extension = python(); break;
+    case "php": extension = (await import("@codemirror/lang-php")).php(); break;
+    case "java": extension = (await import("@codemirror/lang-java")).java(); break;
+    case "cpp": case "c": case "csharp": case "go":
+      extension = (await import("@codemirror/lang-cpp")).cpp(); break;
+    case "rust": extension = (await import("@codemirror/lang-rust")).rust(); break;
+    case "sql": extension = (await import("@codemirror/lang-sql")).sql(); break;
+    case "xml": extension = (await import("@codemirror/lang-xml")).xml(); break;
+    case "yaml": extension = StreamLanguage.define((await import("@codemirror/legacy-modes/mode/yaml")).yaml); break;
+    case "shell": case "dockerfile": extension = StreamLanguage.define((await import("@codemirror/legacy-modes/mode/shell")).shell); break;
+    default: extension = []; break;
   }
-
-  cachedExtensions[language] = ext;
-  return ext;
+  languageCache.set(language, extension);
+  return extension;
 }
 
-interface EditorPanelProps {
+interface Props {
   file: VirtualFile | null;
   onContentChange: (fileId: string, content: string) => void;
-  theme: any;
+  onCursorChange?: (line: number, column: number) => void;
+  theme: { mode?: string };
+  locale?: string;
+  jump?: {fileId: string;line: number;token: number} | null;
 }
 
-export default function EditorPanel({
-  file,
-  onContentChange,
-  theme,
-}: EditorPanelProps) {
-  const editorRef = useRef<HTMLDivElement>(null);
+export default function Editor({ file, onContentChange, onCursorChange, theme, locale, jump }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const statesRef = useRef(new Map<string, EditorState>());
+  const themeCompartmentRef = useRef(new Compartment());
+  const onChangeRef = useRef(onContentChange);
+  const jumpRef = useRef(jump);
+  const onCursorRef = useRef(onCursorChange);
+  const [failed, setFailed] = useState(false);
   const isDark = theme.mode === "dark";
+  const fileId = file?.id;
+  const language = file?.language;
+  onChangeRef.current = onContentChange;
+  jumpRef.current = jump;
+  onCursorRef.current = onCursorChange;
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    setIsReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!editorRef.current || !file || !isReady) return;
-
+    if (!fileId || !file || !containerRef.current) return;
     let cancelled = false;
-
-    async function initEditor() {
+    let createdView: EditorView | null = null;
+    setFailed(false);
+    const initialContent = file.content;
+    void (async () => {
       try {
-        const languageExt = await loadLanguageExtension(file!.language);
-
-        if (cancelled) return;
-
-        const extensions = [
-          lineNumbers(),
-          highlightActiveLine(),
-          highlightSpecialChars(),
-          drawSelection(),
-          rectangularSelection(),
-          crosshairCursor(),
-          highlightSelectionMatches(),
-          bracketMatching(),
-          closeBrackets(),
-          autocompletion(),
-          indentOnInput(),
-          history(),
-          foldGutter(),
-          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-          placeholder("// Start coding..."),
-          languageExt,
-          keymap.of([
-            ...defaultKeymap,
-            ...historyKeymap,
-            ...foldKeymap,
-            ...completionKeymap,
-            ...closeBracketsKeymap,
-            ...searchKeymap,
-            ...lintKeymap,
-            indentWithTab,
-            {
-              key: "Mod-s",
-              run: (view: any) => {
-                onContentChange(file!.id, view.state.doc.toString());
-                window.dispatchEvent(new CustomEvent("editor-save"));
-                return true;
-              },
-              preventDefault: true,
-            },
-          ]),
-          EditorView.updateListener.of((update) => {
-            if (update.docChanged && viewRef.current) {
-              onContentChange(file!.id, update.state.doc.toString());
-            }
-          }),
-        ];
-
-        if (isDark) {
-          extensions.push(oneDark);
+        const lang = await loadLanguage(language || "plaintext");
+        if (cancelled || !containerRef.current) return;
+        const cached = statesRef.current.get(fileId);
+        const state = cached && cached.doc.toString() === initialContent
+          ? cached
+          : EditorState.create({
+              doc: initialContent,
+              extensions: [
+                lineNumbers(), foldGutter(), highlightActiveLine(), highlightSpecialChars(),
+                drawSelection(), rectangularSelection(), highlightSelectionMatches(),
+                bracketMatching(), closeBrackets(), autocompletion(), indentOnInput(),
+                history(), syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+                EditorView.lineWrapping, placeholder("// Start typing or open a project…"), lang,
+                themeCompartmentRef.current.of(isDark ? oneDark : []),
+                EditorView.updateListener.of((update) => {
+                  if (update.docChanged) onChangeRef.current(fileId, update.state.doc.toString());
+                  if (update.selectionSet || update.docChanged) {
+                    const position = update.state.selection.main.head;
+                    const line = update.state.doc.lineAt(position);
+                    onCursorRef.current?.(line.number, position - line.from + 1);
+                  }
+                }),
+                keymap.of([
+                  ...defaultKeymap, ...historyKeymap, ...foldKeymap,
+                  ...completionKeymap, ...closeBracketsKeymap, ...searchKeymap,
+                  ...lintKeymap, indentWithTab,
+                ]),
+              ],
+            });
+        createdView = new EditorView({ state, parent: containerRef.current });
+        viewRef.current = createdView;
+        createdView.dispatch({effects: themeCompartmentRef.current.reconfigure(isDark ? oneDark : [])});
+        const requested = jumpRef.current;
+        if (requested && requested.fileId === fileId) {
+          const line = createdView.state.doc.line(Math.min(Math.max(1,requested.line),createdView.state.doc.lines));
+          createdView.dispatch({selection:{anchor:line.from},scrollIntoView:true});
+          createdView.focus();
         }
-
-        if (isMobile) {
-          extensions.push(
-            EditorView.theme({
-              ".cm-gutters": { display: "none" },
-              ".cm-content": { padding: "8px" },
-            }),
-          );
-        }
-
-        const state = EditorState.create({
-          doc: file!.content,
-          extensions,
-        });
-
-        if (viewRef.current) viewRef.current.destroy();
-
-        viewRef.current = new EditorView({
-          state,
-          parent: editorRef.current!,
-        });
+        const pos = createdView.state.selection.main.head;
+        const line = createdView.state.doc.lineAt(pos);
+        onCursorRef.current?.(line.number, pos - line.from + 1);
+        createdView.focus();
       } catch (error) {
-        console.error("Failed to init editor:", error);
-        // Fallback to plain text
-        if (!cancelled && editorRef.current) {
-          const textarea = document.createElement("textarea");
-          textarea.value = file?.content || "";
-          textarea.className =
-            "w-full h-full p-4 bg-transparent outline-none resize-none font-mono text-sm";
-          textarea.style.color = "var(--app-text)";
-          textarea.style.backgroundColor = "var(--app-bg)";
-          textarea.addEventListener("input", (e) => {
-            if (file)
-              onContentChange(file.id, (e.target as HTMLTextAreaElement).value);
-          });
-          editorRef.current.innerHTML = "";
-          editorRef.current.appendChild(textarea);
-        }
+        console.error("Code editor initialization failed", error);
+        if (!cancelled) setFailed(true);
       }
-    }
-
-    initEditor();
-
+    })();
     return () => {
       cancelled = true;
-      if (viewRef.current) {
-        viewRef.current.destroy();
-        viewRef.current = null;
+      if (createdView) {
+        statesRef.current.set(fileId, createdView.state);
+        if (viewRef.current === createdView) viewRef.current = null;
+        createdView.destroy();
       }
     };
-  }, [file?.id, isReady, isDark]);
+    // Retain the editor and undo stack across ordinary content updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileId, language]);
 
-  if (!isReady) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="animate-spin w-6 h-6 border-2 border-[var(--app-accent)] border-t-transparent rounded-full" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    const view = viewRef.current;
+    if (view) view.dispatch({ effects: themeCompartmentRef.current.reconfigure(isDark ? oneDark : []) });
+  }, [isDark, fileId]);
 
-  if (!file) {
-    return (
-      <div
-        className="flex-1 flex items-center justify-center"
-        style={{ direction: "ltr" }}
-      >
-        <div className="text-center space-y-4 px-6 max-w-md">
-          <div className="text-6xl">📝</div>
-          <h3
-            className="text-xl font-bold"
-            style={{ color: "var(--app-text)" }}
-          >
-            Open a file to start editing
-          </h3>
-          <p className="text-sm" style={{ color: "var(--app-text-muted)" }}>
-            {isMobile
-              ? "Tap a file in the explorer"
-              : "Select a file from the explorer or create a new one"}
-          </p>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const view = viewRef.current;
+    if (view && jump?.fileId === fileId) {
+      const line = view.state.doc.line(Math.min(Math.max(1,jump.line),view.state.doc.lines));
+      view.dispatch({selection:{anchor:line.from}, scrollIntoView:true});
+      view.focus();
+    }
+  }, [jump?.token, fileId]);
+
+  useEffect(() => {
+    const onFind = () => {if (viewRef.current) {openSearchPanel(viewRef.current); viewRef.current.focus();}};
+    window.addEventListener("qf-code-find", onFind);
+    return () => window.removeEventListener("qf-code-find", onFind);
+  }, []);
+
+  if (!file) return (
+    <div className="qf-editor-welcome" dir={locale === "fa" ? "rtl" : "ltr"}>
+      <Code2 size={42} strokeWidth={1.2}/>
+      <h3>{locale === "fa" ? "یک فایل باز کنید یا فایل جدید بسازید" : "Open or create a file to get started"}</h3>
+      <p>{locale === "fa" ? "Ctrl+P برای باز کردن سریع فایل · Ctrl+Shift+F برای جستجو" : "Ctrl+P quick open · Ctrl+Shift+F workspace search"}</p>
+      <p>{locale === "fa" ? "فایل‌ها روی دستگاه شما ویرایش می‌شوند؛ اجرای کد یا ترمینال ارائه نمی‌شود." : "Edit files locally. Code execution and a terminal are not included."}</p>
+    </div>
+  );
 
   return (
-    <div
-      ref={editorRef}
-      className="flex-1 overflow-hidden"
-      style={{ direction: "ltr", minHeight: isMobile ? "300px" : "auto" }}
-      dir="ltr"
-    />
+    <div className="qf-editor-code-pane" dir="ltr">
+      <div ref={containerRef} className="qf-editor-codemirror" aria-label={file.name} />
+      {failed && <textarea aria-label={file.name} className="qf-editor-fallback" value={file.content}
+        onChange={(event) => onContentChange(file.id, event.target.value)} spellCheck={false} />}
+    </div>
   );
 }

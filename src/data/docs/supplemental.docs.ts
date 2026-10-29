@@ -1,7 +1,9 @@
+import { AI_TOOLS } from "../ai-tools";
 import type { RawDocItem } from "./docs.content";
 
 // Entries for tools added after the original documentation bundle.
 const entries: Array<Omit<RawDocItem, "title" | "description" | "features" | "category"> & { category: string; title: [string, string]; description: [string, string]; features: [string[], string[]] }> = [
+  ...Object.entries(AI_TOOLS).map(([id, data]) => ({ id, category: "ai", title: [data.fa[0], data.en[0]] as [string, string], description: [data.fa[1], data.en[1]] as [string, string], features: [[...data.features[0]], [...data.features[1]]] as [string[], string[]] })),
   { id: "image-to-pdf", category: "image", title: ["تبدیل تصویر به PDF", "Image to PDF"], description: ["چند تصویر را به یک فایل PDF مرتب و قابل دانلود تبدیل کنید.", "Turn multiple images into an ordered, downloadable PDF."], features: [["افزودن چند تصویر و تغییر ترتیب آن‌ها", "تنظیم اندازه و چیدمان صفحه", "تولید و دانلود PDF در مرورگر"], ["Add and reorder multiple images", "Configure page size and layout", "Create and download the PDF in-browser"]] },
   { id: "pdf-to-image", category: "pdf", title: ["تبدیل PDF به تصویر", "PDF to image"], description: ["صفحات PDF را به تصویر تبدیل کنید و هر صفحه را جداگانه دریافت کنید.", "Convert PDF pages to images and download pages individually."], features: [["پیش‌نمایش همهٔ صفحات", "انتخاب کیفیت و فرمت خروجی", "دانلود تصویرهای صفحات"], ["Preview every page", "Choose output quality and format", "Download page images"]] },
   { id: "image-stitcher", category: "image", title: ["چسباندن تصاویر", "Image stitcher"], description: ["چند تصویر را افقی یا عمودی در یک تصویر واحد کنار هم قرار دهید.", "Combine multiple images horizontally or vertically into one image."], features: [["چیدمان افقی و عمودی", "تغییر ترتیب تصاویر", "پیش‌نمایش و دانلود خروجی"], ["Horizontal and vertical layouts", "Reorder images", "Preview and download the result"]] },

@@ -1,5 +1,7 @@
 // components/tools/image/color-picker/ColorPickerTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessiblePreview, AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
@@ -288,8 +290,8 @@ export default function ColorPickerTool() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "palette.css";
-    a.click();
+    a.download = outputFilename("palette.css");
+    void saveFile(a.href, a.download);
     URL.revokeObjectURL(url);
   };
 

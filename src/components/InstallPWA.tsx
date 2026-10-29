@@ -16,7 +16,7 @@ export default function InstallPWA() {
   const theme = useThemeColors();
   const { locale } = useLanguage();
 
-  // 🔥 انتخاب محتوا بر اساس زبان
+  //  انتخاب محتوا بر اساس زبان
   const content = pwaContent[locale];
 
   const [supportsPWA, setSupportsPWA] = useState(false);
@@ -58,7 +58,7 @@ export default function InstallPWA() {
 
   if (!supportsPWA || !deferredPrompt) return null;
 
-  // 🔥 استفاده مستقیم از content
+  //  استفاده مستقیم از content
   const label = installing ? content.install.installing : content.install.cta;
   const helper = content.install.helper;
 

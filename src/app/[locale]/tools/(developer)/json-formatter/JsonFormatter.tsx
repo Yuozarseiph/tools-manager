@@ -16,7 +16,7 @@ export default function JsonFormatterClient() {
   const { locale } = useLanguage();
   const page = useJsonFormatterPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

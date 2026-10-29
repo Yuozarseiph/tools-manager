@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fileToAudioBuffer } from "@/utils/audio-actions";
@@ -188,7 +190,7 @@ export function useAudioWaveformEq() {
   );
   useEffect(() => void (bandsRef.current = bands), [bands]);
 
-  // ✅ Peaks cache داخل hook (UI state حذف شد)
+  //  Peaks cache داخل hook (UI state حذف شد)
   const peaksCacheRef = useRef<{
     key: string;
     cols: number;
@@ -509,7 +511,7 @@ export function useAudioWaveformEq() {
     [audioUrl, pause]
   );
 
-  // ✅ Peaks generator (cache + mix channels) => همیشه اگر buffer هست peaks می‌ده
+  //  Peaks generator (cache + mix channels) => همیشه اگر buffer هست peaks می‌ده
   const getPeaks = useCallback(
     (columns: number): Peaks | null => {
       if (!buffer) return null;
@@ -563,9 +565,9 @@ export function useAudioWaveformEq() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = name;
+    a.download = outputFilename(name);
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     a.remove();
     URL.revokeObjectURL(url);
   };

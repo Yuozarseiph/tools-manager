@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 Type مشترک برای SEO
+//  Type مشترک برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -55,19 +55,19 @@ export const imageToPdfContent = {
 
 export type ImageToPdfContent = typeof imageToPdfContent.fa;
 
-// 🔥 Hook برای استفاده در کامپوننت Client
+//  Hook برای استفاده در کامپوننت Client
 export function useImageToPdfContent() {
   const { locale } = useLanguage();
   return imageToPdfContent[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useImageToPdfPageContent() {
   const content = useImageToPdfContent();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (برای page.tsx)
+//  تابع برای دریافت SEO (برای page.tsx)
 export function getImageToPdfSeo(locale: "fa" | "en"): SeoContent {
   return imageToPdfContent[locale].seo;
 }

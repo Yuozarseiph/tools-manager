@@ -1,12 +1,13 @@
 // components/tools/pdf/pdf-merge/PdfMerger.tsx
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 import { FileUp, Trash2, FileText, Loader2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -34,6 +35,11 @@ export default function PdfMerger() {
   const [error, setError] = useState("");
 
   const workerRef = useRef<Worker | null>(null);
+  const cleanupJobRef = useRef<(() => void) | null>(null);
+
+  const createWorker = () => new Worker(
+    new URL("./pdf-merge.worker.ts", import.meta.url), { type: "module" }
+  );
 
   const totalBytes = useMemo(
     () => files.reduce((s, f) => s + f.size, 0),
@@ -42,14 +48,23 @@ export default function PdfMerger() {
   const totalMB = useMemo(() => totalBytes / 1024 / 1024, [totalBytes]);
 
   useEffect(() => {
-    // نکته: آدرس ایمپورت وب‌ورکر در Next.js/Webpack ممکن است نیاز به تنظیمات خاص داشته باشد.
-    // روش استاندارد Next.js (app router) معمولاً استفاده از new Worker(new URL(..., import.meta.url)) است.
-    workerRef.current = new Worker(
-      new URL("./pdf-merge.worker.ts", import.meta.url),
-      { type: "module" }
-    );
-    return () => workerRef.current?.terminate();
+    try { workerRef.current = createWorker(); }
+    catch { setError(content.ui.alerts.error); }
+    return () => {
+      cleanupJobRef.current?.();
+      workerRef.current?.terminate();
+      workerRef.current = null;
+    };
+    // Workers are owned by this component's lifetime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const restartWorker = () => {
+    workerRef.current?.terminate();
+    workerRef.current = null;
+    try { workerRef.current = createWorker(); }
+    catch { setError(content.ui.alerts.error); }
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
@@ -65,56 +80,66 @@ export default function PdfMerger() {
   };
 
   const handleCancel = () => {
-    workerRef.current?.terminate();
-    // بازسازی ورکر برای استفاده مجدد
-    workerRef.current = new Worker(
-      new URL("./pdf-merge.worker.ts", import.meta.url),
-      { type: "module" }
-    );
+    cleanupJobRef.current?.();
+    restartWorker();
     setIsProcessing(false);
     setProgress(null);
-    setError(content.ui.alerts.error); // یا پیام 'لغو شد'
+    setError(content.ui.alerts.cancelled);
   };
 
-  const handleMerge = async () => {
-    if (files.length < 2 || !workerRef.current) return;
-
+  const handleMerge = () => {
+    if (files.length < 2 || isProcessing) return;
+    if (!workerRef.current) {
+      try { workerRef.current = createWorker(); }
+      catch { setError(content.ui.alerts.error); return; }
+    }
     setIsProcessing(true);
     setError("");
     setProgress({ index: 0, total: files.length });
-
     const worker = workerRef.current;
-
-    const onMessage = (ev: MessageEvent<WorkerOut>) => {
-      const msg = ev.data;
-
-      if (msg.type === "progress") {
-        setProgress({ index: msg.index, total: msg.total });
-      }
-
-      if (msg.type === "done") {
-        download(
-          new Uint8Array(msg.buffer),
-          `merged-qodeforge-${Date.now()}.pdf`,
-          "application/pdf"
-        );
-        cleanup();
-      }
-
-      if (msg.type === "error") {
-        setError(msg.message || content.ui.alerts.error);
-        cleanup();
-      }
-    };
-
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let finished = false;
     const cleanup = () => {
-      worker.removeEventListener("message", onMessage as any);
+      if (finished) return;
+      finished = true;
+      if (timer !== null) clearTimeout(timer);
+      worker.removeEventListener("message", onMessage);
+      worker.removeEventListener("error", onWorkerError);
+      worker.removeEventListener("messageerror", onWorkerError);
+      cleanupJobRef.current = null;
+    };
+    const finish = (reason?: string, reset = false) => {
+      cleanup();
+      if (reset) restartWorker();
+      if (reason) setError(reason);
       setIsProcessing(false);
       setProgress(null);
     };
-
-    worker.addEventListener("message", onMessage as any);
-    worker.postMessage({ type: "merge", files });
+    const onWorkerError = (event: Event) => {
+      if (event.type === "error") event.preventDefault();
+      finish(content.ui.alerts.error, true);
+    };
+    const onMessage = (ev: MessageEvent<WorkerOut>) => {
+      const msg = ev.data;
+      if (msg.type === "progress") {
+        setProgress({ index: msg.index, total: msg.total });
+      } else if (msg.type === "done") {
+        try {
+          download(new Uint8Array(msg.buffer), outputFilename(`merged-qodeforge-${Date.now()}.pdf`), "application/pdf");
+          finish();
+        } catch { finish(content.ui.alerts.error, true); }
+      } else if (msg.type === "error") {
+        finish(msg.message || content.ui.alerts.error, true);
+      }
+    };
+    cleanupJobRef.current = cleanup;
+    worker.addEventListener("message", onMessage);
+    worker.addEventListener("error", onWorkerError);
+    worker.addEventListener("messageerror", onWorkerError);
+    // Avoid a permanent loading state on a stuck Worker.
+    timer = setTimeout(() => finish(content.ui.alerts.timeout, true), 300_000);
+    try { worker.postMessage({ type: "merge", files }); }
+    catch { finish(content.ui.alerts.error, true); }
   };
 
   const formatSize = (size: number) =>
@@ -230,7 +255,7 @@ export default function PdfMerger() {
             onClick={handleCancel}
             className="w-full py-3 rounded-xl font-bold text-sm border"
           >
-            Cancel
+            {content.ui.buttons.cancel}
           </button>
         )}
 

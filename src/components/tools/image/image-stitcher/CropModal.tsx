@@ -1,4 +1,5 @@
 "use client";
+import { AnimatedDialog } from "@/components/ui/PanelMotion";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessiblePreview } from "@/components/ui/AccessibleControls";
 
@@ -148,7 +149,7 @@ export default function CropModal({
   const handleStyle = "absolute w-3 h-3 bg-[var(--app-accent)] border border-white rounded-sm";
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Crop Modal" className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <AnimatedDialog role="dialog" aria-modal="true" aria-label="Crop Modal" className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div
         className={`w-full max-w-lg rounded-2xl border p-4 shadow-2xl ${theme.card} ${theme.border}`}
       >
@@ -238,6 +239,6 @@ export default function CropModal({
           </div>
         </div>
       </div>
-    </div>
+    </AnimatedDialog>
   );
 }

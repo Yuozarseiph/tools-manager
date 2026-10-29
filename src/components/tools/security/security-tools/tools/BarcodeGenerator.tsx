@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, useRef } from "react";
@@ -53,9 +55,9 @@ export default function BarcodeGenerator() {
   const downloadBarcode = () => {
     if (!canvasRef.current) return;
     const link = document.createElement("a");
-    link.download = `barcode-${Date.now()}.png`;
+    link.download = outputFilename(`barcode-${Date.now()}.png`);
     link.href = canvasRef.current.toDataURL();
-    link.click();
+    void saveFile(link.href, link.download);
   };
 
   return (

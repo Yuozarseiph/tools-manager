@@ -1,4 +1,5 @@
 import {
+  ArrowLeftRight,
   FileStack,
   Image as ImageIcon,
   Braces,
@@ -14,8 +15,6 @@ import {
   LucideIcon,
   ShieldCheck,
   FileCode,
-  MonitorSmartphone,
-  Globe,
   FileType,
   GitGraph,
   FileSpreadsheet,
@@ -44,18 +43,25 @@ export interface Tool {
     | "developer"
     | "security"
     | "utility"
-    | "system"
     | "excel"
     | "audio"
     | "powerpoint"
     | "calculator"
     | "graphics"
     | "banking"
-    | "game";
+    | "game"
+    | "ai";
   badgeKey?: string;
 }
 
 export const TOOLS: Tool[] = [
+  { id: "file-to-markdown", Icon: FileCode, href: "/tools/file-to-markdown", status: "active", category: "ai", badgeKey: "tools.items.file-to-markdown.badge" },
+  { id: "project-to-markdown", Icon: GitGraph, href: "/tools/project-to-markdown", status: "active", category: "ai", badgeKey: "tools.items.project-to-markdown.badge" },
+  { id: "text-cleaner", Icon: TextCursorInput, href: "/tools/text-cleaner", status: "active", category: "ai", badgeKey: "tools.items.text-cleaner.badge" },
+  { id: "text-chunker", Icon: FileStack, href: "/tools/text-chunker", status: "active", category: "ai", badgeKey: "tools.items.text-chunker.badge" },
+  { id: "chat-to-markdown", Icon: Braces, href: "/tools/chat-to-markdown", status: "active", category: "ai", badgeKey: "tools.items.chat-to-markdown.badge" },
+  { id: "text-diff", Icon: ArrowLeftRight, href: "/tools/text-diff", status: "active", category: "ai", badgeKey: "tools.items.text-diff.badge" },
+  { id: "sensitive-data-redactor", Icon: ShieldCheck, href: "/tools/sensitive-data-redactor", status: "active", category: "ai", badgeKey: "tools.items.sensitive-data-redactor.badge" },
   // ─── پرکاربردترین ابزارها برای عموم ───
   {
     id: "image-compressor",
@@ -344,24 +350,6 @@ export const TOOLS: Tool[] = [
     badgeKey: "tools.items.code-visualizer.badge",
   },
 
-  // ─── ابزارهای سیستمی ───
-  {
-    id: "ip-checker",
-    Icon: Globe,
-    href: "/tools/ip-checker",
-    status: "active",
-    category: "system",
-    badgeKey: "tools.items.ip-checker.badge",
-  },
-  {
-    id: "user-agent",
-    Icon: MonitorSmartphone,
-    href: "/tools/user-agent",
-    status: "active",
-    category: "system",
-    badgeKey: "tools.items.user-agent.badge",
-  },
-
   // ─── ابزارهای تخصصی ───
   {
     id: "audio-editor",
@@ -389,6 +377,14 @@ export const TOOLS: Tool[] = [
   },
 
   // ─── سرگرمی ───
+  {
+    id: "gerdali",
+    Icon: Gamepad,
+    href: "https://gerdali.qodeforge.ir/",
+    status: "active",
+    category: "game",
+    badgeKey: "tools.items.gerdali.badge",
+  },
   {
     id: "emerald-forge",
     Icon: Gamepad,

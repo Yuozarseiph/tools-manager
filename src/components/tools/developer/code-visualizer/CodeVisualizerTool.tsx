@@ -1,5 +1,7 @@
 // components/tools/developer/code-visualizer/CodeVisualizerTool.tsx
 "use client";
+import { AlertTriangle, ChartNoAxesCombined } from "lucide-react";
+
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
@@ -660,7 +662,7 @@ export default function CodeVisualizerTool() {
               <div role="alert" className="p-2 md:p-3 border-b bg-[var(--app-error-bg)] border-[var(--app-error-border)]">
                 <div className="flex items-center gap-2">
                   <div className="text-[var(--app-error-text)] text-xs">
-                    ⚠
+                    <AlertTriangle className="h-4 w-4" aria-hidden="true" />
                   </div>
                   <div className="text-xs md:text-sm text-[var(--app-error-text)] line-clamp-2">
                     {error.length > 80 ? `${error.substring(0, 77)}...` : error}
@@ -741,7 +743,7 @@ export default function CodeVisualizerTool() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center p-4">
                   <div className="text-3xl md:text-4xl mb-2 md:mb-4 opacity-100">
-                    📊
+                    <ChartNoAxesCombined className="mx-auto h-10 w-10" aria-hidden="true" />
                   </div>
                   <h3
                     className={`text-lg md:text-xl font-bold mb-2 ${theme.text}`}

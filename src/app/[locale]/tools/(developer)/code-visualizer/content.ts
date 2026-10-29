@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 Type مشترک برای SEO
+//  Type مشترک برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -55,19 +55,19 @@ export const codeVisualizerContent = {
 
 export type CodeVisualizerContent = typeof codeVisualizerContent.fa;
 
-// 🔥 Hook برای استفاده در کامپوننت Client
+//  Hook برای استفاده در کامپوننت Client
 export function useCodeVisualizerContent() {
   const { locale } = useLanguage();
   return codeVisualizerContent[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useCodeVisualizerPageContent() {
   const content = useCodeVisualizerContent();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (برای page.tsx)
+//  تابع برای دریافت SEO (برای page.tsx)
 export function getCodeVisualizerSeo(locale: "fa" | "en"): SeoContent {
   return codeVisualizerContent[locale].seo;
 }

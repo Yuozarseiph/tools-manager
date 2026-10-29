@@ -1,4 +1,6 @@
 "use client";
+import { usePanelPresence } from "@/hooks/usePanelPresence";
+
 
 import { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -70,12 +72,14 @@ function MobileSheet({
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted || !open) return null;
+  const presence = usePanelPresence(open);
+  if (!mounted || !presence.present) return null;
 
   return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-end bg-black/45"
       role="dialog"
+      {...presence.attributes}
       aria-modal="true"
       aria-label={title}
     >
@@ -219,7 +223,7 @@ export const LayoutControls = memo(function LayoutControls({
         />}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:hidden">
+      <div className={`grid ${mode === "all" ? "grid-cols-2" : "grid-cols-1"} gap-2 sm:hidden`}>
         {mode !== "pinned" && <MobileTrigger
           label={localeKey === "fa" ? "ابزارها" : "Tools"}
           value={selectedTool.label[localeKey]}
@@ -281,16 +285,22 @@ function Dropdown({
   locale,
 }: any) {
   const Icon = selected.icon;
-  const panelRef = useViewportMenu(open);
+  const presence = usePanelPresence(open);
+  const panelRef = useViewportMenu(presence.present);
 
   return (
-    <div className="relative">
+    <div className="relative" onKeyDown={(event) => {
+      if (event.key === "Escape" && open) {
+        onToggle();
+        event.currentTarget.querySelector("button")?.focus();
+      }
+    }}>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-haspopup="menu"
-        className={`flex min-h-12 items-center gap-2 rounded-[16px] border px-3.5 text-xs font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border} ${theme.text}`}
+        className={`ui-control flex min-h-12 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold ${theme.card} ${theme.text}`}
       >
         <Icon size={16} className={theme.accent} aria-hidden="true" />
         <span>{label}</span>
@@ -301,9 +311,10 @@ function Dropdown({
         />
       </button>
 
-      {open && (
+      {presence.present && (
         <div
           role="menu"
+          {...presence.attributes}
           ref={panelRef}
           className={`absolute end-0 top-full z-50 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-[20px] border p-2 shadow-xl bg-[var(--app-menu)] ${theme.border}`}
         >
@@ -341,7 +352,7 @@ function MobileTrigger({ label, value, icon: Icon, onClick, theme }: any) {
     <button
       type="button"
       onClick={onClick}
-      className={`flex min-h-12 items-center gap-2 rounded-[16px] border px-3 text-start focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${theme.card} ${theme.border}`}
+      className={`ui-control flex min-h-12 items-center gap-2 rounded-lg border px-3 text-start ${theme.card}`}
     >
       <Icon size={16} className={theme.accent} aria-hidden="true" />
       <div className="min-w-0 flex-1">

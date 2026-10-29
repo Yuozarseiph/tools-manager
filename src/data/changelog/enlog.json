@@ -1,5 +1,83 @@
 [
   {
+    "version": "27.0.0",
+    "date": "October 26, 2026",
+    "type": "update",
+    "status": "development",
+    "changes": [
+      {
+        "category": "note",
+        "items": [
+          "Version 27.0.0 is in development. This entry records source changes and targeted local checks; it does not announce a public release or final sign-off for every tool."
+        ]
+      },
+      {
+        "category": "added",
+        "items": [
+          "Added Gerdali to the tool catalogue with a link to the game website",
+          "Added an AI preparation category with seven tools: file to Markdown, project bundling, text cleanup, text chunking, chat to Markdown, text diff and sensitive-data redaction",
+          "Added Persian/English pages, specific guides, FAQs, Markdown versions, social images and SEO metadata for the new tools",
+          "Added filename selection when saving downloadable exports, preserving extensions, Unicode names and page numbering; pinned-tool backups retain their own export dialog",
+          "Redesigned the code editor as a VS Code-inspired workspace with activity bar, Explorer, multi-file tabs, breadcrumbs, status bar, and responsive layout.",
+          "Added Ctrl+P quick file navigation, Ctrl+Shift+F workspace content search and jump-to-line for search results.",
+          "Added Ctrl+S save, Ctrl+B explorer toggle, Ctrl+W tab close, and unsaved-change prompts."
+        ]
+      },
+      {
+        "category": "improved",
+        "items": [
+          "Redesigned category pages, guides, related tools and FAQs, with only one FAQ expanded per group",
+          "Added text Workers, input limits, stale-result protection and cancellation for supported operations",
+          "Moved local file-reading and resource-download status beside the relevant input/output controls, showing measurable progress, byte counts and transfer speed, with separate short inline processing messages",
+          "Made FFmpeg and Persian/English OCR resources available on demand from the same site with public-resource caching; improved background-removal progress reporting",
+          "Upgraded editable and visual HTML/Markdown-to-PPTX output with font, direction, quality, margin, color, author, numbering and notes settings; improved long text, merged tables, lists, code, links and images",
+          "Unified dropdowns, checkboxes, radios, sliders, file controls, color pickers and calendars with panel styling and keyboard support",
+          "Improved light/dark text and input-boundary contrast, restored visible keyboard focus and retained compact panels with a separate floating-header treatment",
+          "Localized date selection to the Persian calendar in Persian and Gregorian in English while preserving standard date values in stored data",
+          "Persisted explicit language choices and automatically redirected opposite-language routes to their counterpart, retaining query parameters and fragments and removing language suggestions",
+          "Fixed search icon spacing, replaced tool badges with category names, made category menu labels fully readable, standardized header control sizes and improved original logo visibility in both themes",
+          "Made category menus compact and mobile-friendly, renamed the category to AI and unified short, gentle open/close transitions for menus, dialogs, date pickers and disclosures, respecting reduced-motion preferences",
+          "Use Web Crypto for unbiased password generation, require each selected character class, and never fall back to insecure random generation.",
+          "Repair security QR camera scanning, playback readiness, frame cancellation, media-track cleanup, and unmount behavior.",
+          "Verify actual image output MIME and implement native static GIF/BMP encoders, preventing PNG fallback files labelled as GIF, BMP, or AVIF.",
+          "Align image resize download extensions with the encoded MIME; use PNG for unsupported Canvas output formats and handle encoding errors.",
+          "Correct Word-to-PDF pagination stride/page count, always restore render transforms, and restrict scripts in the conversion iframe.",
+          "Improve PDF merging worker errors, cancellation, timeouts, listener cleanup, and recovery after failure.",
+          "Clean up image stitcher object URLs on every exit and prevent stale preview URLs in image conversion.",
+          "Remove eval from the calculator; use explicit finite-safe arithmetic, correct subtraction, and reject division by zero.",
+          "Made CodeMirror 6 the primary editor, preserved per-file undo history while switching tabs and synchronized syntax theme with actual project light/dark settings.",
+          "Separated browser autosave from disk-backed file saving, protected against false saved status and accidental overwrites, and warned before unloading unsaved changes.",
+          "Improved nested-folder filtering, input validation, deletion safeguards, and corrected the inaccurate Monaco reference in editor page metadata.",
+          "Reworked code-editor fullscreen using the native browser Fullscreen API, with browser-managed Escape to exit, fullscreenchange state synchronization, and isolation from the site header.",
+          "Improved editor Explorer/tabs: resizable sidebar, clearer file names, compact initial folder expansion, indexed file tree rendering, and better keyboard interaction with project files.",
+          "Redesigned the header as a translucent floating surface with backdrop blur, edge spacing and readable light/dark and mobile layouts",
+          "Removed the filename field above tool pages and unified the save dialog for text, image, PDF, spreadsheet, code, audio and PowerPoint downloads; a download starts only after confirmation",
+          "Improved Persian typography and retained Latin digits in English UI, increased card readability, corrected arrow directions and refined mobile search, filters and card layouts",
+          "Completed keyboard file import and export controls, initial filename selection, Escape dismissal and focus restoration to the export control"
+        ]
+      },
+      {
+        "category": "fixed",
+        "items": [
+          "Unified Apache .htaccess generation for direct loads, refreshes, trailing slashes, HTML/Markdown, assets and legacy redirects",
+          "Replaced interface emoji with SVG icons and removed emoji from owned samples and documentation",
+          "Fixed QR Blob downloads, concurrent exports and preview-size restoration; corrected XLSX format/extensions when importing CSV",
+          "Preserved distinct page/image filenames in ZIP output and removed note/password console logging",
+          "Added regression checks for SEO, Apache routing, processing, output names, form controls, language preferences and calendars",
+          "Remove the unimplemented one-time note tool and its active panel/documentation references.",
+          "Remove the expense manager tool and its active panel references, preserving other banking calculators.",
+          "Record a technical change log, exact source paths, and available test results for version 27.0.0.",
+          "Merged all items from the mistakenly labeled release into 27.0.0 without losing any recorded changes.",
+          "Replaced the CSS-only pseudo-fullscreen that kept browser chrome visible; prevented unintended rename on Explorer double-click and added unsupported-fullscreen feedback.",
+          "Fixed off-center icons in the code editor (Explorer, Activity Bar, tabs and toolbar) and isolated compact icon-only controls from the site-wide 44px labeled-button minimum, without changing other panels.",
+          "Removed My system info, What is my IP and the empty System category from the catalogue, docs, guides, sitemap and routing configuration; the active catalogue now has 47 entries",
+          "Returned HTTP 404 for the retired tools and System category in static-export development mode and filtered retired IDs out of saved/imported pins",
+          "Aligned Persian/English documentation and Markdown guides with current saving and inline status behavior, recording the scope of completed checks and remaining validation limits; one guide per active catalogue entry and corrected documentation links"
+        ]
+      }
+    ]
+  },
+  {
     "version": "26.4.2",
     "date": "October 14, 2026",
     "type": "update",
@@ -426,7 +504,7 @@
         "items": [
           "Added Java language support to Code Visualizer tool with analysis of classes, interfaces, enums, annotations, methods, and control structures.",
           "Added dedicated icons for Java-specific types including package, import, annotation, and synchronized in the visualization graph.",
-          "Added Hijri (Islamic) calendar to Date Converter tool with support for 6 conversion modes: Shamsi↔Gregorian, Shamsi↔Hijri, Gregorian↔Hijri.",
+          "Added Hijri (Islamic) calendar to Date Converter tool with support for 6 conversion modes: Shamsi / Gregorian, Shamsi / Hijri, Gregorian / Hijri.",
           "Added pinning capability for tools on the homepage with localStorage persistence for quick access to frequently used tools.",
           "Added a dedicated pinned tools bar above the tools grid displaying icons and names of pinned tools.",
           "Added Export/Import system for pinned settings with three methods: JSON file download, text copy, and QR Code display for easy transfer between devices.",

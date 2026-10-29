@@ -1,5 +1,7 @@
 // src/components/tools/image/image-to-svg/image-to-svg.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessiblePreview } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
@@ -181,9 +183,9 @@ export default function ImageToSvgConverter() {
     if (!svgBlobUrl) return;
     const a = document.createElement("a");
     a.href = svgBlobUrl;
-    a.download = svgFileName;
+    a.download = outputFilename(svgFileName);
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     a.remove();
   };
 

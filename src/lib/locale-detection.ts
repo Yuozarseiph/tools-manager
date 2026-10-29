@@ -5,6 +5,17 @@ export const LOCALE_STORAGE_KEY = "qodeforge_locale";
 const isLocale = (value: string | null): value is Locale =>
   value === "fa" || value === "en";
 
+export function getSavedLocale(): Locale | null {
+  if (typeof window === "undefined") return null;
+  try {
+    for (const key of [LOCALE_STORAGE_KEY, "tm_locale"]) {
+      const value = window.localStorage.getItem(key);
+      if (isLocale(value)) return value;
+    }
+  } catch { /* An explicit route remains usable without browser storage. */ }
+  return null;
+}
+
 /**
  * Pick a language for a first visit without sending identifying data to a
  * third-party geo service. An explicit URL or saved choice always wins;
@@ -13,18 +24,11 @@ const isLocale = (value: string | null): value is Locale =>
 export function detectInitialLocale(): Locale {
   if (typeof window === "undefined") return "en";
 
+  const saved = getSavedLocale();
+  if (saved) return saved;
   const urlLocale = new URLSearchParams(window.location.search).get("lang");
   if (isLocale(urlLocale)) return urlLocale;
 
-  let savedLocale: string | null = null;
-  try {
-    savedLocale =
-      window.localStorage.getItem(LOCALE_STORAGE_KEY) ??
-      window.localStorage.getItem("tm_locale");
-  } catch {
-    // Storage can be disabled in private or embedded browser contexts.
-  }
-  if (isLocale(savedLocale)) return savedLocale;
 
   const browserLanguages = [
     navigator.language,

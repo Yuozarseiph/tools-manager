@@ -1,4 +1,5 @@
 "use client";
+import { AnimatedDialog } from "@/components/ui/PanelMotion";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
@@ -408,7 +409,7 @@ export default function ImageEditModal({
   const toolBtnClass = `${theme.border} ${theme.text} hover:opacity-75`;
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Image Edit Modal"
+    <AnimatedDialog role="dialog" aria-modal="true" aria-label="Image Edit Modal"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/70"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -697,6 +698,6 @@ export default function ImageEditModal({
           </div>
         </div>
       </div>
-    </div>
+    </AnimatedDialog>
   );
 }

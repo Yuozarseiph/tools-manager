@@ -120,7 +120,7 @@ export default function DateConverterTool() {
   const content: DateConverterToolContent = useDateConverterContent();
 
   const [conversion, setConversion] = useState<ConversionType>(
-    "shamsi-to-gregorian",
+    locale === "fa" ? "shamsi-to-gregorian" : "gregorian-to-shamsi",
   );
 
   const [day, setDay] = useState<string>("");

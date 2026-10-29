@@ -1,3 +1,4 @@
+import { FileCode2, CodeXml, Paintbrush, FileJson, FileText, Database, Terminal, Container } from "lucide-react";
 // components/tools/developer/code-editor/types.ts
 
 export interface VirtualFile {
@@ -19,29 +20,29 @@ export interface EditorTab {
 }
 
 export const SUPPORTED_LANGUAGES = {
-  javascript: { name: "JavaScript", ext: ".js", icon: "📜" },
-  typescript: { name: "TypeScript", ext: ".ts", icon: "📘" },
-  jsx: { name: "React JSX", ext: ".jsx", icon: "⚛️" },
-  tsx: { name: "React TSX", ext: ".tsx", icon: "⚛️" },
-  html: { name: "HTML", ext: ".html", icon: "🌐" },
-  css: { name: "CSS", ext: ".css", icon: "🎨" },
-  scss: { name: "SCSS", ext: ".scss", icon: "💅" },
-  json: { name: "JSON", ext: ".json", icon: "📋" },
-  markdown: { name: "Markdown", ext: ".md", icon: "📝" },
-  python: { name: "Python", ext: ".py", icon: "🐍" },
-  php: { name: "PHP", ext: ".php", icon: "🐘" },
-  java: { name: "Java", ext: ".java", icon: "☕" },
-  cpp: { name: "C++", ext: ".cpp", icon: "⚡" },
-  c: { name: "C", ext: ".c", icon: "⚡" },
-  csharp: { name: "C#", ext: ".cs", icon: "💻" },
-  go: { name: "Go", ext: ".go", icon: "🔵" },
-  rust: { name: "Rust", ext: ".rs", icon: "🦀" },
-  sql: { name: "SQL", ext: ".sql", icon: "🗄️" },
-  xml: { name: "XML", ext: ".xml", icon: "📰" },
-  yaml: { name: "YAML", ext: ".yml", icon: "📄" },
-  shell: { name: "Shell", ext: ".sh", icon: "🐚" },
-  dockerfile: { name: "Dockerfile", ext: ".dockerfile", icon: "🐳" },
-  plaintext: { name: "Plain Text", ext: ".txt", icon: "📃" },
+  javascript: { name: "JavaScript", ext: ".js", icon: FileCode2 },
+  typescript: { name: "TypeScript", ext: ".ts", icon: FileCode2 },
+  jsx: { name: "React JSX", ext: ".jsx", icon: CodeXml },
+  tsx: { name: "React TSX", ext: ".tsx", icon: CodeXml },
+  html: { name: "HTML", ext: ".html", icon: CodeXml },
+  css: { name: "CSS", ext: ".css", icon: Paintbrush },
+  scss: { name: "SCSS", ext: ".scss", icon: Paintbrush },
+  json: { name: "JSON", ext: ".json", icon: FileJson },
+  markdown: { name: "Markdown", ext: ".md", icon: FileText },
+  python: { name: "Python", ext: ".py", icon: FileCode2 },
+  php: { name: "PHP", ext: ".php", icon: FileCode2 },
+  java: { name: "Java", ext: ".java", icon: FileCode2 },
+  cpp: { name: "C++", ext: ".cpp", icon: FileCode2 },
+  c: { name: "C", ext: ".c", icon: FileCode2 },
+  csharp: { name: "C#", ext: ".cs", icon: FileCode2 },
+  go: { name: "Go", ext: ".go", icon: FileCode2 },
+  rust: { name: "Rust", ext: ".rs", icon: FileCode2 },
+  sql: { name: "SQL", ext: ".sql", icon: Database },
+  xml: { name: "XML", ext: ".xml", icon: CodeXml },
+  yaml: { name: "YAML", ext: ".yml", icon: FileJson },
+  shell: { name: "Shell", ext: ".sh", icon: Terminal },
+  dockerfile: { name: "Dockerfile", ext: ".dockerfile", icon: Container },
+  plaintext: { name: "Plain Text", ext: ".txt", icon: FileText },
 } as const;
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;

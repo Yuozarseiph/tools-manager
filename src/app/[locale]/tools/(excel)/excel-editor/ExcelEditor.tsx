@@ -16,7 +16,7 @@ export default function ExcelEditorClient() {
   const { locale } = useLanguage();
   const page = useExcelEditorPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

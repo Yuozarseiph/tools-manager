@@ -16,7 +16,7 @@ export default function ExcelViewerClient() {
   const { locale } = useLanguage();
   const { page, why } = useExcelViewerContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (
@@ -52,7 +52,7 @@ export default function ExcelViewerClient() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 w-full flex-1 mt-8">
         <ExcelViewerTool />
 
-        {/* 🔥 بخش "چرا" */}
+        {/*  بخش "چرا" */}
         <div
           className={`mt-12 max-w-3xl ${theme.textMuted} text-sm leading-7`}
         >

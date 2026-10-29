@@ -67,6 +67,7 @@ export default function Header() {
 
   const [moreOpen, setMoreOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
 
   const toggleLocale = () => setLocale(locale === "fa" ? "en" : "fa");
 
@@ -92,6 +93,18 @@ export default function Header() {
     setMoreOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!moreOpen) return;
+    const dismiss = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMoreOpen(false);
+        moreButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", dismiss);
+    return () => document.removeEventListener("keydown", dismiss);
+  }, [moreOpen]);
+
   const isActiveRoute = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
@@ -106,15 +119,15 @@ export default function Header() {
     `
       text-sm font-semibold
       inline-flex items-center gap-1.5
-      px-3.5 py-2
+      min-h-11 px-3 py-2
       rounded-full
-      border ${theme.border}
+      border border-transparent
       backdrop-blur-xl
       transition-all duration-200
       ${
-        pathname === path ? "text-[var(--app-accent)]" : theme.textMuted
+        pathname === path ? `${theme.accent} ${theme.secondary}` : theme.textMuted
       }
-      hover:scale-105 active:scale-95
+      hover:opacity-90
     `;
 
   return (
@@ -124,10 +137,10 @@ export default function Header() {
       ═══════════════════════════════════════ */}
       <header
         className={`
-          sticky top-0 z-50
+          site-header sticky top-0 z-50
         `}
       >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
+        <div className="mx-auto px-3 sm:px-5 h-16 sm:h-[68px] flex items-center justify-between gap-3">
           {/* Logo */}
           <Link
             href="/"
@@ -135,14 +148,14 @@ export default function Header() {
           >
             <Image
               src="/icons/qodeforge.png"
-              alt="QodeForge"
-              width={48}
-              height={48}
-              className="h-14 w-14 rounded-full bg-[var(--app-secondary-color)] p-1.5 object-contain shadow-md sm:h-16 sm:w-16"
+              alt=""
+              width={44}
+              height={44}
+              className="brand-logo h-11 w-11 rounded-lg p-1 object-contain"
               priority
             />
             <span
-              className={`hidden text-sm font-black sm:inline ${theme.text}`}
+              className={`text-sm font-bold ${theme.text}`}
             >
               {content.brand.nameMain}
               <span className={theme.accent}>{content.brand.nameAccent}</span>
@@ -150,14 +163,15 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-3 lg:gap-4">
+          <nav aria-label={locale === "fa" ? "ناوبری اصلی" : "Main navigation"} className="hidden lg:flex items-center gap-1">
             {desktopNavItems.map(({ href, icon: Icon, key }) => (
               <Link
                 key={href}
                 href={href}
                 className={desktopNavLinkClass(href)}
+                aria-current={isActiveRoute(href) ? "page" : undefined}
               >
-                <Icon size={16} />
+                <Icon size={16} aria-hidden="true" />
                 {content[key]}
               </Link>
             ))}
@@ -168,9 +182,9 @@ export default function Header() {
             <button aria-label={locale === "fa" ? "Switch to English" : "تغییر به فارسی"}
               onClick={toggleLocale}
               className={`
-                w-9 h-9 sm:w-10 sm:h-10
+                header-action ui-control
                 rounded-full text-xs font-bold
-                border ${theme.border}
+                border
                 ${theme.text}
                 backdrop-blur-sm
                 flex items-center justify-center
@@ -181,19 +195,17 @@ export default function Header() {
               {locale === "fa" ? "EN" : "فا"}
             </button>
 
-            <div className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full">
-              <ThemeSwitcher />
-            </div>
+            <ThemeSwitcher buttonClassName="header-action" />
 
             <a
               href="https://reymit.ir/yuozarseiph"
               target="_blank"
               rel="noopener noreferrer"
               className={`
-                hidden sm:inline-flex items-center gap-1.5
-                rounded-full border ${theme.border}
+                ui-control hidden sm:inline-flex min-h-11 items-center justify-center gap-1.5
+                rounded-lg border
                 backdrop-blur-sm
-                px-3 py-2 text-sm font-semibold
+                px-3 text-sm font-semibold
                 hover:scale-105 active:scale-95
                 transition-all duration-200
               `}
@@ -208,7 +220,7 @@ export default function Header() {
       {/* ═══════════════════════════════════════
           Mobile Bottom Glass Tab Bar
       ═══════════════════════════════════════ */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+      <div role="navigation" aria-label={locale === "fa" ? "ناوبری موبایل" : "Mobile navigation"} className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
         {/* Overlay when more menu is open */}
         {moreOpen && (
           <div
@@ -224,24 +236,26 @@ export default function Header() {
         >
           {/* ── More Menu Popup ── */}
           <div
+            id="mobile-more-menu"
+            hidden={!moreOpen}
             className={`
-              absolute bottom-full right-4 mb-2
+              absolute bottom-full end-4 mb-2
               min-w-[180px] max-w-[calc(100vw-2rem)] bg-[var(--app-menu)]
               rounded-2xl
               border ${theme.border}
               backdrop-blur-sm backdrop-saturate-150
               shadow-xl shadow-black/10 dark:shadow-black/30
               overflow-hidden
-              transition-all duration-250 ease-out origin-bottom-right
+              transition-all duration-180 ease-[cubic-bezier(.2,.7,.2,1)] origin-bottom-right
               ${
                 moreOpen
                   ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                  : "opacity-0 scale-90 translate-y-2 pointer-events-none"
+                  : "opacity-0 translate-y-1 pointer-events-none"
               }
             `}
           >
             <div className="p-2 space-y-0.5">
-              {mobileMoreItems.map((item, index) => {
+              {mobileMoreItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = !item.external && isActiveRoute(item.href);
                 const isDonate = item.key === "donate";
@@ -259,12 +273,12 @@ export default function Header() {
                         isActive
                           ? "bg-[var(--app-secondary-bg)] text-[var(--app-accent)]"
                           : isDonate
-                            ? "text-red-500 hover:bg-red-500/10"
+                            ? "text-[var(--app-error-text)] hover:bg-[var(--app-error-bg)]"
                             : `${theme.text} hover:bg-black/5 dark:hover:bg-white/5`
                       }
                     `}
                     style={{
-                      transitionDelay: moreOpen ? `${index * 30}ms` : "0ms",
+                      transitionDelay: "0ms",
                     }}
                   >
                     <Icon
@@ -309,7 +323,7 @@ export default function Header() {
           {/* ── Main Tab Bar ── */}
           <div
             className={`
-              mx-10 mb-3
+              mobile-tab-bar mx-3 mb-3
               rounded-full
               border ${theme.border}
               backdrop-blur-sm
@@ -326,6 +340,7 @@ export default function Header() {
                   <Link
                     key={href}
                     href={href}
+                    aria-current={active ? "page" : undefined}
                     className={`
                       flex flex-col items-center justify-center
                       gap-0.5
@@ -337,7 +352,7 @@ export default function Header() {
                       ${
                         active
                           ? "text-[var(--app-accent)]"
-                          : `text-zinc-500 dark:text-zinc-400`
+                          : theme.textMuted
                       }
                     `}
                   >
@@ -358,7 +373,6 @@ export default function Header() {
                       className={`
                         text-xs leading-tight font-semibold
                         truncate max-w-full
-                        ${active ? "opacity-100" : "opacity-60"}
                       `}
                     >
                       {content[key]}
@@ -369,6 +383,10 @@ export default function Header() {
 
               {/* دکمه بیشتر */}
               <button
+                ref={moreButtonRef}
+                type="button"
+                aria-expanded={moreOpen}
+                aria-controls="mobile-more-menu"
                 onClick={() => setMoreOpen((prev) => !prev)}
                 className={`
                   flex flex-col items-center justify-center
@@ -381,7 +399,7 @@ export default function Header() {
                   ${
                     moreOpen || isMoreActive
                       ? "text-[var(--app-accent)]"
-                      : "text-zinc-500 dark:text-zinc-400"
+                      : theme.textMuted
                   }
                 `}
               >
@@ -409,7 +427,6 @@ export default function Header() {
                   className={`
                     text-xs leading-tight font-semibold
                     truncate max-w-full
-                    ${moreOpen || isMoreActive ? "opacity-100" : "opacity-60"}
                   `}
                 >
                   {locale === "fa" ? "بیشتر" : "More"}
@@ -420,8 +437,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Home's mobile hero extends behind the header; footer provides tab-bar clearance. */}
-      <div className={`${pathname === "/" ? "hidden sm:block" : ""} md:hidden h-[72px]`} />
     </>
   );
 }

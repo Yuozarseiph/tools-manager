@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { generateSecurePassword } from "@/lib/secure-password";
 import {
   usePasswordGeneratorContent,
   type PasswordGeneratorToolContent,
@@ -35,36 +36,21 @@ export default function PasswordGeneratorTool() {
     symbols: true,
   });
   const [copied, setCopied] = useState(false);
+  const [generateError, setGenerateError] = useState("");
 
   // Analyze State
   const [userPass, setUserPass] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  // Generator Logic
+  // Never fall back to Math.random for secrets.
   const generate = () => {
-    const sets = {
-      uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-      lowercase: "abcdefghijklmnopqrstuvwxyz",
-      numbers: "0123456789",
-      symbols: "!@#$%^&*()_+~`|}{[]:;?><,./-=",
-    };
-
-    let chars = "";
-    if (options.uppercase) chars += sets.uppercase;
-    if (options.lowercase) chars += sets.lowercase;
-    if (options.numbers) chars += sets.numbers;
-    if (options.symbols) chars += sets.symbols;
-
-    if (!chars) {
+    try {
+      setPassword(generateSecurePassword(length, options));
+      setGenerateError("");
+    } catch {
       setPassword("");
-      return;
+      setGenerateError(content.ui.generate.secureRandomUnavailable);
     }
-
-    let pass = "";
-    for (let i = 0; i < length; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setPassword(pass);
     setCopied(false);
   };
 
@@ -159,9 +145,10 @@ export default function PasswordGeneratorTool() {
               <button aria-label={content.ui.generate.copyTitle}
                 onClick={() => {
                   if (!password) return;
-                  navigator.clipboard.writeText(password);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
+                  void navigator.clipboard.writeText(password).then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }).catch(() => { setCopied(false); });
                 }}
                 className={`p-3 rounded-xl text-white transition-all active:scale-95 ${
                   copied ? "bg-green-500" : theme.primary
@@ -182,6 +169,7 @@ export default function PasswordGeneratorTool() {
           </div>
 
           <div className="space-y-6">
+            {generateError && <p role="alert" className="text-sm text-[var(--app-error-text)]">{generateError}</p>}
             <div className="space-y-2">
               <div className="flex justify-between">
                 <label className="font-bold">

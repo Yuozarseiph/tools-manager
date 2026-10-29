@@ -1,4 +1,8 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { Image as LayerImage } from "lucide-react";
+
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
@@ -397,8 +401,8 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
     if (!canvasRef.current) return;
     const link = document.createElement("a");
     link.href = canvasRef.current.toDataURL("image/png");
-    link.download = "text-image.png";
-    link.click();
+    link.download = outputFilename("text-image.png");
+    void saveFile(link.href, link.download);
   };
 
   // مدیریت آبجکت‌ها
@@ -576,7 +580,7 @@ export default function TextTab({ imageUrl, hasImage }: TextTabProps) {
                 }`}
               >
                 <span className="truncate text-xs">
-                  {isTextObject(o) ? o.text || "(متن خالی)" : `🖼 ${o.name}`}
+                  {!isTextObject(o) && <LayerImage className="me-1 inline h-3 w-3" aria-hidden="true" />}{isTextObject(o) ? o.text || "(متن خالی)" : o.name}
                 </span>
                 <span className="text-xs opacity-70">
                   {Math.round(o.x)}, {Math.round(o.y)}

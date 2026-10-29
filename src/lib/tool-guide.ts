@@ -1,9 +1,11 @@
+import { AI_TOOLS, type AiToolId } from "@/data/ai-tools";
 import { TOOLS, type Tool } from "@/data/tools";
 import { toolsContent } from "@/data/tools.content";
 import docs from "@/data/docs/docs.content.json";
 import { supplementalDocs } from "@/data/docs/supplemental.docs";
 import type { Locale } from "./locale-detection";
 import constraints from "@/data/tool-constraints.json";
+import { hasNamedDownload, interfaceContent } from "@/data/docs/interface.content";
 
 type Doc = { id: string; title: string; description: string; features?: string[]; howItWorks?: string[] };
 export function toolInfo(tool: Tool, locale: Locale) {
@@ -15,15 +17,10 @@ export function toolInfo(tool: Tool, locale: Locale) {
 
 export function networkNote(tool: Tool, locale: Locale): string {
   const fa = locale === "fa";
-  if (tool.href.endsWith("/ip-checker")) return fa
-    ? "برای نمایش IP و موقعیت تقریبی، درخواست به سرویس‌های ipapi، ip-api، ipify و ipwhois ارسال می‌شود؛ این سرویس‌ها IP شما را دریافت می‌کنند."
-    : "IP and approximate location lookups send requests to ipapi, ip-api, ipify and ipwhois; these services receive your IP address.";
+  if (tool.category === "ai") return fa ? "فایل و متن فقط در مرورگر پردازش می‌شوند. هیچ درخواستی به مدل هوش مصنوعی ارسال نمی‌شود و ورودی در مرورگر ذخیره دائمی نمی‌شود. پیش‌نمایش منابع خارجی را بارگذاری نمی‌کند." : "Files and text are processed locally. No AI model receives input, and input is not saved persistently. Preview does not load external resources.";
   if (tool.href.endsWith("/code-editor")) return fa
     ? "فایل‌های ویرایشگر کد در Local Storage مرورگر ذخیره می‌شوند؛ برای حذف آن‌ها از امکانات پاک‌سازی ویرایشگر یا تنظیمات مرورگر استفاده کنید."
     : "The code editor saves its files in browser local storage. Clear them using the editor controls or browser settings.";
-  if (tool.category === "banking" || tool.href.endsWith("/bank")) return fa
-    ? "مدیریت هزینه‌ها تراکنش‌های واردشده را در Local Storage مرورگر نگه می‌دارد. این اطلاعات به سرور QodeForge ارسال نمی‌شوند."
-    : "The expense manager keeps entered transactions in browser local storage. They are not sent to a QodeForge server.";
   const remote = ["background-remover", "image-to-text", "audio-extractor"].includes(tool.href.split("/").pop()!);
   return fa
     ? `پردازش ورودی در مرورگر انجام می‌شود.${remote ? " بارگذاری اولیه مدل‌ها، بسته‌های زبان یا موتور پردازش به اینترنت نیاز دارد." : ""} ورود آدرس اینترنتی فایل، دریافت منابع خارجی یا نمایش محتوای دارای لینک خارجی ممکن است درخواست شبکه ایجاد کند.`
@@ -33,7 +30,10 @@ export function networkNote(tool: Tool, locale: Locale): string {
 export function guideData(tool: Tool, locale: Locale) {
   const fa = locale === "fa";
   const info = toolInfo(tool, locale);
-  const steps = fa ? [
+  const ai = AI_TOOLS[tool.id as AiToolId];
+  const workflow = interfaceContent[locale];
+  const hasDownload = hasNamedDownload(tool.href.split("/").pop()!);
+  const steps = ai ? [...ai.steps[fa ? 0 : 1]] : fa ? [
     `ورودی موردنیاز «${info.name}» را در بخش ابزار وارد یا انتخاب کنید.`,
     "تنظیمات موجود را متناسب با نتیجه دلخواه انتخاب کنید.",
     "نتیجه و پیام‌های ابزار را بررسی کنید و در صورت وجود گزینه خروجی، آن را ذخیره کنید.",
@@ -42,10 +42,11 @@ export function guideData(tool: Tool, locale: Locale) {
     "Choose the available settings for your intended result.",
     "Review the result and any messages, then save it if an export option is available.",
   ];
+  if (hasDownload) steps.push(workflow.saveStep);
   const input = (constraints as Record<string, { acceptedFormats: string[]; maxFiles?: number }>)[tool.href.split("/").pop()!];
   const formatNote = input?.acceptedFormats.length ? `${fa ? "فرمت‌های ورودی" : "Accepted input formats"}: ${input.acceptedFormats.join(", ")}. ` : "";
   const countNote = input?.maxFiles ? `${fa ? "حداکثر تعداد فایل در هر انتخاب" : "Maximum files per selection"}: ${input.maxFiles}. ` : "";
-  const limit = formatNote + countNote + (fa
+  const limit = ai ? ai.limit[fa ? 0 : 1] : formatNote + countNote + (fa
     ? "فرمت‌های پذیرفته‌شده و محدودیت‌های ورودی در کنترل‌های همین ابزار مشخص‌اند. ظرفیت فایل و سرعت پردازش به حافظه و توان دستگاه بستگی دارد؛ خروجی را پیش از استفاده بررسی کنید."
     : "Accepted formats and input constraints are shown in this tool's controls. File capacity and processing speed depend on device memory and performance; review the output before use.");
   const faq = fa ? [
@@ -61,6 +62,7 @@ export function guideData(tool: Tool, locale: Locale) {
     ["What if the result is unexpected?", "Check the input format and settings; try a smaller input for large files and report error details through the contact page."],
     ["What can this tool do?", info.doc?.features?.join("; ") || info.description],
   ];
+  if (hasDownload) faq.push([workflow.saveQuestion, workflow.saveAnswer], [workflow.activityQuestion, workflow.activityAnswer]);
   const related = TOOLS.filter(other => other.status === "active" && other.category === tool.category && other.id !== tool.id).slice(0, 3);
   return { ...info, steps, limit, faq, related };
 }

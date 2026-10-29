@@ -27,7 +27,7 @@ export const markdownContent = {
         title: "پیش‌نمایش Markdown"
       },
       demo: {
-        defaultMarkdown: "# خوش آمدید 👋\n\nاین یک نمونه متن **Markdown** است.\n\n- از لیست‌ها استفاده کنید\n- کد بنویسید: `const x = 1;`\n- تیترها، جدول‌ها و لینک‌ها را تست کنید.\n\n---\n\n[لینک نمونه](https://example.com)"
+        defaultMarkdown: "# خوش آمدید \n\nاین یک نمونه متن **Markdown** است.\n\n- از لیست‌ها استفاده کنید\n- کد بنویسید: `const x = 1;`\n- تیترها، جدول‌ها و لینک‌ها را تست کنید.\n\n---\n\n[لینک نمونه](https://example.com)"
       },
       page: {
         title: "ویرایشگر Markdown",
@@ -59,7 +59,7 @@ export const markdownContent = {
         title: "Markdown preview"
       },
       demo: {
-        defaultMarkdown: "# Welcome 👋\n\nThis is a sample **Markdown** document.\n\n- Use lists\n- Write code: `const x = 1;`\n- Try headings, tables and links.\n\n---\n\n[Sample link](https://example.com)"
+        defaultMarkdown: "# Welcome \n\nThis is a sample **Markdown** document.\n\n- Use lists\n- Write code: `const x = 1;`\n- Try headings, tables and links.\n\n---\n\n[Sample link](https://example.com)"
       },
       page: {
         title: "Markdown editor",

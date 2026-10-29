@@ -11,6 +11,7 @@ export type ChangelogEntry = {
   version: string;
   date: string;
   type: ChangelogType;
+  status?: "development";
   changes: {
     category: ChangelogCategory;
     items: string[];

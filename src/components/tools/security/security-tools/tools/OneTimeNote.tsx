@@ -1,4 +1,6 @@
 "use client";
+import { AlertTriangle } from "lucide-react";
+
 import { AccessibleTextarea, AccessibleSelect, AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
@@ -25,13 +27,6 @@ export default function OneTimeNote() {
     const link = `${window.location.origin}/note/${noteId}`;
 
     // در پروژه واقعی اینجا باید به سرور ارسال شود
-    console.log({
-      id: noteId,
-      content: noteContent,
-      expiresIn,
-      maxViews,
-      password,
-    });
 
     setNoteLink(link);
   };
@@ -189,7 +184,7 @@ export default function OneTimeNote() {
             className={`p-4 rounded-xl bg-[var(--app-warning-bg)] border border-[var(--app-warning-border)]`}
           >
             <p className={`text-sm ${theme.textMuted}`}>
-              ⚠️ این لینک پس از{" "}
+              <AlertTriangle className="me-2 inline h-4 w-4" aria-hidden="true" /> این لینک پس از{" "}
               {
                 content.oneTimeNote.expires[
                   expiresIn as keyof typeof content.oneTimeNote.expires

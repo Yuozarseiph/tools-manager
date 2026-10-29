@@ -178,7 +178,11 @@
     "acceptedFormats": [
       ".html",
       ".htm",
-      "text/html"
+      ".md",
+      ".markdown",
+      ".txt",
+      "text/html",
+      "text/markdown"
     ]
   },
   "exif-remover": {
@@ -193,12 +197,6 @@
     "acceptedFormats": []
   },
   "security-tools": {
-    "acceptedFormats": []
-  },
-  "ip-checker": {
-    "acceptedFormats": []
-  },
-  "user-agent": {
     "acceptedFormats": []
   },
   "date-converter": {

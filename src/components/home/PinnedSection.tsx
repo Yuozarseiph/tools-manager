@@ -151,7 +151,7 @@ export const PinnedSection = memo(function PinnedSection({
               <div className={`text-sm font-black ${theme.text}`}>
                 {uiText.noPinned}
               </div>
-              <div className={`mt-0.5 text-xs ${theme.textMuted}`}>
+              <div className={`mt-1 text-sm leading-6 ${theme.textMuted}`}>
                 {isFa
                   ? "ابزارهای پرکاربرد را پین کن تا سریع‌تر به آن‌ها برسی."
                   : "Pin frequently used tools for quicker access."}
@@ -159,7 +159,7 @@ export const PinnedSection = memo(function PinnedSection({
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             {layoutControls}
             <IconButton
               label={isFa ? "راهنمای پین‌ها" : "Pinned tools help"}
@@ -218,7 +218,7 @@ export const PinnedSection = memo(function PinnedSection({
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             {layoutControls}
             <IconButton
               label={isFa ? "راهنما" : "Help"}
@@ -299,10 +299,10 @@ function IconButton({
       title={label}
       aria-label={label}
       aria-pressed={active || undefined}
-      className={`flex h-10 w-10 items-center justify-center rounded-[14px] border transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-ring)] ${
+      className={`ui-control flex h-11 w-11 items-center justify-center rounded-lg border transition-colors ${
         active && danger
           ? "border-red-500 bg-red-500 text-white"
-          : `${theme.card} ${theme.border} ${theme.textMuted}`
+          : `${theme.card} ${theme.textMuted}`
       }`}
     >
       <Icon size={16} aria-hidden="true" />

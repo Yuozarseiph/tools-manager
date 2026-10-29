@@ -3,7 +3,7 @@
 export const footerContent = {
   fa: {
     text: "توسعه‌یافته توسط تیم XenonQode.",
-    year: "© {year} QodeForge.",
+    year: "(c) {year} QodeForge.",
     madeBy: "ساخته‌شده توسط تیم XenonQode.",
     links: {
       docs: "مستندات",
@@ -17,7 +17,7 @@ export const footerContent = {
 
   en: {
     text: "Developed by the XenonQode team.",
-    year: "© {year} QodeForge.",
+    year: "(c) {year} QodeForge.",
     madeBy: "Built by the XenonQode team.",
     links: {
       docs: "Docs",

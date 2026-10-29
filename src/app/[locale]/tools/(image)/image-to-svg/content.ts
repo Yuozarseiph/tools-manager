@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 Type مشترک برای SEO
+//  Type مشترک برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -55,19 +55,19 @@ export const imageToSvgContent = {
 
 export type ImageToSvgContent = typeof imageToSvgContent.fa;
 
-// 🔥 Hook برای استفاده در کامپوننت Client
+//  Hook برای استفاده در کامپوننت Client
 export function useImageToSvgContent() {
   const { locale } = useLanguage();
   return imageToSvgContent[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useImageToSvgPageContent() {
   const content = useImageToSvgContent();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (برای page.tsx)
+//  تابع برای دریافت SEO (برای page.tsx)
 export function getImageToSvgSeo(locale: "fa" | "en"): SeoContent {
   return imageToSvgContent[locale].seo;
 }

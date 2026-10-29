@@ -3,6 +3,8 @@ import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessibleSelect } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import { dateValue, formatPanelDate, parseDate } from "@/lib/panel-controls";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useBankToolsUIContent } from "../bank-tools.content";
 import {
@@ -31,6 +33,7 @@ interface Transaction {
 }
 
 export default function ExpenseManager() {
+  const { locale } = useLanguage();
   const theme = useThemeColors();
   const content = useBankToolsUIContent();
 
@@ -41,7 +44,7 @@ export default function ExpenseManager() {
     amount: "",
     category: "",
     description: "",
-    date: new Date().toISOString().split("T")[0],
+    date: dateValue(new Date()),
   });
 
   // Load from localStorage
@@ -56,7 +59,7 @@ export default function ExpenseManager() {
   }, [transactions]);
 
   const addTransaction = () => {
-    if (!formData.amount || !formData.category) return;
+    if (!formData.amount || !formData.category || !parseDate(formData.date)) return;
 
     const newTransaction: Transaction = {
       id: Date.now().toString(),
@@ -73,7 +76,7 @@ export default function ExpenseManager() {
       amount: "",
       category: "",
       description: "",
-      date: new Date().toISOString().split("T")[0],
+      date: dateValue(new Date()),
     });
     setShowForm(false);
   };
@@ -175,9 +178,10 @@ export default function ExpenseManager() {
           <div className="flex gap-2">
             <button
               onClick={() => setFormData({ ...formData, type: "income" })}
+              aria-pressed={formData.type === "income"}
               className={`flex-1 py-2 rounded-xl font-medium ${
                 formData.type === "income"
-                  ? "bg-[var(--app-success-text)] text-white"
+                  ? "border border-[var(--app-success-border)] bg-[var(--app-success-bg)] text-[var(--app-success-text)]"
                   : `${theme.secondary} ${theme.text}`
               }`}
             >
@@ -185,9 +189,10 @@ export default function ExpenseManager() {
             </button>
             <button
               onClick={() => setFormData({ ...formData, type: "expense" })}
+              aria-pressed={formData.type === "expense"}
               className={`flex-1 py-2 rounded-xl font-medium ${
                 formData.type === "expense"
-                  ? "bg-[var(--app-error-text)] text-white"
+                  ? "border border-[var(--app-error-border)] bg-[var(--app-error-bg)] text-[var(--app-error-text)]"
                   : `${theme.secondary} ${theme.text}`
               }`}
             >
@@ -234,6 +239,7 @@ export default function ExpenseManager() {
 
           <AccessibleInput
             type="date"
+            required
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
@@ -321,7 +327,7 @@ export default function ExpenseManager() {
                   <p className={`text-sm ${theme.textMuted}`}>
                     {t.description || "-"}
                   </p>
-                  <p className={`text-xs ${theme.textMuted}`}>{t.date}</p>
+                  <p className={`text-xs ${theme.textMuted}`}>{formatPanelDate(t.date, locale)}</p>
                 </div>
                 <AccessibleButton purpose="delete"
                   onClick={() => deleteTransaction(t.id)}

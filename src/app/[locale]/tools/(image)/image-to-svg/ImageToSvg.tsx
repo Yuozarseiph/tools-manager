@@ -16,7 +16,7 @@ export default function ImageToSvgClient() {
   const { locale } = useLanguage();
   const page = useImageToSvgPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

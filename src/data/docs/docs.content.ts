@@ -9,7 +9,6 @@ import {
   Image,
   FileText,
   ShieldCheck,
-  MonitorSmartphone,
   Wrench,
   Volume2,
   Presentation,
@@ -18,8 +17,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import rawDocs from "./docs.content.json";
-import { supplementalDocs } from "./supplemental.docs";
+import { getDocumentationEntries } from "./entries";
 
 type Lang = "fa" | "en";
 
@@ -38,22 +36,17 @@ export type RawDocItem = {
   };
 };
 
-const DOCS_RAW = rawDocs as {
-  fa: RawDocItem[];
-  en: RawDocItem[];
-};
-
 export interface DocSectionItem extends RawDocItem {
   icon: LucideIcon;
 }
 
 const CATEGORY_ICON: Record<string, LucideIcon> = {
+  ai: BookOpen,
   developer: Code2,
   excel: Table,
   image: Image,
   pdf: FileText,
   security: ShieldCheck,
-  system: MonitorSmartphone,
   utility: Wrench,
   audio: Volume2,
   presentation: Presentation,
@@ -68,7 +61,7 @@ export function useDocsContent(): DocSectionItem[] {
 
   return useMemo(
     () =>
-      [...DOCS_RAW[lang], ...supplementalDocs[lang]].map((doc) => ({
+      getDocumentationEntries(lang).map((doc) => ({
         ...doc,
         icon: CATEGORY_ICON[doc.category] ?? BookOpen,
       })),

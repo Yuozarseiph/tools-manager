@@ -16,7 +16,7 @@ export default function ImageEditorClient() {
   const { locale } = useLanguage();
   const page = useImageEditorPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

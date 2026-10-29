@@ -22,7 +22,7 @@ export const privacyContent = {
     noData: {
       files: {
         title: "هیچ فایلی ذخیره نمی‌شود",
-        body: "QodeForge فایل‌های انتخاب‌شده برای پردازش محلی را روی سرور خود ذخیره نمی‌کند. فایل‌ها تا زمان نیاز در حافظه مرورگر باقی می‌مانند؛ زمان آزادسازی حافظه را مرورگر تعیین می‌کند. فایل‌های ویرایشگر کد و تراکنش‌های مدیریت هزینه در Local Storage ذخیره می‌شوند و با پاک‌سازی داده‌های مرورگر قابل حذف‌اند.",
+        body: "QodeForge فایل‌های انتخاب‌شده برای پردازش محلی را روی سرور خود ذخیره نمی‌کند. فایل‌ها تا زمان نیاز در حافظه مرورگر باقی می‌مانند؛ زمان آزادسازی حافظه را مرورگر تعیین می‌کند. فایل‌های ویرایشگر کد در Local Storage ذخیره می‌شوند و با پاک‌سازی داده‌های مرورگر قابل حذف‌اند.",
       },
       account: {
         title: "هیچ حساب کاربری وجود ندارد",
@@ -42,7 +42,7 @@ export const privacyContent = {
         "کد برنامه برای ابزارهای محلی کوکی ردیابی تنظیم نمی‌کند. بررسی IP از سرویس‌های خارجی استفاده می‌کند؛ فرم تماس پیام و اطلاعات واردشده را از طریق EmailJS ارسال می‌کند. این سرویس‌ها سیاست حریم خصوصی خود را دارند.",
       localTitle: "استفاده محدود از Local Storage",
       localIntro:
-        "تنظیمات ظاهری، زبان، پین‌ها، فایل‌های ویرایشگر کد و تراکنش‌های مدیریت هزینه در مرورگر ذخیره می‌شوند:",
+        "تنظیمات ظاهری، زبان، پین‌ها، فایل‌های ویرایشگر کد در مرورگر ذخیره می‌شوند:",
       themeTitle: "انتخاب تم (Theme)",
       themeBody:
         "برای حفظ تجربه کاربری بهتر، تم، زبان و تنظیمات ابزارهای انتخابی شما در حافظه مرورگر ذخیره می‌شوند تا در مراجعه‌های بعدی همان تجربه نمایش داده شود. این داده‌ها اطلاعات شخصی نیستند و به هیچ سروری ارسال نمی‌شوند.",
@@ -90,7 +90,7 @@ export const privacyContent = {
     noData: {
       files: {
         title: "No files are stored",
-        body: "QodeForge does not store files selected for local processing on its server. Files remain in browser memory while needed; the browser controls memory cleanup. Code editor files and expense-manager transactions are saved in local storage and can be deleted by clearing browser data.",
+        body: "QodeForge does not store files selected for local processing on its server. Files remain in browser memory while needed; the browser controls memory cleanup. Code editor files are saved in local storage and can be deleted by clearing browser data.",
       },
       account: {
         title: "No user accounts",
@@ -110,7 +110,7 @@ export const privacyContent = {
         "The application code does not set tracking cookies for local tools. IP lookup uses external services; the contact form sends the entered message and contact details through EmailJS. Those services have their own privacy policies.",
       localTitle: "Limited use of local storage",
       localIntro:
-        "Appearance, language, pins, code editor files and expense-manager transactions are stored locally in the browser:",
+        "Appearance, language, pins, code editor files are stored locally in the browser:",
       themeTitle: "Theme selection",
       themeBody:
         "To provide a better experience, your selected theme, language and tool preferences are stored in the browser so the same experience is used next time. This is not personal data and is never sent to any server.",

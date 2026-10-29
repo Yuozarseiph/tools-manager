@@ -59,11 +59,11 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-4">
               <Image
-                src="/icons/txt-qodeforge.png"
+                src="/icons/qodeforge.png"
                 alt="QodeForge"
                 width={154}
                 height={154}
-                className="h-16 w-16 rounded-[20px] bg-[var(--app-secondary-color)] p-2 object-contain shadow-sm"
+                className="brand-logo h-16 w-16 rounded-lg p-1.5 object-contain"
               />
 
               <div>
@@ -207,7 +207,7 @@ export default function Footer() {
       </div>
 
       {/* Extra clearance for mobile bottom nav */}
-      <div className="h-20 md:hidden" />
+      <div className="h-24 lg:hidden" />
     </footer>
   );
 }

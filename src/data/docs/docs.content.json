@@ -17,7 +17,7 @@
         "پس‌زمینه تصویر با استفاده از مدل‌های هوش مصنوعی تشخیص و حذف می‌شود.",
         "خروجی به صورت PNG با پس‌زمینه شفاف تولید و برای دانلود آماده می‌شود."
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "exif-remover",
@@ -36,7 +36,7 @@
         "اطلاعات EXIF از تصویر خوانده و حذف می‌شود.",
         "خروجی به صورت تصویر جدید بدون EXIF تولید و برای دانلود آماده می‌شود."
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "base64",
@@ -52,7 +52,7 @@
         "متن ورودی به آرایه‌ای از بایت‌ها تبدیل می‌شود.",
         "از توابع داخلی btoa و atob مرورگر با یک لایه اصلاح‌کننده برای کاراکترهای یونیکد استفاده می‌شود."
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "json-formatter",
@@ -125,7 +125,7 @@
         "جستجوی آنی",
         "تاریخچه تغییرات (Undo)"
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "image-compressor",
@@ -144,7 +144,7 @@
         "سطح کیفیت خروجی با یک اسلایدر قابل تنظیم است و بر همین اساس، پارامترهای فشرده‌سازی اعمال می‌شوند.",
         "در انتها یک Blob تصویر جدید ساخته شده و با نام حاوی پسوند صحیح (متناسب با نوع واقعی تصویر) برای دانلود آماده می‌شود."
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "color-picker",
@@ -183,7 +183,7 @@
         "title": "نکات فنی Canvas و فرمت خروجی",
         "content": "برای تغییر اندازه، تصویر روی Canvas با فعال بودن imageSmoothingEnabled و imageSmoothingQuality=\"high\" رسم می‌شود تا در ابعاد جدید لبه‌ها نرم و شارپ باقی بمانند. فرمت و پسوند فایل خروجی بر اساس نوع واقعی تصویر (MIMEType) و یک مپ امن به پسوندهای رایج انتخاب می‌شود تا فایل خروجی در سیستم‌عامل و ابزارهای دیگر به‌درستی به عنوان تصویر شناخته شود."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "image-to-svg",
@@ -205,7 +205,7 @@
         "title": "نکات فنی و محدودیت‌ها",
         "content": "فرایند وکتورسازی کاملاً سمت کلاینت و با استفاده از Canvas API و کتابخانه ImageTracerJS انجام می‌شود. برای تصاویر با ابعاد یا حجم بسیار بالا، مصرف CPU و رم می‌تواند زیاد شود و ممکن است فرایند تبدیل چند ثانیه طول بکشد یا برای لحظاتی باعث فریز شدن مرورگر شود. برای بهترین کارایی، پیشنهاد می‌شود قبل از تبدیل، تصویر را تا حد امکان کوچک‌تر یا فشرده‌تر کنید و برای گرافیک‌هایی با کنتراست و جزئیات مناسب از این ابزار استفاده کنید."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "pdf-merge",
@@ -245,7 +245,7 @@
         "title": "نکات فنی و محدودیت‌ها",
         "content": "ابزار از کتابخانه pdf-lib برای خواندن و کپی صفحات PDF استفاده می‌کند. رندر داخل صفحه برای پیش‌نمایش از iframe با #page=... استفاده می‌شود که در برخی دستگاه‌ها به‌ویژه اندروید نیاز به باز کردن در تب جدید دارد. پردازش فایل‌های خیلی بزرگ ممکن است زمان‌بر بوده و مصرف رم/CPU را افزایش دهد."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "word-to-pdf",
@@ -257,7 +257,7 @@
         "حفظ جداول و تصاویر",
         "بدون نیاز به سرور"
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "password-generator",
@@ -283,32 +283,6 @@
         "پشتیبانی از SHA-256, SHA-512, MD5",
         "بررسی تغییر ناپذیری فایل",
         "سرعت بالا"
-      ]
-    },
-    {
-      "id": "ip-checker",
-      "title": "بررسی IP و موقعیت",
-      "category": "system",
-      "description": "نمایش آی‌پی عمومی، نام سرویس‌دهنده اینترنت (ISP) و موقعیت تقریبی سرور.",
-      "features": [
-        "پشتیبانی از IPv4 و IPv6",
-        "تشخیص پروکسی/VPN",
-        "نمایش روی نقشه"
-      ],
-      "technicalNote": {
-        "title": "API های خارجی",
-        "content": "برای دریافت اطلاعات IP از چندین API معتبر (مثل ipapi) به صورت همزمان استفاده می‌شود."
-      }
-    },
-    {
-      "id": "user-agent",
-      "title": "تحلیل User Agent",
-      "category": "system",
-      "description": "استخراج اطلاعات مرورگر، سیستم عامل و دستگاه از رشته User Agent.",
-      "features": [
-        "تشخیص نسخه دقیق مرورگر",
-        "تشخیص نوع دستگاه (موبایل/دسکتاپ)",
-        "بررسی موتور رندرینگ"
       ]
     },
     {
@@ -370,7 +344,7 @@
         "فایل صوتی با استفاده از Web Audio API به AudioBuffer تبدیل شده و بازه انتخابی بر اساس ثانیه‌های شروع و پایان از آن جدا می‌شود.",
         "روی داده‌های خام صوت، افکت‌های نرم‌کننده (Fade In / Fade Out) به صورت مستقیم اعمال شده و در نهایت خروجی به فرمت WAV در مرورگر ساخته می‌شود."
       ],
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "html-to-pptx",
@@ -378,25 +352,22 @@
       "category": "presentation",
       "description": "تبدیل ساختار اسلایدهای HTML به فایل پاورپوینت قابل ویرایش (PPTX) در مرورگر، با استفاده از پارسر HTML و کتابخانه PptxGenJS.",
       "features": [
-        "پیش‌نمایش زنده HTML در کنار دکمه تبدیل",
-        "پشتیبانی از چند اسلاید با استفاده از کلاس .slide",
-        "تشخیص خودکار تیترها، پاراگراف‌ها، لیست‌ها و جداول ساده",
-        "حفظ استایل‌های اصلی در حد فونت، رنگ، پس‌زمینه و چینش ساده متن",
-        "خروجی PPTX قابل ویرایش در PowerPoint و Google Slides",
-        "تبدیل کاملاً سمت کلاینت (بدون آپلود روی سرور)"
+        "ورودی HTML و Markdown با حفظ CSS سند",
+        "خروجی قابل‌ویرایش یا تصویری",
+        "صفحه‌بندی متن و جدول، حفظ راست‌به‌چپ و لینک‌ها",
+        "تنظیم حاشیه، کیفیت، فونت، پاورقی و شماره‌گذاری نهایی",
+        "کنترل دریافت تصاویر خارجی و گزارش منابع ناموفق"
       ],
       "howItWorks": [
-        "کاربر HTML مربوط به اسلایدها را در ادیتور وارد می‌کند یا از فایل .html بارگذاری می‌کند.",
-        "یک پارسر HTML، هر section با کلاس .slide را به عنوان یک اسلاید شناسایی کرده و تیترها (h1..h3)، پاراگراف‌ها، آیتم‌های لیست و جداول را استخراج می‌کند.",
-        "استایل‌های پایه هر المان (رنگ متن، سایز فونت، تراز، رنگ پس‌زمینه و نوع اسلاید مانند title-slide یا content-slide) به تنظیمات معادل در PptxGenJS مپ می‌شوند.",
-        "با استفاده از PptxGenJS، برای هر اسلاید متن‌ها، بولت‌پوینت‌ها و جداول در موقعیت مناسب روی اسلاید ساخته می‌شوند و در صورت کمبود فضا، متن به‌طور هوشمند بین اسلایدها تقسیم می‌شود.",
-        "در پایان، یک فایل .pptx استاندارد برای دانلود کاربر تولید می‌شود."
+        "فایل یا متن HTML/Markdown را وارد کنید.",
+        "نوع خروجی و تنظیمات را انتخاب کنید؛ دریافت تصاویر خارجی اختیاری است.",
+        "خروجی را بسازید و گزارش تعداد اسلاید و منابع ناموفق را بررسی کنید."
       ],
       "technicalNote": {
         "title": "نکات فنی و محدودیت‌ها",
         "content": "موتور تبدیل بر پایه کتابخانه PptxGenJS ساخته شده است و HTML را ابتدا به یک مدل میانی اسلاید (تیتر، متن، لیست، جدول) تبدیل می‌کند، سپس این مدل را به اسلایدهای پاورپوینت مپ می‌کند. استایل‌های پیچیده CSS (layoutهای چندستونه سنگین، positionهای تو در تو، انیمیشن و افکت‌های خاص) به‌طور کامل بازتولید نمی‌شوند و فقط رنگ، اندازه فونت، چینش و بک‌گراند ساده منتقل می‌شود. برای بهترین نتیجه، هر اسلاید باید یک کانتینر مستقل (مثلاً section.slide) با چیدمان ساده و جداول استاندارد باشد."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "audio-extractor",
@@ -423,7 +394,7 @@
         "title": "نکات فنی و محدودیت‌ها",
         "content": "این ابزار از FFmpeg.wasm استفاده می‌کند که یک پیاده‌سازی کامل WebAssembly از FFmpeg است. بارگذاری اولیه FFmpeg (حدود 30MB) ممکن است چند ثانیه طول بکشد. پردازش ویدیوهای بزرگ یا طولانی (بیش از 100MB یا 30 دقیقه) می‌تواند فشار قابل توجهی بر CPU و رم دستگاه وارد کند و ممکن است مرورگر برای چند دقیقه کُند شود یا موقتاً فریز شود. برای بهترین عملکرد، پیشنهاد می‌شود از ویدیوهای کوتاه‌تر یا با کیفیت متوسط استفاده کنید. در صورت بروز خطا یا فریز طولانی، صفحه را رفرش کنید و با فایل کوچک‌تر امتحان کنید. همچنین توصیه می‌شود سایر برنامه‌های سنگین را در طول پردازش ببندید."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     },
     {
       "id": "image-editor",
@@ -447,7 +418,7 @@
         "title": "نکات فنی و محدودیت‌ها",
         "content": "تمام افکت‌ها و تغییرات روی داده‌های پیکسلی Canvas اعمال می‌شوند؛ عملیات تکراری و سنگین روی تصاویر بسیار بزرگ می‌تواند باعث مصرف بیشتر CPU و RAM و کندی موقت مرورگر شود. برای کارایی بهتر، پیشنهاد می‌شود قبل از ویرایش سنگین، تصویر را فشرده‌تر یا کوچک‌تر کنید و خروجی را با فرمت مناسب (مثلاً JPG برای عکس و PNG برای گرافیک شفاف) دانلود کنید."
       },
-      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی، بارگذاری مدل‌ها و ابزار بررسی IP درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
+      "privacyNote": "ورودی‌های محلی در مرورگر پردازش می‌شوند. دریافت فایل از آدرس اینترنتی و بارگذاری مدل‌ها درخواست شبکه دارند؛ جزئیات ذخیره‌سازی و ارسال داده را در صفحه حریم خصوصی ببینید."
     }
   ],
   "en": [
@@ -468,7 +439,7 @@
         "The background is detected and removed using AI models.",
         "Output is generated as a PNG with transparent background and is ready for download."
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "exif-remover",
@@ -487,7 +458,7 @@
         "EXIF metadata is read and removed from the image.",
         "Output is generated as a new image without EXIF and is ready for download."
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "base64",
@@ -503,7 +474,7 @@
         "The input text is converted to an array of bytes.",
         "Browser built-in btoa/atob are used with an extra Unicode-safe layer for proper handling of non-ASCII characters."
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "json-formatter",
@@ -576,7 +547,7 @@
         "Instant search",
         "Undo history"
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "image-compressor",
@@ -595,7 +566,7 @@
         "The output quality is controlled with a slider, which directly affects the compression parameters.",
         "A new image Blob is then generated and downloaded with a correct file extension that matches the actual image type."
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "color-picker",
@@ -634,7 +605,7 @@
         "title": "Canvas rendering & output format",
         "content": "The tool enables imageSmoothingEnabled and sets imageSmoothingQuality to \"high\" when drawing onto the Canvas to keep edges smooth at the new size. The output MIME type and file extension are derived from the actual image type (MIMEType) and mapped to a known extension so the resulting file is correctly recognized as an image by the OS and other tools."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "image-to-svg",
@@ -656,7 +627,7 @@
         "title": "Technical details & limitations",
         "content": "Vectorization runs entirely in the browser using the Canvas API together with the ImageTracerJS raster-to-vector algorithm. For very large or high-resolution images, CPU and memory usage can be significant and the conversion may take several seconds or temporarily freeze the browser. For best performance and cleaner results, downscale or compress your image beforehand and use source images with good contrast and clear shapes."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "pdf-merge",
@@ -696,7 +667,7 @@
         "title": "Technical details & limitations",
         "content": "This tool uses pdf-lib to read and copy pages between PDF documents. Inline preview uses an iframe with page fragment identifiers; on some Android devices inline preview is limited and the file may be opened in a new tab instead. Very large PDFs may take noticeable time to process and increase CPU/RAM usage."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "word-to-pdf",
@@ -708,7 +679,7 @@
         "Preserves tables and images",
         "No server required"
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "password-generator",
@@ -734,32 +705,6 @@
         "Support for SHA-256, SHA-512 and MD5",
         "File integrity verification",
         "High performance"
-      ]
-    },
-    {
-      "id": "ip-checker",
-      "title": "IP & location checker",
-      "category": "system",
-      "description": "Show your public IP, ISP name and approximate server location.",
-      "features": [
-        "IPv4 and IPv6 support",
-        "Proxy/VPN detection",
-        "Map view"
-      ],
-      "technicalNote": {
-        "title": "External APIs",
-        "content": "Uses multiple trusted IP information APIs (such as ipapi) in parallel."
-      }
-    },
-    {
-      "id": "user-agent",
-      "title": "User-Agent analyzer",
-      "category": "system",
-      "description": "Extract browser, OS and device information from the User-Agent string.",
-      "features": [
-        "Detect exact browser version",
-        "Detect device type (mobile/desktop)",
-        "Inspect rendering engine"
       ]
     },
     {
@@ -821,7 +766,7 @@
         "The audio file is decoded into an AudioBuffer using the Web Audio API, and the selected range is cut out based on start and end times.",
         "Fade-in and fade-out effects are applied directly to the raw audio data, and the final output is encoded as WAV in the browser."
       ],
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "html-to-pptx",
@@ -829,25 +774,22 @@
       "category": "presentation",
       "description": "Convert structured HTML slides into fully editable PowerPoint (PPTX) files in the browser using an HTML parser and PptxGenJS.",
       "features": [
-        "Live HTML preview next to the export button",
-        "Multi-slide support using the .slide CSS class",
-        "Automatic detection of headings, paragraphs, lists and simple tables",
-        "Preserves core styles such as fonts, colors, backgrounds and basic text layout",
-        "Editable PPTX output compatible with PowerPoint and Google Slides",
-        "Client-side only conversion (no file is sent to any server)"
+        "HTML and Markdown input with document CSS",
+        "Editable or visual output",
+        "Text and table pagination, RTL and hyperlink support",
+        "Margins, quality, fonts, footers and final slide numbering",
+        "Control remote images and review unavailable resources"
       ],
       "howItWorks": [
-        "The user pastes slide HTML into the editor or uploads a .html file.",
-        "An HTML parser scans each section with the .slide class, building an internal slide model with headings (h1..h3), paragraphs, list items and simple tables.",
-        "Basic styles for each element (text color, font size, alignment, background color and logical slide type such as title-slide or content-slide) are mapped to the corresponding PptxGenJS text and table options.",
-        "Using PptxGenJS, the tool creates slides with text boxes, bullet lists and tables positioned within a fixed template; if there is not enough space, long text is automatically split across multiple slides.",
-        "Finally, a standards-compliant .pptx file is generated in the browser for the user to download."
+        "Select a file or paste HTML/Markdown.",
+        "Choose the output mode and settings; remote images are optional.",
+        "Export and review final slide count and unavailable resources."
       ],
       "technicalNote": {
         "title": "Technical details & limitations",
         "content": "The converter is built on top of PptxGenJS: HTML is first transformed into an intermediate slide model (title, body text, lists, tables) and then rendered programmatically as PowerPoint slides. Complex CSS layouts (heavy multi-column flex/grid, deeply nested positioning, animations and advanced visual effects) are not faithfully reproduced; only essential style information such as font size, colors, alignment and simple backgrounds is carried over. For best results, design each slide as a simple container (e.g. section.slide) with straightforward layout and regular HTML tables."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "audio-extractor",
@@ -874,7 +816,7 @@
         "title": "Technical details & limitations",
         "content": "This tool uses FFmpeg.wasm, which is a full WebAssembly port of FFmpeg. The initial FFmpeg load (around 30MB) may take a few seconds. Processing large or long videos (over 100MB or 30 minutes) can put significant strain on your device's CPU and RAM, and the browser may slow down or temporarily freeze for several minutes. For best performance, use shorter or medium-quality videos. If you encounter errors or prolonged freezing, refresh the page and try with a smaller file. It's also recommended to close other heavy applications during processing."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     },
     {
       "id": "image-editor",
@@ -898,7 +840,7 @@
         "title": "Technical details & limitations",
         "content": "All effects and transformations are applied to the Canvas pixel buffer; repeated heavy operations on very large images can consume significant CPU and memory and may temporarily slow down the browser. For best performance, downscale or compress large images before heavy editing and choose an appropriate output format (e.g. JPG for photos, PNG for graphics with transparency)."
       },
-      "privacyNote": "Local inputs are processed in your browser. File URL imports, model downloads and IP lookup make network requests. See the privacy page for storage and data-transfer details."
+      "privacyNote": "Local inputs are processed in your browser. File URL imports and model downloads make network requests. See the privacy page for storage and data-transfer details."
     }
   ]
 }

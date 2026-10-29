@@ -1,3 +1,5 @@
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import type { CellValue, ColumnType, DataRow } from "./types";
 
 function makeId() {
@@ -138,9 +140,9 @@ function downloadTextFile(name: string, text: string, mime: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = name;
+  a.download = outputFilename(name);
   document.body.appendChild(a);
-  a.click();
+  void saveFile(a.href, a.download);
   a.remove();
   URL.revokeObjectURL(url);
 }

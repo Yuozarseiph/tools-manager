@@ -1,5 +1,7 @@
 // components/tools/excel/excel-viewer/ExcelViewerTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent, useRef } from "react";
@@ -22,7 +24,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useExcelViewerContent,
   type ExcelViewerToolContent,
-} from "./excel-viewer.content"; // ✅ مسیر نسبی
+} from "./excel-viewer.content"; //  مسیر نسبی
 
 type DataRow = { [key: string]: any };
 
@@ -113,9 +115,9 @@ export default function ExcelViewerTool() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${fileName.split(".")[0]}_${activeSheet}.json`;
+    link.download = outputFilename(`${fileName.split(".")[0]}_${activeSheet}.json`);
     document.body.appendChild(link);
-    link.click();
+    void saveFile(link.href, link.download);
     document.body.removeChild(link);
   };
 
@@ -141,9 +143,9 @@ export default function ExcelViewerTool() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${fileName.split(".")[0]}_${activeSheet}.csv`;
+    link.download = outputFilename(`${fileName.split(".")[0]}_${activeSheet}.csv`);
     document.body.appendChild(link);
-    link.click();
+    void saveFile(link.href, link.download);
     document.body.removeChild(link);
   };
 

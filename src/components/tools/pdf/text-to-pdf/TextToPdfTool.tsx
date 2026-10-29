@@ -1,5 +1,6 @@
 // components/tools/pdf/text-to-pdf/TextToPdfTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
 import { AccessibleSelect, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
@@ -96,7 +97,7 @@ export default function TextToPdfTool() {
               ],
       };
 
-      pdfMake.createPdf(docDefinition as any).download("text-to-pdf.pdf");
+      pdfMake.createPdf(docDefinition as any).getBlob((blob: Blob) => { void saveFile(blob, "text-to-pdf.pdf"); });
     } catch (error) {
       console.error("PDF error:", error);
       alert(content.ui.alerts.error);

@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useRef, useState } from "react";
@@ -92,8 +94,8 @@ export default function RotateTab({ imageUrl, hasImage }: RotateTabProps) {
     if (!canvasRef.current) return;
     const link = document.createElement("a");
     link.href = canvasRef.current.toDataURL("image/png");
-    link.download = "rotated-image.png";
-    link.click();
+    link.download = outputFilename("rotated-image.png");
+    void saveFile(link.href, link.download);
   };
 
   const resetTransform = () => {

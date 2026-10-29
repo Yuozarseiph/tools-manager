@@ -58,7 +58,7 @@ export const audioExtractorContent = {
         error: "خطا در استخراج صدا"
       },
       warning: {
-        title: "⚠️ توجه مهم",
+        title: " توجه مهم",
         description: "پردازش ویدیوهای بزرگ ممکن است چند دقیقه طول بکشد و مرورگر شما موقتاً کُند شود. لطفاً صبر کنید و پنجره را نبندید."
       },
       processing: {
@@ -125,7 +125,7 @@ export const audioExtractorContent = {
         error: "Error extracting audio"
       },
       warning: {
-        title: "⚠️ Important Notice",
+        title: " Important Notice",
         description: "Processing large videos may take several minutes and your browser might temporarily slow down. Please be patient and don't close the window."
       },
       processing: {

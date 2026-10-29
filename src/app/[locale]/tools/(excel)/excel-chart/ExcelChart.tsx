@@ -16,7 +16,7 @@ export default function ExcelChartClient() {
   const { locale } = useLanguage();
   const page = useExcelChartPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

@@ -15,12 +15,12 @@ export const codeEditorContent = {
     page: {
       title: "ویرایشگر کد آنلاین (Code Editor)",
       description:
-        "ویرایشگر کد حرفه‌ای با Monaco Editor، پشتیبانی از HTML/CSS/JS/TS، پوشه‌بندی، AutoSave و ذخیره در مرورگر.",
+        "محیط برنامه‌نویسی شبیه VS Code با CodeMirror، تب‌های چندفایلی، جست‌وجوی پروژه، میانبرها، ذخیره خودکار محلی و امکان باز کردن پوشه در مرورگرهای سازگار.",
     },
     seo: {
       title: "ویرایشگر کد آنلاین | Code Editor | QodeForge",
       description:
-        "ویرایشگر کد آنلاین با Monaco Editor. پشتیبانی از HTML، CSS، JavaScript، TypeScript و Python. ذخیره خودکار، پوشه‌بندی، export و import پروژه.",
+        "ویرایشگر کد با CodeMirror، تب‌های چندفایلی، جست‌وجوی پروژه، دسترسی سریع Ctrl+P، هایلایت زبان‌های رایج، ذخیره محلی و خروجی فایل.",
       canonical: "https://qodeforge.ir/tools/code-editor",
       applicationCategory: "DeveloperApplication",
       inLanguage: "fa-IR",
@@ -30,12 +30,12 @@ export const codeEditorContent = {
     page: {
       title: "Online Code Editor",
       description:
-        "Professional code editor with Monaco Editor, HTML/CSS/JS/TS support, folder management, AutoSave and browser storage.",
+        "VS Code-inspired code workspace powered by CodeMirror, with multi-file tabs, project search, shortcuts, local autosave and browser-supported folder access.",
     },
     seo: {
       title: "Online Code Editor | QodeForge",
       description:
-        "Online code editor powered by Monaco Editor. Supports HTML, CSS, JavaScript, TypeScript and Python. Auto-save, folders, export and import projects.",
+        "CodeMirror-powered web editor with file tabs, project search, Ctrl+P quick open, syntax highlighting, local autosave, import and export.",
       canonical: "https://qodeforge.ir/tools/code-editor",
       applicationCategory: "DeveloperApplication",
       inLanguage: "en-US",

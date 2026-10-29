@@ -1,4 +1,5 @@
 "use client";
+import PanelDisclosure from "@/components/ui/PanelDisclosure";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useState } from "react";
@@ -305,11 +306,11 @@ export default function ChangelogPage() {
                           {content.versionLabel} {entry.version}
                         </span>
 
-                        {isLatest && (
+                        {(entry.status === "development" || entry.version === data.find(item => item.status !== "development")?.version) && (
                           <span
                             className={`rounded-full px-2.5 py-1 text-xs font-black ${theme.primary} text-white`}
                           >
-                            {content.currentLabel}
+                            {entry.status === "development" ? (isFa ? "در حال توسعه" : "In development") : content.currentLabel}
                           </span>
                         )}
 
@@ -341,9 +342,9 @@ export default function ChangelogPage() {
                   </button>
 
                   {(
-                    <div
+                    <PanelDisclosure
                       id={panelId}
-                      hidden={!isExpanded}
+                      open={isExpanded}
                       className={`border-t px-4 pb-5 pt-4 sm:px-5 sm:pb-6 ${theme.border}`}
                     >
                       <span className="sr-only">
@@ -404,7 +405,7 @@ export default function ChangelogPage() {
                           );
                         })}
                       </div>
-                    </div>
+                    </PanelDisclosure>
                   )}
                 </article>
               );

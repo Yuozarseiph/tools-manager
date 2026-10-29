@@ -1,12 +1,12 @@
 import { useLanguage } from "@/context/LanguageContext";
 
 export const DOC_CATEGORIES = [
+  "ai",
   "pdf",
   "image",
   "developer",
   "security",
   "utility",
-  "system",
   "excel",
   "audio",
   "presentation",
@@ -63,7 +63,7 @@ export const docsContent = {
     seo: {
       title: "مستندات QodeForge | راهنمای ابزارها",
       description:
-        "راهنمای ابزارهای QodeForge برای PDF، تصویر، توسعه، اکسل، امنیت، سیستم و ابزارهای کاربردی.",
+        "راهنمای ابزارهای فعال QodeForge برای PDF، تصویر، توسعه، اکسل و امنیت؛ همراه با روش ذخیرهٔ خروجی و پیگیری وضعیت فایل.",
       canonical: "https://qodeforge.ir/docs",
       ogTitle: "مستندات و راهنمای ابزارهای QodeForge",
       ogDescription:
@@ -76,7 +76,7 @@ export const docsContent = {
       hero: {
         title: "مستندات ابزارها",
         subtitle:
-          "راهنمای قابلیت‌ها، نحوه کار، محدودیت‌ها و حریم خصوصی ابزارهای QodeForge.",
+          "راهنمای ابزارهای فعال، ذخیرهٔ خروجی، وضعیت فایل و پردازش، محدودیت‌ها و حریم خصوصی.",
         badge: "به‌روزرسانی مداوم",
       },
       sidebar: {
@@ -96,12 +96,12 @@ export const docsContent = {
         contactCta: "تماس با ما",
       },
       categories: {
-        pdf: "PDF",
+        ai: "هوش مصنوعی",
+      pdf: "PDF",
         image: "تصویر",
         developer: "توسعه‌دهنده",
         security: "امنیت",
         utility: "ابزارهای کاربردی",
-        system: "سیستم",
         excel: "اکسل",
         audio: "صوت",
         presentation: "پاورپوینت",
@@ -121,7 +121,7 @@ export const docsContent = {
     seo: {
       title: "QodeForge docs | Tool guides",
       description:
-        "Browse QodeForge documentation for PDF, image, developer, Excel, security, system and utility tools.",
+        "Guides for active QodeForge PDF, image, developer, Excel and security tools, including saving exports and following file status.",
       canonical: "https://qodeforge.ir/docs",
       ogTitle: "QodeForge tool documentation",
       ogDescription:
@@ -134,7 +134,7 @@ export const docsContent = {
       hero: {
         title: "Tool documentation",
         subtitle:
-          "Capabilities, usage details, limitations and privacy information for QodeForge tools.",
+          "Active tool guides, saving exports, inline file and processing status, limitations and privacy information.",
         badge: "Continuously updated",
       },
       sidebar: {
@@ -154,12 +154,12 @@ export const docsContent = {
         contactCta: "Contact us",
       },
       categories: {
-        pdf: "PDF",
+        ai: "AI",
+      pdf: "PDF",
         image: "Image",
         developer: "Developer",
         security: "Security",
         utility: "Utility",
-        system: "System",
         excel: "Excel",
         audio: "Audio",
         presentation: "PowerPoint",

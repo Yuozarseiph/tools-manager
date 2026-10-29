@@ -196,12 +196,232 @@
   }
 
   /* جلوگیری از زوم خودکار هنگام فوکوس روی اینپوت‌ها در iOS */
-  input, textarea, select {
+  .qf-editor-workspace input, .qf-editor-workspace textarea, .qf-editor-workspace select {
     font-size: 16px !important;
   }
 
   /* حفظ فضای امن در گوشی‌های دارای ناچ */
   .cm-editor .cm-content {
     padding-bottom: env(safe-area-inset-bottom, 8px) !important;
+  }
+}
+/* QodeForge 27.0.0 developer workspace (scoped; does not affect other panels) */
+.qf-editor-workspace {
+  --qf-code-bg: var(--app-bg, #1e1e1e);
+  --qf-code-panel: var(--app-card, #252526);
+  --qf-code-border: var(--app-border, #343434);
+  --qf-code-text: var(--app-text, #e4e4e4);
+  --qf-code-muted: var(--app-text-muted, #969696);
+  --qf-code-accent: var(--app-accent, #327bd0);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: min(82vh, 950px);
+  min-height: 520px;
+  overflow: hidden;
+  isolation: isolate;
+  position: relative;
+  color: var(--qf-code-text);
+  background: var(--qf-code-bg);
+  border: 1px solid var(--qf-code-border);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgb(0 0 0 / 9%);
+  font-size: 13px;
+}
+.qf-editor-workspace button {cursor: pointer;}
+.qf-editor-workspace button:focus-visible,
+.qf-editor-workspace input:focus-visible {outline: 2px solid var(--qf-code-accent); outline-offset: -2px;}
+/* Only the browser-native fullscreen element fills the physical display. */
+.qf-editor-workspace:fullscreen,
+.qf-editor-workspace:-webkit-full-screen {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 0;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--qf-code-bg);
+}
+.qf-editor-workspace::backdrop {background: var(--qf-code-bg);}
+.qf-editor-notice {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;background:var(--qf-code-panel);border-top:1px solid var(--qf-code-border);color:var(--qf-code-text);font-size:12px;}
+.qf-editor-notice button {padding:3px;border-radius:5px;}
+.qf-editor-toolbar {flex: 0 0 44px;display: flex;align-items: center;justify-content: space-between;gap: 10px;padding: 0 12px;background: var(--qf-code-panel);border-bottom: 1px solid var(--qf-code-border);}
+.qf-editor-brand {display: flex;gap: 7px;align-items: center;white-space: nowrap;min-width: 0;}
+.qf-editor-brand-symbol {display: grid;place-items: center;color: var(--qf-code-accent);}
+.qf-editor-brand-label {font-size: 12px;letter-spacing: -.1px;}
+.qf-editor-brand-label strong {font-weight: 750;}
+.qf-editor-version {color: var(--qf-code-muted);font-size: 10px;padding: 3px 5px;border: 1px solid var(--qf-code-border);border-radius: 4px;}
+.qf-editor-command {display: flex;align-items: center;justify-content: space-between;gap: 10px;min-width: 170px;width: min(340px, 33%);border: 1px solid var(--qf-code-border);background: var(--qf-code-bg);border-radius: 6px;padding: 5px 8px;color: var(--qf-code-muted);font-size: 12px;}
+.qf-editor-command:hover {border-color: var(--qf-code-accent);}
+.qf-editor-command kbd {font-family: inherit;font-size: 10px;white-space: nowrap;border: 1px solid var(--qf-code-border);border-radius: 3px;padding: 1px 4px;}
+.qf-editor-toolbar-actions {display: flex;align-items: center;gap: 3px;}
+.qf-editor-toolbar-button {display: grid;place-items: center;width: 29px;height: 29px;border-radius: 5px;color: var(--qf-code-muted);}
+.qf-editor-toolbar-button:hover {background: var(--qf-code-bg);color: var(--qf-code-text);}
+.qf-editor-menu-anchor {position: relative;}
+.qf-editor-menu-backdrop {position: fixed;inset: 0;z-index: 21;cursor: default!important;}
+.qf-editor-menu {position: absolute;right: 0;top: 34px;z-index: 22;width: min(290px, calc(100vw - 40px));background: var(--qf-code-panel);border: 1px solid var(--qf-code-border);border-radius: 7px;padding: 6px;box-shadow: 0 18px 30px rgb(0 0 0 / 20%);}
+.qf-editor-menu > button {display: flex;align-items: center;gap: 10px;width: 100%;padding: 9px 10px;border-radius: 5px;text-align: start;color: var(--qf-code-text);font-size: 12px;}
+.qf-editor-menu > button:hover {background: var(--qf-code-bg);}
+.qf-editor-menu .qf-editor-destructive {color: var(--app-error-text, #dc5555);}
+.qf-editor-menu-divider {margin: 5px 2px;border-top: 1px solid var(--qf-code-border);}
+.qf-editor-menu-meta {color: var(--qf-code-muted);font-size: 11px;padding: 7px 10px 3px;}
+.qf-editor-reset-confirm {display: flex;align-items: center;gap: 5px;padding: 8px;font-size: 11px;}
+.qf-editor-reset-confirm span {flex: 1;}
+.qf-editor-reset-confirm button {padding: 5px;border-radius: 4px;}
+.qf-editor-body {display: flex;flex: 1;min-height: 0;position: relative;overflow: hidden;}
+.qf-editor-activity {flex: 0 0 45px;display: flex;flex-direction: column;align-items: stretch;gap: 6px;padding: 7px 0;border-right: 1px solid var(--qf-code-border);background: var(--qf-code-panel);}
+.qf-editor-activity > button {display: grid;place-items: center;min-height: 42px;color: var(--qf-code-muted);border-left: 2px solid transparent;}
+.qf-editor-activity > button:hover {color: var(--qf-code-text);}
+.qf-editor-activity > button.is-active {color: var(--qf-code-text);border-left-color: var(--qf-code-accent);}
+.qf-editor-activity > .qf-editor-activity-bottom {margin-top: auto;}
+.qf-editor-sidebar {flex: 0 0 0;width: 0;min-width: 0;min-height: 0;overflow: hidden;border-right: 0 solid var(--qf-code-border);background: var(--qf-code-panel);transition: flex-basis 150ms ease;}
+.qf-editor-sidebar.is-open {flex-basis: min(var(--qf-editor-sidebar-width, 304px), calc(100% - 190px));border-right-width: 0;}
+.qf-editor-splitter {flex:0 0 5px;cursor:col-resize;background:var(--qf-code-border);opacity:.65;touch-action:none;}
+.qf-editor-splitter:hover,.qf-editor-splitter:focus-visible {background:var(--qf-code-accent);opacity:1;outline:none;}
+.qf-editor-sidebar-heading {display: flex;justify-content: space-between;align-items: center;height: 35px;padding: 0 13px;font-size: 11px;font-weight: 650;letter-spacing: .4px;color: var(--qf-code-muted);border-bottom: 1px solid var(--qf-code-border);}
+.qf-editor-sidebar-heading button {padding: 4px;}
+.qf-editor-sidebar-content {height: calc(100% - 35px);overflow: hidden;}
+.qf-editor-sidebar-content > div {background: transparent!important;}
+.qf-editor-main {min-width: 0;flex: 1;display: flex;flex-direction: column;background: var(--qf-code-bg);}
+.qf-editor-title-strip {flex-shrink: 0;display: flex;min-height: 39px;border-bottom: 1px solid var(--qf-code-border);}
+.qf-editor-tabs {display: flex;flex: 1;min-width: 0;overflow-x: auto;scrollbar-width: thin;}
+.qf-editor-tab {display: flex;align-items: center;flex: 0 0 auto;max-width: 225px;border-right: 1px solid var(--qf-code-border);border-top: 2px solid transparent;color: var(--qf-code-muted);}
+.qf-editor-tab.is-active {background: var(--qf-code-panel);color: var(--qf-code-text);border-top-color: var(--qf-code-accent);}
+.qf-editor-tab-select {display: flex;align-items: center;gap: 7px;min-width: 0;max-width: 185px;padding: 8px 9px;text-align: left;white-space: nowrap;font-size: 12px;}
+.qf-editor-tab-select span.truncate {min-width: 0;}
+.qf-editor-dirty {width: 7px;height: 7px;border-radius: 50%;background: var(--qf-code-accent);flex: 0 0 7px;}
+.qf-editor-tab-close {display: grid;place-items: center;width: 24px;height: 26px;margin-right: 3px;border-radius: 4px;opacity: .5;}
+.qf-editor-tab:hover .qf-editor-tab-close, .qf-editor-tab.is-active .qf-editor-tab-close {opacity: 1;}
+.qf-editor-tab-close:hover {background: var(--qf-code-border);}
+.qf-editor-mobile-toggle {display: none;place-items: center;padding: 8px;color: var(--qf-code-muted);}
+.qf-editor-breadcrumbs {display: flex;align-items: center;gap: 7px;height: 29px;flex-shrink: 0;padding: 0 13px;color: var(--qf-code-muted);font-size: 11px;border-bottom: 1px solid var(--qf-code-border);white-space: nowrap;overflow: hidden;}
+.qf-editor-breadcrumbs span {overflow: hidden;text-overflow: ellipsis;}
+.qf-editor-code-pane {position: relative;flex: 1;min-height: 0;display: flex;}
+.qf-editor-codemirror {flex: 1;min-width: 0;overflow: hidden;}
+.qf-editor-code-pane .cm-editor {height: 100%;}
+.qf-editor-fallback {position: absolute;inset: 0;width: 100%;height: 100%;padding: 15px;background: var(--qf-code-bg);color: var(--qf-code-text);font: 13px/1.6 monospace;resize: none;}
+.qf-editor-welcome {flex: 1;display: flex;flex-direction: column;align-items: center;justify-content: center;text-align: center;gap: 13px;padding: 20px;color: var(--qf-code-muted);}
+.qf-editor-welcome h3 {font-weight: 650;font-size: 16px;color: var(--qf-code-text);}
+.qf-editor-welcome p {font-size: 12px;max-width: 430px;}
+.qf-editor-status {display: flex;flex: 0 0 26px;gap: 16px;align-items: center;padding: 0 12px;border-top: 1px solid var(--qf-code-border);background: var(--qf-code-panel);font-size: 10px;color: var(--qf-code-muted);white-space: nowrap;}
+.qf-editor-status > span {display: flex;align-items: center;gap: 5px;}
+.qf-editor-status-spacer {flex: 1;}
+.qf-editor-status-dot {display: inline-block;height: 6px;width: 6px;border-radius: 50%;background: var(--app-success-text, #38a36c);}
+.qf-editor-search-pane {height: 100%;display: flex;flex-direction: column;gap: 8px;padding: 12px 8px;}
+.qf-editor-search-pane label {font-size: 11px;font-weight: 600;color: var(--qf-code-muted);}
+.qf-editor-search-pane input {width: 100%;font-size: 12px;background: var(--qf-code-bg);border: 1px solid var(--qf-code-border);color: var(--qf-code-text);padding: 9px;border-radius: 5px;}
+.qf-editor-search-count {color: var(--qf-code-muted);font-size: 11px;padding: 0 4px;}
+.qf-editor-search-results {overflow: auto;flex: 1;display: flex;flex-direction: column;gap: 3px;}
+.qf-editor-search-results button {display: flex;flex-direction: column;align-items: stretch;text-align: left;gap: 5px;padding: 9px 7px;border-radius: 4px;min-width: 0;}
+.qf-editor-search-results button:hover {background: var(--qf-code-border);}
+.qf-editor-search-results strong {font-size: 11px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.qf-editor-search-results small {font-weight: 400;color: var(--qf-code-muted);}
+.qf-editor-search-results span {font-size: 11px;color: var(--qf-code-muted);overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.qf-editor-quick-overlay {position: fixed;inset: 0;z-index: 80;display: flex;align-items: flex-start;justify-content: center;padding: min(13vh, 110px) 16px 16px;background: rgb(0 0 0 / 50%);}
+.qf-editor-quick-dialog {width: min(560px, 100%);max-height: min(70vh, 620px);display: flex;flex-direction: column;border: 1px solid var(--qf-code-border);background: var(--qf-code-panel);border-radius: 8px;overflow: hidden;box-shadow: 0 20px 70px rgb(0 0 0 / 30%);}
+.qf-editor-quick-input {display: flex;align-items: center;gap: 10px;padding: 11px 13px;border-bottom: 1px solid var(--qf-code-border);color: var(--qf-code-muted);}
+.qf-editor-quick-input input {flex: 1;min-width: 0;border: 0;outline: none;background: transparent;color: var(--qf-code-text);font-size: 14px;}
+.qf-editor-quick-input button {padding: 4px;}
+.qf-editor-quick-results {overflow-y: auto;min-height: 65px;}
+.qf-editor-quick-results button {display: flex;align-items: center;gap: 10px;padding: 10px 13px;width: 100%;text-align: left;color: var(--qf-code-text);font-size: 12px;}
+.qf-editor-quick-results button span:nth-child(2) {flex: 1;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+.qf-editor-quick-results button span:last-child {font-size: 11px;color: var(--qf-code-muted);}
+.qf-editor-quick-results button.is-selected, .qf-editor-quick-results button:hover {background: var(--qf-code-bg);}
+.qf-editor-quick-footer {border-top: 1px solid var(--qf-code-border);padding: 8px 13px;color: var(--qf-code-muted);font-size: 11px;}
+.qf-editor-quick-empty {padding: 15px;text-align: center;color: var(--qf-code-muted);}
+.qf-editor-sidebar-scrim {display: none;}
+@media(max-width: 767px) {
+  .qf-editor-workspace {height: min(80dvh, 810px);min-height: 400px;}
+  .qf-editor-workspace:fullscreen {height:100dvh;min-height:0;}
+  .qf-editor-toolbar {padding: 0 8px;gap: 5px;}
+  .qf-editor-brand-label {font-size: 11px;}
+  .qf-editor-version, .qf-editor-command kbd {display: none;}
+  .qf-editor-command {width: auto;min-width: 0;flex: 1;max-width: 145px;}
+  .qf-editor-command span {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+  .qf-editor-activity {flex-basis: 40px;}
+  .qf-editor-sidebar.is-mobile {position: absolute;z-index: 9;inset: 0 auto 0 40px;width: min(304px, calc(100vw - 75px));flex-basis: auto;box-shadow: 6px 0 20px rgb(0 0 0 / 20%);}
+  .qf-editor-sidebar.is-mobile:not(.is-open) {display: none;}
+  .qf-editor-sidebar-scrim {display: block;position: absolute;inset: 0;z-index: 8;background: rgb(0 0 0 / 40%);}
+  .qf-editor-mobile-toggle {display: grid;}
+  .qf-editor-status {gap: 9px;padding: 0 7px;}
+  .qf-editor-welcome {gap: 9px;}
+}
+@media(prefers-reduced-motion: reduce) {.qf-editor-sidebar {transition: none;}}
+
+/* Workspace explorer: filenames get the available width; row tools float on hover. */
+.qf-editor-tree-scroll {scrollbar-width:thin;overscroll-behavior:contain;}
+.qf-editor-tree-row {position:relative;min-width:0;min-height:30px;padding:3px 8px 3px 0;white-space:nowrap;color:var(--qf-code-text);outline-offset:-2px;}
+.qf-editor-tree-name {min-width:0;text-align:left;direction:ltr;unicode-bidi:plaintext;}
+.qf-editor-tree-actions {position:absolute;right:2px;top:50%;transform:translateY(-50%);padding:3px 4px;background:var(--qf-code-panel);border:1px solid var(--qf-code-border);border-radius:4px;opacity:0;pointer-events:none;}
+.qf-editor-tree-row:hover .qf-editor-tree-actions,.qf-editor-tree-row:focus-within .qf-editor-tree-actions {opacity:1;pointer-events:auto;}
+.qf-editor-tree-actions button {padding:3px;}
+.qf-editor-sidebar .qf-editor-tree-scroll .qf-editor-tree-row:hover {background:var(--qf-code-border);}
+.qf-editor-tab-select {flex:1;}
+.qf-editor-tab-close {flex:0 0 24px;}
+.qf-editor-tabs {overscroll-behavior-x:contain;}
+@media(max-width:767px) {
+  .qf-editor-sidebar.is-mobile.is-open {flex-basis:auto;}
+  .qf-editor-toolbar-actions {gap:0;}
+  .qf-editor-toolbar-button {width:30px;}
+  .qf-editor-tree-actions {visibility:visible;opacity:1;pointer-events:auto;position:static;transform:none;border:0;background:transparent;}
+  .qf-editor-tree-name {max-width:100%;}
+}
+
+
+/* QodeForge 27.0.0: Center icon-only controls without changing site-wide button rules. */
+/* The site-wide button[aria-label] min 44px rule enlarges compact editor
+   controls; Explorer icon SVGs were left inline-start aligned. */
+.qf-editor-workspace .qf-editor-toolbar-button,
+.qf-editor-workspace .qf-editor-tab-close,
+.qf-editor-workspace .qf-editor-icon-button,
+.qf-editor-workspace .qf-editor-sidebar-heading > button,
+.qf-editor-workspace .qf-editor-mobile-toggle,
+.qf-editor-workspace .qf-editor-quick-input > button,
+.qf-editor-workspace .qf-editor-notice > button,
+.qf-editor-workspace .qf-editor-reset-confirm > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+.qf-editor-workspace .qf-editor-toolbar-button {
+  width: 34px; height: 34px; min-width: 34px; min-height: 34px; flex: 0 0 34px;
+}
+.qf-editor-workspace .qf-editor-tab-close {
+  width: 30px; height: 32px; min-width: 30px; min-height: 32px; flex: 0 0 30px;
+}
+.qf-editor-workspace .qf-editor-icon-button {
+  width: 32px; height: 32px; min-width: 32px; min-height: 32px; flex: 0 0 32px;
+}
+.qf-editor-workspace .qf-editor-tree-actions .qf-editor-icon-button {
+  width: 26px; height: 26px; min-width: 26px; min-height: 26px; flex: 0 0 26px;
+}
+.qf-editor-workspace .qf-editor-activity > button {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-width: 0; padding: 0; box-sizing: border-box;
+  border-left: 0;
+}
+.qf-editor-workspace .qf-editor-activity > button.is-active {
+  box-shadow: inset 2px 0 0 var(--qf-code-accent);
+}
+.qf-editor-workspace .qf-editor-sidebar-heading > button,
+.qf-editor-workspace .qf-editor-quick-input > button,
+.qf-editor-workspace .qf-editor-notice > button,
+.qf-editor-workspace .qf-editor-reset-confirm > button {
+  width: 32px; height: 32px; min-width: 32px; min-height: 32px; flex: 0 0 32px;
+}
+.qf-editor-workspace .qf-editor-mobile-toggle {
+  width: 38px; height: 38px; min-width: 38px; min-height: 38px; flex: 0 0 38px;
+}
+.qf-editor-workspace :is(.qf-editor-toolbar-button, .qf-editor-tab-close, .qf-editor-icon-button, .qf-editor-activity > button) > svg {
+  display: block; flex-shrink: 0;
+}
+@media (pointer: coarse) {
+  .qf-editor-workspace .qf-editor-tree-actions .qf-editor-icon-button {
+    width: 34px; height: 34px; min-width: 34px; min-height: 34px; flex-basis: 34px;
   }
 }

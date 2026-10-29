@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,6 +18,8 @@ import {
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
+import { startActivity } from "@/lib/transfer";
+import { prepareOcrResources } from "@/lib/ocr-resources";
 import { useImageToTextContent } from "./image-to-text.content";
 
 type OcrLanguage = "fa" | "en" | "faEn";
@@ -26,9 +30,9 @@ type OcrWorker = {
   recognize: (
     image: string | File | Blob | HTMLCanvasElement,
     options?: Record<string, unknown>,
-  ) => Promise<any>;
-  setParameters: (params: Record<string, string>) => Promise<any>;
-  terminate: () => Promise<any>;
+  ) => Promise<{ data: { text?: string; confidence?: number } }>;
+  setParameters: (params: Record<string, string>) => Promise<{ data: { text?: string; confidence?: number } }>;
+  terminate: () => Promise<{ data: { text?: string; confidence?: number } }>;
 };
 
 type OcrCandidate = {
@@ -678,6 +682,9 @@ export default function ImageToTextTool() {
   const inputRef = useRef<HTMLInputElement>(null);
   const workerRef = useRef<OcrWorker | null>(null);
   const runIdRef = useRef(0);
+  const resourceController = useRef<AbortController | null>(null);
+  const processTask = useRef<ReturnType<typeof startActivity> | null>(null);
+  useEffect(() => () => { resourceController.current?.abort(); processTask.current?.fail(new DOMException("Cancelled", "AbortError")); }, []);
 
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -716,6 +723,8 @@ export default function ImageToTextTool() {
   );
 
   const removeFile = useCallback(() => {
+    resourceController.current?.abort();
+    processTask.current?.fail(new DOMException("Cancelled", "AbortError"));
     runIdRef.current += 1;
     workerRef.current?.terminate().catch(() => undefined);
     workerRef.current = null;
@@ -753,6 +762,8 @@ export default function ImageToTextTool() {
   }, [setSelectedFile, t.clipboardDenied, t.noClipboardImage]);
 
   const cancel = useCallback(() => {
+    resourceController.current?.abort();
+    processTask.current?.fail(new DOMException("Cancelled", "AbortError"));
     runIdRef.current += 1;
     workerRef.current?.terminate().catch(() => undefined);
     workerRef.current = null;
@@ -772,6 +783,9 @@ export default function ImageToTextTool() {
     setProgress(0);
     setStatus(t.preparing);
 
+    resourceController.current = new AbortController();
+    processTask.current = startActivity("OCR", "process", undefined, cancel);
+    let resources: Awaited<ReturnType<typeof prepareOcrResources>> | null = null;
     let worker: OcrWorker | null = null;
     let prepared: PreparedVariant[] = [];
     const ownedCanvases: HTMLCanvasElement[] = [];
@@ -783,16 +797,16 @@ export default function ImageToTextTool() {
       prepared = await prepareOcrVariants(file, quality);
       if (runId !== runIdRef.current) return;
 
-      const langPath =
-        quality === "accurate"
-          ? "https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_best"
-          : undefined;
+      const langPath = `${window.location.origin}/runtime/ocr-v7/languages/${quality === "accurate" ? "accurate" : "balanced"}`;
 
+      resources = await prepareOcrResources(Array.isArray(OCR_LANG[language]) ? (OCR_LANG[language] as string[]).join("+") : OCR_LANG[language] as string, quality === "accurate", resourceController.current.signal);
+      if (runId !== runIdRef.current) return;
       worker = (await Tesseract.createWorker(
-        OCR_LANG[language] as any,
+        OCR_LANG[language],
         Tesseract.OEM.LSTM_ONLY,
         {
           ...(langPath ? { langPath } : {}),
+          workerPath: resources.workerPath, corePath: resources.corePath, cachePath: resources.cachePath,
           logger: (message: { status?: string; progress?: number }) => {
             if (runId !== runIdRef.current) return;
 
@@ -805,7 +819,7 @@ export default function ImageToTextTool() {
               setProgress((current) => Math.max(current, scaledProgress));
             }
 
-            if (message.status) setStatus(message.status);
+            if (message.status) { setStatus(message.status); processTask.current?.progress(message.progress ?? 0, 1, message.status); }
           },
         },
       )) as unknown as OcrWorker;
@@ -879,7 +893,7 @@ export default function ImageToTextTool() {
         await runTasks(normalTasks, 0.08, mode === "auto" ? 0.48 : 0.96);
       }
 
-      let currentBest = [...candidates].sort((a, b) => b.score - a.score)[0];
+      const currentBest = [...candidates].sort((a, b) => b.score - a.score)[0];
       const shouldRunStylized =
         mode === "stylized" ||
         (mode === "auto" && isWeakCandidate(currentBest, language));
@@ -895,14 +909,16 @@ export default function ImageToTextTool() {
       setText(final.text);
       setConfidence(final.text ? final.confidence : null);
       setProgress(1);
+      processTask.current?.finish();
       setStatus("");
       if (!final.text) setError(t.noText);
     } catch (err) {
       if (runId === runIdRef.current) {
         console.error("[image-to-text]", err);
-        setError(t.error);
+        setError(t.error); processTask.current?.fail(err);
       }
     } finally {
+      resources?.release();
       releaseCanvases([...prepared.map((variant) => variant.canvas), ...ownedCanvases]);
       if (worker) {
         await worker.terminate().catch(() => undefined);
@@ -922,6 +938,7 @@ export default function ImageToTextTool() {
     t.preparing,
     t.recognizingPass,
     t.stylizedFallback,
+    cancel,
   ]);
 
   const copyText = useCallback(async () => {
@@ -938,16 +955,18 @@ export default function ImageToTextTool() {
     const a = document.createElement("a");
     const base = file?.name.replace(/\.[^.]+$/, "") || "extracted-text";
     a.href = url;
-    a.download = `${base}.txt`;
+    a.download = outputFilename(`${base}.txt`);
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     a.remove();
     URL.revokeObjectURL(url);
   }, [file, text]);
 
   useEffect(() => {
     return () => {
-      runIdRef.current += 1;
+      resourceController.current?.abort();
+    processTask.current?.fail(new DOMException("Cancelled", "AbortError"));
+    runIdRef.current += 1;
       workerRef.current?.terminate().catch(() => undefined);
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };

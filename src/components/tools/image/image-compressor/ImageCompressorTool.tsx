@@ -1,5 +1,6 @@
 // components/tools/developer/image-compressor/ImageCompressorTool.tsx
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
@@ -8,7 +9,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 // @ts-ignore
 import imageCompression from "browser-image-compression";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 import {
   FileUp,
   Trash2,
@@ -23,7 +24,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useImageCompressorContent,
   type ImageCompressorToolContent,
-} from "./image-compressor.content"; // ✅ مسیر نسبی اصلاح شد
+} from "./image-compressor.content"; //  مسیر نسبی اصلاح شد
 
 export default function ImageCompressorTool() {
   const theme = useThemeColors();
@@ -71,7 +72,7 @@ export default function ImageCompressorTool() {
 
   const handleDownload = () => {
     if (compressedFile && file) {
-      download(compressedFile, `min-${file.name}`, compressedFile.type);
+      download(compressedFile, outputFilename(`min-${file.name}`), compressedFile.type);
     }
   };
 

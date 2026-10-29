@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+import { JSDOM } from 'jsdom';
+import ts from 'typescript';
+const dom=new JSDOM('<main><div data-activity-area="upload"><label><input type="file"></label></div><button id="export">Download</button></main>',{url:'http://localhost:3000/fa/tools/text-cleaner'});
+const timers=[], downloads=[];
+dom.window.HTMLAnchorElement.prototype.click=function(){downloads.push({name:this.download,url:this.href})};
+const shared={window:dom.window,document:dom.window.document,Element:dom.window.Element,HTMLElement:dom.window.HTMLElement,Blob,URL,fetch,crypto,Promise,Error,setTimeout:fn=>{timers.push(fn);return timers.length;}};
+function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{...shared,exports,require:name=>{assert(name in deps,`Unexpected dependency ${name}`);return deps[name];}});return exports;}
+const names=load('src/lib/output-name.ts'), origins=load('src/lib/activity-origin.ts');
+const service=load('src/lib/file-export.ts',{'./activity-origin':origins,'./output-name':names});
+origins.captureActivityOrigin(dom.window.document.querySelector('input'));
+assert.equal(origins.activityOrigin().element.getAttribute('data-activity-area'),'upload');
+const queued=service.saveFile(new Blob(['first']), 'first.md');
+let request;
+const release=service.onFileExport(item=>{request=item;});
+assert(request);assert.equal(request.origin.path,'/fa/tools/text-cleaner');
+request.resolve(false);assert.equal(await queued,false);assert.equal(downloads.length,0);
+let receive;
+service.onFileExport(item=>receive(item));
+release(); // A stale cleanup must not disconnect the replacement handler.
+const ready=new Promise(resolve=>{receive=resolve;});
+const url=URL.createObjectURL(new Blob(['سلام Markdown'],{type:'text/markdown'}));
+const saved=service.saveFile(url,'original.md');
+URL.revokeObjectURL(url); // Existing callers release their object URLs immediately.
+request=await ready;
+assert.equal(await request.blob.text(),'سلام Markdown');
+assert.equal(service.downloadExport(request,'گزارش نهایی.pdf'),'گزارش نهایی.md');
+request.resolve(true);assert.equal(await saved,true);assert.equal(downloads.length,1);
+assert.equal(downloads[0].name,'گزارش نهایی.md');assert.equal(await (await fetch(downloads[0].url)).text(),'سلام Markdown');
+assert.equal(dom.window.document.querySelectorAll('a[download]').length,0);
+timers.splice(0).forEach(fn=>fn());
+const bytesReady=new Promise(resolve=>{receive=resolve;});
+const bytes=service.saveFile(new Uint8Array([1,2,3]),'raw.bin','application/octet-stream');
+request=await bytesReady;assert.equal(request.blob.size,3);assert.equal(request.blob.type,'application/octet-stream');request.resolve(false);await bytes;
+const failedReady=new Promise(resolve=>{receive=resolve;});
+const failed=service.saveFile('blob:missing-file','missing.txt');
+request=await failedReady;assert(request.error);assert.equal(request.blob,undefined);request.resolve(false);await failed;
+dom.reconfigure({url:'http://localhost:3000/en/tools/json-formatter'});assert.equal(origins.activityOrigin().element,undefined);
+assert.equal(downloads.length,1);
+console.log('Export flow passed: queued requests, cancel without download, immediate URL revocation, preserved bytes, Persian naming/correct extension, binary data, failed files, handler cleanup and route-scoped origins.');

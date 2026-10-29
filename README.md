@@ -1,22 +1,25 @@
-Below is an English-only section you can drop into your README to document the new structure and how to add a tool from scratch.
+# QodeForge
+
+QodeForge is a bilingual collection of browser-based tools for files, images, documents, development and everyday tasks. See the current development documentation below for the latest interface and export behavior.
 
 ***
 ## License
 
-ToolsManager is proprietary software.  
+QodeForge is proprietary software.
+
 Personal, non-commercial use only.  
 Copying, commercial use, redistribution, and reuse of the code or UI design are strictly prohibited.  
 See the [LICENSE](./LICENSE) file for full terms.
 
-## 🧱 Architecture Overview
+##  Architecture Overview
 
-ToolsManager is built with the Next.js App Router (`app` directory) and uses a locale-aware route segment (`[locale]`) to support both Persian (RTL) and English (LTR) in a single codebase.[1][2]
+QodeForge is built with the Next.js App Router (`app` directory) and uses a locale-aware route segment (`[locale]`) to support both Persian (RTL) and English (LTR) in a single codebase.[1][2]
 Each tool has its own route under `/app/[locale]/tools/...` and a corresponding implementation in `src/components/tools`, plus a small i18n content JSON and hook to keep UI text separate from logic.[3]
 Most tools are pure client-side utilities implemented as Client Components (`"use client"`), so they can freely use React hooks and browser APIs while still being statically prerendered at build time.[4][5]
 
 ***
 
-## 📂 Project & Tool Structure
+##  Project & Tool Structure
 
 At a high level, the project is organized like this (simplified):
 
@@ -40,7 +43,7 @@ This separation lets you:
 
 ***
 
-## 🧩 Anatomy of a Single Tool Module
+##  Anatomy of a Single Tool Module
 
 A fully integrated tool usually consists of:
 
@@ -106,7 +109,7 @@ This pattern keeps the code for all tools consistent and makes them easy to main
 
 ***
 
-## 🧪 Step‑by‑Step: Adding a New Tool
+##  Step‑by‑Step: Adding a New Tool
 
 Imagine you want to add a new tool called **“CSV to JSON”** under the **Dev Tools** category. The steps are:
 
@@ -255,17 +258,17 @@ Imagine you want to add a new tool called **“CSV to JSON”** under the **Dev 
 
 6. **Run and test in dev & production:**  
    - `npm run dev` → test `/fa/tools/csv-to-json` and `/en/tools/csv-to-json`.  
-   - `npm run build && npm run start` → verify it still builds statically and behaves correctly.  
+   - `npm run build` → serve the exported `out/` over HTTP and verify locale routes and behavior; see [deployment instructions](docs/seo-and-accessibility.md).
 
 ***
 
-## 🌐 i18n, Theming, and Client Components
+##  i18n, Theming, and Client Components
 
 - **i18n:** The `[locale]` segment in the App Router combined with `LanguageContext` ensures every tool reads the current locale and picks the right branch from its `*.i18n.json` file.[2]
 - **Theming:** `useThemeColors()` returns Tailwind-compatible class names for background, text, border, primary/secondary, ensuring all tools look consistent in light and dark mode.  
 - **Client components:** Any interactive tool (`useState`, file uploads, drag-and-drop, audio/video, etc.) must start with `"use client"` so React hooks and browser APIs are available while Next.js still statically prerenders the entry page.[5][4]
 
-You can adapt the CSV example above to any new tool you add; just keep to this pattern (route → component → i18n JSON → content hook → optional registry entry) and the new tool will integrate cleanly with the rest of ToolsManager.
+You can adapt the CSV example above to any new tool you add; just keep to this pattern (route → component → i18n JSON → content hook → optional registry entry) and the new tool will integrate cleanly with the rest of QodeForge.
 
 [1](https://nextjs.org/docs/app)
 [2](https://next-intl.dev/docs/routing/setup)
@@ -289,9 +292,9 @@ You can adapt the CSV example above to any new tool you add; just keep to this p
 [20](https://www.reddit.com/r/nextjs/comments/1ezamqy/using_react_hooks_with_nextjs_is_really_confusing/)
 [21](https://dev.to/muhammad_usman_35b52e4f04/nextjs-14-app-router-building-modern-full-stack-applications-52ej)
 
-## ✅ Conventions & Guarantees
+##  Tool development conventions
 
-Every tool in ToolsManager guarantees:
+When adding or updating a tool, use:
 
 - A single route entry under `app/[locale]/tools`.
 - A dedicated UI module in `src/components/tools`.
@@ -300,7 +303,7 @@ Every tool in ToolsManager guarantees:
 - Consistent theming via `useThemeColors()`.
 - Locale resolution exclusively through `LanguageContext`.
 
-## 🚀 Future Expansion
+##  Future Expansion
 
 The current architecture is designed to support:
 
@@ -311,4 +314,16 @@ The current architecture is designed to support:
 - Auto-generated documentation
 - Admin dashboard for managing tools & content
 
-ToolsManager is not just a collection of utilities — it is a scalable, modular platform for building and shipping browser-first tools with long-term maintainability in mind.
+QodeForge is not just a collection of utilities — it is a scalable, modular platform for building and shipping browser-first tools with long-term maintainability in mind.
+
+## Current development documentation — 27.0.0
+
+Updated October 26, 2026. The active catalogue has 47 entries (45 internal tools and two external games); the IP lookup and system-info tools and the empty System category have been removed. The header is floating and translucent. Download filenames are chosen in the save dialog, and transfer/processing notices appear inline with the tool.
+
+- [Current interface and export workflow](docs/current-interface-and-exports.md)
+- [Shared controls and keyboard behavior](docs/panel-controls.md)
+- [AI tools and processing](docs/ai-tools-and-processing.md)
+- [SEO, locale routing and deployment checks](docs/seo-and-accessibility.md)
+- [Persian technical report](CHANGELOG-27.0.0-TECHNICAL.fa.md)
+
+The in-app documentation and both changelogs describe the same behavior. Version 27.0.0 remains in development; targeted local checks do not replace a successful production build or complete browser coverage.

@@ -45,11 +45,11 @@ export const THEMES: Record<ThemeName, ThemePalette> = {
     text: "text-[var(--app-text)]",
     textMuted: "text-[var(--app-text-muted)]",
     primary:
-      "bg-[var(--app-primary-bg)] hover:bg-[var(--app-primary-hover)] text-white shadow-[0_0_15px_var(--app-accent)]",
+      "bg-[var(--app-primary-bg)] hover:bg-[var(--app-primary-hover)] text-white",
     secondary: "bg-[var(--app-secondary-bg)] text-[var(--app-secondary-text)]",
     accent: "text-[var(--app-accent)]",
     border: "border-[var(--app-border)]",
-    ring: "focus:ring-[var(--app-ring)]",
+    ring: "focus:border-[var(--app-accent)]",
     gradient: "from-[var(--app-gradient-from)] to-[var(--app-gradient-to)]",
     note: {
       infoBg: "bg-[var(--app-secondary-bg)]",
@@ -80,11 +80,11 @@ export const THEMES: Record<ThemeName, ThemePalette> = {
     text: "text-[var(--app-text)]",
     textMuted: "text-[var(--app-text-muted)]",
     primary:
-      "bg-[var(--app-primary-bg)] hover:bg-[var(--app-primary-hover)] text-white shadow-[0_0_15px_var(--app-accent)]",
+      "bg-[var(--app-primary-bg)] hover:bg-[var(--app-primary-hover)] text-white",
     secondary: "bg-[var(--app-secondary-bg)] text-[var(--app-secondary-text)]",
     accent: "text-[var(--app-accent)]",
     border: "border-[var(--app-border)]",
-    ring: "focus:ring-[var(--app-ring)]",
+    ring: "focus:border-[var(--app-accent)]",
     gradient: "from-[var(--app-gradient-from)] to-[var(--app-gradient-to)]",
     note: {
       infoBg: "bg-[var(--app-secondary-bg)]",

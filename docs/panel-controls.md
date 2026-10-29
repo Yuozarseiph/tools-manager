@@ -1,0 +1,17 @@
+# Shared panel form controls
+
+The panel uses theme tokens for form surfaces, focus, selected/disabled/error states and light/dark contrast. Checkbox and radio inputs retain native semantics with custom SVG/CSS indicators; ranges retain native keyboard/touch interaction with custom tracks/thumbs. File buttons and number inputs use panel styling.
+
+`CustomDropdown` and `AccessibleSelect` share `PanelDropdown`. Native select adapters retain a visually hidden select for form serialization, refs, validation and React change events. The visible control and its options are custom elements; the browser's native option popup is not shown. All select controls in owned tool UI use this path.
+
+Dropdowns support search, disabled options, option groups, Arrow/Home/End/Page keys, type-ahead, Enter/Space, Escape and Tab. Options are placed in a viewport-positioned portal to avoid clipping by cards or tables, with a scrollable list and direction-aware positioning. Observers/listeners are active only while open.
+
+Color inputs use panel presets, editable HEX and RGB sliders. Date input uses a Persian calendar for Persian and Gregorian for English, min/max restrictions, day/week/month keyboard navigation and Today/Clear actions; the underlying ISO date format stays unchanged. Persian month transitions use Jalaali calendar boundaries, including Esfand leap days. The operating system's file chooser remains the normal file selection dialog.
+
+The 27.0.0 development UI uses shared light/dark text, input-boundary and primary-button contrast tokens. Panels retain compact 4–8 pixel corners; the floating glass header has an 18–20 pixel treatment and restrained shadow. Keyboard focus has a visible 3 pixel outline with input-border changes where appropriate. A saved explicit language choice redirects opposite-language routes to the matching page using history replacement, retaining query parameters and fragments; visitors without a saved choice can use either localized URL. Earlier 26.7 notes are consolidated into the development entry for 27.0.0. Output naming now appears only in the save dialog for prepared downloads; transfers stay beside their controls and processing uses short inline messages. See [Current interface and file exports](current-interface-and-exports.md).
+
+Use `AccessibleInput`, `AccessibleSelect` and `CustomDropdown` for new form controls. For an existing visible label, pass `hasVisibleLabel` and a specific `fieldLabel` or associate the label using its ID. Avoid adding visible native `<select>` elements.
+
+Validation: `npm run verify-panel-controls` exercises real React change events, keyboard selection, disabled options, refs, required validation/form data, color updates, leap-year dates and calendar navigation in JSDOM. Browser checks additionally cover Persian/English selectors, search, light/dark appearance and an exported PPTX retaining the chosen font, color and speaker notes. Mobile viewport placement uses responsive sizing; no separate physical-device claim is made.
+
+Layer motion uses usePanelPresence: 180 ms entry / 140 ms exit, opacity and 3–4 px translation only. Closing layers are inert and aria-hidden immediately, then removed; reopening cancels disposal. Native details use discrete content-visibility and intrinsic-size transitions where supported. Reduced-motion disables these effects. Image editing dialogs use AnimatePresence without adding layout wrappers. Category menus use two compact columns with 44 px touch rows and viewport-aware scrolling.

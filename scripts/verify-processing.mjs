@@ -1,0 +1,78 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
+import { createServer } from "node:http";
+import { JSDOM } from "jsdom";
+import ts from "typescript";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url), dom = new JSDOM(""), events = new EventTarget();
+const shared = { window: events, document: dom.window.document, DOMParser: dom.window.DOMParser, Node: dom.window.Node, Element: dom.window.Element, HTMLElement: dom.window.HTMLElement, File: dom.window.File, FileReader: dom.window.FileReader, Blob, TextDecoder, TextEncoder, CustomEvent, crypto, Date, Error, DOMException, AbortController, Uint8Array, ArrayBuffer, URL, setTimeout, clearTimeout, fetch, Promise };
+function load(file, overrides = {}) {
+  const exports = {};
+  const compiled = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+  vm.runInNewContext(compiled, { ...shared, exports, require, ...overrides }, { filename: file }); return exports;
+}
+const core = load("src/lib/ai-text.ts");
+const markdown = load("src/lib/document-markdown.ts", { require: name => name === "./ai-text" ? core : require(name) });
+const source = '<h1>Title</h1><p>Hello <b>bold</b> <a href="javascript:alert(1)">bad</a></p><table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table><pre><code>const x = `a`;</code></pre><script>BAD_SCRIPT</script><img src="https://invalid.example/image.png" alt="Image">';
+const md = markdown.htmlMarkdown(source);
+assert(md.includes("# Title")); assert(md.includes("**bold**")); assert(md.includes("| A | B |")); assert(md.includes("const x = `a`;")); assert(!md.includes("javascript:")); assert(!md.includes("BAD_SCRIPT")); assert(!md.includes("https://invalid.example"));
+const parser = load("src/components/tools/presentation/html-to-pptx/HtmlParser.tsx", { window: dom.window });
+const parsed = parser.parseHtmlToSlides('<style>h1{color:#123456}</style><section class="slide"><h1>Title</h1><p dir="rtl">سلام <a href="https://example.com/">پیوند</a></p><ul><li>Parent<ol start="3"><li>Child</li></ol></li></ul><pre>first\nsecond</pre><table><tr><th colspan="2">Header</th></tr><tr><td rowspan="2">A</td><td>B</td></tr><tr><td>C</td></tr></table></section>');
+assert.equal(parsed.length, 1);
+const blocks = parsed[0].blocks;
+assert.equal(blocks.find(block => block.kind === "code").text, "first\nsecond");
+assert.equal(blocks.find(block => block.kind === "heading").css.color, "#123456");
+assert.equal(blocks.find(block => block.text?.includes("سلام")).css.direction, "rtl");
+assert(blocks.find(block => block.text?.includes("سلام")).runs.some(run => run.options?.hyperlink?.url === "https://example.com/"));
+assert.equal(blocks.filter(block => block.kind === "listItem").length, 2);
+assert.equal(blocks.find(block => block.text === "Parent").listLevel, 1);
+assert.equal(blocks.find(block => block.text === "Child").listNumber, 3);
+assert.equal(blocks.find(block => block.kind === "table").colSpans[0][0], 2);
+assert.equal(blocks.find(block => block.kind === "table").rowSpans[1][0], 2);
+assert(parser.parseHtmlToSlides("plain text")[0].blocks[0].text === "plain text");
+const decoder = load("src/lib/decode-text.ts");
+assert.equal(decoder.decodeText(new Uint8Array([255, 254, 65, 0, 66, 0]).buffer), "AB");
+assert.equal(decoder.decodeText(new Uint8Array([254, 255, 0, 65, 0, 66]).buffer), "AB");
+const names = load("src/lib/output-name.ts");
+const origins = load("src/lib/activity-origin.ts");
+const fileExport = load("src/lib/file-export.ts", { require: name => name === "./output-name" ? names : name === "./activity-origin" ? origins : require(name) });
+const transfer = load("src/lib/transfer.ts", { require: name => name === "./file-export" ? fileExport : name === "./activity-origin" ? origins : require(name) }), observed = [];
+events.addEventListener(transfer.activityEvent, event => observed.push(event.detail));
+const restore = transfer.observeFileReads("Reading file");
+const input = new dom.window.File(["Hello فارسی"], "input.txt", { type: "text/plain" });
+assert.equal(await input.text(), "Hello فارسی");
+assert.equal(new TextDecoder().decode(await input.arrayBuffer()), "Hello فارسی");
+assert(observed.some(task => task.kind === "read" && task.status === "done" && task.done === input.size));
+restore();
+const payload = Buffer.alloc(6 * 4096, 65);
+const server = createServer((request, response) => {
+  if (request.url === "/error") { response.writeHead(503); response.end("Unavailable"); return; }
+  response.setHeader("content-type", "application/octet-stream");
+  if (request.url === "/known") response.setHeader("content-length", payload.length);
+  let offset = 0;
+  const timer = setInterval(() => { response.write(payload.subarray(offset, offset + 4096)); offset += 4096; if (offset >= payload.length) { clearInterval(timer); response.end(); } }, 40);
+  response.on("close", () => clearInterval(timer));
+});
+await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+const base = `http://127.0.0.1:${server.address().port}`;
+try {
+  const known = await transfer.downloadBlob(`${base}/known`, "Known");
+  assert.equal(known.size, payload.length); assert.equal(await known.text(), payload.toString());
+  assert(observed.some(task => task.name === "Known" && task.status === "running" && task.total === payload.length && task.done > 0));
+  const unknown = await transfer.downloadBlob(`${base}/unknown`, "Unknown");
+  assert.equal(unknown.size, payload.length);
+  assert(observed.some(task => task.name === "Unknown" && task.status === "running" && task.total === undefined));
+  const manifest = await transfer.downloadBlob(`${base}/unknown`, "Manifest", undefined, payload.length);
+  assert.equal(manifest.size, payload.length);
+  assert(observed.some(task => task.name === "Manifest" && task.done === 0 && task.total === payload.length));
+  const controller = new AbortController();
+  const cancel = event => { if (event.detail.name === "Abort" && event.detail.done > 0) controller.abort(); };
+  events.addEventListener(transfer.activityEvent, cancel);
+  await assert.rejects(() => transfer.downloadBlob(`${base}/unknown`, "Abort", controller.signal));
+  events.removeEventListener(transfer.activityEvent, cancel);
+  assert.equal(observed.filter(task => task.name === "Abort").at(-1).status, "cancelled");
+  await assert.rejects(() => transfer.downloadBlob(`${base}/error`, "Error"));
+  assert.equal(observed.filter(task => task.name === "Error").at(-1).status, "error");
+} finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
+console.log("Processing checks passed: safe HTML/Markdown, PPTX CSS/RTL/links/lists/code/merges, UTF-16 BOM, single native file reads, streamed download bytes, known/unknown/manifest totals, cancellation and HTTP errors.");

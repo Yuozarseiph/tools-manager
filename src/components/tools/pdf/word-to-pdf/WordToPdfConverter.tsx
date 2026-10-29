@@ -1,4 +1,6 @@
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
@@ -78,12 +80,14 @@ async function renderPageByPageToPdf(iframeDoc: Document, pdf: any) {
 
   // total pages
   const contentHeight = contentEl.scrollHeight;
-  const totalPages = Math.max(1, Math.ceil(contentHeight / pageHeightPx));
-
   const overlapPx = 24;
+  const stepPx = pageHeightPx - overlapPx;
+  const totalPages = 1 + Math.ceil(Math.max(0, contentHeight - pageHeightPx) / stepPx);
+  if (totalPages > 500) throw new Error("Document is too long to render safely");
 
+  try {
   for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-    const offsetY = pageIndex * (pageHeightPx - overlapPx);
+    const offsetY = pageIndex * stepPx;
     (contentEl as HTMLElement).style.transform = `translateY(-${offsetY}px)`;
 
     // Let layout settle
@@ -106,8 +110,9 @@ async function renderPageByPageToPdf(iframeDoc: Document, pdf: any) {
     pdf.addImage(imgData, "JPEG", 0, 0, A4.wMm, A4.hMm);
   }
 
-  // reset transform
-  (contentEl as HTMLElement).style.transform = "translateY(0)";
+  } finally {
+    (contentEl as HTMLElement).style.transform = "translateY(0)";
+  }
 }
 
 export default function WordToPdfConverter() {
@@ -210,6 +215,7 @@ export default function WordToPdfConverter() {
       iframe.style.width = `${Math.round(A4.wMm * PX_PER_MM)}px`;
       iframe.style.height = `${Math.round(A4.hMm * PX_PER_MM)}px`;
       iframe.style.border = "none";
+      iframe.setAttribute("sandbox", "allow-same-origin");
       document.body.appendChild(iframe);
 
       const iframeDoc =
@@ -224,6 +230,7 @@ export default function WordToPdfConverter() {
 <html>
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; font-src data:;" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: white; color: black; }
@@ -323,9 +330,9 @@ export default function WordToPdfConverter() {
     if (!pdfBlobUrl) return;
     const a = document.createElement("a");
     a.href = pdfBlobUrl;
-    a.download = pdfFileName;
+    a.download = outputFilename(pdfFileName);
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     a.remove();
   };
 

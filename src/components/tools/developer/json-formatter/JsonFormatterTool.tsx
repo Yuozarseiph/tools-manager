@@ -1,5 +1,7 @@
 // components/tools/developer/json-formatter/JsonFormatterTool.tsx
 "use client";
+import { saveFile } from "@/lib/file-export";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent } from "react";
@@ -107,9 +109,9 @@ export default function JsonFormatterTool() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "formatted.json";
+    a.download = outputFilename("formatted.json");
     document.body.appendChild(a);
-    a.click();
+    void saveFile(a.href, a.download);
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };

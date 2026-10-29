@@ -16,7 +16,7 @@ export default function BankToolsClient() {
   const { locale } = useLanguage();
   const page = useBankToolsPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

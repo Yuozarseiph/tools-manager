@@ -1,14 +1,16 @@
 // data/tools.content.ts
 
+import { aiToolsContent } from "./ai-tools";
+
 export const toolsContent = {
   fa: {
     categories: {
       all: "همه ابزارها",
+      ai: "هوش مصنوعی",
       pdf: "PDF",
       image: "تصویر",
       developer: "برنامه‌نویسی",
       security: "امنیت",
-      system: "سیستم",
       utility: "کاربردی",
       excel: "اکسل",
       audio: "صدا",
@@ -30,11 +32,17 @@ export const toolsContent = {
     },
     loadMore: "نمایش ابزارهای بیشتر",
     items: {
+      ...aiToolsContent("fa"),
       "code-editor": {
         title: "ویرایشگر کد آنلاین",
         description:
-          "ویرایشگر کد حرفه‌ای با پشتیبانی از ۲۳ زبان برنامه‌نویسی، File System API، پوشه‌بندی، ذخیره و بازیابی پروژه.",
+          "محیط کدنویسی با ظاهر الهام‌گرفته از VS Code، تب‌های چندفایلی، تکمیل کد، جست‌وجوی پروژه و ذخیره محلی.",
         badge: "آزمایشی",
+      },
+      "gerdali": {
+        title: "گردالی - Gerdali",
+        description: "با گردالی از موانع بپرید، ستاره جمع کنید و در ۱۰ سرزمین رکورد بزنید؛ یک بازی مرورگری برای موبایل و دسکتاپ.",
+        badge: "جدید",
       },
       "emerald-forge": {
         title: "مینی گیم سازنده زمرد",
@@ -123,17 +131,6 @@ export const toolsContent = {
         description:
           "حذف خودکار پس‌زمینه با هوش مصنوعی. کاملاً آفلاین و بدون آپلود به سرور.",
         badge: "AI",
-      },
-      "user-agent": {
-        title: "اطلاعات سیستم من",
-        description: "نمایش جزئیات مرورگر، سیستم عامل، مدل گوشی و IP شما.",
-        badge: "کاربردی",
-      },
-      "ip-checker": {
-        title: "IP من چیه؟",
-        description:
-          "نمایش IP عمومی، نام کشور، شهر و سرویس‌دهنده اینترنت (ISP) شما.",
-        badge: "محبوب",
       },
       "json-formatter": {
         title: "فرمت‌کننده JSON",
@@ -261,7 +258,7 @@ export const toolsContent = {
       "bank-tools": {
         title: "ابزارهای بانکی",
         description:
-          "محاسبه وام، سود سپرده، خرید اقساطی، پس‌انداز و مدیریت هزینه‌های شخصی.",
+          "محاسبه وام، سود سپرده، خرید اقساطی، پس‌انداز و برنامه‌ریزی مالی.",
         badge: "مالی",
       },
       "security-tools": {
@@ -276,11 +273,11 @@ export const toolsContent = {
   en: {
     categories: {
       all: "All tools",
+      ai: "AI",
       pdf: "PDF",
       image: "Image",
       developer: "Developer",
       security: "Security",
-      system: "System",
       utility: "Utilities",
       excel: "Excel",
       audio: "Audio",
@@ -302,11 +299,17 @@ export const toolsContent = {
     },
     loadMore: "Show more tools",
     items: {
+      ...aiToolsContent("en"),
       "code-editor": {
         title: "Online Code Editor",
         description:
-          "Professional code editor supporting 23 programming languages, File System API, folder management, save and restore projects.",
+          "VS Code-inspired code workspace with multi-file tabs, completion, project-wide search, shortcuts and local saving.",
         badge: "Beta",
+      },
+      "gerdali": {
+        title: "Gerdali",
+        description: "Jump over obstacles, collect stars and set new records across 10 worlds in a browser game for mobile and desktop.",
+        badge: "New",
       },
       "emerald-forge": {
         title: "Emerald Forge Minigame",
@@ -395,18 +398,6 @@ export const toolsContent = {
         description:
           "Automatically remove image backgrounds with AI, fully offline with no uploads.",
         badge: "AI",
-      },
-      "user-agent": {
-        title: "My system info",
-        description:
-          "View browser details, operating system, device model and your IP.",
-        badge: "Utility",
-      },
-      "ip-checker": {
-        title: "What is my IP?",
-        description:
-          "Show your public IP, country, city and internet provider (ISP).",
-        badge: "Popular",
       },
       "json-formatter": {
         title: "JSON formatter",
@@ -533,7 +524,7 @@ export const toolsContent = {
       "bank-tools": {
         title: "Banking Tools",
         description:
-          "Calculate loans, deposit interest, installment purchases, savings and manage personal expenses.",
+          "Calculate loans, deposit interest, installment purchases, and savings.",
         badge: "Finance",
       },
       "security-tools": {

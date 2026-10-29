@@ -1,12 +1,13 @@
 // components/tools/developer/image-converter/ImageConverter.tsx
 "use client";
+import { outputFilename } from "@/lib/output-name";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useDropzone } from "react-dropzone";
-import download from "downloadjs";
+import { saveFile as download } from "@/lib/file-export";
 import JSZip from "jszip";
 import {
   FileUp,
@@ -26,7 +27,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import {
   useImageConverterContent,
   type ImageConverterToolContent,
-} from "./image-converter.content"; // ✅ مسیر اصلاح شده
+} from "./image-converter.content"; //  مسیر اصلاح شده
 
 interface FileWithPreview extends File {
   preview: string;
@@ -38,6 +39,7 @@ export default function ImageConverter() {
   const content: ImageConverterToolContent = useImageConverterContent();
 
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const previewUrls = useRef(new Set<string>());
   const [targetFormat, setTargetFormat] = useState<ImageFormat>("image/jpeg");
   const [quality, setQuality] = useState(90);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -62,21 +64,25 @@ export default function ImageConverter() {
     },
     maxFiles: 20,
     onDrop: (acceptedFiles) => {
-      const filesWithPreview = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
+      const room = Math.max(0, 20 - files.length);
+      const added = acceptedFiles.slice(0, room).map((file) => {
+        const preview = URL.createObjectURL(file);
+        previewUrls.current.add(preview);
+        return Object.assign(file, {
+          preview,
           id: `${file.name}-${Date.now()}-${Math.random()}`,
-        })
-      );
-      setFiles((prev) => [...prev, ...filesWithPreview]);
+        });
+      });
+      setFiles((prev) => [...prev, ...added]);
     },
   });
 
   useEffect(() => {
     return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
+      previewUrls.current.forEach((url) => URL.revokeObjectURL(url));
+      previewUrls.current.clear();
     };
-  }, [files]);
+  }, []);
 
   const handleConvert = async () => {
     if (files.length === 0) return;
@@ -88,15 +94,15 @@ export default function ImageConverter() {
       });
 
       if (results.length === 1) {
-        download(results[0].converted, results[0].filename, targetFormat);
+        download(results[0].converted, outputFilename(results[0].filename), results[0].converted.type);
       } else {
         const zip = new JSZip();
-        results.forEach((result) => {
-          zip.file(result.filename, result.converted);
+        results.forEach((result, index) => {
+          zip.file(outputFilename(result.filename, String(index + 1)), result.converted);
         });
 
         const zipBlob = await zip.generateAsync({ type: "blob" });
-        download(zipBlob, "converted-images.zip", "application/zip");
+        download(zipBlob, outputFilename("converted-images.zip"), "application/zip");
       }
     } catch (err) {
       alert(content.ui.alerts.error);
@@ -109,13 +115,14 @@ export default function ImageConverter() {
   const removeFile = (id: string) => {
     const file = files.find((f) => f.id === id);
     if (file) {
+      previewUrls.current.delete(file.preview);
       URL.revokeObjectURL(file.preview);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
 
   const clearAllFiles = () => {
-    files.forEach((file) => URL.revokeObjectURL(file.preview));
+    files.forEach((file) => { previewUrls.current.delete(file.preview); URL.revokeObjectURL(file.preview); });
     setFiles([]);
   };
 
@@ -150,6 +157,7 @@ export default function ImageConverter() {
         id: `${cleanName}-${Date.now()}-${Math.random()}`,
       });
 
+      previewUrls.current.add(fileWithPreview.preview);
       setFiles((prev) => [...prev, fileWithPreview]);
       setImageUrlInput("");
     } catch (err) {

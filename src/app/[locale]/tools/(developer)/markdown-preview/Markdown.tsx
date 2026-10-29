@@ -16,7 +16,7 @@ export default function MarkdownClient() {
   const { locale } = useLanguage();
   const page = useMarkdownPageContent();
 
-  // 🔥 استفاده از HeaderContent
+  //  استفاده از HeaderContent
   const nav = HeaderContent[locale];
 
   return (

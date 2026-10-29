@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-// 🔥 Type مشترک برای SEO
+//  Type مشترک برای SEO
 export type SeoContent = {
   title: string;
   description: string;
@@ -73,19 +73,19 @@ export const excelViewerContent = {
 
 export type ExcelViewerContent = typeof excelViewerContent.fa;
 
-// 🔥 Hook برای استفاده در کامپوننت Client
+//  Hook برای استفاده در کامپوننت Client
 export function useExcelViewerContent() {
   const { locale } = useLanguage();
   return excelViewerContent[locale];
 }
 
-// 🔥 Hook مخصوص page content
+//  Hook مخصوص page content
 export function useExcelViewerPageContent() {
   const content = useExcelViewerContent();
   return content.page;
 }
 
-// 🔥 تابع برای دریافت SEO (برای page.tsx)
+//  تابع برای دریافت SEO (برای page.tsx)
 export function getExcelViewerSeo(locale: "fa" | "en"): SeoContent {
   return excelViewerContent[locale].seo;
 }
