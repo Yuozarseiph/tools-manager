@@ -56,7 +56,7 @@ export default function OneTimeNote() {
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               rows={8}
-              placeholder="متن یادداشت خود را اینجا وارد کنید..."
+              placeholder={content.oneTimeNote.notePlaceholder}
               className={`w-full p-3 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
             />
           </div>
@@ -116,7 +116,7 @@ export default function OneTimeNote() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="برای امنیت بیشتر رمز تنظیم کنید"
+                placeholder={content.oneTimeNote.passwordPlaceholder}
                 className={`w-full p-3 pr-12 rounded-xl border ${theme.border} ${theme.bg} ${theme.text}`}
               />
             </div>
@@ -147,7 +147,7 @@ export default function OneTimeNote() {
                   {content.oneTimeNote.noteCreated}
                 </h3>
                 <p className={`text-sm ${theme.textMuted}`}>
-                  لینک زیر را با گیرنده به اشتراک بگذارید
+                  {content.oneTimeNote.shareHint}
                 </p>
               </div>
             </div>
@@ -176,7 +176,7 @@ export default function OneTimeNote() {
             onClick={resetForm}
             className={`w-full py-3 rounded-xl font-medium ${theme.secondary} ${theme.text}`}
           >
-            ساخت یادداشت جدید
+            {content.oneTimeNote.newNote}
           </button>
 
           {/* Info */}
@@ -184,19 +184,19 @@ export default function OneTimeNote() {
             className={`p-4 rounded-xl bg-[var(--app-warning-bg)] border border-[var(--app-warning-border)]`}
           >
             <p className={`text-sm ${theme.textMuted}`}>
-              <AlertTriangle className="me-2 inline h-4 w-4" aria-hidden="true" /> این لینک پس از{" "}
+              <AlertTriangle className="me-2 inline h-4 w-4" aria-hidden="true" />{" "}
+              {content.oneTimeNote.expiryNote}{" "}
               {
                 content.oneTimeNote.expires[
                   expiresIn as keyof typeof content.oneTimeNote.expires
                 ]
               }{" "}
-              یا پس از{" "}
+              /{" "}
               {
                 content.oneTimeNote.views[
                   maxViews as keyof typeof content.oneTimeNote.views
                 ]
-              }{" "}
-              مشاهده منقضی می‌شود.
+              }
             </p>
           </div>
         </>

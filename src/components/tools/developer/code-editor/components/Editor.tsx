@@ -156,7 +156,7 @@ export default function Editor({ file, onContentChange, onCursorChange, theme, l
 
   useEffect(() => {
     const view = viewRef.current;
-    if (view && jump?.fileId === fileId) {
+    if (view && jump && jump.fileId === fileId) {
       const line = view.state.doc.line(Math.min(Math.max(1,jump.line),view.state.doc.lines));
       view.dispatch({selection:{anchor:line.from}, scrollIntoView:true});
       view.focus();

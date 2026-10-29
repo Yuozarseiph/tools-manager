@@ -297,12 +297,12 @@ export default function ExpenseManager() {
       {/* Transactions List */}
       <div className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}>
         <h4 className={`font-bold mb-3 ${theme.text}`}>
-          تراکنش‌ها ({transactions.length})
+            {content.expense.labels.transactions} ({transactions.length})
         </h4>
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {transactions.length === 0 ? (
             <p className={`text-center py-8 ${theme.textMuted}`}>
-              هنوز تراکنشی ثبت نشده است
+              {content.expense.labels.empty}
             </p>
           ) : (
             transactions.map((t) => (

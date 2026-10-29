@@ -152,7 +152,7 @@ export default function CalculatorTool() {
         <Button onClick={() => handleNumber("4")}>4</Button>
         <Button onClick={() => handleNumber("5")}>5</Button>
         <Button onClick={() => handleNumber("6")}>6</Button>
-        <Button onClick={() => handleOperator("-")} variant="operator">
+        <Button onClick={() => handleOperator("−")} variant="operator">
           −
         </Button>
 
