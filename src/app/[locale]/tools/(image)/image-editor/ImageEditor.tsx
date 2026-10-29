@@ -44,7 +44,7 @@ export default function ImageEditorClient() {
       </div>
 
       {/* محوطه ابزار */}
-      <div className="max-w-5xl mx-auto px-6 pb-20 w-full flex-1">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 w-full flex-1">
         <ImageEditorTool />
       </div>
     </div>

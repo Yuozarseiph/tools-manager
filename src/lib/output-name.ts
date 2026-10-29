@@ -10,7 +10,7 @@ export const OUTPUT_NAME_TOOLS = new Set([
   "text-to-pdf", "qr-generator", "security-tools",
 ]);
 
-const knownExtension = /\.(?:png|jpe?g|webp|gif|svg|ico|pdf|docx?|pptx?|xlsx?|csv|tsv|json|txt|md|markdown|diff|zip|wav|mp3|ogg|aac|m4a|flac|css|html?|js|jsx|ts|tsx|py|php|java|cpp|c|cs|go|rs|sql|xml|ya?ml|sh|exe|bat|cmd)$/i;
+const knownExtension = /\.(?:png|jpe?g|webp|gif|svg|ico|pdf|docx?|pptx?|xlsx?|csv|tsv|json|txt|md|markdown|diff|zip|wav|mp3|ogg|aac|m4a|flac|css|html?|js|jsx|ts|tsx|py|php|java|cpp|c|cs|go|rs|sql|xml|ya?ml|sh|exe|bat|cmd|psd|psb)$/i;
 function cleanBase(value: string) {
   // Keep Unicode names, but disallow path traversal, control characters and Windows device names.
   let clean = Array.from(value.normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069<>:"/\\|?*]/g, "-").trim().replace(/^[.\s]+|[.\s]+$/g, "")).slice(0, 120).join("");

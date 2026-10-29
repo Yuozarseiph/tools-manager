@@ -18,16 +18,16 @@ export const imageEditorContent = {
     page: {
       title: "ویرایشگر تصویر آفلاین",
       description:
-        "تصاویر PNG، JPG، WebP و AVIF را به صورت کاملاً آفلاین ویرایش کن. فیلترها را اعمال کن، اندازه و چرخش را تغییر بده، متن و استیکر اضافه کن و خروجی را در فرمت‌های مختلف ذخیره کن.",
+        "تصاویر PNG، JPG، WebP و PSD را به صورت کاملاً آفلاین ویرایش کن. با لایه‌ها، حالت‌های ترکیب، فیلترها و تنظیمات رنگ کار کن، متن و شکل اضافه کن و خروجی را در فرمت‌های PNG، JPG، WebP یا PSD ذخیره کن.",
     },
     seo: {
-      title: "ویرایشگر تصویر آفلاین PNG و JPG | QodeForge",
+      title: "ویرایشگر تصویر آفلاین PNG، JPG و PSD | QodeForge",
       description:
-        "ویرایش حرفه‌ای تصویر با پشتیبانی از PNG، JPG، WebP و AVIF. فیلترهای پیشرفته، تغییر اندازه، چرخش، افزودن متن و استیکر و خروجی به فرمت‌های مدرن - کاملاً رایگان و آفلاین.",
+        "ویرایش حرفه‌ای تصویر با پشتیبانی از PNG، JPG، WebP و PSD. لایه‌ها، حالت‌های ترکیب، فیلترهای پیشرفته، تنظیمات رنگ، متن و شکل با خروجی چندگانه - کاملاً رایگان و آفلاین.",
       canonical: "https://qodeforge.ir/tools/image-editor",
       ogTitle: "ویرایشگر تصویر آفلاین - جایگزین سبک برای Photoshop",
       ogDescription:
-        "یک ویرایشگر تصویر قدرتمند و کاملاً آفلاین برای ویرایش تصاویر PNG، JPG، WebP و AVIF با فیلترها، تغییر اندازه، متن، استیکر و خروجی چندگانه.",
+        "یک ویرایشگر تصویر لایه‌ای و کاملاً آفلاین برای ویرایش تصاویر PNG، JPG، WebP و PSD با فیلترها، تنظیمات رنگ، متن، شکل و خروجی چندگانه.",
       applicationCategory: "MultimediaApplication",
       inLanguage: "fa-IR",
     } satisfies SeoContent,
@@ -37,16 +37,16 @@ export const imageEditorContent = {
     page: {
       title: "Offline Image Editor",
       description:
-        "Edit PNG, JPG, WebP and AVIF images completely offline. Apply filters, resize and rotate, add text and stickers, and export in multiple formats.",
+        "Edit PNG, JPG, WebP and PSD images completely offline. Work with layers, blend modes, filters and color adjustments, add text and shapes, and export to PNG, JPG, WebP or PSD.",
     },
     seo: {
-      title: "Offline PNG & JPG Image Editor | QodeForge",
+      title: "Offline PNG, JPG & PSD Image Editor | QodeForge",
       description:
-        "Professional image editing with PNG, JPG, WebP and AVIF support. Advanced filters, resize, rotate, text and stickers, and export to modern formats – completely free and offline.",
+        "Professional layered image editing with PNG, JPG, WebP and PSD support. Advanced filters, color adjustments, text and shapes, and multi-format export – completely free and offline.",
       canonical: "https://qodeforge.ir/tools/image-editor",
       ogTitle: "Offline Image Editor - Lightweight Photoshop Alternative",
       ogDescription:
-        "A powerful, fully offline image editor for PNG, JPG, WebP and AVIF with filters, resize, rotate, text, stickers and multi-format export.",
+        "A powerful, fully offline layered image editor for PNG, JPG, WebP and PSD with filters, color adjustments, text, shapes and multi-format export.",
       applicationCategory: "MultimediaApplication",
       inLanguage: "en-US",
     } satisfies SeoContent,
