@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, Undo2, Redo2 } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { AccessibleSelect } from "@/components/ui/AccessibleControls";
 import type { ThemePalette } from "@/constants/themes";
 import { EDITOR_FONTS } from "../editor-constants";
@@ -26,7 +26,7 @@ export default function EditorOptionsBar({
   const tool = editor.tool;
 
   return (
-    <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 border-b px-3 py-2 ${theme.border} ${theme.card}`}>
+    <div className={`flex max-h-40 shrink-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-y-auto border-b px-3 py-2 ${theme.border} ${theme.card}`}>
       <span className={`text-xs font-semibold ${theme.text}`}>{content.ui.tools[tool]}</span>
       <Divider theme={theme} />
 
@@ -269,13 +269,6 @@ export default function EditorOptionsBar({
       {tool === "crop" && <p className={`text-[11px] ${theme.textMuted}`}>{options.cropHint}</p>}
 
       <div className="ms-auto flex items-center gap-1">
-        <MiniButton theme={theme} onClick={editor.undo} disabled={!editor.canUndo} title={content.ui.history.undo}>
-          <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
-        </MiniButton>
-        <MiniButton theme={theme} onClick={editor.redo} disabled={!editor.canRedo} title={content.ui.history.redo}>
-          <Redo2 className="h-3.5 w-3.5" aria-hidden="true" />
-        </MiniButton>
-        <span className={`mx-1 h-6 w-px ${theme.border.replace("border-", "bg-")}`} />
         <MiniButton theme={theme} onClick={editor.zoomOut} title={content.ui.status.zoom}>
           <Minus className="h-3.5 w-3.5" aria-hidden="true" />
         </MiniButton>

@@ -148,6 +148,7 @@ export function useImageEditor() {
   const [doc, setDoc] = useState<EditorDocument | null>(null);
   const [tool, setTool] = useState<EditorToolId>("move");
   const [zoom, setZoom] = useState(1);
+  const [fitRequest, setFitRequest] = useState(0);
   const [revision, setRevision] = useState(0);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<EditorNotice | null>(null);
@@ -215,6 +216,7 @@ export function useImageEditor() {
 
   const commit = useCallback(
     (label: string, next: EditorDocument) => {
+      docRef.current = next;
       pushHistory(label, next);
       setDoc(next);
       setPreview(null);
@@ -225,6 +227,7 @@ export function useImageEditor() {
 
   const loadDocument = useCallback(
     (next: EditorDocument, label: string) => {
+      docRef.current = next;
       setDoc(next);
       setHistory({ entries: [{ id: uid("history"), label, doc: next }], index: 0 });
       setPreview(null);
@@ -247,6 +250,7 @@ export function useImageEditor() {
     setHistory((previous) => {
       if (previous.index <= 0) return previous;
       const index = previous.index - 1;
+      docRef.current = previous.entries[index].doc;
       setDoc(previous.entries[index].doc);
       setPreview(null);
       setRevision((value) => value + 1);
@@ -258,6 +262,7 @@ export function useImageEditor() {
     setHistory((previous) => {
       if (previous.index >= previous.entries.length - 1) return previous;
       const index = previous.index + 1;
+      docRef.current = previous.entries[index].doc;
       setDoc(previous.entries[index].doc);
       setPreview(null);
       setRevision((value) => value + 1);
@@ -271,6 +276,7 @@ export function useImageEditor() {
   const jumpTo = useCallback((index: number) => {
     setHistory((previous) => {
       if (index < 0 || index >= previous.entries.length || index === previous.index) return previous;
+      docRef.current = previous.entries[index].doc;
       setDoc(previous.entries[index].doc);
       setPreview(null);
       setRevision((value) => value + 1);
@@ -313,11 +319,19 @@ export function useImageEditor() {
   );
 
   const setActiveLayer = useCallback((id: string) => {
-    setDoc((current) => (current && current.layers.some((layer) => layer.id === id) ? { ...current, activeLayerId: id } : current));
+    const current = docRef.current;
+    if (!current || !current.layers.some((layer) => layer.id === id)) return;
+    const next = { ...current, activeLayerId: id };
+    docRef.current = next;
+    setDoc(next);
   }, []);
 
   const setSelection = useCallback((selection: EditorSelection | null) => {
-    setDoc((current) => (current ? documentWithSelection(current, selection) : current));
+    const current = docRef.current;
+    if (!current) return;
+    const next = documentWithSelection(current, selection);
+    docRef.current = next;
+    setDoc(next);
     bump();
   }, [bump]);
 
@@ -446,6 +460,7 @@ export function useImageEditor() {
   );
 
   const closeDocument = useCallback(() => {
+    docRef.current = null;
     setDoc(null);
     setHistory({ entries: [], index: -1 });
     setPreview(null);
@@ -455,6 +470,51 @@ export function useImageEditor() {
   /* ---------------------------------------------------------------- */
   /* Layers                                                            */
   /* ---------------------------------------------------------------- */
+
+  /** Adds a new image as its own editable layer without replacing the open document. */
+  const placeImageFile = useCallback(
+    async (file: File, label: string) => {
+      if (!file.type.startsWith("image/") || file.name.toLowerCase().endsWith(".svg")) {
+        notify("imageError", "error");
+        return;
+      }
+      if (!docRef.current) return;
+      setBusy(true);
+      try {
+        const url = URL.createObjectURL(file);
+        try {
+          const image = await loadImageElement(url);
+          const current = docRef.current;
+          if (!current) return;
+          const factor = Math.min(1, current.width / image.width, current.height / image.height);
+          const width = Math.max(1, Math.round(image.width * factor));
+          const height = Math.max(1, Math.round(image.height * factor));
+          const left = Math.round((current.width - width) / 2);
+          const top = Math.round((current.height - height) / 2);
+          const { canvas, ctx } = createCanvas(current.width, current.height);
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(image, left, top, width, height);
+          const layer: EditorRasterLayer = {
+            ...baseLayer("raster", file.name.replace(/\.[^.]+$/, "") || label),
+            kind: "raster",
+            canvas,
+            contentRect: { x: left, y: top, width, height },
+          };
+          commit(label, { ...current, layers: [...current.layers, layer], activeLayerId: layer.id });
+          setTool("move");
+          notify("imagePlaced", "success");
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      } catch (error) {
+        console.error("Image placement failed", error);
+        notify("imageError", "error");
+      } finally {
+        setBusy(false);
+      }
+    },
+    [commit, notify]
+  );
 
   const addRasterLayer = useCallback(
     (label: string, name: string) => {
@@ -587,6 +647,25 @@ export function useImageEditor() {
     [commit]
   );
 
+  const reorderLayer = useCallback((fromId: string, toId: string, label: string) => {
+    const current = docRef.current;
+    if (!current || fromId === toId) return;
+    const layers = [...current.layers];
+    const sourceIndex = layers.findIndex((layer) => layer.id === fromId);
+    const targetIndex = layers.findIndex((layer) => layer.id === toId);
+    if (sourceIndex < 0 || targetIndex < 0) return;
+    const [layer] = layers.splice(sourceIndex, 1);
+    layers.splice(targetIndex, 0, layer);
+    commit(label, { ...current, layers, activeLayerId: fromId });
+  }, [commit]);
+
+  const renameDocument = useCallback((name: string) => {
+    const current = docRef.current;
+    if (!current) return;
+    const next = { ...current, name: name.trim() || "Untitled" };
+    commit("Rename document", next);
+  }, [commit]);
+
   const mergeDown = useCallback(
     (label: string) => {
       const current = docRef.current;
@@ -699,7 +778,7 @@ export function useImageEditor() {
       }
       const canvas = cloneCanvas(layer.canvas);
       const layers = current.layers.map((item) =>
-        item.id === layer.id ? ({ ...item, canvas } as EditorLayer) : item
+        item.id === layer.id ? ({ ...item, canvas, contentRect: undefined } as EditorLayer) : item
       );
       const next = { ...current, layers };
       docRef.current = next;
@@ -959,6 +1038,7 @@ export function useImageEditor() {
   const zoomIn = useCallback(() => setZoom((value) => clamp(value * 1.25, 0.05, 32)), []);
   const zoomOut = useCallback(() => setZoom((value) => clamp(value / 1.25, 0.05, 32)), []);
   const zoomActual = useCallback(() => setZoom(1), []);
+  const zoomFit = useCallback(() => setFitRequest((value) => value + 1), []);
 
   const swapColors = useCallback(() => {
     setForegroundColor(backgroundColor);
@@ -987,6 +1067,8 @@ export function useImageEditor() {
     zoomIn,
     zoomOut,
     zoomActual,
+    zoomFit,
+    fitRequest,
     revision,
     busy,
     notice,
@@ -1034,12 +1116,15 @@ export function useImageEditor() {
     closeDocument,
 
     addRasterLayer,
+    placeImageFile,
     addTextLayer,
     addShapeLayer,
     addAdjustmentLayer,
     duplicateLayer,
     deleteLayer,
     moveLayer,
+    reorderLayer,
+    renameDocument,
     mergeDown,
     flattenImage,
     rasterizeLayer,

@@ -189,12 +189,16 @@ export function getLayerBounds(layer: EditorLayer, doc: EditorDocument): EditorL
   let pivotX: number;
   let pivotY: number;
   let localCenterX = 0;
+  let localCenterY = 0;
 
   if (layer.kind === "raster") {
-    width = doc.width;
-    height = doc.height;
+    const rect = layer.contentRect ?? { x: 0, y: 0, width: doc.width, height: doc.height };
+    width = rect.width;
+    height = rect.height;
     pivotX = doc.width / 2 + layer.x;
     pivotY = doc.height / 2 + layer.y;
+    localCenterX = rect.x + rect.width / 2 - doc.width / 2;
+    localCenterY = rect.y + rect.height / 2 - doc.height / 2;
   } else if (layer.kind === "text") {
     const measured = measureTextLayer(layer);
     width = measured.width;
@@ -219,10 +223,10 @@ export function getLayerBounds(layer: EditorLayer, doc: EditorDocument): EditorL
   const cos = Math.cos(layer.rotation);
   const sin = Math.sin(layer.rotation);
   const corners = [
-    { x: localCenterX - halfWidth, y: -halfHeight },
-    { x: localCenterX + halfWidth, y: -halfHeight },
-    { x: localCenterX + halfWidth, y: halfHeight },
-    { x: localCenterX - halfWidth, y: halfHeight },
+    { x: localCenterX - halfWidth, y: localCenterY - halfHeight },
+    { x: localCenterX + halfWidth, y: localCenterY - halfHeight },
+    { x: localCenterX + halfWidth, y: localCenterY + halfHeight },
+    { x: localCenterX - halfWidth, y: localCenterY + halfHeight },
   ].map((corner) => {
     const scaledX = corner.x * layer.scaleX;
     const scaledY = corner.y * layer.scaleY;
@@ -242,8 +246,8 @@ export function getLayerBounds(layer: EditorLayer, doc: EditorDocument): EditorL
     y,
     width: Math.max(...xs) - x,
     height: Math.max(...ys) - y,
-    centerX: pivotX + localCenterX * layer.scaleX * cos,
-    centerY: pivotY + localCenterX * layer.scaleX * sin,
+    centerX: pivotX + localCenterX * layer.scaleX * cos - localCenterY * layer.scaleY * sin,
+    centerY: pivotY + localCenterX * layer.scaleX * sin + localCenterY * layer.scaleY * cos,
     corners,
   };
 }
@@ -1048,9 +1052,17 @@ export function cropDocument(doc: EditorDocument, rect: EditorSelectionRect): Ed
     if (layer.kind === "raster") {
       const { canvas, ctx } = createCanvas(width, height);
       ctx.drawImage(layer.canvas, -rect.x, -rect.y);
+      const oldRect = layer.contentRect;
+      const left = oldRect ? Math.max(0, oldRect.x - rect.x) : 0;
+      const top = oldRect ? Math.max(0, oldRect.y - rect.y) : 0;
+      const right = oldRect ? Math.min(width, oldRect.x + oldRect.width - rect.x) : width;
+      const bottom = oldRect ? Math.min(height, oldRect.y + oldRect.height - rect.y) : height;
       return {
         ...layer,
         canvas,
+        contentRect: oldRect && right > left && bottom > top
+          ? { x: left, y: top, width: right - left, height: bottom - top }
+          : undefined,
         x: doc.width / 2 + layer.x - rect.x - width / 2,
         y: doc.height / 2 + layer.y - rect.y - height / 2,
       };
@@ -1074,7 +1086,14 @@ export function resizeDocument(doc: EditorDocument, width: number, height: numbe
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(layer.canvas, 0, 0, nextWidth, nextHeight);
-      return { ...layer, canvas, x: layer.x * scaleX, y: layer.y * scaleY };
+      const bounds = layer.contentRect;
+      return {
+        ...layer, canvas, x: layer.x * scaleX, y: layer.y * scaleY,
+        contentRect: bounds ? {
+          x: bounds.x * scaleX, y: bounds.y * scaleY,
+          width: bounds.width * scaleX, height: bounds.height * scaleY,
+        } : undefined,
+      };
     }
     if (layer.kind === "text") {
       return {
@@ -1133,7 +1152,14 @@ export function rotateDocument(doc: EditorDocument, direction: "cw" | "ccw" | "1
     const remap = remapLayerAnchor(layer, doc, width, height, transform, radians);
     if (layer.kind === "raster") {
       const turns = direction === "cw" ? 1 : direction === "ccw" ? -1 : 2;
-      return { ...layer, ...remap, canvas: rotateRasterCanvas(layer.canvas, turns) };
+      const rect = layer.contentRect;
+      const contentRect = rect ? (direction === "cw"
+        ? { x: doc.height - rect.y - rect.height, y: rect.x, width: rect.height, height: rect.width }
+        : direction === "ccw"
+          ? { x: rect.y, y: doc.width - rect.x - rect.width, width: rect.height, height: rect.width }
+          : { x: doc.width - rect.x - rect.width, y: doc.height - rect.y - rect.height, width: rect.width, height: rect.height }
+      ) : undefined;
+      return { ...layer, ...remap, canvas: rotateRasterCanvas(layer.canvas, turns), contentRect };
     }
     return { ...layer, ...remap };
   });
@@ -1161,7 +1187,11 @@ export function flipDocument(doc: EditorDocument, axis: "horizontal" | "vertical
         ctx.scale(1, -1);
       }
       ctx.drawImage(layer.canvas, 0, 0);
-      return { ...mirrored, canvas };
+      const rect = layer.contentRect;
+      const contentRect = rect ? (axis === "horizontal"
+        ? { ...rect, x: doc.width - rect.x - rect.width }
+        : { ...rect, y: doc.height - rect.y - rect.height }) : undefined;
+      return { ...mirrored, canvas, contentRect };
     }
     if (layer.kind === "text" || layer.kind === "shape") {
       if (axis === "horizontal") mirrored.scaleX = -layer.scaleX;

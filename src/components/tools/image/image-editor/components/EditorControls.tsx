@@ -5,7 +5,7 @@ import { AccessibleInput, AccessibleSelect, AccessibleTextarea } from "@/compone
 import type { ThemePalette } from "@/constants/themes";
 
 const inputClass = (theme: ThemePalette) =>
-  `w-full rounded-lg border px-2.5 py-1.5 text-xs outline-none ${theme.border} ${theme.bg} ${theme.text} ${theme.ring}`;
+  `min-h-9 w-full min-w-0 rounded-lg border px-2.5 py-1.5 text-xs outline-none ${theme.border} ${theme.bg} ${theme.text} ${theme.ring}`;
 
 export function PanelSection({
   title,
@@ -81,7 +81,7 @@ export function SliderRow({
             if (Number.isFinite(next)) onChange(Math.min(max, Math.max(min, next)));
           }}
           onBlur={onCommit}
-          className={`w-16 rounded-md border px-1.5 py-1 text-[11px] tabular-nums ${theme.border} ${theme.bg} ${theme.text}`}
+          className={`h-9 w-[70px] shrink-0 rounded-lg border px-2 text-[11px] tabular-nums ${theme.border} ${theme.bg} ${theme.text}`}
         />
       </div>
     </div>
@@ -109,7 +109,7 @@ export function ColorRow({
           type="color"
           value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : "#ffffff"}
           onChange={(event) => onChange(event.target.value)}
-          className="h-7 w-9 cursor-pointer rounded-md border border-transparent bg-transparent p-0"
+          className="h-9 w-10 cursor-pointer rounded-md border border-transparent bg-transparent p-0"
         />
       </span>
     </label>
@@ -123,6 +123,7 @@ export function TextRow({
   onChange,
   textarea,
   placeholder,
+  onCommit,
 }: {
   label: string;
   value: string;
@@ -130,6 +131,7 @@ export function TextRow({
   onChange: (value: string) => void;
   textarea?: boolean;
   placeholder?: string;
+  onCommit?: () => void;
 }) {
   return (
     <label className="flex flex-col gap-1">
@@ -139,6 +141,7 @@ export function TextRow({
           fieldLabel={label}
           rows={3}
           value={value}
+          onBlur={onCommit}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
           className={inputClass(theme)}
@@ -149,6 +152,7 @@ export function TextRow({
           value={value}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
+          onBlur={onCommit}
           className={inputClass(theme)}
         />
       )}
@@ -176,7 +180,7 @@ export function NumberRow({
   onCommit?: () => void;
 }) {
   return (
-    <label className="flex items-center justify-between gap-2">
+    <label className="flex min-w-0 flex-col gap-1">
       <span className={`text-[11px] font-medium ${theme.text}`}>{label}</span>
       <AccessibleInput
         fieldLabel={label}
@@ -189,7 +193,7 @@ export function NumberRow({
         }}
         onBlur={onCommit}
         step={step}
-        className={`w-20 rounded-md border px-2 py-1 text-[11px] tabular-nums ${theme.border} ${theme.bg} ${theme.text}`}
+        className={`h-9 w-full min-w-0 rounded-lg border px-2 text-[11px] tabular-nums ${theme.border} ${theme.bg} ${theme.text}`}
       />
     </label>
   );
@@ -252,7 +256,7 @@ export function Segmented<T extends string>({
               type="button"
               aria-pressed={active}
               onClick={() => onChange(option.value)}
-              className={`flex-1 px-2 py-1.5 text-[11px] font-medium transition-colors ${
+              className={`min-h-9 min-w-0 flex-1 px-2 py-1.5 text-[11px] font-medium transition-colors ${
                 active ? `${theme.primary}` : `${theme.bg} ${theme.text} hover:${theme.secondary}`
               }`}
             >
@@ -290,7 +294,7 @@ export function MiniButton({
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+      className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
         danger
           ? "border-[var(--app-error-border)] bg-[var(--app-error-bg)] text-[var(--app-error-text)]"
           : active

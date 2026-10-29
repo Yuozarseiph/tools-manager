@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import {
   Blend,
   Copy,
   ChevronDown,
   ChevronUp,
-  ArrowUp,
   ArrowDown,
   Merge,
   Layers as LayersIcon,
@@ -22,11 +21,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { ThemePalette } from "@/constants/themes";
-import { EDITOR_BLEND_MODES } from "../editor-constants";
 import type { EditorLayer } from "../editor-types";
 import type { ImageEditorContent } from "../image-editor.content";
 import type { ImageEditorController } from "../useImageEditor";
-import { MiniButton, SelectRow, SliderRow } from "./EditorControls";
+import { MiniButton } from "./EditorControls";
 
 function Thumbnail({ layer, theme }: { layer: EditorLayer; theme: ThemePalette }) {
   const ref = useRef<HTMLCanvasElement | null>(null);
@@ -79,6 +77,10 @@ export default function EditorLayersPanel({
   theme: ThemePalette;
 }) {
   const [addOpen, setAddOpen] = useState(false);
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
   const doc = editor.doc;
   if (!doc) return null;
   const labels = content.ui.layers;
@@ -144,6 +146,15 @@ export default function EditorLayersPanel({
             </div>
           )}
         </div>
+        <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp" className="hidden"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (file) void editor.placeImageFile(file, content.ui.header.placeImage);
+          }} />
+        <MiniButton theme={theme} onClick={() => imageInputRef.current?.click()} title={content.ui.header.placeImage}>
+          <ImagePlus className="h-4 w-4" aria-hidden="true" />{content.ui.layers.kindRaster}
+        </MiniButton>
         <MiniButton theme={theme} onClick={() => editor.duplicateLayer(labels.duplicate)} disabled={!active} title={labels.duplicate}>
           <Copy className="h-3.5 w-3.5" aria-hidden="true" />
         </MiniButton>
@@ -166,9 +177,25 @@ export default function EditorLayersPanel({
           {[...doc.layers].reverse().map((layer) => {
             const isActive = layer.id === doc.activeLayerId;
             return (
-              <li key={layer.id}>
+              <li key={layer.id}
+                draggable={renamingId !== layer.id}
+                onDragStart={(event) => {
+                  setDraggedId(layer.id);
+                  event.dataTransfer.setData("text/x-image-editor-layer", layer.id);
+                  event.dataTransfer.effectAllowed = "move";
+                }}
+                onDragEnd={() => setDraggedId(null)}
+                onDragOver={(event: DragEvent<HTMLLIElement>) => {
+                  if (draggedId) { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }
+                }}
+                onDrop={(event) => {
+                  if (!draggedId) return;
+                  event.preventDefault(); event.stopPropagation();
+                  editor.reorderLayer(draggedId, layer.id, content.ui.layers.moveOrder);
+                  setDraggedId(null);
+                }}>
                 <div
-                  className={`flex items-center gap-2 px-2 py-1.5 ${isActive ? theme.secondary : ""}`}
+                  className={`flex min-w-0 items-center gap-2 px-2 py-2 ${isActive ? theme.secondary : ""} ${draggedId === layer.id ? "opacity-50" : ""}`}
                 >
                   <button
                     type="button"
@@ -190,15 +217,36 @@ export default function EditorLayersPanel({
                   >
                     {layer.locked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
                   </button>
-                  <button
-                    type="button"
+                  <div
+                    role="button"
+                    tabIndex={0}
                     onClick={() => editor.setActiveLayer(layer.id)}
-                    className="flex min-w-0 flex-1 items-center gap-2 text-start"
+                    onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); editor.setActiveLayer(layer.id); } }}
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-start"
                     aria-pressed={isActive}
                   >
                     <Thumbnail layer={layer} theme={theme} />
                     <span className="flex min-w-0 flex-col">
-                      <span className={`truncate text-[11px] font-medium ${theme.text}`}>{layer.name}</span>
+                      {renamingId === layer.id ? (
+                        <input autoFocus value={renameValue} aria-label={content.ui.layers.rename}
+                          className={`h-7 w-full min-w-0 rounded border px-1.5 text-[11px] ${theme.border} ${theme.bg} ${theme.text}`}
+                          onChange={(event) => setRenameValue(event.target.value)}
+                          onClick={(event) => event.stopPropagation()}
+                          onKeyDown={(event) => {
+                            if (event.key === "Escape") { setRenamingId(null); event.stopPropagation(); }
+                            if (event.key === "Enter") event.currentTarget.blur();
+                          }}
+                          onBlur={() => {
+                            if (renameValue.trim() && renameValue !== layer.name) editor.patchLayer(layer.id, { name: renameValue.trim() }, content.ui.layers.rename);
+                            setRenamingId(null);
+                          }} />
+                      ) : (
+                      <span className={`truncate text-[11px] font-medium ${theme.text}`}
+                        title={content.ui.layers.rename} onDoubleClick={(event) => {
+                          event.preventDefault(); event.stopPropagation();
+                          setRenamingId(layer.id); setRenameValue(layer.name);
+                        }}>{layer.name}</span>
+                      )}
                       <span className={`truncate text-[10px] ${theme.textMuted}`}>
                         {layer.kind === "raster"
                           ? labels.kindRaster
@@ -212,35 +260,13 @@ export default function EditorLayersPanel({
                         {layer.blend !== "normal" ? ` · ${content.ui.blend[layer.blend]}` : ""}
                       </span>
                     </span>
-                  </button>
+                  </div>
                 </div>
               </li>
             );
           })}
         </ul>
       </div>
-
-      {active && (
-        <div className={`flex flex-col gap-2 rounded-xl border p-2.5 ${theme.border} ${theme.bg}`}>
-          <SelectRow
-            label={labels.blend}
-            value={active.blend}
-            theme={theme}
-            options={EDITOR_BLEND_MODES.map((mode) => ({ value: mode, label: content.ui.blend[mode] }))}
-            onChange={(value) => editor.patchLayer(active.id, { blend: value }, labels.blend)}
-          />
-          <SliderRow
-            label={labels.opacity}
-            value={Math.round(active.opacity * 100)}
-            min={0}
-            max={100}
-            theme={theme}
-            suffix="%"
-            onChange={(value) => editor.patchLayer(active.id, { opacity: value / 100 })}
-            onCommit={() => editor.recordHistory(labels.opacity)}
-          />
-        </div>
-      )}
 
       <div className="flex flex-wrap gap-1">
         <MiniButton theme={theme} onClick={() => editor.mergeDown(labels.mergeDown)} disabled={!active} title={labels.mergeDown}>
@@ -259,9 +285,6 @@ export default function EditorLayersPanel({
         >
           <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
           {labels.rasterize}
-        </MiniButton>
-        <MiniButton theme={theme} onClick={() => editor.nudgeLayer(0, -1)} disabled={!active} title="↑">
-          <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
         </MiniButton>
       </div>
     </div>

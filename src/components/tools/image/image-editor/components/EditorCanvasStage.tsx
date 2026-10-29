@@ -11,6 +11,7 @@ import {
   polygonSelection,
   rectSelection,
   renderDocument,
+  getLayerBounds,
   traceSelectionPath,
   normaliseRect,
 } from "../image-editor.utils";
@@ -19,7 +20,8 @@ import type { ImageEditorController } from "../useImageEditor";
 
 type Drag =
   | { kind: "pan"; clientX: number; clientY: number; left: number; top: number }
-  | { kind: "move"; start: EditorPoint; x: number; y: number; changed: boolean }
+  | { kind: "move"; id: string; start: EditorPoint; x: number; y: number; changed: boolean }
+  | { kind: "resize"; id: string; start: EditorPoint; scaleX: number; scaleY: number; rotation: number; corner: number; width: number; height: number; changed: boolean }
   | { kind: "stroke"; last: EditorPoint; canvas: HTMLCanvasElement; erase: boolean }
   | { kind: "rect"; tool: "marquee" | "crop"; start: EditorPoint; current: EditorPoint }
   | { kind: "lasso"; points: EditorPoint[] }
@@ -169,7 +171,7 @@ export default function EditorCanvasStage({
       ctx.restore();
     }
 
-    if (editor.tool === "move" && editor.activeBounds && !liveMarquee) {
+    if (editor.tool === "move" && editor.activeBounds && editor.activeLayer?.visible && !editor.activeLayer?.locked && !liveMarquee) {
       const bounds = editor.activeBounds;
       ctx.save();
       ctx.strokeStyle = "#3b82f6";
@@ -231,20 +233,28 @@ export default function EditorCanvasStage({
     return () => node.removeEventListener("wheel", onWheel);
   }, [editor]);
 
-  /** Fits a freshly opened document into the viewport once, like Photoshop's "Fit on screen". */
-  const fittedRef = useRef(false);
+  /** Fit is available at any time; opening another document and switching view also work. */
+  const fitRequest = editor.fitRequest;
+  const docWidth = doc?.width;
+  const docHeight = doc?.height;
   useEffect(() => {
-    if (fittedRef.current) return;
     const node = scrollRef.current;
-    const current = editor.doc;
-    if (!node || !current) return;
-    fittedRef.current = true;
-    const availableWidth = node.clientWidth - 48;
-    const availableHeight = node.clientHeight - 48;
-    if (availableWidth <= 0 || availableHeight <= 0) return;
-    const fit = Math.min(availableWidth / current.width, availableHeight / current.height, 1);
-    editor.setZoom(Math.max(0.05, Math.round(fit * 100) / 100));
-  }, [editor]);
+    if (!node || !docWidth || !docHeight) return;
+    const apply = () => {
+      const width = node.clientWidth - 56;
+      const height = node.clientHeight - 56;
+      if (width <= 0 || height <= 0) return;
+      // "Fit" can scale up a small document as well as shrink a large one.
+      // Keep an upper bound so tiny icons never become absurdly magnified.
+      const fittedZoom = Math.min(width / docWidth, height / docHeight, 8);
+      editor.setZoom(Math.min(32, Math.max(0.05, Number(fittedZoom.toFixed(3)))));
+      node.scrollTo({ left: 0, top: 0 });
+    };
+    const frame = window.requestAnimationFrame(apply);
+    return () => window.cancelAnimationFrame(frame);
+    // Intentional: fit only when requested or document dimensions change, not on every editor render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitRequest, docWidth, docHeight]);
 
   if (!doc) return null;
 
@@ -326,9 +336,31 @@ export default function EditorCanvasStage({
     }
 
     if (tool === "move") {
-      if (editor.activeLayer?.locked) return;
-      if (editor.activeBounds && inRect(point, editor.activeBounds)) {
-        dragRef.current = { kind: "move", start: point, x: editor.activeLayer?.x ?? 0, y: editor.activeLayer?.y ?? 0, changed: false };
+      const selected = editor.activeLayer;
+      const selectedBounds = editor.activeBounds;
+      if (selected && selectedBounds && !selected.locked && selected.visible) {
+        const cornerIndex = selectedBounds.corners.findIndex((corner) => Math.hypot(corner.x - point.x, corner.y - point.y) <= 11 / Math.max(0.05, zoom));
+        if (cornerIndex >= 0) {
+          const originalWidth = selected.kind === "raster" ? (selected.contentRect?.width ?? doc.width)
+            : selected.kind === "shape" ? selected.width : selectedBounds.width / Math.max(0.01, Math.abs(selected.scaleX));
+          const originalHeight = selected.kind === "raster" ? (selected.contentRect?.height ?? doc.height)
+            : selected.kind === "shape" ? selected.height : selectedBounds.height / Math.max(0.01, Math.abs(selected.scaleY));
+          dragRef.current = {
+            kind: "resize", id: selected.id, start: point, scaleX: selected.scaleX, scaleY: selected.scaleY,
+            rotation: selected.rotation, corner: cornerIndex, width: Math.max(1, originalWidth), height: Math.max(1, originalHeight), changed: false,
+          };
+          return;
+        }
+      }
+      // Select whichever visible layer is actually clicked, rather than requiring a detour through the layer list.
+      const target = [...doc.layers].reverse().find((layer) =>
+        layer.kind !== "adjustment" && layer.visible && !layer.locked && inRect(point, getLayerBounds(layer, doc))
+      );
+      if (target) {
+        if (target.id !== selected?.id) editor.setActiveLayer(target.id);
+        dragRef.current = { kind: "move", id: target.id, start: point, x: target.x, y: target.y, changed: false };
+      } else {
+        editor.deselect();
       }
       return;
     }
@@ -375,10 +407,30 @@ export default function EditorCanvasStage({
     }
 
     if (drag.kind === "move") {
-      const id = editor.activeLayer?.id;
-      if (!id) return;
+      if (point.x === drag.start.x && point.y === drag.start.y) return;
       drag.changed = true;
-      editor.updateLayerWith(id, (layer) => ({ ...layer, x: drag.x + point.x - drag.start.x, y: drag.y + point.y - drag.start.y }));
+      editor.updateLayerWith(drag.id, (layer) => ({ ...layer, x: drag.x + point.x - drag.start.x, y: drag.y + point.y - drag.start.y }));
+      return;
+    }
+
+    if (drag.kind === "resize") {
+      const dx = point.x - drag.start.x;
+      const dy = point.y - drag.start.y;
+      const cos = Math.cos(drag.rotation);
+      const sin = Math.sin(drag.rotation);
+      const localDx = dx * cos + dy * sin;
+      const localDy = -dx * sin + dy * cos;
+      const xSign = drag.corner === 0 || drag.corner === 3 ? -1 : 1;
+      const ySign = drag.corner === 0 || drag.corner === 1 ? -1 : 1;
+      let scaleX = Math.max(0.02, drag.scaleX + (xSign * 2 * localDx) / drag.width);
+      let scaleY = Math.max(0.02, drag.scaleY + (ySign * 2 * localDy) / drag.height);
+      if (event.shiftKey) {
+        const factor = Math.max(scaleX / Math.max(0.02, drag.scaleX), scaleY / Math.max(0.02, drag.scaleY));
+        scaleX = Math.max(0.02, drag.scaleX * factor);
+        scaleY = Math.max(0.02, drag.scaleY * factor);
+      }
+      drag.changed = true;
+      editor.updateLayerWith(drag.id, (layer) => ({ ...layer, scaleX, scaleY }));
       return;
     }
 
@@ -437,7 +489,7 @@ export default function EditorCanvasStage({
     dragRef.current = null;
     if (!drag) return;
 
-    if (drag.kind === "move" && drag.changed) {
+    if ((drag.kind === "move" || drag.kind === "resize") && drag.changed) {
       editor.recordHistory(content.ui.tools.move);
       return;
     }
@@ -512,7 +564,7 @@ export default function EditorCanvasStage({
     <div className="relative flex min-h-0 flex-1 flex-col">
       <div
         ref={scrollRef}
-        className={`relative flex min-h-0 flex-1 items-start justify-center overflow-auto p-6 ${theme.bg}`}
+        className={`relative min-h-0 flex-1 overflow-auto p-7 ${theme.bg}`}
         style={{
           backgroundImage:
             "linear-gradient(45deg, rgba(0,0,0,0.06) 25%, transparent 25%), linear-gradient(-45deg, rgba(0,0,0,0.06) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.06) 75%), linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.06) 75%)",
@@ -521,7 +573,7 @@ export default function EditorCanvasStage({
         }}
       >
         <div
-          className="relative shrink-0 shadow-2xl ring-1 ring-black/20"
+          className="relative mx-auto shrink-0 shadow-2xl ring-1 ring-black/20"
           style={{
             width: displayWidth,
             height: displayHeight,
@@ -588,7 +640,7 @@ export default function EditorCanvasStage({
           {pointer ? `${Math.round(pointer.x)}, ${Math.round(pointer.y)} px` : content.ui.status.pointer}
         </span>
         <span>
-          {content.ui.status.zoom} {Math.round(zoom * 100)}% · {content.ui.status.selection}:{" "}
+          {doc.width} × {doc.height} px · {content.ui.status.zoom} {Math.round(zoom * 100)}% · {content.ui.status.selection}:{" "}
           {doc.selection
             ? `${Math.round(doc.selection.bounds.width)} × ${Math.round(doc.selection.bounds.height)}`
             : content.ui.status.noSelection}

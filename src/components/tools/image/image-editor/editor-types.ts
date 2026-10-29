@@ -107,6 +107,8 @@ export interface EditorLayerBase {
 export interface EditorRasterLayer extends EditorLayerBase {
   kind: "raster";
   canvas: HTMLCanvasElement;
+  /** Bounds of placed image pixels within the document-sized raster canvas. */
+  contentRect?: EditorSelectionRect;
 }
 
 export interface EditorTextLayer extends EditorLayerBase {

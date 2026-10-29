@@ -72,15 +72,15 @@ export default function EditorToolbar({
 
   return (
     <div
-      className={`flex shrink-0 items-center gap-1 overflow-x-auto border-b px-2 py-1.5 md:flex-col md:justify-start md:overflow-visible md:border-b-0 md:border-e md:py-2 ${theme.border} ${theme.card}`}
+      className={`flex shrink-0 items-center gap-1 overflow-x-auto border-b px-2 py-1.5 lg:w-[94px] lg:flex-col lg:justify-start lg:overflow-y-auto lg:overflow-x-hidden lg:border-b-0 lg:border-e lg:py-2 ${theme.border} ${theme.card}`}
       role="toolbar"
       aria-label={content.ui.header.badge}
     >
       {groups.map((group, index) => (
         <div
           key={group.key}
-          className={`flex items-center gap-1 md:flex-col ${
-            index > 0 ? `border-s ps-1 md:border-s-0 md:border-t md:pt-1 ${theme.border}` : ""
+          className={`flex items-center gap-1 lg:w-full lg:flex-col ${
+            index > 0 ? `border-s ps-1 lg:border-s-0 lg:border-t lg:pt-1 ${theme.border}` : ""
           }`}
           role="group"
           aria-label={content.ui.groups[group.key]}
@@ -96,20 +96,21 @@ export default function EditorToolbar({
                 aria-label={`${content.ui.tools[tool.id]} (${tool.shortcut})`}
                 aria-pressed={active}
                 onClick={() => editor.setTool(tool.id)}
-                className={`relative grid h-9 w-9 shrink-0 place-items-center rounded-lg transition-colors ${
+                className={`relative flex h-12 w-[72px] shrink-0 flex-col items-center justify-center gap-1 rounded-lg px-1 transition-colors lg:h-12 lg:w-full ${
                   active
                     ? `${theme.primary} shadow-sm`
                     : `${theme.text} hover:${theme.secondary}`
                 }`}
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
+                <Icon className="h-[17px] w-[17px] shrink-0" aria-hidden="true" />
+                <span className="max-w-full truncate text-[9px] leading-none">{content.ui.tools[tool.id]}</span>
               </button>
             );
           })}
         </div>
       ))}
 
-      <div className={`mt-auto hidden flex-col items-center gap-2 border-t pt-3 md:flex ${theme.border}`}>
+      <div className={`mt-auto hidden flex-col items-center gap-2 border-t pt-3 lg:flex ${theme.border}`}>
         <div className="relative h-11 w-11">
           <label className="absolute end-0 top-0 h-7 w-7 cursor-pointer overflow-hidden rounded-md border border-white/60 shadow" title={content.ui.options.from}>
             <span className="sr-only">{content.ui.options.from}</span>
