@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
@@ -236,7 +237,7 @@ export default function AudioTrimTool() {
           </div>
         </div>
 
-        <button
+        <button data-file-target="fileInputRef" data-file-control="pick"
           onClick={() => fileInputRef.current?.click()}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${theme.primary}`}
         >
@@ -244,9 +245,8 @@ export default function AudioTrimTool() {
           {content.ui.trim.upload.button}
         </button>
 
-        <AccessibleInput
+        <QueuedFileInput data-file-target="fileInputRef"
           ref={fileInputRef}
-          type="file"
           accept="audio/*"
           className="hidden"
           onChange={handleFileChange}
@@ -437,7 +437,7 @@ export default function AudioTrimTool() {
                 )})`}
               </button>
 
-              <button data-testid="download-result"
+              <button data-file-control="download" data-testid="download-result"
                 onClick={handleDownloadSelection}
                 disabled={
                   disableControls ||

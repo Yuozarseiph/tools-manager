@@ -4,6 +4,18 @@
 <FilesMatch "\.(html|md)$">
   Header merge Vary Accept
 </FilesMatch>
+<Files "ai-input-preparer.html">
+  Header set Link "<https://qodeforge.ir/fa/tools/ai-input-preparer.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "ai-response-review.html">
+  Header set Link "<https://qodeforge.ir/fa/tools/ai-response-review.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "ai-output-extractor.html">
+  Header set Link "<https://qodeforge.ir/fa/tools/ai-output-extractor.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "prompt-builder.html">
+  Header set Link "<https://qodeforge.ir/fa/tools/prompt-builder.md>; rel=alternate; type=text/markdown"
+</Files>
 <Files "file-to-markdown.html">
   Header set Link "<https://qodeforge.ir/fa/tools/file-to-markdown.md>; rel=alternate; type=text/markdown"
 </Files>

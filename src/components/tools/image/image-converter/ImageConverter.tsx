@@ -6,7 +6,7 @@ import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useEffect, useRef, type ChangeEvent } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { saveFile as download } from "@/lib/file-export";
 import JSZip from "jszip";
 import {
@@ -48,7 +48,7 @@ export default function ImageConverter() {
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: {
       "image/*": [
         ".png",
@@ -207,6 +207,7 @@ export default function ImageConverter() {
     >
       {/* آپلودر (دیوایس / درگ‌درآپ) */}
       {files.length === 0 ? (
+        <>
         <AccessibleDropzone
           {...getRootProps()}
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
@@ -230,6 +231,8 @@ export default function ImageConverter() {
             </p>
           </div>
         </AccessibleDropzone>
+        {fileQueue}
+        </>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -363,7 +366,7 @@ export default function ImageConverter() {
 
           {/* دکمه‌های اکشن */}
           <div className="space-y-3">
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={handleConvert}
               disabled={isProcessing}
               type="button"

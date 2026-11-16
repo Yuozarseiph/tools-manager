@@ -27,6 +27,18 @@ const withPWA = require("@imbios/next-pwa")({
   sw: "sw.js",
   // Large engines and OCR models are fetched on demand with measured progress.
   publicExcludes: ["!runtime/**/*"],
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/staticimgly\.com\/@imgly\/background-removal-data\/[^/]+\/dist\//,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "qodeforge-background-model",
+        cacheableResponse: { statuses: [200] },
+        expiration: { maxEntries: 96, maxAgeSeconds: 30 * 24 * 60 * 60 },
+      },
+    },
+    ...require("@imbios/next-pwa/cache"),
+  ],
   // جلوگیری از خطا در build
   buildExcludes: [/middleware-manifest\.json$/, /_buildManifest\.js$/, /_ssgManifest\.js$/],
 });

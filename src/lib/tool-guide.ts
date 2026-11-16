@@ -17,6 +17,9 @@ export function toolInfo(tool: Tool, locale: Locale) {
 
 export function networkNote(tool: Tool, locale: Locale): string {
   const fa = locale === "fa";
+  if (tool.id === "prompt-builder") return fa
+    ? "پرامپت در مرورگر ساخته می‌شود. اگر قالبی ذخیره کنید، فقط قالب در همین مرورگر می‌ماند و مقادیر واردشده برای فیلدهای متغیر ذخیره نمی‌شوند."
+    : "Prompts are built in your browser. Saved templates stay in this browser, and values entered into variable fields are not saved.";
   if (tool.category === "ai") return fa ? "فایل و متن فقط در مرورگر پردازش می‌شوند. هیچ درخواستی به مدل هوش مصنوعی ارسال نمی‌شود و ورودی در مرورگر ذخیره دائمی نمی‌شود. پیش‌نمایش منابع خارجی را بارگذاری نمی‌کند." : "Files and text are processed locally. No AI model receives input, and input is not saved persistently. Preview does not load external resources.";
   if (tool.href.endsWith("/code-editor")) return fa
     ? "فایل‌های ویرایشگر کد در Local Storage مرورگر ذخیره می‌شوند؛ برای حذف آن‌ها از امکانات پاک‌سازی ویرایشگر یا تنظیمات مرورگر استفاده کنید."

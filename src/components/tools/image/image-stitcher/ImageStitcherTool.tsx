@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 import { AnimatePresence } from "framer-motion";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
@@ -237,9 +238,8 @@ export default function ImageStitcherTool() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <AccessibleInput
+      <QueuedFileInput data-file-target="inputRef"
         ref={inputRef}
-        type="file"
         accept="image/*"
         multiple
         className="hidden"
@@ -315,13 +315,13 @@ export default function ImageStitcherTool() {
       )}
 
       {/* Dropzone */}
-      <button
+      <button data-file-target="inputRef" data-file-control="drop"
         type="button"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
-          addFiles(e.dataTransfer.files);
+          stageDroppedFiles(inputRef.current, e.dataTransfer.files);
         }}
         className={`w-full flex flex-col items-center justify-center gap-2 py-10 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-[var(--app-accent)] ${theme.bg}`}
       >
@@ -430,7 +430,7 @@ export default function ImageStitcherTool() {
         <div className="mt-8">
           <div className="flex items-center justify-between mb-3">
             <h3 className={`font-bold ${theme.text}`}>{t.resultTitle}</h3>
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={doDownload}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium ${theme.primary}`}
             >

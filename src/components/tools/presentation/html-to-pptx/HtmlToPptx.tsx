@@ -1,5 +1,6 @@
 // components/tools/presentation/html-to-pptx/HtmlToPptx.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { LoaderCircle, CircleCheck, Ruler, ArrowUpDown, Type, Ratio } from "lucide-react";
 
@@ -465,8 +466,7 @@ export default function HtmlToPptxTool() {
           <p className={`text-xs sm:text-xs mb-2 ${theme.textMuted}`}>
             {content.ui.upload.subtitle}
           </p>
-          <AccessibleInput
-            type="file"
+          <QueuedFileInput
             accept=".html,.htm,.md,.markdown,.txt,text/html,text/markdown"
             disabled={isConverting}
             onChange={handleFileSelect}
@@ -657,7 +657,7 @@ export default function HtmlToPptxTool() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <button
+          <button data-file-control="download"
             type="button"
             onClick={handleConvert}
             disabled={!hasContent || isConverting}

@@ -48,6 +48,34 @@ export const AI_TOOLS = {
     steps: [["متن را وارد و جست‌وجو را اجرا کنید.", "موارد پیشنهادی را بررسی و موارد موردنظر را انتخاب کنید.", "پوشاندن را تأیید و متن خروجی را دریافت کنید."], ["Provide text and scan for potential sensitive data.", "Review matches and select the ones to redact.", "Apply redaction and copy or download the result."]],
     limit: ["حداکثر ۲ میلیون نویسه. تشخیص با الگوهای متنی انجام می‌شود؛ موارد جاافتاده و تشخیص اشتباه ممکن است. نام، آدرس و همه انواع کلید یا شماره شناسایی تشخیص داده نمی‌شوند.", "Maximum 2 million characters. Pattern matching can miss data or report false positives. Names, addresses and all key or identity-number formats are not detected."],
   },
+  "ai-input-preparer": {
+    fa: ["آماده‌ساز ورودی هوش مصنوعی","متن یا فایل را بازبینی کنید، اطلاعات حساس را بپوشانید و متن آمادهٔ ارسال و بخش‌های متناسب با بودجهٔ تقریبی توکن بگیرید."],
+    en: ["AI Input Preparer","Review pasted text or a file, redact sensitive information, and prepare chunks for an estimated token budget."],
+    features: [["ورود TXT، Markdown، HTML یا DOCX","بازبینی و انتخاب موارد حساس","تخمین توکن و بخش‌بندی"],["Import TXT, Markdown, HTML or DOCX","Review and select sensitive matches","Estimated token counts and chunking"]],
+    steps: [["متن یا یک فایل وارد کنید.","موارد حساس را بازبینی و انتخاب کنید.","بودجهٔ تقریبی توکن را تعیین و خروجی را دریافت کنید."],["Paste text or import one file.","Review and select sensitive matches.","Set an optional estimated token budget and export the result."]],
+    limit: ["حداکثر ۲۰۰ هزار نویسه و ۲ مگابایت برای فایل. شمارش توکن تخمینی است و تشخیص اطلاعات حساس ممکن است مواردی را جا بیندازد.","Up to 200,000 characters and a 2 MB file. Token counts are estimates, and sensitive-data detection can miss matches."],
+  },
+  "ai-response-review": {
+    fa: ["ارزیابی پاسخ‌های هوش مصنوعی","دو پاسخ را کنار هم بگذارید، تفاوت خطوط را ببینید و بر اساس معیارهای خودتان به آن‌ها امتیاز دهید."],
+    en: ["AI Response Review","Compare two responses side by side and score them against your own criteria."],
+    features: [["مقایسهٔ خط‌به‌خط","معیار و امتیاز دستی","گزارش Markdown"],["Line-by-line differences","Custom criteria and manual scoring","Markdown report"]],
+    steps: [["دو پاسخ را وارد کنید.","تفاوت‌ها و معیارها را بررسی کنید و امتیاز و یادداشت بنویسید.","گزارش مقایسه را کپی یا دانلود کنید."],["Paste both responses.","Review the differences, add criteria, and enter scores and notes.","Copy or download the review report."]],
+    limit: ["حداکثر ۲۰۰ هزار نویسه و ۲ هزار خط در هر پاسخ، با ۱۲ معیار. امتیازها و تشخیص درستی پاسخ با شماست.","Up to 200,000 characters and 2,000 lines per response, with up to 12 criteria. You assign scores and verify factual accuracy."],
+  },
+  "ai-output-extractor": {
+    fa: ["استخراج فایل از پاسخ هوش مصنوعی","از پاسخ چت، JSON معتبر، جدول CSV و بلوک کد Markdown را جدا کنید و هر بخش را جداگانه بگیرید."],
+    en: ["AI Output Extractor","Extract valid JSON, CSV tables, and Markdown code blocks from a chat response."],
+    features: [["اعتبارسنجی JSON","تبدیل جدول Markdown به CSV","دانلود جداگانهٔ بخش‌ها"],["JSON validation","Markdown tables to CSV","Individual downloads"]],
+    steps: [["پاسخ را در کادر وارد کنید.","فایل‌های قابل استخراج و خطاهای JSON را بررسی کنید.","بخش دلخواه یا متن کامل را دانلود کنید."],["Paste the response.","Review extracted files and JSON validation results.","Download the part you need or the full response."]],
+    limit: ["تا ۲۰۰ هزار نویسه و ۱۰۰ بخش. جدول باید قالب Markdown و سطر جداکننده داشته باشد. بلوک‌های کد اجرا نمی‌شوند.","Up to 200,000 characters and 100 parts. Tables must include a Markdown delimiter row. Code blocks are never executed."],
+  },
+  "prompt-builder": {
+    fa: ["سازندهٔ پرامپت","هدف، ورودی و قالب پاسخ را در یک قالب شخصی بچینید و بار بعد فقط فیلدهای متغیر را پر کنید."],
+    en: ["Prompt Builder","Combine a goal, input, and response format in a reusable template with fillable fields."],
+    features: [["فیلدهای متغیر فارسی و انگلیسی","ذخیرهٔ محلی قالب‌ها","کپی و دانلود پرامپت"],["Persian and English placeholders","Local template storage","Copy and download the prompt"]],
+    steps: [["هدف، ورودی و قالب پاسخ را تعریف کنید.","برای فیلد متغیر از {{موضوع}} استفاده کنید و مقدار هر فیلد را بنویسید.","پرامپت نهایی را دریافت کنید یا قالب را برای بعد ذخیره کنید."],["Define your goal, input, and response format.","Use a placeholder like {{topic}} and fill in its value.","Export the prompt or save the template for later."]],
+    limit: ["حداکثر ۳۰ قالب و ۸ هزار نویسه در هر بخش قالب یا مقدار فیلد. قالب‌ها فقط در همین مرورگر ذخیره می‌شوند.","Up to 30 templates and 8,000 characters per template section or field value. Templates are stored in this browser only."],
+  },
 } as const;
 export type AiToolId = keyof typeof AI_TOOLS;
 export function aiToolsContent(locale: "fa" | "en") {

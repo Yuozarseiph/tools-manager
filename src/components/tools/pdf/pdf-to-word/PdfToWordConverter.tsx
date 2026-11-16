@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
@@ -181,9 +182,8 @@ export default function PdfToWordConverter() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <AccessibleInput
+      <QueuedFileInput data-file-target="inputRef"
         ref={inputRef}
-        type="file"
         accept="application/pdf,.pdf"
         className="hidden"
         disabled={busy}
@@ -315,13 +315,13 @@ export default function PdfToWordConverter() {
       </div>
 
       {!file && (
-        <button
+        <button data-file-target="inputRef" data-file-control="drop"
           type="button"
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
-            handleFile(e.dataTransfer.files?.[0]);
+            stageDroppedFiles(inputRef.current, e.dataTransfer.files);
           }}
           className={`w-full flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-[var(--app-accent)] ${theme.bg}`}
         >
@@ -393,7 +393,7 @@ export default function PdfToWordConverter() {
 
       {file && !result && (
         <div className="mt-4 flex gap-3">
-          <button data-testid="download-result"
+          <button data-file-control="download" data-testid="download-result"
             type="button"
             onClick={convert}
             disabled={busy || inspecting}
@@ -447,7 +447,7 @@ export default function PdfToWordConverter() {
           )}
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               type="button"
               onClick={handleDownload}
               className={`flex-1 px-5 py-3 rounded-xl font-bold inline-flex items-center justify-center gap-2 ${theme.primary}`}

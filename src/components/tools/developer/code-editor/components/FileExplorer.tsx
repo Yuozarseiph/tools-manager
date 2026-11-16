@@ -1,5 +1,6 @@
 // components/tools/developer/code-editor/components/FileExplorer.tsx
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
@@ -153,6 +154,11 @@ export default function FileExplorer({
       dragExpandTimerRef.current = null;
     }
     setDragOverFolder(null);
+    if (e.dataTransfer.files.length) {
+      stageDroppedFiles(fileInputRef.current, e.dataTransfer.files);
+      setDraggedItem(null);
+      return;
+    }
     const fileId = e.dataTransfer.getData("text/plain");
     if (fileId && fileId !== targetFolderId) {
       const item = files.find((f) => f.id === fileId);
@@ -507,10 +513,9 @@ export default function FileExplorer({
             <Plus size={14} style={{ color: "var(--app-text-muted)" }} />
           </button>
         </div>
-        <AccessibleInput
+        <QueuedFileInput data-file-target="fileInputRef"
           id="file-import"
           ref={fileInputRef}
-          type="file"
           multiple
           onChange={handleFileImport}
           className="hidden"

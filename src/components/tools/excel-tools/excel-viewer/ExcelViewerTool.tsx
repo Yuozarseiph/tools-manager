@@ -1,5 +1,6 @@
 // components/tools/excel/excel-viewer/ExcelViewerTool.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
@@ -188,11 +189,10 @@ export default function ExcelViewerTool() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
             {rows.length === 0 ? (
-              <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-bold rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 whitespace-nowrap">
+              <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-bold rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 whitespace-nowrap">
                 <UploadCloud size={20} />
                 <span>{content.ui.upload.buttonInitial}</span>
-                <AccessibleInput hasVisibleLabel
-                  type="file"
+                <QueuedFileInput hasVisibleLabel
                   accept=".xlsx, .xls, .csv"
                   className="hidden"
                   onChange={handleFileUpload}
@@ -236,14 +236,14 @@ export default function ExcelViewerTool() {
                   className={`h-6 w-px mx-1 ${theme.border} bg-gray-300 dark:bg-gray-700`}
                 />
 
-                <button aria-label={content.ui.toolbar.csvTitle}
+                <button data-file-control="download" aria-label={content.ui.toolbar.csvTitle}
                   onClick={downloadCSV}
                   className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-success-bg)] dark:hover:bg-[var(--app-success-bg)] transition-colors text-[var(--app-success-text)] border-[var(--app-success-border)]"
                   title={content.ui.toolbar.csvTitle}
                 >
                   <FileText size={16} /> CSV
                 </button>
-                <button aria-label={content.ui.toolbar.jsonTitle}
+                <button data-file-control="download" aria-label={content.ui.toolbar.jsonTitle}
                   onClick={downloadJSON}
                   className="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg border hover:bg-[var(--app-warning-bg)] dark:hover:bg-[var(--app-warning-bg)] transition-colors text-[var(--app-warning-text)] border-[var(--app-warning-border)]"
                   title={content.ui.toolbar.jsonTitle}

@@ -64,7 +64,7 @@ export function AccessibleButton({ purpose = "action", ...props }: ComponentProp
 
 export function AccessibleDropzone(props: ComponentProps<"div">) {
   const { locale } = useLanguage();
-  return <div {...props} role="button" tabIndex={props.tabIndex ?? 0}
+  return <div {...props} data-file-control="drop" data-activity-area="upload" role="button" tabIndex={props.tabIndex ?? 0}
     aria-label={props["aria-label"] ?? (locale === "fa" ? "انتخاب فایل یا کشیدن و رها کردن فایل در این قسمت" : "Select files or drag and drop files here")}
     onKeyDown={event => {
       if (props.onKeyDown) props.onKeyDown(event);

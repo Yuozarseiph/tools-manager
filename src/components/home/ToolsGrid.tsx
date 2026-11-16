@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { usePanelPresence } from "@/hooks/usePanelPresence";
 
 import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
@@ -54,6 +55,7 @@ import { LayoutControls } from "./LayoutControls";
 import { PinnedSection } from "./PinnedSection";
 import {
   DEFAULT_LAYOUT,
+  isMobileToolsLayout,
   LAYOUT_STORAGE_KEY,
   LayoutSettings,
   PinnedLayoutMode,
@@ -96,7 +98,7 @@ const getGridClass = (layout: ToolsLayoutMode): string => {
     case "grid-1":
       return "grid-cols-1 gap-3";
     case "grid-2":
-      return "grid-cols-1 sm:grid-cols-2 gap-3";
+      return "grid-cols-2 gap-3";
     case "grid-3":
       return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
     case "grid-4":
@@ -246,12 +248,25 @@ export default function ToolsGrid() {
   const [importText, setImportText] = useState("");
   const [layoutSettings, setLayoutSettings] =
     useState<LayoutSettings>(DEFAULT_LAYOUT);
+  const [mobile, setMobile] = useState(false);
+  const desktopLayout = layoutSettings.toolsLayout;
+  const mobileLayout = layoutSettings.mobileToolsLayout ??
+    (isMobileToolsLayout(desktopLayout) ? desktopLayout : "grid-2");
+  const toolsLayout = mobile ? mobileLayout : desktopLayout;
+
+  useEffect(() => {
+    const query = window.matchMedia("(width < 640px)");
+    const update = () => setMobile(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [showImportHelp, setShowImportHelp] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const categoryPresence = usePanelPresence(showCategoryDropdown);
-  const exportPresence = usePanelPresence(showExportModal);
-  const importPresence = usePanelPresence(showImportModal);
+  const exportPresence = usePanelPresence(showExportModal, "modal");
+  const importPresence = usePanelPresence(showImportModal, "modal");
   const categoryPanelRef = useViewportMenu(categoryPresence.present);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -317,12 +332,18 @@ export default function ToolsGrid() {
   const handleToolsLayoutChange = useCallback(
     (layout: ToolsLayoutMode) => {
       setLayoutSettings((previous) => {
-        const next = { ...previous, toolsLayout: layout };
+        const next = { ...previous };
+        if (mobile) {
+          if (!isMobileToolsLayout(layout)) return previous;
+          next.mobileToolsLayout = layout;
+        } else {
+          next.toolsLayout = layout;
+        }
         saveLayoutSettings(next);
         return next;
       });
     },
-    [saveLayoutSettings],
+    [mobile, saveLayoutSettings],
   );
 
   const handlePinnedLayoutChange = useCallback(
@@ -333,7 +354,7 @@ export default function ToolsGrid() {
         return next;
       });
     },
-    [saveLayoutSettings],
+    [mobile, saveLayoutSettings],
   );
 
   const savePinnedTools = useCallback((pins: string[]) => {
@@ -525,7 +546,8 @@ export default function ToolsGrid() {
         layoutControls={
           <LayoutControls
             mode="pinned"
-            toolsLayout={layoutSettings.toolsLayout}
+            mobile={mobile}
+            toolsLayout={toolsLayout}
             pinnedLayout={layoutSettings.pinnedLayout}
             onToolsLayoutChange={handleToolsLayoutChange}
             onPinnedLayoutChange={handlePinnedLayoutChange}
@@ -584,7 +606,8 @@ export default function ToolsGrid() {
       <div className="tools-filters">
         <LayoutControls
           mode="tools"
-          toolsLayout={layoutSettings.toolsLayout}
+          mobile={mobile}
+          toolsLayout={toolsLayout}
           pinnedLayout={layoutSettings.pinnedLayout}
           onToolsLayoutChange={handleToolsLayoutChange}
           onPinnedLayoutChange={handlePinnedLayoutChange}
@@ -687,7 +710,7 @@ export default function ToolsGrid() {
         {filteredTools.length.toLocaleString(locale === "fa" ? "fa-IR" : "en-US")} {locale === "fa" ? "ابزار در دسترس" : "tools available"}
       </p>
 
-      <div className={`grid ${getGridClass(layoutSettings.toolsLayout)}`}>
+      <div className={`grid ${getGridClass(toolsLayout)}`}>
         {visibleTools.length > 0 ? (
           visibleTools.map((tool) => (
             <ToolCard
@@ -698,7 +721,7 @@ export default function ToolsGrid() {
               theme={theme}
               locale={locale}
               content={content}
-              layout={layoutSettings.toolsLayout}
+              layout={toolsLayout}
             />
           ))
         ) : (
@@ -780,7 +803,7 @@ export default function ToolsGrid() {
                 <span>{locale === "fa" ? "نام فایل خروجی (اختیاری)" : "Output filename (optional)"}</span>
                 <AccessibleInput value={exportName} onChange={event => setExportName(event.target.value)} maxLength={160} placeholder={locale === "fa" ? "نام خودکار؛ پسوند JSON خودکار اضافه می‌شود" : "Automatic name; JSON extension is added automatically"} className={`w-full rounded-xl border px-3 py-2 ${theme.border} ${theme.bg} ${theme.text}`} dir="auto" />
               </label>
-              <button data-testid="download-result"
+              <button data-file-control="download" data-testid="download-result"
                 type="button"
                 onClick={handleExportFile}
                 className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] font-black text-white ${theme.primary}`}
@@ -825,7 +848,7 @@ export default function ToolsGrid() {
           onHelp={() => setShowImportHelp(true)}
         >
           <div className="space-y-4">
-            <button
+            <button data-file-target="fileInputRef" data-file-control="pick"
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[15px] border text-sm font-black ${theme.card} ${theme.border} ${theme.text}`}
@@ -834,9 +857,8 @@ export default function ToolsGrid() {
               {uiText.uploadFile}
             </button>
 
-            <AccessibleInput
+            <QueuedFileInput data-file-target="fileInputRef"
               ref={fileInputRef}
-              type="file"
               accept=".json"
               onChange={handleImportFile}
               className="hidden"

@@ -1,10 +1,10 @@
 import { saveFile } from "./file-export";
 import { activityOrigin, type ActivityOrigin } from "./activity-origin";
-export type Activity = { id: string; name: string; kind: "read" | "download" | "process" | "save"; done: number; total?: number; started: number; updated: number; status: "running" | "done" | "error" | "cancelled"; cancel?: () => void; detail?: string; origin?: ActivityOrigin };
+export type Activity = { id: string; name: string; kind: "read" | "download" | "process" | "save"; done: number; total?: number; started: number; updated: number; status: "running" | "done" | "error" | "cancelled"; cancel?: () => void; detail?: string; cached?: boolean; origin?: ActivityOrigin };
 const EVENT = "qodeforge-activity";
 export const activityEvent = EVENT;
-export function startActivity(name: string, kind: Activity["kind"], total?: number, cancel?: () => void, origin = activityOrigin()) {
-  let state: Activity = { id: crypto.randomUUID(), name, kind, done: 0, total: total && total > 0 ? total : undefined, started: Date.now(), updated: Date.now(), status: "running", cancel, origin };
+export function startActivity(name: string, kind: Activity["kind"], total?: number, cancel?: () => void, origin = activityOrigin(), cached = false) {
+  let state: Activity = { id: crypto.randomUUID(), name, kind, done: 0, total: total && total > 0 ? total : undefined, started: Date.now(), updated: Date.now(), status: "running", cancel, origin, cached };
   let last = 0;
   const emit = (force = false) => { if (force || Date.now() - last > 120) { last = Date.now(); window.dispatchEvent(new CustomEvent(EVENT, { detail: { ...state } })); } };
   emit(true);
@@ -52,23 +52,79 @@ export function readLocalFile(file: File, signal?: AbortSignal): Promise<ArrayBu
     reader.readAsArrayBuffer(file);
   });
 }
+const RUNTIME_CACHE = "qodeforge-resources-v1";
+const BACKGROUND_CACHE = "qodeforge-background-model";
+export const runtimeCacheEvent = "qodeforge-runtime-cache";
+export type RuntimeGroup = "ocr" | "audio" | "background";
+const runtimePrefixes = { ocr: "/runtime/ocr-v7/", audio: "/runtime/ffmpeg-v0.12.10/" };
 let runtimeManifest: Promise<Record<string, { size: number; hash: string }>> | undefined;
-export async function downloadResource(url: string, name: string, signal?: AbortSignal) {
-  // Cache public engine/model resources only; never use this for user input.
-  let expectedSize: number | undefined;
-  if (url.startsWith("/runtime/")) {
-    try {
-      runtimeManifest ??= fetch("/runtime/manifest.json", { cache: "no-store" }).then(response => { if (!response.ok) throw new Error("MANIFEST_UNAVAILABLE"); return response.json(); });
-      const resource = (await runtimeManifest)[url];
-      if (resource) { expectedSize = resource.size; url += `?v=${resource.hash}`; }
-    } catch { runtimeManifest = undefined; }
+
+async function runtimeKeys(group: Exclude<RuntimeGroup, "background">, cache: Cache) {
+  return (await cache.keys()).filter(request => new URL(request.url).pathname.startsWith(runtimePrefixes[group]));
+}
+
+export async function hasRuntimeCache(group: RuntimeGroup) {
+  if (typeof caches === "undefined") return false;
+  if (group === "background") return caches.has(BACKGROUND_CACHE);
+  return (await runtimeKeys(group, await caches.open(RUNTIME_CACHE))).length > 0;
+}
+
+export async function clearRuntimeCache(group: RuntimeGroup) {
+  if (typeof caches !== "undefined") {
+    if (group === "background") await caches.delete(BACKGROUND_CACHE);
+    else {
+      const cache = await caches.open(RUNTIME_CACHE);
+      await Promise.all((await runtimeKeys(group, cache)).map(request => cache.delete(request)));
+    }
   }
+  if (group === "ocr") {
+    // Tesseract also keeps decompressed language packs in its own IndexedDB entries.
+    const { keys, delMany } = await import("idb-keyval");
+    const stored = (await keys()).filter(key => typeof key === "string" && /^qodeforge-ocr-(?:balanced|accurate)-v7\//.test(key));
+    if (stored.length) await delMany(stored);
+  }
+  window.dispatchEvent(new Event(runtimeCacheEvent));
+}
+
+export async function downloadResource(path: string, name: string, signal?: AbortSignal) {
+  signal?.throwIfAborted();
+  // Cache only QodeForge's public runtime assets. User-selected files and URLs stay out of this cache.
+  if (!Object.values(runtimePrefixes).some(prefix => path.startsWith(prefix))) return downloadBlob(path, name, signal);
+  let url = path, expectedSize: number | undefined;
+  try {
+    runtimeManifest ??= fetch("/runtime/manifest.json", { cache: "no-cache" }).then(response => {
+      if (!response.ok) throw new Error("MANIFEST_UNAVAILABLE");
+      return response.json();
+    });
+    const resource = (await runtimeManifest)[path];
+    if (resource) { expectedSize = resource.size; url += `?v=${encodeURIComponent(resource.hash)}`; }
+  } catch { runtimeManifest = undefined; }
+  signal?.throwIfAborted();
   let cache: Cache | undefined;
-  try { cache = await caches.open("qodeforge-resources-v1"); const hit = await cache.match(url); if (hit) { signal?.throwIfAborted(); const blob = await hit.blob(); const task = startActivity(name, "download", blob.size); task.progress(blob.size, blob.size, "Cache"); task.finish(); return blob; } } catch (error) { if (signal?.aborted) throw error; }
+  try {
+    cache = await caches.open(RUNTIME_CACHE);
+    const hit = await cache.match(url);
+    if (hit) {
+      signal?.throwIfAborted();
+      const blob = await hit.blob();
+      signal?.throwIfAborted();
+      const task = startActivity(name, "download", blob.size, undefined, undefined, true);
+      task.progress(blob.size, blob.size);
+      task.finish();
+      return blob;
+    }
+  } catch (error) { if (signal?.aborted) throw error; }
   const blob = await downloadBlob(url, name, signal, expectedSize);
-  try { await cache?.put(url, new Response(blob)); } catch { /* Storage quota may be unavailable. */ }
+  signal?.throwIfAborted();
+  if (cache) {
+    try {
+      await cache.put(url, new Response(blob, { headers: { "Content-Type": blob.type || "application/octet-stream" } }));
+      window.dispatchEvent(new Event(runtimeCacheEvent));
+    } catch { /* The resource remains usable when storage is unavailable. */ }
+  }
   return blob;
 }
+
 export function saveText(text: string, name: string, type = "text/markdown;charset=utf-8") {
   return saveFile(new Blob([text], { type }), name);
 }

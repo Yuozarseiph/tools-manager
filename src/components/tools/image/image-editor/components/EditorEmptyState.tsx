@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 
 import { useRef, useState } from "react";
 import { FilePlus2, ImagePlus, Link2, Sparkles, Upload } from "lucide-react";
@@ -60,11 +61,11 @@ export default function EditorEmptyState({
             <p className={`mt-2 text-sm leading-relaxed ${theme.textMuted}`}>{labels.description}</p>
           </div>
 
-          <AccessibleDropzone
+          <AccessibleDropzone data-file-target="inputRef"
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
               event.preventDefault();
-              openFile(event.dataTransfer.files?.[0]);
+              stageDroppedFiles(inputRef.current, event.dataTransfer.files);
             }}
             onClick={() => inputRef.current?.click()}
             className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ${theme.border} ${theme.bg}`}
@@ -76,9 +77,8 @@ export default function EditorEmptyState({
             <span className={`text-[11px] ${theme.textMuted}`}>PNG · JPG · WebP · PSD</span>
           </AccessibleDropzone>
 
-          <input
+          <QueuedFileInput data-file-target="inputRef"
             ref={inputRef}
-            type="file"
             accept="image/*,.psd,.psb"
             className="hidden"
             onChange={(event) => {
@@ -94,7 +94,7 @@ export default function EditorEmptyState({
                 {labels.psd}
               </span>
               <p className={`text-[11px] ${theme.textMuted}`}>{content.ui.messages.psdLoaded}</p>
-              <MiniButton theme={theme} onClick={() => inputRef.current?.click()} title={labels.upload}>
+              <MiniButton data-file-target="inputRef" theme={theme} onClick={() => inputRef.current?.click()} title={labels.upload}>
                 <Upload className="h-3.5 w-3.5" aria-hidden="true" />
                 {labels.psd}
               </MiniButton>

@@ -140,7 +140,7 @@ export default function Header() {
           site-header sticky top-0 z-50
         `}
       >
-        <div className="mx-auto px-3 sm:px-5 h-16 sm:h-[68px] flex items-center justify-between gap-3">
+        <div className="mx-auto px-3 sm:px-5 h-full flex items-center justify-between gap-3">
           {/* Logo */}
           <Link
             href="/"

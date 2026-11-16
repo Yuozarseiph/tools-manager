@@ -19,8 +19,9 @@ assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/en/tools/ban
 assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/fa/tools/bank", "en"), "https://qodeforge.ir/en/tools/bank");
 assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/fa/tools/bank", "fa"), null);
 const fa = JSON.parse(readFileSync("src/data/changelog/falog.json", "utf8")), en = JSON.parse(readFileSync("src/data/changelog/enlog.json", "utf8"));
-assert.equal(fa[0].version, "27.0.0"); assert.equal(en[0].version, "27.0.0");
-assert.equal(fa[0].status, "development"); assert.equal(en[0].status, "development");
+assert.equal(fa[0].version, "27.1.0"); assert.equal(en[0].version, "27.1.0");
+assert.equal(fa[0].status, undefined); assert.equal(en[0].status, undefined);
+assert.equal(fa[0].date, "۳۰ دی ۱۴۰۵"); assert.equal(en[0].date, "January 20, 2027");
 assert.equal(fa[0].changes.reduce((total, group) => total + group.items.length, 0), en[0].changes.reduce((total, group) => total + group.items.length, 0));
 const css = readFileSync("src/app/globals.css", "utf8");
 for (const rule of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
@@ -40,4 +41,4 @@ for (const dark of [false, true]) {
  for (const button of ["--app-primary-bg", "--app-primary-hover"]) assert(contrast("#ffffff", colors[button]) >= 4.5, `${button} text contrast`);
 }
 assert(!readFileSync("src/components/SiteLayout.tsx", "utf8").includes("LanguageSuggestion"));
-console.log("Interface passed: saved language preference, redirects/query/hash/no loop, bilingual 27.0.0 development log, compact panels/floating header and readable light/dark text/button contrast.");
+console.log("Interface passed: saved language preference, redirects/query/hash/no loop, bilingual 27.1.0 release notes, compact panels/floating header and readable light/dark text/button contrast.");

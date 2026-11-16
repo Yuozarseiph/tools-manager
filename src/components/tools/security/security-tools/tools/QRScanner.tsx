@@ -1,5 +1,5 @@
 "use client";
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 
 import { useState, useRef, useEffect } from "react";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -148,7 +148,7 @@ export default function QRScanner() {
     <div className="space-y-6">
       {/* Upload & Camera Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button
+        <button data-file-target="fileInputRef" data-file-control="pick"
           onClick={() => fileInputRef.current?.click()}
           className={`flex items-center justify-center gap-2 py-3 rounded-xl font-bold ${theme.primary} text-white`}
         >
@@ -166,9 +166,8 @@ export default function QRScanner() {
         </button>
       </div>
 
-      <AccessibleInput
+      <QueuedFileInput data-file-target="fileInputRef"
         ref={fileInputRef}
-        type="file"
         accept="image/*"
         onChange={handleFileUpload}
         className="hidden"

@@ -232,7 +232,7 @@ export default function LoanCalculator() {
             <h3 className={`font-bold ${theme.text}`}>
               {content.loan.labels.paymentSchedule}
             </h3>
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={exportToCSV}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg ${theme.secondary} ${theme.text} hover:opacity-80`}
             >

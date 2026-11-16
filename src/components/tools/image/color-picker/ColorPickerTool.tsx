@@ -19,7 +19,7 @@ import {
   Sparkles,
   Code2,
 } from "lucide-react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -52,7 +52,7 @@ export default function ColorPickerTool() {
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "image/*": [] },
     multiple: false,
     onDrop: useCallback(
@@ -378,6 +378,7 @@ export default function ColorPickerTool() {
           className={`lg:col-span-2 rounded-3xl border overflow-hidden relative min-h-[400px] ${theme.bg} ${theme.border}`}
         >
           {!image ? (
+            <>
             <AccessibleDropzone
               {...getRootProps()}
               className={`text-center cursor-pointer p-10 w-full h-full flex items-center justify-center transition-all duration-200 min-h-[400px] ${isDragActive ? "scale-95" : ""}`}
@@ -399,6 +400,8 @@ export default function ColorPickerTool() {
                 </p>
               </motion.div>
             </AccessibleDropzone>
+            {fileQueue}
+            </>
           ) : (
             <div className="relative w-full h-full min-h-[400px] flex items-center justify-center p-4">
               <AccessiblePreview purpose="input"
@@ -521,7 +524,7 @@ export default function ColorPickerTool() {
                   >
                     <Shuffle size={16} className={theme.accent} />
                   </button>
-                  <button aria-label={content.ui.palette.downloadCssTitle} data-testid="download-result"
+                  <button data-file-control="download" aria-label={content.ui.palette.downloadCssTitle} data-testid="download-result"
                     onClick={exportToCss}
                     className={`p-2 rounded-lg transition hover:${theme.secondary}`}
                     title={content.ui.palette.downloadCssTitle}

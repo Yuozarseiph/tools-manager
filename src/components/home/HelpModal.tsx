@@ -33,7 +33,7 @@ export default function HelpModal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, onClose]);
 
-  const presence = usePanelPresence(isOpen);
+  const presence = usePanelPresence(isOpen, "modal");
   if (!presence.present) return null;
 
   const content = helpContent[locale as "fa" | "en"][type];

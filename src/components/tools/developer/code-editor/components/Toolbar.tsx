@@ -43,7 +43,7 @@ export default function Toolbar({
       <div className="qf-editor-brand">
         <span className="qf-editor-brand-symbol"><Files size={16}/></span>
         <span className="qf-editor-brand-label">QodeForge <strong>Code</strong></span>
-        <span className="qf-editor-version">27.0.0</span>
+        <span className="qf-editor-version">27.1.0</span>
       </div>
       <button className="qf-editor-command" onClick={onQuickOpen} type="button" title="Ctrl+P">
         <Search size={14}/>
@@ -59,11 +59,11 @@ export default function Toolbar({
           {more && <>
             <button className="qf-editor-menu-backdrop" type="button" onClick={() => {setMore(false); setConfirmReset(false)}} aria-label={isFa ? "بستن منو" : "Close menu"}/>
             <div className="qf-editor-menu" role="menu" dir={isFa ? "rtl" : "ltr"}>
-              {isFileSystemSupported && <button type="button" role="menuitem" onClick={() => {onOpenFolder();setMore(false)}}><FolderOpen size={15}/>{isFa ? "باز کردن پوشه محلی" : "Open local folder"}</button>}
-              {activeFile && <button type="button" role="menuitem" onClick={() => {onSaveToDisk();setMore(false)}}><HardDriveDownload size={15}/>{isFa ? "ذخیره فایل روی دیسک / دانلود" : "Save file to disk / download"}</button>}
+              {isFileSystemSupported && <button data-file-control="pick" type="button" role="menuitem" onClick={() => {onOpenFolder();setMore(false)}}><FolderOpen size={15}/>{isFa ? "باز کردن پوشه محلی" : "Open local folder"}</button>}
+              {activeFile && <button data-file-control="download" type="button" role="menuitem" onClick={() => {onSaveToDisk();setMore(false)}}><HardDriveDownload size={15}/>{isFa ? "ذخیره فایل روی دیسک / دانلود" : "Save file to disk / download"}</button>}
               {isFileSystemSupported && <button type="button" role="menuitem" onClick={() => {onSaveAllToDisk();setMore(false)}}><Save size={15}/>{isFa ? "ذخیره فایل‌های دیسکی" : "Save disk files"}</button>}
-              {activeFile && <button type="button" role="menuitem" onClick={() => {onExportFile(activeFile.id);setMore(false)}}><Download size={15}/>{isFa ? "دانلود فایل فعلی" : "Download current file"}</button>}
-              <button type="button" role="menuitem" onClick={() => {onExportAll();setMore(false)}}><Download size={15}/>{isFa ? "خروجی JSON پروژه" : "Export project JSON"}</button>
+              {activeFile && <button data-file-control="download" type="button" role="menuitem" onClick={() => {onExportFile(activeFile.id);setMore(false)}}><Download size={15}/>{isFa ? "دانلود فایل فعلی" : "Download current file"}</button>}
+              <button data-file-control="download" type="button" role="menuitem" onClick={() => {onExportAll();setMore(false)}}><Download size={15}/>{isFa ? "خروجی JSON پروژه" : "Export project JSON"}</button>
               <div className="qf-editor-menu-divider"/>
               {confirmReset ? <div className="qf-editor-reset-confirm"><span>{isFa ? "همه فایل‌های محیط پاک شوند؟" : "Clear the workspace?"}</span><button type="button" onClick={() => {onReset();setMore(false);setConfirmReset(false)}} title={isFa ? "تأیید" : "Confirm"}><Check size={16}/></button><button type="button" onClick={() => setConfirmReset(false)} title={isFa ? "انصراف" : "Cancel"}><X size={16}/></button></div>
                 : <button type="button" role="menuitem" className="qf-editor-destructive" onClick={() => setConfirmReset(true)}><RotateCcw size={15}/>{isFa ? "پاک کردن محیط" : "Clear workspace"}</button>}

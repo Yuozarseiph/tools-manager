@@ -6,7 +6,7 @@ import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 // @ts-ignore
 import imageCompression from "browser-image-compression";
 import { saveFile as download } from "@/lib/file-export";
@@ -39,7 +39,7 @@ export default function ImageCompressorTool() {
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [isAddingFromUrl, setIsAddingFromUrl] = useState(false);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp"] },
     maxFiles: 1,
     onDrop: (acceptedFiles) => {
@@ -126,6 +126,7 @@ export default function ImageCompressorTool() {
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
       {!file ? (
+        <>
         <AccessibleDropzone
           {...getRootProps()}
           className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
@@ -152,6 +153,8 @@ export default function ImageCompressorTool() {
             )}
           </div>
         </AccessibleDropzone>
+        {fileQueue}
+        </>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -228,7 +231,7 @@ export default function ImageCompressorTool() {
               )}
             </button>
 
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={handleDownload}
               disabled={!compressedFile}
               className={`flex-1 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] 

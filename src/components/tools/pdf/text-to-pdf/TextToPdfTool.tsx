@@ -173,7 +173,7 @@ export default function TextToPdfTool() {
           </div>
         </div>
 
-        <button data-testid="download-result"
+        <button data-file-control="download" data-testid="download-result"
           onClick={generatePdf}
           disabled={!text.trim() || isGenerating}
           className={`px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-all disabled:opacity-50 ${theme.primary}`}

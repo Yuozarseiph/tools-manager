@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef } from "react";
@@ -336,7 +337,7 @@ export default function AudioWaveformEqTool() {
           </div>
         </div>
 
-        <button
+        <button data-file-target="fileInputRef" data-file-control="pick"
           onClick={() => fileInputRef.current?.click()}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${theme.primary}`}
           type="button"
@@ -345,9 +346,8 @@ export default function AudioWaveformEqTool() {
           {ui.uploadBtn}
         </button>
 
-        <AccessibleInput
+        <QueuedFileInput data-file-target="fileInputRef"
           ref={fileInputRef}
-          type="file"
           accept="audio/*"
           className="hidden"
           onChange={async (e) => {
@@ -473,7 +473,7 @@ export default function AudioWaveformEqTool() {
             />
 
             <div className="flex flex-wrap gap-2 mt-3">
-              <button data-testid="download-result"
+              <button data-file-control="download" data-testid="download-result"
                 onClick={tool.exportSelectionWav}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
@@ -487,7 +487,7 @@ export default function AudioWaveformEqTool() {
                 {ui.exportSel}
               </button>
 
-              <button data-testid="download-result"
+              <button data-file-control="download" data-testid="download-result"
                 onClick={tool.exportFullWavSelectionOnly}
                 disabled={tool.disableControls || tool.isExporting}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${

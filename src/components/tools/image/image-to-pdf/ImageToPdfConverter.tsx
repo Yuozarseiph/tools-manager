@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
@@ -141,8 +142,7 @@ export default function ImageToPdfConverter() {
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-300 cursor-pointer ${colors.border} hover:border-opacity-70`}
       >
-        <AccessibleInput
-          type="file"
+        <QueuedFileInput
           accept="image/*"
           multiple
           onChange={handleImageSelect}
@@ -258,7 +258,7 @@ export default function ImageToPdfConverter() {
             <FileImage className="h-6 w-6" />
             <span className="font-medium">{content.ui.result.ready}</span>
           </div>
-          <button data-testid="download-result"
+          <button data-file-control="download" data-testid="download-result"
             onClick={downloadPdf}
             className={`w-full py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${colors.primary}`}
           >

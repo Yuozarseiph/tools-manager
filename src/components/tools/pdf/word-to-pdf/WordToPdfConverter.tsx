@@ -1,7 +1,7 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -393,8 +393,7 @@ export default function WordToPdfConverter() {
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <AccessibleInput
-                type="file"
+              <QueuedFileInput
                 accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileSelect}
                 className="hidden"
@@ -479,7 +478,7 @@ export default function WordToPdfConverter() {
             {selectedFile && (
               <div className="space-y-3">
                 {progressStep !== "success" && (
-                  <button data-testid="download-result"
+                  <button data-file-control="download" data-testid="download-result"
                     onClick={convertToPdf}
                     disabled={isConverting || !isPreviewReady}
                     className={`w-full px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -493,7 +492,7 @@ export default function WordToPdfConverter() {
 
                 {pdfBlobUrl && progressStep === "success" && (
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <button data-testid="download-result"
+                    <button data-file-control="download" data-testid="download-result"
                       onClick={handleManualDownload}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${theme.primary}`}
                     >

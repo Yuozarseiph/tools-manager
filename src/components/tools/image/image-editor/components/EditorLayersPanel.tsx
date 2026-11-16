@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import {
@@ -146,13 +147,13 @@ export default function EditorLayersPanel({
             </div>
           )}
         </div>
-        <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp" className="hidden"
+        <QueuedFileInput data-file-target="imageInputRef" ref={imageInputRef} accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp" className="hidden"
           onChange={(event) => {
             const file = event.target.files?.[0];
             event.target.value = "";
             if (file) void editor.placeImageFile(file, content.ui.header.placeImage);
           }} />
-        <MiniButton theme={theme} onClick={() => imageInputRef.current?.click()} title={content.ui.header.placeImage}>
+        <MiniButton data-file-target="imageInputRef" theme={theme} onClick={() => imageInputRef.current?.click()} title={content.ui.header.placeImage}>
           <ImagePlus className="h-4 w-4" aria-hidden="true" />{content.ui.layers.kindRaster}
         </MiniButton>
         <MiniButton theme={theme} onClick={() => editor.duplicateLayer(labels.duplicate)} disabled={!active} title={labels.duplicate}>

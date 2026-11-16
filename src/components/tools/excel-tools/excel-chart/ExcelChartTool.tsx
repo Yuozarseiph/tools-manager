@@ -1,5 +1,6 @@
 // components/tools/excel/excel-chart/ExcelChartTool.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent, useMemo, useEffect } from "react";
@@ -136,15 +137,14 @@ export default function ExcelChartTool() {
       {/* Toolbar */}
       <div className={`p-6 border-b flex flex-col gap-6 ${theme.border}`}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-medium rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 w-full sm:w-auto active:scale-95">
+          <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--app-primary-bg)] text-white font-medium rounded-xl cursor-pointer hover:bg-[var(--app-primary-hover)] transition-all shadow-lg shadow-[var(--app-primary-bg)]/20 w-full sm:w-auto active:scale-95">
             <UploadCloud size={20} />
             <span>
               {data.length > 0
                 ? content.ui.upload.buttonChange
                 : content.ui.upload.buttonInitial}
             </span>
-            <AccessibleInput hasVisibleLabel
-              type="file"
+            <QueuedFileInput hasVisibleLabel
               accept=".xlsx, .xls, .csv"
               className="hidden"
               onChange={handleFileUpload}

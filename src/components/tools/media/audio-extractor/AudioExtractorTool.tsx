@@ -1,11 +1,12 @@
 // components/tools/media/audio-extractor/AudioExtractorTool.tsx
 "use client";
 import { outputFilename } from "@/lib/output-name";
+import RuntimeCacheControl from "@/components/ui/RuntimeCacheControl";
 import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { readLocalFile, downloadResource, startActivity } from "@/lib/transfer";
 import { useLanguage } from "@/context/LanguageContext";
@@ -61,7 +62,8 @@ export default function AudioExtractorTool() {
   }, []);
 
   const loadFFmpeg = async () => {
-    if (isLoadingEngine || isFFmpegLoaded) return;
+    if (isFFmpegLoaded && ffmpegRef.current) return ffmpegRef.current;
+    if (loadingController.current) return null;
     const controller = new AbortController(); loadingController.current = controller;
     setIsLoadingEngine(true); setError("");
     const urls: string[] = [];
@@ -77,18 +79,26 @@ export default function AudioExtractorTool() {
       await ffmpeg.load({ coreURL, wasmURL });
       controller.signal.throwIfAborted();
       if (alive.current) setIsFFmpegLoaded(true);
+      return ffmpeg;
     } catch {
       ffmpeg.terminate();
       if (alive.current && !controller.signal.aborted) setError(fa ? "دریافت یا راه‌اندازی موتور ناموفق بود؛ دوباره تلاش کنید." : "Engine download or initialization failed; please retry.");
-    } finally { urls.forEach(url => URL.revokeObjectURL(url)); if (alive.current) setIsLoadingEngine(false); }
+      return null;
+    } finally {
+      urls.forEach(url => URL.revokeObjectURL(url));
+      if (loadingController.current === controller) {
+        loadingController.current = null;
+        if (alive.current) setIsLoadingEngine(false);
+      }
+    }
   };
   const cancelOperation = () => {
-    loadingController.current?.abort(); ffmpegRef.current?.terminate(); ffmpegRef.current = null;
+    loadingController.current?.abort(); loadingController.current = null; ffmpegRef.current?.terminate(); ffmpegRef.current = null;
     extractionTask.current?.fail(new DOMException("Cancelled", "AbortError"));
     setIsFFmpegLoaded(false); setIsLoadingEngine(false); setIsProcessing(false); setProgress(0);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: {
       "video/*": [".mp4", ".avi", ".mov", ".mkv", ".webm", ".flv", ".wmv"],
     },
@@ -126,14 +136,15 @@ export default function AudioExtractorTool() {
   };
 
   const handleExtract = async () => {
-    if (!file || !isFFmpegLoaded || !ffmpegRef.current || isProcessing) return;
+    if (!file || isLoadingEngine || isProcessing) return;
+    const ffmpeg = await loadFFmpeg();
+    if (!ffmpeg || ffmpegRef.current !== ffmpeg || !alive.current) return;
 
     setIsProcessing(true);
     setProgress(0);
     setError("");
     setExtractedAudio(null);
 
-    const ffmpeg = ffmpegRef.current;
     extractionTask.current = startActivity(fa ? "استخراج صدا" : "Audio extraction", "process", 100, cancelOperation);
 
     try {
@@ -223,7 +234,6 @@ export default function AudioExtractorTool() {
     <div
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
-      {!isFFmpegLoaded && !isLoadingEngine && <div className="mb-5 space-y-3"><p className="text-sm">{fa ? "موتور تبدیل فقط با انتخاب شما دریافت می‌شود. حجم و سرعت واقعی در پنل انتقال نمایش داده می‌شود." : "Download the conversion engine when needed. Real size and speed appear in the transfer panel."}</p><button className="ai-button ai-primary" onClick={loadFFmpeg}>{fa ? "دریافت موتور / تلاش مجدد" : "Download engine / retry"}</button></div>}
       {(isLoadingEngine || isProcessing) && <button className="ai-button mb-4" onClick={cancelOperation}>{fa ? "لغو عملیات" : "Cancel operation"}</button>}
       {isLoadingEngine && (
         <div
@@ -239,6 +249,7 @@ export default function AudioExtractorTool() {
         </div>
       )}
 
+      <RuntimeCacheControl group="audio" busy={isLoadingEngine || isProcessing} onClear={cancelOperation} />
       <AnimatePresence mode="wait">
         {!file ? (
           <motion.div
@@ -247,6 +258,7 @@ export default function AudioExtractorTool() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
+            <>
             <AccessibleDropzone
               {...getRootProps()}
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
@@ -256,7 +268,6 @@ export default function AudioExtractorTool() {
                   : `${theme.border} hover:border-[var(--app-accent)]`
               }
               ${theme.bg}
-              ${!isFFmpegLoaded ? "pointer-events-none" : ""}
               `}
             >
               <AccessibleInput {...getInputProps()} />
@@ -281,6 +292,8 @@ export default function AudioExtractorTool() {
                 </div>
               </div>
             </AccessibleDropzone>
+            {fileQueue}
+            </>
           </motion.div>
         ) : (
           <motion.div
@@ -454,7 +467,7 @@ export default function AudioExtractorTool() {
               {!extractedAudio ? (
                 <button
                   onClick={handleExtract}
-                  disabled={isProcessing || !isFFmpegLoaded}
+                  disabled={isProcessing || isLoadingEngine}
                   className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
                 >
                   {isProcessing ? (
@@ -470,7 +483,7 @@ export default function AudioExtractorTool() {
                   )}
                 </button>
               ) : (
-                <button data-testid="download-result"
+                <button data-file-control="download" data-testid="download-result"
                   onClick={handleDownload}
                   className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] ${theme.primary}`}
                 >

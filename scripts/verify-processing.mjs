@@ -6,10 +6,10 @@ import { JSDOM } from "jsdom";
 import ts from "typescript";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url), dom = new JSDOM(""), events = new EventTarget();
-const shared = { window: events, document: dom.window.document, DOMParser: dom.window.DOMParser, Node: dom.window.Node, Element: dom.window.Element, HTMLElement: dom.window.HTMLElement, File: dom.window.File, FileReader: dom.window.FileReader, Blob, TextDecoder, TextEncoder, CustomEvent, crypto, Date, Error, DOMException, AbortController, Uint8Array, ArrayBuffer, URL, setTimeout, clearTimeout, fetch, Promise };
+const shared = { window: events, document: dom.window.document, DOMParser: dom.window.DOMParser, Node: dom.window.Node, Element: dom.window.Element, HTMLElement: dom.window.HTMLElement, File: dom.window.File, FileReader: dom.window.FileReader, Blob, TextDecoder, TextEncoder, CustomEvent, crypto, Date, Error, DOMException, Event, Response, AbortController, Uint8Array, ArrayBuffer, URL, setTimeout, clearTimeout, fetch, Promise };
 function load(file, overrides = {}) {
   const exports = {};
-  const compiled = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+  const compiled = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX }, fileName: file }).outputText;
   vm.runInNewContext(compiled, { ...shared, exports, require, ...overrides }, { filename: file }); return exports;
 }
 const core = load("src/lib/ai-text.ts");
@@ -74,5 +74,86 @@ try {
   assert.equal(observed.filter(task => task.name === "Abort").at(-1).status, "cancelled");
   await assert.rejects(() => transfer.downloadBlob(`${base}/error`, "Error"));
   assert.equal(observed.filter(task => task.name === "Error").at(-1).status, "error");
+  const cacheEntries = new Map();
+  let downloads = 0;
+  const runtimePath = "/runtime/ffmpeg-v0.12.10/ffmpeg-core.wasm";
+  const cache = {
+    match: async url => cacheEntries.get(url)?.clone(),
+    put: async (url, response) => cacheEntries.set(url, response.clone()),
+    keys: async () => [...cacheEntries.keys()].map(path => ({ url: new URL(path, base).href })),
+    delete: async request => cacheEntries.delete(request.url.replace(base, "")),
+  };
+  const runtime = load("src/lib/transfer.ts", {
+    caches: { open: async () => cache },
+    fetch: async (path, options) => {
+      if (path === "/runtime/manifest.json") return Response.json({ [runtimePath]: { size: payload.length, hash: "v1" } });
+      downloads++;
+      return fetch(new URL(path, base), options);
+    },
+    require: name => name === "./file-export" ? fileExport : name === "./activity-origin" ? origins : require(name),
+  });
+  const first = await runtime.downloadResource(runtimePath, "Engine");
+  const second = await runtime.downloadResource(runtimePath, "Engine");
+  assert.equal(first.size, payload.length);
+  assert.equal(second.size, payload.length);
+  assert.equal(downloads, 1, "a second engine load must use the versioned cache");
+  assert.equal(observed.filter(task => task.name === "Engine").at(-1).cached, true);
+  assert.equal(await runtime.hasRuntimeCache("audio"), true);
+  await runtime.clearRuntimeCache("audio");
+  assert.equal(await runtime.hasRuntimeCache("audio"), false);
+  await runtime.downloadResource(runtimePath, "Engine");
+  assert.equal(downloads, 2, "deleting the saved resource should permit another download");
 } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 console.log("Processing checks passed: safe HTML/Markdown, PPTX CSS/RTL/links/lists/code/merges, UTF-16 BOM, single native file reads, streamed download bytes, known/unknown/manifest totals, cancellation and HTTP errors.");
+
+const uploadDom = new JSDOM("<div id='root'></div>", { url: "http://localhost:3000/en" });
+uploadDom.window.matchMedia = query => ({ matches: query === "(width < 640px)" });
+globalThis.window = uploadDom.window;
+globalThis.document = uploadDom.window.document;
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const { createElement: h, act } = require("react");
+const { createRoot } = require("react-dom/client");
+const uploadWidgets = load("src/components/ui/FileTransfer.tsx", {
+  window: uploadDom.window,
+  document: uploadDom.window.document,
+  require: name => {
+    if (name === "@/context/LanguageContext") return { useLanguage: () => ({ locale: "en" }) };
+    if (name === "@/lib/decode-text") return decoder;
+    if (name === "@/lib/transfer") return transfer;
+    return require(name);
+  },
+});
+const received = [], reads = [];
+const fileA = new uploadDom.window.File(["aaaa"], "alpha.txt");
+fileA.stream = () => new ReadableStream({ start(controller) { reads.push(controller); } });
+const fileB = new uploadDom.window.File(["bbbb"], "beta.txt");
+fileB.stream = () => new Blob(["bbbb"]).stream();
+const onReady = files => received.push(files.map(({ file }) => file.name).join(","));
+const uploadRoot = createRoot(document.getElementById("root"));
+await act(async () => uploadRoot.render(h(uploadWidgets.default, { multiple: true, onReady })));
+const drop = document.querySelector('[data-file-control="drop"]');
+const event = new uploadDom.window.Event("drop", { bubbles:true, cancelable:true });
+Object.defineProperty(event, "dataTransfer", { value: { files: [fileA, fileB] } });
+await act(async () => { drop.dispatchEvent(event); });
+assert.equal(document.querySelectorAll(".file-transfer-list li").length, 2);
+assert.equal(document.querySelectorAll(".file-transfer-list progress").length, 2);
+assert.equal(received.length, 0, "a batch is handed off once its pending reads are settled");
+await act(async () => document.querySelector('.file-transfer-list li button').click());
+assert.equal(received.join(","), "beta.txt", "cancelling one file must preserve the other");
+const alpha = document.querySelector(".file-transfer-list li");
+assert(alpha.textContent.includes("Cancelled"));
+await act(async () => [...alpha.querySelectorAll("button")].find(button => button.textContent === "Retry").click());
+assert.equal(reads.length, 2);
+await act(async () => {
+  reads[1].enqueue(new Uint8Array([1,2,3,4]));
+  reads[1].close();
+});
+assert.equal(received.join(","), "beta.txt,alpha.txt");
+await act(async () => [...alpha.querySelectorAll("button")].find(button => button.textContent === "Dismiss").click());
+assert.equal(document.querySelectorAll(".file-transfer-list li").length, 1);
+assert(!document.body.textContent.includes("Use ready files"));
+await act(async () => { await new Promise(resolve => setTimeout(resolve, 1550)); });
+assert.equal(document.querySelectorAll(".file-transfer-list li").length, 0, "ready status should clear automatically on mobile");
+await act(async () => uploadRoot.unmount());
+uploadDom.window.close();
+console.log("Transfer UX passed: independent file progress, drop handling, cancellation, retry, dismissal and automatic batch delivery and faster mobile dismissal.");

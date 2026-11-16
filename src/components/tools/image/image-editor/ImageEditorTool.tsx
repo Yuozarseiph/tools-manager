@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import { createPortal } from "react-dom";
@@ -7,7 +8,6 @@ import {
   MonitorUp, Scan, Undo2, Redo2, X, Keyboard, Layers3, ExternalLink, PanelRightOpen,
 } from "lucide-react";
 
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useImageEditorContent } from "./image-editor.content";
 import { EDITOR_TOOLS } from "./editor-constants";
@@ -113,8 +113,7 @@ export default function ImageEditorTool() {
     if (!editor.doc || event.dataTransfer.types.includes("text/x-image-editor-layer")) return;
     event.preventDefault();
     setDragHover(false);
-    const file = [...event.dataTransfer.files].find((item) => item.type.startsWith("image/"));
-    if (file) void editor.placeImageFile(file, content.ui.header.placeImage);
+    stageDroppedFiles(placeRef.current, event.dataTransfer.files);
   };
 
   useEffect(() => {
@@ -201,14 +200,14 @@ export default function ImageEditorTool() {
           </div>
         </div>
         <div className="flex w-full min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5 sm:w-auto sm:overflow-visible sm:pb-0">
-          <AccessibleInput id="image-editor-open-file" type="file" accept="image/*,.psd,.psb" onChange={onLocalFile} className="hidden" />
+          <QueuedFileInput id="image-editor-open-file" accept="image/*,.psd,.psb" onChange={onLocalFile} className="hidden" />
           <label htmlFor="image-editor-open-file" title={content.ui.header.upload}
             className={`inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-medium ${theme.card} ${theme.border} ${theme.text}`}>
             <ImagePlus className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{content.ui.header.upload}</span>
           </label>
           {editor.doc && <>
-            <input ref={placeRef} type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp" className="hidden" onChange={onPlaceFile} />
-            <button type="button" onClick={() => placeRef.current?.click()} title={content.ui.header.placeImage} aria-label={content.ui.header.placeImage}
+            <QueuedFileInput data-file-target="placeRef" ref={placeRef} multiple accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp" className="hidden" onChange={onPlaceFile} />
+            <button data-file-target="placeRef" data-file-control="pick" type="button" onClick={() => placeRef.current?.click()} title={content.ui.header.placeImage} aria-label={content.ui.header.placeImage}
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-medium ${theme.card} ${theme.border} ${theme.text}`}>
               <ImagePlus className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{content.ui.header.placeImage}</span>
             </button>
@@ -228,7 +227,7 @@ export default function ImageEditorTool() {
               className={`grid h-9 w-9 place-items-center rounded-lg border disabled:opacity-40 ${theme.card} ${theme.border} ${theme.text}`}>
               <Redo2 className="h-4 w-4" aria-hidden="true" />
             </button>
-            <button type="button" onClick={() => setExportOpen(true)}
+            <button data-file-control="download" type="button" onClick={() => setExportOpen(true)}
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-[11px] font-semibold ${theme.primary}`}>
               <Download className="h-4 w-4" aria-hidden="true" />{content.ui.header.export}
             </button>
@@ -278,13 +277,13 @@ export default function ImageEditorTool() {
             }}
             onDrop={onDropImage}>
             <EditorToolbar editor={editor} content={content} theme={theme} />
-            <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
               <EditorOptionsBar editor={editor} content={content} theme={theme} />
               <EditorCanvasStage editor={editor} content={content} theme={theme} />
               {dragHover && <div className="pointer-events-none absolute inset-2 z-20 flex items-center justify-center rounded-xl border-2 border-dashed border-[var(--app-accent)] bg-black/20 p-5">
                 <span className={`rounded-xl px-5 py-3 text-sm font-semibold shadow-lg ${theme.card} ${theme.text}`}>{content.ui.document.dropHint}</span>
               </div>}
-            </main>
+            </div>
             <EditorRightPanel editor={editor} content={content} theme={theme} panel={panel} onPanelChange={setPanel}
               mobileOpen={mobileInspectorOpen} onMobileClose={() => setMobileInspectorOpen(false)} />
           </div>

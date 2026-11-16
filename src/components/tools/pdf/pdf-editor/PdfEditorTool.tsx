@@ -1,8 +1,8 @@
 // components/tools/pdf/pdf-editor/PdfEditorTool.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
 import { useLanguage } from "@/context/LanguageContext";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -336,8 +336,7 @@ export default function PdfEditorTool() {
             <div
               className={`border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <AccessibleInput
-                type="file"
+              <QueuedFileInput
                 accept="application/pdf,.pdf"
                 onChange={onFileChange}
                 className="hidden"
@@ -448,7 +447,7 @@ export default function PdfEditorTool() {
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button data-testid="download-result"
+                  <button data-file-control="download" data-testid="download-result"
                     onClick={handleGenerate}
                     disabled={isBusy || totalPages === 0}
                     className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -460,7 +459,7 @@ export default function PdfEditorTool() {
                   </button>
 
                   {editedObjectUrl && (
-                    <button
+                    <button data-file-control="download"
                       onClick={handleDownload}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium border ${theme.border} ${theme.card} ${theme.text}`}
                     >

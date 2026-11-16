@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { outputFilename } from "@/lib/output-name";
 import { saveFile } from "@/lib/file-export";
 import { AccessibleButton } from "@/components/ui/AccessibleControls";
@@ -778,16 +779,15 @@ export default function ExcelEditorTool() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-3">
             <div className="flex flex-wrap items-center gap-2 min-w-0">
               {!showTable ? (
-                <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
+                <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                   className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-all active:scale-95 ${theme.primary}`}
                 >
                   <UploadCloud size={18} />
                   <span className="text-sm font-bold">
                     {content.ui.upload.buttonInitial}
                   </span>
-                  <AccessibleInput hasVisibleLabel
+                  <QueuedFileInput data-file-target="fileInputRef" hasVisibleLabel
                     ref={fileInputRef}
-                    type="file"
                     accept=".xlsx, .xls, .csv"
                     className="hidden"
                     onChange={handleFileUpload}
@@ -795,7 +795,7 @@ export default function ExcelEditorTool() {
                 </label>
               ) : (
                 <>
-                  <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
+                  <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                     className={`inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-colors hover:opacity-90 ${theme.border} ${theme.text}`}
                     title={content.ui.upload.acceptHint}
                   >
@@ -803,16 +803,15 @@ export default function ExcelEditorTool() {
                     <span className="text-sm font-semibold">
                       {content.ui.upload.buttonChange}
                     </span>
-                    <AccessibleInput hasVisibleLabel
+                    <QueuedFileInput data-file-target="fileInputRef" hasVisibleLabel
                       ref={fileInputRef}
-                      type="file"
                       accept=".xlsx, .xls, .csv"
                       className="hidden"
                       onChange={handleFileUpload}
                     />
                   </label>
 
-                  <button
+                  <button data-file-control="download"
                     onClick={handleDownloadXlsx}
                     className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl transition-colors ${theme.primary}`}
                   >
@@ -1185,14 +1184,14 @@ export default function ExcelEditorTool() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 mt-2">
-                  <button
+                  <button data-file-control="download"
                     onClick={handleExportCsvFiltered}
                     className={`w-full px-3 py-2 rounded-xl transition-colors ${theme.primary}`}
                   >
                     {content.ui.export.filteredButton}
                   </button>
 
-                  <button
+                  <button data-file-control="download"
                     onClick={handleExportCsvRange}
                     className={`w-full px-3 py-2 rounded-xl border hover:opacity-90 transition-colors ${theme.border} ${theme.text}`}
                   >

@@ -18,7 +18,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className={`relative flex w-full items-center justify-center border-b px-5 py-10 text-center sm:px-10 sm:py-12 ${theme.card} ${theme.border}`}>
+    <section className={`home-hero relative flex w-full items-center justify-center border-b px-5 pb-10 pt-[calc(var(--home-header-space)+2.5rem)] text-center sm:px-10 sm:pb-12 sm:pt-[calc(var(--home-header-space)+3rem)] ${theme.card} ${theme.border}`}>
       <div className="relative mx-auto max-w-3xl">
         <h1
           className={`text-3xl font-extrabold leading-[1.6] sm:text-4xl lg:text-5xl ${theme.text}`}

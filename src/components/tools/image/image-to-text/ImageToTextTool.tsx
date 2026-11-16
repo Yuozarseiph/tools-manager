@@ -1,7 +1,8 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
-import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -18,6 +19,7 @@ import {
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 import CustomDropdown from "@/components/ui/CustomDropdown";
+import RuntimeCacheControl from "@/components/ui/RuntimeCacheControl";
 import { startActivity } from "@/lib/transfer";
 import { prepareOcrResources } from "@/lib/ocr-resources";
 import { useImageToTextContent } from "./image-to-text.content";
@@ -1036,16 +1038,16 @@ export default function ImageToTextTool() {
           </div>
         )}
 
-        <AccessibleInput
+        <RuntimeCacheControl group="ocr" busy={busy} />
+        <QueuedFileInput data-file-target="inputRef"
           ref={inputRef}
-          type="file"
           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
           className="hidden"
           onChange={(e) => e.target.files?.[0] && setSelectedFile(e.target.files[0])}
         />
 
         {!file ? (
-          <div
+          <div data-file-target="inputRef" data-file-control="drop"
             role="button"
             tabIndex={0}
             onClick={() => inputRef.current?.click()}
@@ -1053,8 +1055,7 @@ export default function ImageToTextTool() {
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
-              const dropped = e.dataTransfer.files?.[0];
-              if (dropped) setSelectedFile(dropped);
+              stageDroppedFiles(inputRef.current, e.dataTransfer.files);
             }}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-colors ${theme.border} ${theme.bg} hover:border-[var(--app-accent)]`}
           >
@@ -1188,7 +1189,7 @@ export default function ImageToTextTool() {
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? t.copied : t.copy}
               </button>
-              <button data-testid="download-result"
+              <button data-file-control="download" data-testid="download-result"
                 type="button"
                 onClick={downloadText}
                 disabled={!text}

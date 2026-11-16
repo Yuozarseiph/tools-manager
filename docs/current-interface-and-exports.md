@@ -1,6 +1,6 @@
 # Current interface and file exports
 
-Updated October 26, 2026 for **27.0.0 (development)**. The active catalogue has 47 entries: 45 internal tools and two external games. My system info, What is my IP and the empty System category have been removed from the catalogue, docs, sitemap and routing configuration.
+Applies to **27.1.0**. The active catalogue has 51 entries: 49 internal tools and two external games. My system info, What is my IP and the empty System category have been removed from the catalogue, docs, sitemap and routing configuration.
 
 ## Saving a file
 
@@ -48,4 +48,4 @@ node scripts/verify-processing.mjs
 
 Targeted browser checks covered Persian/English home views, search and filters, representative text/image/JSON tools, filename editing and cancellation, a real Markdown download with verified contents, keyboard file import, inline notices, focus restoration and narrow layouts. Contrast checks cover 52 text/control/header combinations, including the glass header against its worst-case background.
 
-These checks do not recertify all interactions in all 47 entries. Full-project TypeScript retains 32 pre-existing diagnostics with no additional diagnostics from these changes. A successful production build is not recorded for this revision. Apache HTTP checks require a running server; port 4186 was unavailable. Rebuild and verify the complete `out/` before publishing.
+These checks do not recertify all interactions in all 51 entries. Full-project TypeScript retains 32 pre-existing diagnostics with no additional diagnostics from these changes. A successful production build is not recorded for this revision. Apache HTTP checks require a running server; port 4186 was unavailable. Rebuild and verify the complete `out/` before publishing.

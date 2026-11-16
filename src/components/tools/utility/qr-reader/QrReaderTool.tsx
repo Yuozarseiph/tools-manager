@@ -1,5 +1,5 @@
 "use client";
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -293,16 +293,15 @@ export default function QrReaderTool() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <div className="space-y-4">
-        <AccessibleInput
+        <QueuedFileInput data-file-target="inputRef"
           ref={inputRef}
-          type="file"
           accept="image/*,.jpg,.jpeg,.png,.webp"
           className="hidden"
           onChange={(e) => e.target.files?.[0] && scanFile(e.target.files[0])}
         />
 
         {!previewUrl && !scanning ? (
-          <div
+          <div data-file-target="inputRef" data-file-control="drop"
             role="button"
             tabIndex={0}
             onClick={() => inputRef.current?.click()}
@@ -310,8 +309,7 @@ export default function QrReaderTool() {
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
-              const dropped = e.dataTransfer.files?.[0];
-              if (dropped) scanFile(dropped);
+              stageDroppedFiles(inputRef.current, e.dataTransfer.files);
             }}
             className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-colors ${theme.border} ${theme.bg} hover:border-[var(--app-accent)]`}
           >

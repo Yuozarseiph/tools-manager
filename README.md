@@ -316,14 +316,12 @@ The current architecture is designed to support:
 
 QodeForge is not just a collection of utilities — it is a scalable, modular platform for building and shipping browser-first tools with long-term maintainability in mind.
 
-## Current development documentation — 27.0.0
+## Documentation for 27.1.0
 
-Updated October 26, 2026. The active catalogue has 47 entries (45 internal tools and two external games); the IP lookup and system-info tools and the empty System category have been removed. The header is floating and translucent. Download filenames are chosen in the save dialog, and transfer/processing notices appear inline with the tool.
+Release date: January 20, 2027. The active catalogue has 51 entries (49 internal tools and two external games); the IP lookup and system-info tools and the empty System category have been removed. The header is floating and translucent. Download filenames are chosen in the save dialog, and transfer/processing notices appear inline with the tool.
 
 - [Current interface and export workflow](docs/current-interface-and-exports.md)
 - [Shared controls and keyboard behavior](docs/panel-controls.md)
 - [AI tools and processing](docs/ai-tools-and-processing.md)
 - [SEO, locale routing and deployment checks](docs/seo-and-accessibility.md)
-- [Persian technical report](CHANGELOG-27.0.0-TECHNICAL.fa.md)
-
-The in-app documentation and both changelogs describe the same behavior. Version 27.0.0 remains in development; targeted local checks do not replace a successful production build or complete browser coverage.
+- [Persian technical archive for 27.0.0](CHANGELOG-27.0.0-TECHNICAL.fa.md)

@@ -9,7 +9,7 @@ function load(file){
  const resolved=path.resolve(file);
  if(cache.has(resolved))return cache.get(resolved).exports;
  if(resolved.endsWith('.json'))return JSON.parse(readFileSync(resolved,'utf8'));
- const module={exports:{}};cache.set(resolved,module);
+ const record={exports:{}};cache.set(resolved,record);
  const require=name=>{
   if(!name.startsWith('@/')&&!name.startsWith('.'))return nodeRequire(name);
   const base=name.startsWith('@/')?path.resolve('src',name.slice(2)):path.resolve(path.dirname(resolved),name);
@@ -17,21 +17,32 @@ function load(file){
   assert(target,`Missing documentation dependency ${name}`);return load(target);
  };
  const compiled=ts.transpileModule(readFileSync(resolved,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,esModuleInterop:true}}).outputText;
- vm.runInNewContext(compiled,{module,exports:module.exports,require,Set,Map,URL},{filename:resolved});return module.exports;
+ vm.runInNewContext(compiled,{module:record,exports:record.exports,require,Set,Map,URL},{filename:resolved});return record.exports;
 }
 const fa=JSON.parse(readFileSync('src/data/changelog/falog.json','utf8'));
 const en=JSON.parse(readFileSync('src/data/changelog/enlog.json','utf8'));
-for(const log of [fa,en]){assert.equal(log[0].version,'27.0.0');assert.equal(log[0].status,'development');assert.equal(log.filter(e=>e.version==='27.0.0').length,1);}
+const { version } = load('package.json');
+const lock = load('package-lock.json');
+assert.equal(lock.version, version);
+assert.equal(lock.packages[''].version, version);
+const { downloadContent } = load('src/data/pages/download.content.ts');
+for (const [locale, log] of [['fa', fa], ['en', en]]) {
+ assert.equal(log[0].version, version);
+ assert.equal(log[0].status, undefined);
+ assert.equal(log.filter(entry => entry.version === version).length, 1);
+ assert.equal(downloadContent[locale].cards.pwa.version, version);
+ assert(!log[0].changes.some(group => group.category === 'note'));
+}
 assert.deepEqual(fa[0].changes.map(g=>[g.category,g.items.length]),en[0].changes.map(g=>[g.category,g.items.length]));
 const date=new Date(en[0].date+' 12:00:00 UTC');assert(Number.isFinite(date.getTime()));
 assert.equal(new Intl.DateTimeFormat('fa-IR',{calendar:'persian',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Tehran'}).format(date),fa[0].date);
 const {TOOLS}=load('src/data/tools.ts'), {guideData}=load('src/lib/tool-guide.ts');
 const {toolMarkdown}=load('src/lib/tool-markdown.ts'), {interfaceContent,hasNamedDownload}=load('src/data/docs/interface.content.ts');
 const {getDocumentationEntries}=load('src/data/docs/entries.ts');
-assert.equal(TOOLS.length,47);assert(!TOOLS.some(t=>['ip-checker','user-agent'].includes(t.id)||t.category==='system'));
+assert.equal(TOOLS.length,51);assert(!TOOLS.some(t=>['ip-checker','user-agent'].includes(t.id)||t.category==='system'));
 for(const locale of ['fa','en']) {
  const docs=getDocumentationEntries(locale);
- assert.equal(docs.length,47);assert.equal(new Set(docs.map(doc=>doc.id)).size,47);
+ assert.equal(docs.length,TOOLS.length);assert.equal(new Set(docs.map(doc=>doc.id)).size,TOOLS.length);
  for(const tool of TOOLS) {
   const doc=docs.find(doc=>doc.id===tool.id);
   assert(doc?.title&&doc.description);assert.equal(doc.href,tool.href);
@@ -51,4 +62,4 @@ for(const locale of ['fa','en'])for(const tool of TOOLS.filter(t=>t.href.startsW
 }
 const raw=JSON.parse(readFileSync('src/data/docs/docs.content.json','utf8'));
 for(const locale of ['fa','en'])assert(!raw[locale].some(d=>['ip-checker','user-agent'].includes(d.id)));
-console.log(`Documentation passed: matched bilingual 27.0.0 dates/categories, ${guides} Markdown guides, ${exports} localized export workflows and a 47-entry catalogue without retired tools.`);
+console.log(`Documentation passed: matched bilingual 27.1.0 dates/categories, ${guides} Markdown guides, ${exports} localized export workflows and a ${TOOLS.length}-entry catalogue without retired tools.`);

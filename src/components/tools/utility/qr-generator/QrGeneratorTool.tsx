@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput, AccessibleTextarea, AccessibleSelect } from "@/components/ui/AccessibleControls";
@@ -309,7 +310,7 @@ export default function QrGeneratorTool() {
 
           {/* Download Buttons */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={() => downloadQr("png")}
               disabled={exporting}
               aria-busy={exporting}
@@ -318,7 +319,7 @@ export default function QrGeneratorTool() {
               <Download size={18} />
               {content.buttons.downloadPng}
             </button>
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={() => downloadQr("svg")}
               disabled={exporting}
               aria-busy={exporting}
@@ -717,13 +718,12 @@ export default function QrGeneratorTool() {
             </h3>
 
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-              <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
+              <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
                 className={`cursor-pointer px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium border flex items-center gap-2 ${theme.bg} ${theme.border} ${theme.text} hover:opacity-80 transition-opacity`}
               >
                 <ImageIcon size={16} />
                 {content.logo.selectButton}
-                <AccessibleInput hasVisibleLabel
-                  type="file"
+                <QueuedFileInput hasVisibleLabel
                   accept="image/jpeg,image/png,image/svg+xml"
                   className="hidden"
                   onChange={handleLogoUpload}

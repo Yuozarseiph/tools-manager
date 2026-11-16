@@ -10,6 +10,7 @@ export function PanelMotionProvider({ children }: { children: ReactNode }) {
 export function AnimatedDialog(props: HTMLMotionProps<"div">) {
   const present = useIsPresent(), reduced = useReducedMotion();
   return <motion.div {...props} aria-hidden={!present || undefined} inert={!present || undefined}
+    data-modal-motion={present ? "open" : "closing"}
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-    transition={{ duration: reduced ? 0 : present ? .18 : .14, ease: [.2, .7, .2, 1] }} />;
+    transition={{ duration: reduced ? 0 : present ? .26 : .20, ease: [.2, .7, .2, 1] }} />;
 }

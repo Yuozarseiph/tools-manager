@@ -18,10 +18,11 @@ import {
   X,
 } from "lucide-react";
 
-import { PinnedLayoutMode, ToolsLayoutMode } from "./types";
+import { isMobileToolsLayout, type PinnedLayoutMode, type ToolsLayoutMode } from "./types";
 
 interface LayoutControlsProps {
   toolsLayout: ToolsLayoutMode;
+  mobile: boolean;
   pinnedLayout: PinnedLayoutMode;
   onToolsLayoutChange: (layout: ToolsLayoutMode) => void;
   onPinnedLayoutChange: (layout: PinnedLayoutMode) => void;
@@ -40,6 +41,8 @@ const toolOptions = [
   { value: "grid-3" as ToolsLayoutMode, icon: Columns3, label: { fa: "سه ستون", en: "3 columns" } },
   { value: "grid-4" as ToolsLayoutMode, icon: Columns4, label: { fa: "چهار ستون", en: "4 columns" } },
 ];
+
+const mobileToolOptions = toolOptions.filter(({ value }) => isMobileToolsLayout(value));
 
 const pinnedOptions = [
   { value: "horizontal-scroll" as PinnedLayoutMode, icon: GripHorizontal, label: { fa: "اسکرول افقی", en: "Horizontal scroll" } },
@@ -72,7 +75,7 @@ function MobileSheet({
 
   useEffect(() => setMounted(true), []);
 
-  const presence = usePanelPresence(open);
+  const presence = usePanelPresence(open, "modal");
   if (!mounted || !presence.present) return null;
 
   return createPortal(
@@ -121,6 +124,7 @@ function MobileSheet({
               <button
                 key={option.value}
                 type="button"
+                aria-pressed={active}
                 onClick={() => {
                   onChange(option.value);
                   onClose();
@@ -146,6 +150,7 @@ function MobileSheet({
 
 export const LayoutControls = memo(function LayoutControls({
   toolsLayout,
+  mobile,
   pinnedLayout,
   onToolsLayoutChange,
   onPinnedLayoutChange,
@@ -156,15 +161,7 @@ export const LayoutControls = memo(function LayoutControls({
   const localeKey = locale as LocaleType;
   const [toolsOpen, setToolsOpen] = useState(false);
   const [pinnedOpen, setPinnedOpen] = useState(false);
-  const [mobile, setMobile] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const update = () => setMobile(window.innerWidth < 640);
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   useEffect(() => {
     if (mobile) return;
@@ -246,9 +243,7 @@ export const LayoutControls = memo(function LayoutControls({
             open={toolsOpen}
             onClose={() => setToolsOpen(false)}
             title={localeKey === "fa" ? "چیدمان ابزارها" : "Tools layout"}
-            options={toolOptions.filter((item) =>
-              ["list-compact", "list-detail", "grid-2", "grid-4"].includes(item.value),
-            )}
+            options={mobileToolOptions}
             value={toolsLayout}
             onChange={onToolsLayoutChange}
             theme={theme}

@@ -1,4 +1,5 @@
 "use client";
+import QueuedFileInput, { stageDroppedFiles } from "@/components/ui/QueuedFileInput";
 import { AnimatePresence } from "framer-motion";
 import { outputFilename } from "@/lib/output-name";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
@@ -262,9 +263,8 @@ export default function PdfToImageConverter() {
     <div
       className={`max-w-4xl mx-auto rounded-3xl border p-5 md:p-8 shadow-xl ${theme.card} ${theme.border}`}
     >
-      <AccessibleInput
+      <QueuedFileInput data-file-target="inputRef"
         ref={inputRef}
-        type="file"
         accept="application/pdf,.pdf"
         className="hidden"
         onChange={(e) => handleFile(e.target.files?.[0])}
@@ -419,13 +419,13 @@ export default function PdfToImageConverter() {
 
       {/* Dropzone */}
       {items.length === 0 && !busy && (
-        <button
+        <button data-file-target="inputRef" data-file-control="drop"
           type="button"
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
-            handleFile(e.dataTransfer.files?.[0]);
+            stageDroppedFiles(inputRef.current, e.dataTransfer.files);
           }}
           className={`w-full flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border-2 border-dashed transition-colors ${theme.border} hover:border-[var(--app-accent)] ${theme.bg}`}
         >
@@ -488,7 +488,7 @@ export default function PdfToImageConverter() {
               {items.length} {mode === "pages" ? t.pages : t.images}
             </span>
             <div className="flex flex-wrap gap-2">
-              <button
+              <button data-file-control="download"
                 onClick={downloadZip}
                 disabled={zipping}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium disabled:opacity-60 ${theme.primary}`}
@@ -547,7 +547,7 @@ export default function PdfToImageConverter() {
                       {it.width}×{it.height}
                     </span>
                   </div>
-                  <button data-testid="download-result"
+                  <button data-file-control="download" data-testid="download-result"
                     onClick={() => downloadPage(it)}
                     className={`w-full inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium ${theme.secondary} ${theme.accent} hover:opacity-80`}
                   >

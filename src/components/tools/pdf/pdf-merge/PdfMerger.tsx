@@ -6,7 +6,7 @@ import { AccessibleButton } from "@/components/ui/AccessibleControls";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { saveFile as download } from "@/lib/file-export";
 import { FileUp, Trash2, FileText, Loader2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -66,7 +66,7 @@ export default function PdfMerger() {
     catch { setError(content.ui.alerts.error); }
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "application/pdf": [".pdf"] },
     disabled: isProcessing,
     onDrop: (acceptedFiles) => {
@@ -149,6 +149,7 @@ export default function PdfMerger() {
     <div
       className={`rounded-3xl border p-6 md:p-10 shadow-xl transition-colors duration-300 ${theme.card} ${theme.border}`}
     >
+      <>
       <AccessibleDropzone
         {...getRootProps()}
         className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
@@ -180,6 +181,8 @@ export default function PdfMerger() {
           </div>
         </div>
       </AccessibleDropzone>
+      {fileQueue}
+      </>
 
       {error && <div role="alert" className="mt-4 text-sm text-[var(--app-error-text)]">{error}</div>}
 
@@ -259,7 +262,7 @@ export default function PdfMerger() {
           </button>
         )}
 
-        <button data-testid="download-result"
+        <button data-file-control="download" data-testid="download-result"
           onClick={handleMerge}
           disabled={files.length < 2 || isProcessing}
           className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98]

@@ -82,7 +82,13 @@
     "acceptedFormats": [
       "image/*",
       ".psd",
-      ".psb"
+      ".psb",
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/gif",
+      "image/avif",
+      "image/bmp"
     ]
   },
   "image-resizer": {

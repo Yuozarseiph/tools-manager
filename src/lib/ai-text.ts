@@ -24,7 +24,7 @@ export function splitText(input: string, options: TextOptions) {
     if (chunks.length >= 500) throw new Error("TOO_MANY_CHUNKS");
     let end = Math.min(start + size, input.length);
     if (end < input.length) {
-      const boundary = input.lastIndexOf("\n\n", end);
+      const boundary = input.lastIndexOf("\n\n", end - 2);
       if (boundary > start + size * .65) end = boundary + 2;
       if (/[\uDC00-\uDFFF]/.test(input[end])) end--;
     }

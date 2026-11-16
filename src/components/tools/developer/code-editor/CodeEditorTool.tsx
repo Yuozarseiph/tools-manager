@@ -257,7 +257,7 @@ export default function CodeEditorTool({ locale }: Props) {
           }} />}
         {isMobile && isSidebarOpen && <button type="button" className="qf-editor-sidebar-scrim" onClick={() => setIsSidebarOpen(false)} aria-label={isFa ? "بستن پنل" : "Close sidebar"}/>}
 
-        <main className="qf-editor-main">
+        <div className="qf-editor-main">
           <div className="qf-editor-title-strip">
             <button className="qf-editor-mobile-toggle" type="button" aria-label={isFa ? "باز کردن کاوشگر" : "Open explorer"} onClick={() => {setPane("files");setIsSidebarOpen(true)}}><Menu size={17}/></button>
             <FileTabs files={files} tabs={tabs} activeFileId={activeFileId} onTabClick={selectFile} onTabClose={handleClose} locale={locale}/>
@@ -268,7 +268,7 @@ export default function CodeEditorTool({ locale }: Props) {
             {activeFile && <ChevronRight size={13}/>} {activeFile && <Braces size={13}/>} 
           </div>
           <Editor file={activeFile} onContentChange={updateContent} onCursorChange={(line,column) => setCursor({line,column})} theme={{mode}} locale={locale} jump={jump}/>
-        </main>
+        </div>
       </div>
       {fullscreenError && <div className="qf-editor-notice" role="alert" dir={isFa ? "rtl" : "ltr"}>
         <span>{fullscreenError}</span>

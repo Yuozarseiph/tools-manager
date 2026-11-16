@@ -1,8 +1,9 @@
 // components/tools/developer/json-formatter/JsonFormatterTool.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
-import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
+import { AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { useState, ChangeEvent } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -147,13 +148,12 @@ export default function JsonFormatterTool() {
           className={`flex items-center justify-between px-4 py-3 border-b ${theme.border} bg-gray-50/50 dark:bg-white/5`}
         >
           <div className="flex items-center gap-2">
-            <label tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
+            <label data-file-control="pick" tabIndex={0} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }}
               className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors bg-[var(--app-primary-bg)] text-white hover:bg-[var(--app-primary-hover)]`}
             >
               <UploadCloud size={14} />
               <span>{content.ui.upload.button}</span>
-              <AccessibleInput hasVisibleLabel
-                type="file"
+              <QueuedFileInput hasVisibleLabel
                 accept=".json"
                 className="hidden"
                 onChange={handleFileUpload}
@@ -264,7 +264,7 @@ export default function JsonFormatterTool() {
                 <Copy size={16} className={theme.textMuted} />
               )}
             </button>
-            <button aria-label={content.ui.output.downloadTitle} data-testid="download-result"
+            <button data-file-control="download" aria-label={content.ui.output.downloadTitle} data-testid="download-result"
               onClick={handleDownload}
               className={`p-2 rounded-lg border hover:bg-[var(--app-secondary-bg)] hover:text-[var(--app-accent)] dark:hover:bg-[var(--app-secondary-bg)] dark:hover:text-[var(--app-accent)] transition-colors ${theme.border}`}
               title={content.ui.output.downloadTitle}

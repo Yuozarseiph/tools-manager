@@ -6,7 +6,7 @@ import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { motion } from "framer-motion";
 import { Download, FileUp, Trash2, Link2 } from "lucide-react";
 
@@ -14,6 +14,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { useLanguage } from "@/context/LanguageContext";
 import { useBackgroundRemoverContent } from "./background-remover.content";
 
+import RuntimeCacheControl from "@/components/ui/RuntimeCacheControl";
 import { startActivity, downloadBlob } from "@/lib/transfer";
 import { removeBackground } from "@imgly/background-removal";
 
@@ -38,6 +39,7 @@ export default function BackgroundRemoverTool() {
 
   const runId = useRef(0);
   const outputRef = useRef<string | null>(null);
+  const resourceController = useRef<AbortController | null>(null);
   const processTask = useRef<ReturnType<typeof startActivity> | null>(null);
   const downloads = useRef(new Map<string, ReturnType<typeof startActivity>>());
   const [processingError, setProcessingError] = useState("");
@@ -47,6 +49,7 @@ export default function BackgroundRemoverTool() {
   const [outputSize, setOutputSize] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [firstRun, setFirstRun] = useState(true);
+  const [receivingModel, setReceivingModel] = useState(false);
 
   // URL state
   const [imageUrlInput, setImageUrlInput] = useState("");
@@ -76,43 +79,59 @@ export default function BackgroundRemoverTool() {
 
   useEffect(() => {
     const resources = downloads.current;
-    return () => { runId.current = -1; cleanupOutput(); processTask.current?.fail(new DOMException("Cancelled", "AbortError")); resources.forEach(task => task.fail(new DOMException("Cancelled", "AbortError"))); };
+    return () => { runId.current = -1; resourceController.current?.abort(); cleanupOutput(); processTask.current?.fail(new DOMException("Cancelled", "AbortError")); resources.forEach(task => task.fail(new DOMException("Cancelled", "AbortError"))); };
   }, [cleanupOutput]);
+
+  const cancelDownload = useCallback(() => {
+    resourceController.current?.abort();
+  }, []);
 
   const runRemoveBackground = useCallback(async () => {
     if (!file || isProcessing) return;
     const currentRun = ++runId.current;
+    const controller = new AbortController();
+    resourceController.current = controller;
     downloads.current.clear();
     setProcessingError("");
     processTask.current = startActivity(locale === "fa" ? "حذف پس‌زمینه" : "Background removal", "process");
     setIsProcessing(true);
+    setReceivingModel(true);
     cleanupOutput();
     setFirstRun(false);
 
     try {
-      const result = await removeBackground(file, { progress: (key, loaded, total) => {
+      const result = await removeBackground(file, { fetchArgs: { signal: controller.signal }, progress: (key, loaded, total) => {
         if (currentRun !== runId.current) return;
         if (key.startsWith("fetch:")) {
-          if (!downloads.current.has(key)) downloads.current.set(key, startActivity(key.slice(6), "download", total));
+          if (!downloads.current.has(key)) downloads.current.set(key, startActivity(key.slice(6), "download", total, cancelDownload));
           const task = downloads.current.get(key)!; task.progress(loaded, total);
           if (total > 0 && loaded >= total) task.finish();
-        } else processTask.current?.progress(loaded, total, key);
+        } else {
+          setReceivingModel(false);
+          processTask.current?.progress(loaded, total, key);
+        }
       } });
       if (currentRun !== runId.current) return;
+      controller.signal.throwIfAborted();
       const blob = new Blob([result], { type: "image/png" });
       setOutputSize(blob.size);
       const url = URL.createObjectURL(blob);
       outputRef.current = url; setOutputUrl(url);
       processTask.current?.finish();
     } catch (e) {
-      console.error(e);
-      if (currentRun === runId.current) { setProcessingError(content.ui.errors.processingFailed); processTask.current?.fail(e); downloads.current.forEach(task => task.fail(e)); }
+      if (currentRun === runId.current) {
+        const cause = controller.signal.aborted ? new DOMException("Cancelled", "AbortError") : e;
+        if (!controller.signal.aborted) setProcessingError(content.ui.errors.processingFailed);
+        processTask.current?.fail(cause);
+        downloads.current.forEach(task => task.fail(cause));
+      }
     } finally {
-      if (currentRun === runId.current) setIsProcessing(false);
+      if (resourceController.current === controller) resourceController.current = null;
+      if (currentRun === runId.current) { setReceivingModel(false); setIsProcessing(false); }
     }
-  }, [file, isProcessing, locale, cleanupOutput, content.ui.errors.processingFailed]);
+  }, [file, isProcessing, locale, cleanupOutput, content.ui.errors.processingFailed, cancelDownload]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "image/*": [] },
     multiple: false,
     onDrop: useCallback(
@@ -183,11 +202,14 @@ export default function BackgroundRemoverTool() {
   return (
     <div className="space-y-6">
       {processingError && <p role="alert" className="rounded-xl bg-[var(--app-error-bg)] p-4 text-[var(--app-error-text)]">{processingError}</p>}
+      <RuntimeCacheControl group="background" busy={isProcessing} />
+      {receivingModel && <button type="button" className="ai-button" onClick={cancelDownload}>{locale === "fa" ? "لغو دریافت مدل" : "Cancel model download"}</button>}
       {/* Upload card */}
       <div
         className={`rounded-3xl border overflow-hidden ${theme.bg} ${theme.border}`}
       >
         {!file ? (
+          <>
           <AccessibleDropzone
             {...getRootProps()}
             className={`text-center cursor-pointer p-10 w-full min-h-[260px] flex items-center justify-center transition-all duration-200 ${
@@ -211,6 +233,8 @@ export default function BackgroundRemoverTool() {
               </p>
             </motion.div>
           </AccessibleDropzone>
+          {fileQueue}
+          </>
         ) : (
           <div className="p-4 space-y-4">
             <div className="flex items-center justify-between gap-3">
@@ -261,15 +285,15 @@ export default function BackgroundRemoverTool() {
                     {content.ui.output.title}
                   </p>
 
-                  <button aria-label="Remove background"
+                  <button aria-label={locale === "fa" ? "حذف پس‌زمینه" : "Remove background"}
                     onClick={runRemoveBackground}
                     disabled={isProcessing}
                     className={`px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-2 ${
                       isProcessing ? "opacity-60 cursor-not-allowed" : ""
                     } ${theme.secondary} ${theme.accent}`}
-                    title="Remove background"
+                    title={locale === "fa" ? "حذف پس‌زمینه" : "Remove background"}
                   >
-                    {isProcessing ? content.ui.upload.loading : "Remove"}
+                    {isProcessing ? content.ui.upload.loading : locale === "fa" ? "حذف پس‌زمینه" : "Remove background"}
                   </button>
                 </div>
 
@@ -302,7 +326,7 @@ export default function BackgroundRemoverTool() {
                         .replace("{size}", formatBytes(outputSize ?? 0))
                         .replace("{type}", "PNG")}
                     </p>
-                    <button data-testid="download-result"
+                    <button data-file-control="download" data-testid="download-result"
                       onClick={download}
                       className={`px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-2 ${theme.secondary} ${theme.accent}`}
                     >

@@ -47,7 +47,7 @@ function InlineActivities({ tasks, now, locale }: { tasks: Activity[]; now: numb
       const elapsed = Math.max(.1, ((task.status === "running" ? now : task.updated) - task.started) / 1000);
       const percent = task.status === "done" ? 100 : task.total ? Math.min(99, Math.round(task.done / task.total * 100)) : undefined;
       const Icon = task.status === "done" ? Check : task.status === "error" ? AlertCircle : task.kind === "read" ? FileUp : Download;
-      const status = task.status === "done" ? (task.kind === "save" ? (fa ? "ارسال به مرورگر برای ذخیره" : "Sent to your browser to save") : (fa ? "آماده شد" : "Ready"))
+      const status = task.status === "done" ? (task.kind === "save" ? (fa ? "ارسال به مرورگر برای ذخیره" : "Sent to your browser to save") : task.cached ? (fa ? "آماده از حافظهٔ مرورگر" : "Loaded from browser cache") : (fa ? "آماده شد" : "Ready"))
         : task.status === "error" ? (fa ? "انتقال ناموفق بود؛ دوباره تلاش کنید." : "Transfer failed. Please retry.")
         : task.status === "cancelled" ? (fa ? "لغو شد" : "Cancelled")
         : task.kind === "read" ? (fa ? "خواندن فایل در مرورگر" : "Reading file locally") : (fa ? "دریافت فایل" : "Downloading file");
@@ -82,7 +82,7 @@ export default function ActivityCenter() {
     const release = observeFileReads(locale === "fa" ? "خواندن فایل" : "Reading file");
     const timer = setInterval(() => {
       setNow(Date.now());
-      setTasks(previous => previous.filter(task => task.status === "running" || Date.now() - task.updated < (task.status === "error" ? 12_000 : 6000)));
+      setTasks(previous => previous.filter(task => task.status === "running" || Date.now() - task.updated < (task.status === "error" ? 12_000 : task.kind === "read" && task.status === "done" ? 1600 : 6000)));
     }, 500);
     return () => {
       clearInterval(timer); release(); window.removeEventListener(activityEvent, receive);

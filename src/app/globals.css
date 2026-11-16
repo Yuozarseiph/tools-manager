@@ -412,10 +412,21 @@ body :is(input, textarea, button, [role="combobox"])[aria-invalid="true"] { bord
 .brand-logo { background: #fff; border: 1px solid #d7d7dc; flex-shrink: 0; }
 .header-action { box-sizing: border-box; width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0; }
 @media (min-width: 640px) { .header-action { width: 48px; } }
+:root {
+  --site-header-inset: 12px;
+  --site-header-height: 70px;
+}
+@media (max-width: 639px) {
+  :root { --site-header-inset: 8px; --site-header-height: 66px; }
+}
+.home-hero {
+  --home-header-space: calc(var(--site-header-inset) + var(--site-header-height));
+  margin-top: calc(-1 * var(--home-header-space));
+}
 /* Floating glass header: the backdrop stays readable as content scrolls beneath. */
 .site-header {
   --app-radius: 12px;
-  top: 12px; width: calc(100% - 40px); max-width: 1280px; margin: 12px auto 0;
+  top: var(--site-header-inset); width: calc(100% - 40px); max-width: 1280px; height: var(--site-header-height); margin: var(--site-header-inset) auto 0;
   background: color-mix(in srgb, var(--app-card) 92%, transparent);
   border: 1px solid color-mix(in srgb, var(--app-text) 18%, transparent);
   border-radius: 20px;
@@ -429,7 +440,7 @@ body .site-header .header-action, body .site-header a.ui-control {
   border-color: color-mix(in srgb, var(--app-text) 15%, transparent);
 }
 body .site-header .header-action:hover, body .site-header a.ui-control:hover { background: var(--app-secondary-bg); border-color: var(--app-accent); }
-@media (max-width: 639px) { .site-header { top: 8px; margin-top: 8px; width: calc(100% - 20px); border-radius: 18px; } }
+@media (max-width: 639px) { .site-header { width: calc(100% - 20px); border-radius: 18px; } }
 @media (prefers-reduced-transparency: reduce) { .site-header, .dark .site-header { background: var(--app-card); backdrop-filter: none; } }
 .ui-control { border-color: var(--app-input-border); }
 .ui-control:hover:not(:disabled), .header-action:hover { background: var(--app-secondary-bg); border-color: var(--app-accent); }
@@ -468,6 +479,17 @@ body .site-header .header-action:hover, body .site-header a.ui-control:hover { b
   [data-panel-state="open"][aria-modal="true"] { transform: none; }
   [data-panel-state="open"][aria-modal="true"] > div { transform: translateY(4px); }
 }
+/* Animate the backdrop and the panel separately so the overlay stays fixed. */
+[data-panel-state][data-modal-motion] { transition: none; }
+[data-panel-state][data-modal-motion="open"] { animation: modal-backdrop-in 260ms var(--panel-motion-ease) both; }
+[data-panel-state][data-modal-motion="closing"] { animation: modal-backdrop-out 200ms ease-in both; }
+[data-modal-motion] > :is(div, section) { transform-origin: center; }
+[data-modal-motion="open"] > :is(div, section) { animation: modal-panel-in 260ms var(--panel-motion-ease) both; }
+[data-modal-motion="closing"] > :is(div, section) { animation: modal-panel-out 200ms ease-in both; }
+@keyframes modal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes modal-panel-in { from { transform: translateY(24px) scale(.97); } to { transform: none; } }
+@keyframes modal-panel-out { from { transform: none; } to { transform: translateY(16px) scale(.98); } }
 button[aria-expanded] svg { transition: transform 180ms var(--panel-motion-ease); }
 .panel-calendar-days { animation: panel-calendar-in 150ms ease-out; }
 @keyframes panel-calendar-in { from { opacity: .45; } to { opacity: 1; } }
@@ -483,6 +505,8 @@ button[aria-expanded] svg { transition: transform 180ms var(--panel-motion-ease)
 }
 @media (prefers-reduced-motion: reduce) {
   [data-panel-state], [data-panel-state] > div, .panel-calendar-days { animation: none !important; }
+  [data-panel-state][data-modal-motion], [data-modal-motion] > :is(div, section) { animation: none !important; transition: none !important; }
+  [data-modal-motion] > :is(div, section) { transform: none !important; }
   details::details-content { transition: none !important; }
 }
 
@@ -506,3 +530,32 @@ button[aria-expanded] svg { transition: transform 180ms var(--panel-motion-ease)
 .inline-process-status > svg { flex-shrink: 0; color: var(--app-accent); }
 .inline-transfer[data-status="error"], .inline-process-status[data-status="error"] { color: var(--app-error-text); }
 @media (max-width: 639px) { .export-overlay { align-items: flex-end; padding: .75rem; } .export-dialog { padding: 1.25rem; } }
+
+/* Shared file controls for pickers, drop areas and downloadable output. */
+[data-file-control="drop"] {
+  border: 2px dashed var(--app-input-border);
+  border-radius: 8px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  padding: clamp(1rem, 5vw, 2rem);
+  text-align: center;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+[data-file-control="drop"]:is(:hover, :focus-within, [data-dragging="true"]) {
+  border-color: var(--app-accent);
+}
+[data-file-control="drop"][data-dragging="true"] { background: var(--app-secondary-bg); }
+[data-file-control="drop"][data-disabled="true"] { opacity: .6; }
+[data-file-control="pick"], [data-file-control="download"] { border-radius: 8px; }
+[data-file-control="pick"]:focus-visible, [data-file-control="download"]:focus-visible {
+  outline: 2px solid var(--app-ring);
+  outline-offset: 2px;
+}
+.file-transfer-list .inline-transfer { margin-block: 0; }
+@media (prefers-reduced-motion: reduce) {
+  [data-file-control="drop"] { transition: none; }
+}
+.file-transfer-host { min-width: 0; flex-basis: 100%; grid-column: 1 / -1; }
+.file-transfer-host:empty { display: none; }
+[data-file-control="drop"][data-compact="true"] { padding: 0; border: 0; background: transparent; }
+[data-file-control="drop"][data-compact="true"][data-dragging="true"] { outline: 2px dashed var(--app-accent); outline-offset: 2px; }

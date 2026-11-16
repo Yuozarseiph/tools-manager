@@ -55,6 +55,10 @@ export interface Tool {
 }
 
 export const TOOLS: Tool[] = [
+  { id: "ai-input-preparer", Icon: TextCursorInput, href: "/tools/ai-input-preparer", status: "active", category: "ai" },
+  { id: "ai-response-review", Icon: Scale, href: "/tools/ai-response-review", status: "active", category: "ai" },
+  { id: "ai-output-extractor", Icon: FileStack, href: "/tools/ai-output-extractor", status: "active", category: "ai" },
+  { id: "prompt-builder", Icon: Sparkles, href: "/tools/prompt-builder", status: "active", category: "ai" },
   { id: "file-to-markdown", Icon: FileCode, href: "/tools/file-to-markdown", status: "active", category: "ai", badgeKey: "tools.items.file-to-markdown.badge" },
   { id: "project-to-markdown", Icon: GitGraph, href: "/tools/project-to-markdown", status: "active", category: "ai", badgeKey: "tools.items.project-to-markdown.badge" },
   { id: "text-cleaner", Icon: TextCursorInput, href: "/tools/text-cleaner", status: "active", category: "ai", badgeKey: "tools.items.text-cleaner.badge" },

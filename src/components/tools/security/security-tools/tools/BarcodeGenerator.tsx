@@ -165,7 +165,7 @@ export default function BarcodeGenerator() {
         className={`p-6 rounded-xl border ${theme.border} ${theme.bg} flex flex-col items-center gap-4`}
       >
         <canvas ref={canvasRef} />
-        <button data-testid="download-result"
+        <button data-file-control="download" data-testid="download-result"
           onClick={downloadBarcode}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold ${theme.primary} text-white`}
         >

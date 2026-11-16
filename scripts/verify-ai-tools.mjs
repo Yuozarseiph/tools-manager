@@ -44,3 +44,52 @@ assert.equal(projectExclusion("public/image.png"), "unsupported");
 assert(isBinary("abc\0def")); assert(!isBinary("فارسی\nEnglish"));
 assert(fence("```js\ncode\n```", "md").startsWith("````md"));
 console.log("AI tool checks passed: cleanup, chunk coverage/overlap/Unicode/limits, chat roles/JSON/code, diff reconstruction, redaction approval and project exclusions.");
+
+const workflowExports = {};
+const workflowSource = readFileSync("src/lib/ai-workflows.ts", "utf8");
+const workflowCompiled = ts.transpileModule(workflowSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText;
+vm.runInNewContext(workflowCompiled, {
+  exports: workflowExports,
+  require: name => {
+    assert.equal(name, "./ai-text");
+    return exports;
+  },
+});
+const { compareResponses, extractFiles, fillPrompt, finishInput, prepareInput, promptVariables } = workflowExports;
+const prepared = prepareInput("  كتاب  ي   user@example.com\n\n  " + "متن ".repeat(25), true);
+assert(prepared.source.startsWith("کتاب ی user@example.com"));
+assert.equal(prepared.matches.length, 1);
+assert.equal(finishInput(prepared.source, []).text, prepared.source);
+const finished = finishInput(prepared.source, prepared.matches, 10);
+assert(!finished.text.includes("user@example.com"));
+assert.equal(finished.chunks.join(""), finished.text);
+assert(finished.chunks.every(chunk => chunk.length <= 30));
+const boundary = "a".repeat(29) + "\n\ntext";
+assert(finishInput(boundary, [], 10).chunks.every(chunk => chunk.length <= 30));
+const review = compareResponses("same\nold", "same\nnew");
+assert.equal(review.added, 1);
+assert.equal(review.removed, 1);
+assert.equal(review.lines.find(line => line.type === "added").text, "new");
+assert.equal(review.lines.find(line => line.type === "removed").text, "old");
+assert.throws(() => compareResponses("x\n".repeat(2000), "ok"), /DIFF_LIMIT/);
+const rawJson = '{"precision":9007199254740993}';
+assert.equal(extractFiles(rawJson).files[0].text, rawJson);
+const extracted = extractFiles([
+  "````javascript", "const note = '```';", "````",
+  "| نام | مقدار |", "| --- | --- |", '| علی\\|رضا | -12 |', '| test | =1+2 |',
+  "~~~json", "{broken}", "~~~", "```json", '{"ok":true}', "```",
+].join("\n"));
+assert.equal(extracted.invalidJson, 1);
+assert.equal(extracted.files.map(file => file.kind).join(","), "code,csv,json");
+assert.equal(extracted.files[1].text, "\uFEFF\"نام\",\"مقدار\"\r\n\"علی|رضا\",\"-12\"\r\n\"test\",\"'=1+2\"");
+assert.equal(extractFiles("```js\n| ignore | this |\n| --- | --- |").files.length, 0);
+assert.equal(extractFiles(("```txt\nx\n```\n").repeat(100)).files.length, 100);
+assert.throws(() => extractFiles(("```txt\nx\n```\n").repeat(101)), /BLOCK_LIMIT/);
+const template = { name: "Test", goal: "Review {{موضوع}}", input: "{{input}}", format: "{{موضوع}} in JSON" };
+assert.equal(promptVariables(template).join(","), "موضوع,input");
+const prompt = fillPrompt(template, { "موضوع": "{{input}}", input: "A" }, ["Goal", "Input", "Format"]);
+assert.equal(prompt, "## Goal\n\nReview {{input}}\n\n## Input\n\nA\n\n## Format\n\n{{input}} in JSON");
+assert.equal(fillPrompt({ ...template, goal: "{{input}}".repeat(40) }, {input: "x".repeat(8000)}, ["Goal","Input","Format"]), null);
+console.log("AI workflow checks passed: approved redaction, chunk budgets, review diffs, safe CSV, exact JSON text, fenced blocks and bounded prompt templates.");

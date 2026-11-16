@@ -6,7 +6,7 @@ import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { motion } from "framer-motion";
 import { Download, FileUp, Trash2, Link2 } from "lucide-react";
 // @ts-ignore
@@ -154,7 +154,7 @@ export default function ExifRemoverTool() {
     [content.ui.errors.notImage, content.ui.errors.processingFailed]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "image/*": [] },
     multiple: false,
     onDrop: useCallback(
@@ -215,6 +215,7 @@ export default function ExifRemoverTool() {
         className={`rounded-3xl border overflow-hidden relative ${theme.bg} ${theme.border}`}
       >
         {!inputFile ? (
+          <>
           <AccessibleDropzone
             {...getRootProps()}
             className={`text-center cursor-pointer p-10 w-full min-h-[260px] flex items-center justify-center transition-all duration-200 ${
@@ -241,6 +242,8 @@ export default function ExifRemoverTool() {
               </p>
             </motion.div>
           </AccessibleDropzone>
+          {fileQueue}
+          </>
         ) : (
           <div className="p-4 space-y-4">
             <div className="flex items-center justify-between">
@@ -309,7 +312,7 @@ export default function ExifRemoverTool() {
                           .replace("{size}", formatBytes(outputMeta?.size ?? 0))
                           .replace("{type}", outputMeta?.type ?? "-")}
                       </p>
-                      <button data-testid="download-result"
+                      <button data-file-control="download" data-testid="download-result"
                         onClick={handleDownload}
                         className={`px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-2 ${theme.secondary} ${theme.accent}`}
                       >

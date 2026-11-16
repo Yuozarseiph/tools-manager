@@ -5,7 +5,7 @@ import { AccessibleDropzone } from "@/components/ui/AccessibleControls";
 import { AccessibleInput, AccessiblePreview } from "@/components/ui/AccessibleControls";
 
 import { useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useTransferDropzone } from "@/components/ui/useTransferDropzone";
 import { saveFile as download } from "@/lib/file-export";
 import {
   FileUp,
@@ -64,7 +64,7 @@ export default function ImageResizerTool() {
     reader.readAsDataURL(f);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileQueue } = useTransferDropzone({
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"] },
     maxFiles: 1,
     onDrop: (acceptedFiles) => {
@@ -186,6 +186,7 @@ export default function ImageResizerTool() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
+            <>
             <AccessibleDropzone
               {...getRootProps()}
               className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200
@@ -216,6 +217,8 @@ export default function ImageResizerTool() {
                 </div>
               </div>
             </AccessibleDropzone>
+            {fileQueue}
+            </>
           </motion.div>
         ) : (
           <motion.div
@@ -367,7 +370,7 @@ export default function ImageResizerTool() {
             </div>
 
             {/* دکمه دانلود */}
-            <button data-testid="download-result"
+            <button data-file-control="download" data-testid="download-result"
               onClick={handleResize}
               disabled={!width || !height}
               className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}

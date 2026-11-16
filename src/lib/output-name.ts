@@ -1,5 +1,6 @@
 /** The optional export name is scoped to the current tool, kept in memory only. */
 export const OUTPUT_NAME_TOOLS = new Set([
+  "ai-input-preparer", "ai-response-review", "ai-output-extractor", "prompt-builder",
   "file-to-markdown", "project-to-markdown", "text-cleaner", "text-chunker",
   "chat-to-markdown", "text-diff", "sensitive-data-redactor", "json-formatter",
   "code-editor", "excel-viewer", "excel-editor", "bank", "audio-editor",

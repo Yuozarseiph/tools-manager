@@ -7,6 +7,11 @@ export type ToolsLayoutMode =
   | "grid-2"
   | "grid-3"
   | "grid-4";
+export type MobileToolsLayoutMode = Exclude<ToolsLayoutMode, "grid-3" | "grid-4">;
+
+export function isMobileToolsLayout(layout: ToolsLayoutMode): layout is MobileToolsLayoutMode {
+  return layout === "list-compact" || layout === "list-detail" || layout === "grid-1" || layout === "grid-2";
+}
 export type PinnedLayoutMode =
   | "horizontal-scroll"
   | "grid-small"
@@ -16,6 +21,7 @@ export type PinnedLayoutMode =
 
 export interface LayoutSettings {
   toolsLayout: ToolsLayoutMode;
+  mobileToolsLayout?: MobileToolsLayoutMode;
   pinnedLayout: PinnedLayoutMode;
 }
 
@@ -31,11 +37,3 @@ export type ToolWithText = import("@/data/tools").Tool & {
   description: string;
   badge?: string;
 };
-
-// گزینه‌های چیدمان برای موبایل (فقط ۴ گزینه کاربردی)
-export const mobileToolsLayoutOptions = [
-  { value: "list-compact", label: { fa: "لیست فشرده", en: "Compact List" } },
-  { value: "list-detail", label: { fa: "لیست کامل", en: "Detailed List" } },
-  { value: "grid-1", label: { fa: "تک ستونه", en: "Single Column" } },
-  { value: "grid-2", label: { fa: "دو ستونه", en: "Two Columns" } },
-] as const;

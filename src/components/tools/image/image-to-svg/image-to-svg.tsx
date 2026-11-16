@@ -1,9 +1,9 @@
 // src/components/tools/image/image-to-svg/image-to-svg.tsx
 "use client";
+import QueuedFileInput from "@/components/ui/QueuedFileInput";
 import { saveFile } from "@/lib/file-export";
 import { outputFilename } from "@/lib/output-name";
 import { AccessiblePreview } from "@/components/ui/AccessibleControls";
-import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -274,8 +274,7 @@ export default function ImageToSvgConverter() {
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-300 ${theme.border} hover:opacity-80`}
             >
-              <AccessibleInput
-                type="file"
+              <QueuedFileInput
                 accept="image/*,.jpg,.jpeg,.png,.webp"
                 onChange={handleFileSelect}
                 className="hidden"
@@ -364,7 +363,7 @@ export default function ImageToSvgConverter() {
             {selectedFile && (
               <div className="space-y-3">
                 {progressStep !== "success" && (
-                  <button data-testid="download-result"
+                  <button data-file-control="download" data-testid="download-result"
                     onClick={convertToSvg}
                     disabled={isConverting}
                     className={`w-full px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${theme.primary}`}
@@ -378,7 +377,7 @@ export default function ImageToSvgConverter() {
 
                 {svgBlobUrl && progressStep === "success" && (
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <button data-testid="download-result"
+                    <button data-file-control="download" data-testid="download-result"
                       onClick={handleManualDownload}
                       className={`flex-1 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${theme.primary}`}
                     >
