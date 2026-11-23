@@ -98,7 +98,7 @@ const getGridClass = (layout: ToolsLayoutMode): string => {
     case "grid-1":
       return "grid-cols-1 gap-3";
     case "grid-2":
-      return "grid-cols-2 gap-3";
+      return "tools-grid-two grid-cols-2 gap-3";
     case "grid-3":
       return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
     case "grid-4":
@@ -147,7 +147,7 @@ const ToolCard = memo(function ToolCard({
         }`}
       >
         <div
-          className={`flex shrink-0 items-center justify-center rounded-[15px] ${theme.secondary} ${
+          className={`tool-card-icon flex shrink-0 items-center justify-center rounded-[15px] ${theme.secondary} ${
             list ? "h-11 w-11" : "h-12 w-12"
           }`}
         >
@@ -157,7 +157,7 @@ const ToolCard = memo(function ToolCard({
           />
         </div>
 
-        <div className={`min-w-0 flex-1 ${list ? "" : "mt-4"}`}>
+        <div className={`tool-card-copy min-w-0 flex-1 ${list ? "" : "mt-4"}`}>
           <div className="flex min-w-0 flex-col items-start gap-2">
             <h2
               className={`min-w-0 text-base font-bold leading-7 ${theme.text}`}
@@ -187,7 +187,7 @@ const ToolCard = memo(function ToolCard({
 
         {!list && (
           <div
-            className={`mt-5 flex items-center justify-between border-t pt-3 text-sm font-bold ${theme.border} ${theme.accent}`}
+            className={`tool-card-cta mt-5 flex items-center justify-between border-t pt-3 text-sm font-bold ${theme.border} ${theme.accent}`}
           >
             <span>{content.item.cta}</span>
             <ArrowLeft

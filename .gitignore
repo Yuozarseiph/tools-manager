@@ -9,13 +9,14 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
 # testing
 /coverage
 
 # next.js
 /.next/
 /out/
-.htaccess
+
 # production
 /build
 
@@ -38,6 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/.claude
+
+# auto-generated htaccess (produced by postbuild script)
+.htaccess
+en.htaccess
+fa.htaccess
+
+# work/temp dev scripts directory
 /work/
+
+# pdfjs and runtime assets are copied from node_modules at build time
+/public/pdfjs/
 /public/runtime/
+
+# IDE and agent directories
+/.claude
+/.next/

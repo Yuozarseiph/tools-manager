@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { usePanelPresence } from "@/hooks/usePanelPresence";
 
-import { Palette, Check, Moon, Sun } from "lucide-react";
+import { Palette, Check, Moon, Sun, MoonStar } from "lucide-react";
 
 import { useTheme, ThemeName } from "@/context/ThemeContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
@@ -48,6 +48,14 @@ export default function ThemeSwitcher({ buttonClassName = "h-11 w-11" }: { butto
       label: {
         fa: themeContent.fa.dark,
         en: themeContent.en.dark,
+      },
+    },
+    {
+      id: "royal-blue-oled",
+      icon: MoonStar,
+      label: {
+        fa: "اولد (مشکی)",
+        en: "OLED (black)",
       },
     },
   ];

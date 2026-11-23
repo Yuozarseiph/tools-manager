@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 // 1. آپدیت لیست نام تم‌ها مطابق با themes.ts
 export type ThemeName = 
-  | 'royal-blue-light' | 'royal-blue-dark'
+  | 'royal-blue-light' | 'royal-blue-dark' | 'royal-blue-oled'
   | 'ruby-red-light' | 'ruby-red-dark'
   | 'emerald-green-light' | 'emerald-green-dark'
   | 'classic-light' | 'classic-dark'
@@ -34,6 +34,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     'classic-light': 'light',
     
     'royal-blue-dark': 'dark',
+    'royal-blue-oled': 'dark',
     'ruby-red-dark': 'dark',
     'emerald-green-dark': 'dark',
     'classic-dark': 'dark',
@@ -58,8 +59,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('app-theme', name);
     
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
+    root.classList.remove('light', 'dark', 'oled');
     root.classList.add(newMode);
+    if (name.endsWith('-oled')) root.classList.add('oled');
     root.style.colorScheme = newMode;
   };
 

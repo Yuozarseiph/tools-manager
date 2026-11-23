@@ -318,7 +318,7 @@ QodeForge is not just a collection of utilities — it is a scalable, modular pl
 
 ## Documentation for 27.1.0
 
-Release date: January 20, 2027. The active catalogue has 51 entries (49 internal tools and two external games); the IP lookup and system-info tools and the empty System category have been removed. The header is floating and translucent. Download filenames are chosen in the save dialog, and transfer/processing notices appear inline with the tool.
+Release date: December 5, 2026. The active catalogue has 51 entries (49 internal tools and two external games); the IP lookup and system-info tools and the empty System category have been removed. The header is floating and translucent. Download filenames are chosen in the save dialog, and transfer/processing notices appear inline with the tool.
 
 - [Current interface and export workflow](docs/current-interface-and-exports.md)
 - [Shared controls and keyboard behavior](docs/panel-controls.md)

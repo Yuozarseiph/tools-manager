@@ -1,5 +1,5 @@
 // constants/themes.ts
-export type ThemeName = "royal-blue-light" | "royal-blue-dark";
+export type ThemeName = "royal-blue-light" | "royal-blue-dark" | "royal-blue-oled";
 
 export interface ThemePalette {
   name: string;
@@ -37,7 +37,7 @@ export interface ThemePalette {
 // تمام کلاس‌ها از متغیرهای CSS استفاده می‌کنند.
 // با تغییر کلاس dark روی<html> متغیرها عوض می‌شوند،
 // در نتیجه خودِ کلاس‌های Tailwind هم رنگ عوض می‌کنند.
-export const THEMES: Record<ThemeName, ThemePalette> = {
+const BASE_THEMES: Record<Exclude<ThemeName, "royal-blue-oled">, ThemePalette> = {
   "royal-blue-light": {
     name: "روشن",
     bg: "bg-[var(--app-bg)]",
@@ -104,6 +104,20 @@ export const THEMES: Record<ThemeName, ThemePalette> = {
     },
     divider: {
       via: "via-[var(--app-border)]",
+    },
+  },
+};
+
+// OLED: همان کلاس‌های تم تاریک؛ رنگ‌ها با :root.oled در CSS تعیین می‌شوند.
+export const THEMES: Record<ThemeName, ThemePalette> = {
+  ...BASE_THEMES,
+  "royal-blue-oled": {
+    ...BASE_THEMES["royal-blue-dark"],
+    name: "OLED",
+    scrollbar: {
+      thumb: "rgba(201,193,176,0.25)",
+      thumbHover: "rgba(127,167,201,0.45)",
+      track: "transparent",
     },
   },
 };

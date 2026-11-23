@@ -465,6 +465,44 @@ body .site-header .header-action:hover, body .site-header a.ui-control:hover { b
   .tools-filters > :first-child { flex: 1; }
   .tools-filters > div > button { width: 100%; }
 }
+@media (width < 640px) {
+  .tools-grid-two {
+    gap: 10px;
+    margin-inline: -4px;
+  }
+  .tools-grid-two > .tool-card > a { padding: clamp(10px, 3vw, 16px); }
+  .tools-grid-two .tool-card-icon {
+    width: 40px;
+    height: 40px;
+    margin-block-start: 2px;
+  }
+  .tools-grid-two .tool-card-copy { margin-block-start: .75rem; }
+  .tools-grid-two .tool-card h2 {
+    font-size: .9375rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+  .tools-grid-two .tool-card h2 + span {
+    padding: .15rem .4rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .tools-grid-two .tool-card-copy > p {
+    margin-block-start: .5rem;
+    font-size: .8125rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+  .tools-grid-two .tool-card-cta {
+    gap: .375rem;
+    margin-block-start: .75rem;
+    padding-block-start: .55rem;
+    font-size: .8125rem;
+    line-height: 1.5;
+  }
+  .tools-grid-two .tool-card-cta > svg { flex-shrink: 0; }
+}
+
 #tools-search::-webkit-search-cancel-button { appearance: none; }
 
 /* Small, consistent layer motion: no blur animation, springs or layout loops. */
@@ -559,3 +597,17 @@ button[aria-expanded] svg { transition: transform 180ms var(--panel-motion-ease)
 .file-transfer-host:empty { display: none; }
 [data-file-control="drop"][data-compact="true"] { padding: 0; border: 0; background: transparent; }
 [data-file-control="drop"][data-compact="true"][data-dragging="true"] { outline: 2px dashed var(--app-accent); outline-offset: 2px; }
+
+/* ------------------------------------------------------------------ */
+/* تم OLED: سیاه مطلق (روی :root.dark اعمال می‌شود)                   */
+/* ------------------------------------------------------------------ */
+:root.dark.oled {
+  --app-bg: #000000;
+  --app-card: #0a0a0a;
+  --app-menu: #111111;
+  --app-border: #2a2d33;
+  --app-secondary-bg: #0d1a29;
+  --app-gradient-from: #000000;
+  --app-gradient-to: #0a1a2c;
+  --app-input-bg: #000000;
+}

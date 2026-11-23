@@ -21,7 +21,7 @@ assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/fa/tools/ban
 const fa = JSON.parse(readFileSync("src/data/changelog/falog.json", "utf8")), en = JSON.parse(readFileSync("src/data/changelog/enlog.json", "utf8"));
 assert.equal(fa[0].version, "27.1.0"); assert.equal(en[0].version, "27.1.0");
 assert.equal(fa[0].status, undefined); assert.equal(en[0].status, undefined);
-assert.equal(fa[0].date, "۳۰ دی ۱۴۰۵"); assert.equal(en[0].date, "January 20, 2027");
+assert.equal(fa[0].date, "۱۴ آذر ۱۴۰۵"); assert.equal(en[0].date, "December 5, 2026");
 assert.equal(fa[0].changes.reduce((total, group) => total + group.items.length, 0), en[0].changes.reduce((total, group) => total + group.items.length, 0));
 const css = readFileSync("src/app/globals.css", "utf8");
 for (const rule of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
