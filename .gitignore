@@ -9,10 +9,10 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+*.exe
 # testing
 /coverage
-
+/send
 # next.js
 /.next/
 /out/
