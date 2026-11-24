@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { stripLocale } from "@/lib/localized-path";
+import { stripLocale } from "@/lib/i18n/localized-path";
 import {
   Heart,
   Book,
@@ -16,10 +16,10 @@ import {
   MoreHorizontal,
   X,
 } from "lucide-react";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
+import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useLanguage } from "@/context/LanguageContext";
-import { HeaderContent } from "@/data/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
 
 const desktopNavItems = [
   { href: "/docs", icon: Book, key: "docs" as const },

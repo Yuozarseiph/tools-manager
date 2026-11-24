@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Braces } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const JsonFormatterTool = dynamic(() => import("@/components/tools/developer/json-formatter/JsonFormatterTool"));
+const JsonFormatterTool = dynamic(() => import("@/features/tools/developer/json-formatter/JsonFormatterTool"));
 import { useJsonFormatterPageContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function JsonFormatterClient() {
   const theme = useThemeColors();

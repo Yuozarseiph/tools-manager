@@ -1,6 +1,6 @@
 // app/tools/(image)/background-remover/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export type SeoContent = {
   title: string;

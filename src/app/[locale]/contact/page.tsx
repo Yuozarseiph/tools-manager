@@ -1,6 +1,6 @@
 import Client from "./Client";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 const copy = {"fa": {"title": "تماس با QodeForge", "description": "راه‌های تماس با تیم QodeForge برای بازخورد، پیشنهاد و گزارش مشکل."}, "en": {"title": "Contact QodeForge", "description": "Contact the QodeForge team with feedback, suggestions or bug reports."}};
 export async function generateMetadata({ params }: Props) {

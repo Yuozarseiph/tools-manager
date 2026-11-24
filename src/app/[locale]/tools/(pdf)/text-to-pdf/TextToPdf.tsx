@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileText } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const TextToPdfTool = dynamic(() => import("@/components/tools/pdf/text-to-pdf/TextToPdfTool"));
+const TextToPdfTool = dynamic(() => import("@/features/tools/pdf/text-to-pdf/TextToPdfTool"));
 import { useTextToPdfPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function TextToPdfClient() {
   const theme = useThemeColors();

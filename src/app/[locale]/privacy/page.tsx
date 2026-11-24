@@ -1,6 +1,6 @@
 import Client from "./Client";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 const copy = {"fa": {"title": "حریم خصوصی QodeForge", "description": "سیاست حریم خصوصی QodeForge و توضیح پردازش محلی فایل‌ها در مرورگر."}, "en": {"title": "QodeForge privacy policy", "description": "QodeForge privacy policy and details about local browser processing."}};
 export async function generateMetadata({ params }: Props) {

@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, PieChart } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ExcelChartTool = dynamic(() => import("@/components/tools/excel-tools/excel-chart/ExcelChartTool"));
+const ExcelChartTool = dynamic(() => import("@/features/tools/excel/excel-chart/ExcelChartTool"));
 import { useExcelChartPageContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function ExcelChartClient() {
   const theme = useThemeColors();

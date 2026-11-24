@@ -7,7 +7,7 @@ const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirector
 const attrs=node=>Object.fromEntries((node.attrs??[]).map(a=>[a.name,a.value]));
 const text=node=>node.value??(node.childNodes??[]).map(text).join("");
 function nodes(document,tag) { const result=[]; const visit=n=>{if(n.tagName===tag)result.push(n);for(const c of n.childNodes??[])visit(c);};visit(document);return result; }
-const slugs=[...fs.readFileSync("src/data/tools.ts","utf8").matchAll(/href:\s*"\/tools\/([^"\n]+)"/g)].map(m=>m[1]);
+const slugs=[...fs.readFileSync("src/config/tools.ts","utf8").matchAll(/href:\s*"\/tools\/([^"\n]+)"/g)].map(m=>m[1]);
 let pages=0;
 for(const locale of ["fa","en"]) {
  const files=[`out/${locale}.html`, ...walk(`out/${locale}`).filter(file=>file.endsWith(".html"))];

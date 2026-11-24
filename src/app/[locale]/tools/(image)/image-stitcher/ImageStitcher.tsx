@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, StretchVertical } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ImageStitcherTool = dynamic(() => import("@/components/tools/image/image-stitcher/ImageStitcherTool"));
+const ImageStitcherTool = dynamic(() => import("@/features/tools/image/image-stitcher/ImageStitcherTool"));
 import { useImageStitcherPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function ImageStitcherClient() {
   const theme = useThemeColors();

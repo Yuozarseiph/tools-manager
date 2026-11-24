@@ -1,5 +1,5 @@
 import base from "../../../../public/manifest.json";
-import { parseLocale } from "@/lib/localized-path";
+import { parseLocale } from "@/lib/i18n/localized-path";
 export const dynamic = "force-static";
 export function generateStaticParams() { return [{ locale: "fa" }, { locale: "en" }]; }
 export async function GET(_request: Request, { params }: { params: Promise<{ locale: string }> }) {

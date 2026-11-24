@@ -1,5 +1,5 @@
-import { toolMarkdown } from "@/lib/tool-markdown";
-import { parseLocale } from "@/lib/localized-path";
+import { toolMarkdown } from "@/lib/seo/tool-markdown";
+import { parseLocale } from "@/lib/i18n/localized-path";
 export const dynamic = "force-static";
 export async function GET(_request: Request, { params }: { params: Promise<{ locale: string }> }) {
  return new Response(toolMarkdown("file-to-markdown", parseLocale((await params).locale)), { headers: { "Content-Type": "text/markdown; charset=utf-8" } });

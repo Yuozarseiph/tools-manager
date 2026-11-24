@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, TextCursorInput } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const WordCounterTool = dynamic(() => import("@/components/tools/utility/word-counter/WordCounterTool"));
+const WordCounterTool = dynamic(() => import("@/features/tools/utility/word-counter/WordCounterTool"));
 import { useWordCounterPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function WordCounterClient() {
   const theme = useThemeColors();

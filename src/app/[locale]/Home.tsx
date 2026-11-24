@@ -1,7 +1,7 @@
 "use client";
 
-import HeroSection from "@/components/home/HeroSection";
-import ToolsGrid from "@/components/home/ToolsGrid";
+import HeroSection from "@/features/home/HeroSection";
+import ToolsGrid from "@/features/home/ToolsGrid";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function Home() {

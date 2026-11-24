@@ -8,8 +8,8 @@ const timers=[], downloads=[];
 dom.window.HTMLAnchorElement.prototype.click=function(){downloads.push({name:this.download,url:this.href})};
 const shared={window:dom.window,document:dom.window.document,Element:dom.window.Element,HTMLElement:dom.window.HTMLElement,Blob,URL,fetch,crypto,Promise,Error,setTimeout:fn=>{timers.push(fn);return timers.length;}};
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{...shared,exports,require:name=>{assert(name in deps,`Unexpected dependency ${name}`);return deps[name];}});return exports;}
-const names=load('src/lib/output-name.ts'), origins=load('src/lib/activity-origin.ts');
-const service=load('src/lib/file-export.ts',{'./activity-origin':origins,'./output-name':names});
+const names=load('src/lib/files/output-name.ts'), origins=load('src/lib/files/activity-origin.ts');
+const service=load('src/lib/files/file-export.ts',{'./activity-origin':origins,'./output-name':names});
 origins.captureActivityOrigin(dom.window.document.querySelector('input'));
 assert.equal(origins.activityOrigin().element.getAttribute('data-activity-area'),'upload');
 const queued=service.saveFile(new Blob(['first']), 'first.md');

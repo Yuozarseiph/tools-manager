@@ -1,6 +1,6 @@
 // app/tools/(developer)/base64/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 //  تعریف Type برای SEO
 export type SeoContent = {

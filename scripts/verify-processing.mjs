@@ -12,12 +12,12 @@ function load(file, overrides = {}) {
   const compiled = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX }, fileName: file }).outputText;
   vm.runInNewContext(compiled, { ...shared, exports, require, ...overrides }, { filename: file }); return exports;
 }
-const core = load("src/lib/ai-text.ts");
-const markdown = load("src/lib/document-markdown.ts", { require: name => name === "./ai-text" ? core : require(name) });
+const core = load("src/lib/ai/ai-text.ts");
+const markdown = load("src/lib/ai/document-markdown.ts", { require: name => name === "./ai-text" ? core : require(name) });
 const source = '<h1>Title</h1><p>Hello <b>bold</b> <a href="javascript:alert(1)">bad</a></p><table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table><pre><code>const x = `a`;</code></pre><script>BAD_SCRIPT</script><img src="https://invalid.example/image.png" alt="Image">';
 const md = markdown.htmlMarkdown(source);
 assert(md.includes("# Title")); assert(md.includes("**bold**")); assert(md.includes("| A | B |")); assert(md.includes("const x = `a`;")); assert(!md.includes("javascript:")); assert(!md.includes("BAD_SCRIPT")); assert(!md.includes("https://invalid.example"));
-const parser = load("src/components/tools/presentation/html-to-pptx/HtmlParser.tsx", { window: dom.window });
+const parser = load("src/features/tools/presentation/html-to-pptx/HtmlParser.tsx", { window: dom.window });
 const parsed = parser.parseHtmlToSlides('<style>h1{color:#123456}</style><section class="slide"><h1>Title</h1><p dir="rtl">سلام <a href="https://example.com/">پیوند</a></p><ul><li>Parent<ol start="3"><li>Child</li></ol></li></ul><pre>first\nsecond</pre><table><tr><th colspan="2">Header</th></tr><tr><td rowspan="2">A</td><td>B</td></tr><tr><td>C</td></tr></table></section>');
 assert.equal(parsed.length, 1);
 const blocks = parsed[0].blocks;
@@ -31,13 +31,13 @@ assert.equal(blocks.find(block => block.text === "Child").listNumber, 3);
 assert.equal(blocks.find(block => block.kind === "table").colSpans[0][0], 2);
 assert.equal(blocks.find(block => block.kind === "table").rowSpans[1][0], 2);
 assert(parser.parseHtmlToSlides("plain text")[0].blocks[0].text === "plain text");
-const decoder = load("src/lib/decode-text.ts");
+const decoder = load("src/lib/files/decode-text.ts");
 assert.equal(decoder.decodeText(new Uint8Array([255, 254, 65, 0, 66, 0]).buffer), "AB");
 assert.equal(decoder.decodeText(new Uint8Array([254, 255, 0, 65, 0, 66]).buffer), "AB");
-const names = load("src/lib/output-name.ts");
-const origins = load("src/lib/activity-origin.ts");
-const fileExport = load("src/lib/file-export.ts", { require: name => name === "./output-name" ? names : name === "./activity-origin" ? origins : require(name) });
-const transfer = load("src/lib/transfer.ts", { require: name => name === "./file-export" ? fileExport : name === "./activity-origin" ? origins : require(name) }), observed = [];
+const names = load("src/lib/files/output-name.ts");
+const origins = load("src/lib/files/activity-origin.ts");
+const fileExport = load("src/lib/files/file-export.ts", { require: name => name === "./output-name" ? names : name === "./activity-origin" ? origins : require(name) });
+const transfer = load("src/lib/files/transfer.ts", { require: name => name === "./file-export" ? fileExport : name === "./activity-origin" ? origins : require(name) }), observed = [];
 events.addEventListener(transfer.activityEvent, event => observed.push(event.detail));
 const restore = transfer.observeFileReads("Reading file");
 const input = new dom.window.File(["Hello فارسی"], "input.txt", { type: "text/plain" });
@@ -83,7 +83,7 @@ try {
     keys: async () => [...cacheEntries.keys()].map(path => ({ url: new URL(path, base).href })),
     delete: async request => cacheEntries.delete(request.url.replace(base, "")),
   };
-  const runtime = load("src/lib/transfer.ts", {
+  const runtime = load("src/lib/files/transfer.ts", {
     caches: { open: async () => cache },
     fetch: async (path, options) => {
       if (path === "/runtime/manifest.json") return Response.json({ [runtimePath]: { size: payload.length, hash: "v1" } });
@@ -117,9 +117,9 @@ const uploadWidgets = load("src/components/ui/FileTransfer.tsx", {
   window: uploadDom.window,
   document: uploadDom.window.document,
   require: name => {
-    if (name === "@/context/LanguageContext") return { useLanguage: () => ({ locale: "en" }) };
-    if (name === "@/lib/decode-text") return decoder;
-    if (name === "@/lib/transfer") return transfer;
+    if (name === "@/providers/LanguageContext") return { useLanguage: () => ({ locale: "en" }) };
+    if (name === "@/lib/files/decode-text") return decoder;
+    if (name === "@/lib/files/transfer") return transfer;
     return require(name);
   },
 });

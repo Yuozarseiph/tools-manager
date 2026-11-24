@@ -3,12 +3,12 @@
 import dynamic from "next/dynamic";
 
 import { FileStack, ArrowRight } from "lucide-react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const PdfMerger = dynamic(() => import("@/components/tools/pdf/pdf-merge/PdfMerger"));
+const PdfMerger = dynamic(() => import("@/features/tools/pdf/pdf-merge/PdfMerger"));
 import { usePdfMergePageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function PdfMergeClient() {
   const theme = useThemeColors();

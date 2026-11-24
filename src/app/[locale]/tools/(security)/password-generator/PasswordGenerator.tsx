@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, KeyRound } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const PasswordGeneratorTool = dynamic(() => import("@/components/tools/security/password-generator/PasswordGeneratorTool"));
+const PasswordGeneratorTool = dynamic(() => import("@/features/tools/security/password-generator/PasswordGeneratorTool"));
 import { usePasswordGeneratorPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function PasswordGeneratorClient() {
   const theme = useThemeColors();

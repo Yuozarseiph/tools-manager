@@ -1,7 +1,7 @@
 // hooks/useThemeColors.ts
 "use client";
-import { useTheme } from "@/context/ThemeContext";
-import { THEMES, ThemePalette, ThemeName } from "@/constants/themes";
+import { useTheme } from "@/providers/ThemeContext";
+import { THEMES, ThemePalette, ThemeName } from "@/config/themes";
 
 export function useThemeColors(): ThemePalette {
   const { themeName } = useTheme();

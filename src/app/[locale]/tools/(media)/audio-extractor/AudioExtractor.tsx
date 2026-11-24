@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Music } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const AudioExtractorTool = dynamic(() => import("@/components/tools/media/audio-extractor/AudioExtractorTool"));
+const AudioExtractorTool = dynamic(() => import("@/features/tools/media/audio-extractor/AudioExtractorTool"));
 import { useAudioExtractorPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function AudioExtractorClient() {
   const theme = useThemeColors();

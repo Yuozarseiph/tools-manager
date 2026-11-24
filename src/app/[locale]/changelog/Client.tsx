@@ -3,7 +3,7 @@ import PanelDisclosure from "@/components/ui/PanelDisclosure";
 import { AccessibleInput } from "@/components/ui/AccessibleControls";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import {
   ArrowLeft,
   ArrowRight,
@@ -24,9 +24,9 @@ import {
 import {
   CHANGELOG_BY_LOCALE,
   type ChangelogEntry,
-} from "@/data/changelog";
-import { useChangelogContent } from "@/data/changelog/changelog.content";
-import { useLanguage } from "@/context/LanguageContext";
+} from "@/content/changelog";
+import { useChangelogContent } from "@/content/changelog/changelog.content";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 type CategoryKey = "added" | "improved" | "fixed" | "beta" | "note";

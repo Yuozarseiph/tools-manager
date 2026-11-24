@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Image as ImageIcon } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useImageToSvgPageContent } from "./content";
-const ImageToSvgConverter = dynamic(() => import("@/components/tools/image/image-to-svg/image-to-svg"));
-import { HeaderContent } from "@/data/layout/header.content";
+const ImageToSvgConverter = dynamic(() => import("@/features/tools/image/image-to-svg/image-to-svg"));
+import { HeaderContent } from "@/content/layout/header.content";
 
 export default function ImageToSvgClient() {
   const theme = useThemeColors();

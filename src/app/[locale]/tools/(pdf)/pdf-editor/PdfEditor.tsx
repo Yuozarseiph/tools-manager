@@ -2,12 +2,12 @@
 "use client";
 import dynamic from "next/dynamic";
 
-const PdfEditorTool = dynamic(() => import("@/components/tools/pdf/pdf-editor/PdfEditorTool"));
+const PdfEditorTool = dynamic(() => import("@/features/tools/pdf/pdf-editor/PdfEditorTool"));
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { usePdfEditorPageContent } from "./content";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileStack } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function PdfEditorClient() {
   const theme = useThemeColors();

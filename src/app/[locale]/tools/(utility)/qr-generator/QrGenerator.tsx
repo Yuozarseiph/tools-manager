@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, QrCode } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const QrGeneratorTool = dynamic(() => import("@/components/tools/utility/qr-generator/QrGeneratorTool"));
+const QrGeneratorTool = dynamic(() => import("@/features/tools/utility/qr-generator/QrGeneratorTool"));
 import { useQrGeneratorPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function QrGeneratorClient() {
   const theme = useThemeColors();

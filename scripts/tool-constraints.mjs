@@ -16,5 +16,5 @@ for(const file of walk("src/app/[locale]/tools").filter(file=>file.endsWith(".ts
   const maxFiles=text.match(/maxFiles:\s*(\d+)/);
   constraints[path.basename(path.dirname(file))]={acceptedFormats:[...new Set(formats)],...(maxFiles?{maxFiles:Number(maxFiles[1])}:{})};
 }
-fs.writeFileSync("src/data/tool-constraints.json",JSON.stringify(constraints,null,2)+"\n");
+fs.writeFileSync("src/content/tool-constraints.json",JSON.stringify(constraints,null,2)+"\n");
 console.log(`[tool-constraints] recorded supported inputs for ${Object.keys(constraints).length} tools`);

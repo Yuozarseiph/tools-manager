@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 
 const base = new URL(process.argv[2] ?? "http://127.0.0.1:4186");
-const slugs = [...readFileSync("src/data/tools.ts", "utf8").matchAll(/href:\s*"\/tools\/([^"\n]+)"/g)].map(match => match[1]);
+const slugs = [...readFileSync("src/config/tools.ts", "utf8").matchAll(/href:\s*"\/tools\/([^"\n]+)"/g)].map(match => match[1]);
 const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(`${dir}/${entry.name}`) : [`${dir}/${entry.name}`]);
 let requests = 0;
 async function get(route, accept = "text/html") {

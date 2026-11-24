@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const HashGeneratorTool = dynamic(() => import("@/components/tools/security/hash-generator/HashGeneratorTool"));
+const HashGeneratorTool = dynamic(() => import("@/features/tools/security/hash-generator/HashGeneratorTool"));
 import { useHashGeneratorPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function HashGeneratorClient() {
   const theme = useThemeColors();

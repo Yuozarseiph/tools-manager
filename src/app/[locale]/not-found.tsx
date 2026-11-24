@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowLeft, ArrowRight, BookOpen, Home, SearchX, Wrench } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function NotFound() {

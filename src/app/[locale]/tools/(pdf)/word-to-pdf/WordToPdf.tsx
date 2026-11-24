@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileText } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const WordToPdfConverter = dynamic(() => import("@/components/tools/pdf/word-to-pdf/WordToPdfConverter"));
+const WordToPdfConverter = dynamic(() => import("@/features/tools/pdf/word-to-pdf/WordToPdfConverter"));
 import { useWordToPdfPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function WordToPdfClient() {
   const theme = useThemeColors();

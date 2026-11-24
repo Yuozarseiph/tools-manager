@@ -1,5 +1,5 @@
-import { TOOLS } from "@/data/tools";
-import { toolInfo } from "@/lib/tool-guide";
+import { TOOLS } from "@/config/tools";
+import { toolInfo } from "@/lib/seo/tool-guide";
 export const dynamic = "force-static";
 export function GET() {
   const text = ["# QodeForge", "", "> Free tools in Persian and English. Processing and network exceptions are documented per tool.", "",

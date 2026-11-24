@@ -1,8 +1,8 @@
 import ColorPickerClient from "./ColorPicker";
 import { getColorPickerSeo } from "./content";
-import { pageMetadata } from "@/lib/page-metadata";
-import { parseLocale } from "@/lib/localized-path";
-import ToolGuide, { ToolBreadcrumb } from "@/components/seo/ToolGuide";
+import { pageMetadata } from "@/lib/seo/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import ToolGuide, { ToolBreadcrumb } from "@/features/seo/ToolGuide";
 type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props) {
  const locale = parseLocale((await params).locale); const seo = getColorPickerSeo(locale);

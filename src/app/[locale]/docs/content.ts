@@ -1,4 +1,4 @@
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export const DOC_CATEGORIES = [
   "ai",

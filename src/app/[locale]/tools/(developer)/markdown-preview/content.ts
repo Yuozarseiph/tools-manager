@@ -1,6 +1,6 @@
 // app/tools/(developer)/markdown/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 //  Type مشترک برای SEO
 export type SeoContent = {

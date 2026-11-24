@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { agentToolDefinitions } from "@/lib/agent-tools";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata } from "@/lib/page-metadata";
+import { agentToolDefinitions } from "@/lib/seo/agent-tools";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props) {
   const locale = parseLocale((await params).locale);

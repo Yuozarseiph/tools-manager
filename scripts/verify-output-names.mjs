@@ -5,7 +5,7 @@ import vm from "node:vm";
 import ts from "typescript";
 
 const exports = {}, window = { location: { pathname: "/fa/tools/pdf-to-image" } };
-vm.runInNewContext(ts.transpileModule(readFileSync("src/lib/output-name.ts", "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, { exports, window });
+vm.runInNewContext(ts.transpileModule(readFileSync("src/lib/files/output-name.ts", "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, { exports, window });
 const { normaliseOutputName: name, outputFilename, configureOutputName, releaseOutputName } = exports;
 assert.equal(name("", "original.pdf"), "original.pdf");
 assert.equal(name("گزارش نهایی", "original.pdf"), "گزارش نهایی.pdf");
@@ -36,7 +36,7 @@ function walk(dir) { return readdirSync(dir, { withFileTypes: true }).flatMap(en
 const sources = [...walk("src"), ...walk("scripts"), ...walk("docs"), "README.md"];
 for (const file of sources) assert(!/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u20E3]/u.test(readFileSync(file, "utf8")), `Emoji literal in ${file}`);
 let checked = 0;
-for (const file of [...walk("src/components/tools"), "src/lib/transfer.ts"].filter(file => /\.tsx?$/.test(file))) {
+for (const file of [...walk("src/features/tools"), "src/lib/files/transfer.ts"].filter(file => /\.tsx?$/.test(file))) {
  const source = readFileSync(file, "utf8"), ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
  function verify(node) {
   if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken && ts.isPropertyAccessExpression(node.left) && node.left.name.text === "download") {
@@ -49,12 +49,12 @@ for (const file of [...walk("src/components/tools"), "src/lib/transfer.ts"].filt
  }
  verify(ast);
 }
-assert(readFileSync("src/components/tools/utility/qr-generator/QrGeneratorTool.tsx", "utf8").includes('anchor.download = outputFilename('));
-assert(readFileSync("src/components/tools/excel-tools/excel-editor/ExcelEditorTool.tsx", "utf8").includes('void saveFile(new Blob([data]'));
-assert(readFileSync("src/components/tools/pdf/text-to-pdf/TextToPdfTool.tsx", "utf8").includes('.getBlob((blob: Blob) => { void saveFile('));
-assert(!readFileSync("src/components/seo/ToolGuide.tsx", "utf8").includes('OutputNameSettings'));
-assert(readFileSync("src/components/SiteLayout.tsx", "utf8").includes('<ExportDialog />'));
-for (const file of walk("src/components/tools").filter(file => /\.tsx?$/.test(file))) {
+assert(readFileSync("src/features/tools/utility/qr-generator/QrGeneratorTool.tsx", "utf8").includes('anchor.download = outputFilename('));
+assert(readFileSync("src/features/tools/excel/excel-editor/ExcelEditorTool.tsx", "utf8").includes('void saveFile(new Blob([data]'));
+assert(readFileSync("src/features/tools/pdf/text-to-pdf/TextToPdfTool.tsx", "utf8").includes('.getBlob((blob: Blob) => { void saveFile('));
+assert(!readFileSync("src/features/seo/ToolGuide.tsx", "utf8").includes('OutputNameSettings'));
+assert(readFileSync("src/components/layout/SiteLayout.tsx", "utf8").includes('<ExportDialog />'));
+for (const file of walk("src/features/tools").filter(file => /\.tsx?$/.test(file))) {
  const source = readFileSync(file, "utf8");
  assert(!/from\s+["']downloadjs["']/.test(source), `Export bypasses the save dialog: ${file}`);
  const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true), anchors = new Set();

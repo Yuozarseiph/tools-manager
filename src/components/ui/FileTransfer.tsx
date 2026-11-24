@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { FileUp } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { decodeText } from "@/lib/decode-text";
-import { byteSize } from "@/lib/transfer";
+import { useLanguage } from "@/providers/LanguageContext";
+import { decodeText } from "@/lib/files/decode-text";
+import { byteSize } from "@/lib/files/transfer";
 
 export type ReadyFile = { file: File };
 type Row = {

@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileSpreadsheet } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ExcelViewerTool = dynamic(() => import("@/components/tools/excel-tools/excel-viewer/ExcelViewerTool"));
+const ExcelViewerTool = dynamic(() => import("@/features/tools/excel/excel-viewer/ExcelViewerTool"));
 import { useExcelViewerContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function ExcelViewerClient() {
   const theme = useThemeColors();

@@ -1,8 +1,8 @@
 import DocsClient from "./Docs";
-import DocsDirectory from "@/components/seo/DocsDirectory";
+import DocsDirectory from "@/features/seo/DocsDirectory";
 import { getDocsSeo } from "./content";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
-import { parseLocale } from "@/lib/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
 type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props) {
  const locale = parseLocale((await params).locale); const seo = getDocsSeo(locale);

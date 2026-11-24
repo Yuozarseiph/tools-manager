@@ -1,8 +1,8 @@
-import AiWorkflow from "@/components/tools/ai/AiWorkflow";
-import { AI_TOOLS } from "@/data/ai-tools";
-import { pageMetadata } from "@/lib/page-metadata";
-import { parseLocale } from "@/lib/localized-path";
-import ToolGuide, { ToolBreadcrumb } from "@/components/seo/ToolGuide";
+import AiWorkflow from "@/features/tools/ai/AiWorkflow";
+import { AI_TOOLS } from "@/config/ai-tools";
+import { pageMetadata } from "@/lib/seo/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import ToolGuide, { ToolBreadcrumb } from "@/features/seo/ToolGuide";
 type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props) {
  const locale = parseLocale((await params).locale); const copy = AI_TOOLS["prompt-builder"][locale];

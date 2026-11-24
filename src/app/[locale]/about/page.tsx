@@ -1,7 +1,7 @@
 import Client from "./Client";
-import TrustDetails from "@/components/seo/TrustDetails";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import TrustDetails from "@/features/seo/TrustDetails";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 const copy = {"fa": {"title": "درباره QodeForge", "description": "درباره جعبه‌ابزار آنلاین QodeForge و رویکرد آن به سرعت و حریم خصوصی."}, "en": {"title": "About QodeForge", "description": "Learn about QodeForge, a fast and privacy-friendly online toolbox."}};
 export async function generateMetadata({ params }: Props) {

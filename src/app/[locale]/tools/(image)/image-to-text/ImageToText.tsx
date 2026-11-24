@@ -1,12 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileText } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ImageToTextTool = dynamic(() => import("@/components/tools/image/image-to-text/ImageToTextTool"));
+const ImageToTextTool = dynamic(() => import("@/features/tools/image/image-to-text/ImageToTextTool"));
 import { useImageToTextPageContent } from "./content";
 
 export default function ImageToTextClient() {

@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, AudioLines } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const AudioTool = dynamic(() => import("@/components/tools/media/AudioEditor/AudioTool"));
+const AudioTool = dynamic(() => import("@/features/tools/media/audio-editor/AudioTool"));
 import { useAudioEditorPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function AudioEditorClient() {
   const theme = useThemeColors();

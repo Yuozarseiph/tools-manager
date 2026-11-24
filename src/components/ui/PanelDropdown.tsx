@@ -5,8 +5,8 @@ import { usePanelPresence } from "@/hooks/usePanelPresence";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Search, X } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { usePanelPopover } from "./usePanelPopover";
+import { useLanguage } from "@/providers/LanguageContext";
+import { usePanelPopover } from "../../hooks/usePanelPopover";
 
 export type PanelOption = { value: string; label: string; disabled?: boolean; group?: string };
 type Props = {

@@ -3,13 +3,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
-const ExifRemoverTool = dynamic(() => import("@/components/tools/security/exif-remover/ExifRemoverTool"));
+const ExifRemoverTool = dynamic(() => import("@/features/tools/security/exif-remover/ExifRemoverTool"));
 import { useExifRemoverPageContent } from "./content";
 
 export default function ExifRemoverClient() {

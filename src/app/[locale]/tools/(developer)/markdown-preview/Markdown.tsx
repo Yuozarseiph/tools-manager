@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileCode } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const MarkdownTool = dynamic(() => import("@/components/tools/developer/markdown/MarkdownTool"));
+const MarkdownTool = dynamic(() => import("@/features/tools/developer/markdown-preview/MarkdownTool"));
 import { useMarkdownPageContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function MarkdownClient() {
   const theme = useThemeColors();

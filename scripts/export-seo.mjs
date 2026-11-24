@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 
-const source = readFileSync("src/data/tools.ts", "utf8");
+const source = readFileSync("src/config/tools.ts", "utf8");
 const slugs = [...source.matchAll(/href:\s*"\/tools\/([^"\n]+)"/g)].map(match => match[1]);
 const legacy = ["about", "contact", "privacy", "download", "changelog", "docs", ...slugs.map(slug => `tools/${slug}`)];
 const escapeRegex = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

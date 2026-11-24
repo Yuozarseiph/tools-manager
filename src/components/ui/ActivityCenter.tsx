@@ -4,9 +4,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { Check, Download, FileUp, AlertCircle, Loader2, X } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { captureActivityOrigin, clearActivityOrigin } from "@/lib/activity-origin";
-import { activityEvent, observeFileReads, byteSize, type Activity } from "@/lib/transfer";
+import { useLanguage } from "@/providers/LanguageContext";
+import { captureActivityOrigin, clearActivityOrigin } from "@/lib/files/activity-origin";
+import { activityEvent, observeFileReads, byteSize, type Activity } from "@/lib/files/transfer";
 
 function activityArea(source?: HTMLElement, parents?: HTMLElement[]) {
   if (!source?.isConnected) {

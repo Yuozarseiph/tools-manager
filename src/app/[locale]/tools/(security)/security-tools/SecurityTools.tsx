@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Shield } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const SecurityToolsMain = dynamic(() => import("@/components/tools/security/security-tools/SecurityToolsMain"));
+const SecurityToolsMain = dynamic(() => import("@/features/tools/security/security-tools/SecurityToolsMain"));
 import { useSecurityToolsPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function SecurityToolsClient() {
   const theme = useThemeColors();

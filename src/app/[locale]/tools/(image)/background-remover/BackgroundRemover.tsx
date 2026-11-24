@@ -3,13 +3,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
-const BackgroundRemoverTool = dynamic(() => import("@/components/tools/image/background-remover/BackgroundRemoverTool"));
+const BackgroundRemoverTool = dynamic(() => import("@/features/tools/image/background-remover/BackgroundRemoverTool"));
 import { useBackgroundRemoverPageContent } from "./content";
 
 export default function BackgroundRemoverClient() {

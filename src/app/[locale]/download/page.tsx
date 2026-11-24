@@ -1,6 +1,6 @@
 import Client from "./Client";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 const copy = {"fa": {"title": "دانلود QodeForge", "description": "نصب QodeForge به‌عنوان وب‌اپلیکیشن پیش‌رونده برای دسترسی سریع‌تر به ابزارها."}, "en": {"title": "Download QodeForge", "description": "Install QodeForge as a progressive web app for faster access to its tools."}};
 export async function generateMetadata({ params }: Props) {

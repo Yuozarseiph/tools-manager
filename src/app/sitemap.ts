@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
-import { TOOLS } from "@/data/tools";
-import updated from "@/data/page-updated.json";
+import { TOOLS } from "@/config/tools";
+import updated from "@/content/page-updated.json";
 export const dynamic = "force-static";
 const base = "https://qodeforge.ir";
 export default function sitemap(): MetadataRoute.Sitemap {

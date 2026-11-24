@@ -1,6 +1,6 @@
 // app/tools/(image)/image-resizer/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 //  Type مشترک برای SEO
 export type SeoContent = {

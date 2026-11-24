@@ -5,9 +5,9 @@ import { usePanelPresence } from "@/hooks/usePanelPresence";
 import { useEffect, useId, useImperativeHandle, useRef, useState, type ComponentProps, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import { CalendarDays, Check, ChevronLeft, ChevronRight, Palette, X } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { calendarDays, calendarParts, calendarMonth, dateValue, normaliseHex, parseDate, rgbChannels, rgbHex } from "@/lib/panel-controls";
-import { usePanelPopover } from "./usePanelPopover";
+import { useLanguage } from "@/providers/LanguageContext";
+import { calendarDays, calendarParts, calendarMonth, dateValue, normaliseHex, parseDate, rgbChannels, rgbHex } from "@/lib/utils/panel-controls";
+import { usePanelPopover } from "../../hooks/usePanelPopover";
 
 type Props = ComponentProps<"input">;
 function useNativeInput(props: Props) {

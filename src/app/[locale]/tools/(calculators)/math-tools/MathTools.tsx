@@ -1,12 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Calculator } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
-const MathToolsMain = dynamic(() => import("@/components/tools/calculators/math-tools/MathToolsMain"));
+const MathToolsMain = dynamic(() => import("@/features/tools/calculators/math-tools/MathToolsMain"));
 import { useMathToolsPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function MathToolsClient() {
   const theme = useThemeColors();

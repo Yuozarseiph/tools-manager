@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useViewportMenu } from "@/hooks/useViewportMenu";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 interface Props { options: string[]; selectedValues: string[]; onChange: (values: string[]) => void; label?: string; placeholder?: string }
 export default function CustomMultiSelect({ options, selectedValues, onChange, label, placeholder = "انتخاب کنید..." }: Props) {
   const theme = useThemeColors(); const { locale } = useLanguage(); const listId = useId();

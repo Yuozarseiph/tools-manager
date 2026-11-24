@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
-const source = readFileSync("src/lib/ai-text.ts", "utf8");
+const source = readFileSync("src/lib/ai/ai-text.ts", "utf8");
 const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const exports = {}; vm.runInNewContext(compiled, { exports });
 const { cleanText, splitText, chatMarkdown, diffText, findSensitive, redact, fence, projectExclusion, isBinary } = exports;
@@ -46,7 +46,7 @@ assert(fence("```js\ncode\n```", "md").startsWith("````md"));
 console.log("AI tool checks passed: cleanup, chunk coverage/overlap/Unicode/limits, chat roles/JSON/code, diff reconstruction, redaction approval and project exclusions.");
 
 const workflowExports = {};
-const workflowSource = readFileSync("src/lib/ai-workflows.ts", "utf8");
+const workflowSource = readFileSync("src/lib/ai/ai-workflows.ts", "utf8");
 const workflowCompiled = ts.transpileModule(workflowSource, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;

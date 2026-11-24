@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import Image from "next/image";
 import {
   ArrowUpLeft,
@@ -12,9 +12,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { footerContent } from "@/data/layout/footer.content";
+import { footerContent } from "@/content/layout/footer.content";
 
 export default function Footer() {
   const theme = useThemeColors();

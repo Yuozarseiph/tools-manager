@@ -2,7 +2,7 @@
 import { AccessibleInput, AccessibleTextarea } from "@/components/ui/AccessibleControls";
 
 import { FormEvent, useRef, useState } from "react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import emailjs from "@emailjs/browser";
 import {
   ArrowLeft,
@@ -17,8 +17,8 @@ import {
   Send,
 } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
-import { contactContent } from "@/data/pages/contact.content";
+import { useLanguage } from "@/providers/LanguageContext";
+import { contactContent } from "@/content/pages/contact.content";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 const TelegramIcon = ({

@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Scale } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const UnitConverterTool = dynamic(() => import("@/components/tools/utility/unit-converter/UnitConverterTool"));
+const UnitConverterTool = dynamic(() => import("@/features/tools/utility/unit-converter/UnitConverterTool"));
 import { useUnitConverterPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function UnitConverterClient() {
   const theme = useThemeColors();

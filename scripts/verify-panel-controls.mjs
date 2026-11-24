@@ -20,7 +20,7 @@ function load(file) {
  const exports = {}; cache.set(absolute, exports);
  const compiled = ts.transpileModule(readFileSync(absolute, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true } }).outputText;
  const localRequire = name => {
-  if (name === "@/context/LanguageContext") return { useLanguage: () => ({ locale: testLocale }) };
+  if (name === "@/providers/LanguageContext") return { useLanguage: () => ({ locale: testLocale }) };
   if (name.startsWith(".") || name.startsWith("@/")) {
    const base = name.startsWith("@/") ? path.resolve("src", name.slice(2)) : path.resolve(path.dirname(absolute), name);
    const candidate = [base, `${base}.ts`, `${base}.tsx`].find(file => existsSync(file));
@@ -33,7 +33,7 @@ function load(file) {
 }
 const PanelSelect = load("src/components/ui/PanelSelect.tsx").default;
 const PanelSpecialInput = load("src/components/ui/PanelSpecialInput.tsx").default;
-const helpers = load("src/lib/panel-controls.ts");
+const helpers = load("src/lib/utils/panel-controls.ts");
 assert.equal(helpers.normaliseHex("#AbC"), "#aabbcc");
 assert.equal(helpers.normaliseHex("not-a-color"), null);
 assert.equal(helpers.rgbHex(helpers.rgbChannels("#16a34a")), "#16a34a");

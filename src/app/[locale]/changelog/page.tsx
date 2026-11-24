@@ -1,6 +1,6 @@
 import Client from "./Client";
-import { parseLocale } from "@/lib/localized-path";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 type Props = { params: Promise<{ locale: string }> };
 const copy = {"fa": {"title": "تغییرات QodeForge", "description": "آخرین تغییرات، قابلیت‌ها و بهبودهای ابزارهای QodeForge."}, "en": {"title": "QodeForge changelog", "description": "Latest QodeForge releases, improvements and new features."}};
 export async function generateMetadata({ params }: Props) {

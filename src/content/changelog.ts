@@ -1,0 +1,28 @@
+// data/changelog.ts
+export type ChangelogCategory =
+  | "added"
+  | "improved"
+  | "fixed"
+  | "beta"
+  | "note";
+export type ChangelogType = "release" | "update" | "fix";
+
+export type ChangelogEntry = {
+  version: string;
+  date: string;
+  type: ChangelogType;
+  status?: "development";
+  changes: {
+    category: ChangelogCategory;
+    items: string[];
+  }[];
+};
+
+import faLog from "./changelog/falog.json";
+import enLog from "./changelog/enlog.json";
+import type { Locale } from "@/providers/LanguageContext";
+
+export const CHANGELOG_BY_LOCALE: Record<Locale, ChangelogEntry[]> = {
+  fa: faLog as ChangelogEntry[],
+  en: enLog as ChangelogEntry[],
+};

@@ -1,6 +1,6 @@
 // app/tools/(utility)/qr-generator/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export type SeoContent = {
   title: string;

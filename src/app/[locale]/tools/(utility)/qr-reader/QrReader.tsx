@@ -1,12 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, QrCode } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
-const QrReaderTool = dynamic(() => import("@/components/tools/utility/qr-reader/QrReaderTool"));
+const QrReaderTool = dynamic(() => import("@/features/tools/utility/qr-reader/QrReaderTool"));
 import { useQrReaderPageContent } from "./content";
 
 export default function QrReaderClient() {

@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { Download, FileCheck2, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { AnimatedDialog } from "@/components/ui/PanelMotion";
-import { useLanguage } from "@/context/LanguageContext";
-import { downloadExport, onFileExport, type ExportRequest } from "@/lib/file-export";
-import { normaliseOutputName } from "@/lib/output-name";
-import { byteSize, startActivity } from "@/lib/transfer";
+import { useLanguage } from "@/providers/LanguageContext";
+import { downloadExport, onFileExport, type ExportRequest } from "@/lib/files/file-export";
+import { normaliseOutputName } from "@/lib/files/output-name";
+import { byteSize, startActivity } from "@/lib/files/transfer";
 
 export default function ExportDialog() {
   const { locale } = useLanguage(), fa = locale === "fa", pathname = usePathname();

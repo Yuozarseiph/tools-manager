@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,8 +13,8 @@ import {
   Terminal,
 } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
-import { downloadContent } from "@/data/pages/download.content";
+import { useLanguage } from "@/providers/LanguageContext";
+import { downloadContent } from "@/content/pages/download.content";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 type DownloadAction = {

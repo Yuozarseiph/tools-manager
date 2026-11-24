@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Pipette } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ColorPickerTool = dynamic(() => import("@/components/tools/image/color-picker/ColorPickerTool"));
+const ColorPickerTool = dynamic(() => import("@/features/tools/image/color-picker/ColorPickerTool"));
 import { useColorPickerPageContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function ColorPickerClient() {
   const theme = useThemeColors();

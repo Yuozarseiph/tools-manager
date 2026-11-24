@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, CalendarDays } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const DateConverterTool = dynamic(() => import("@/components/tools/utility/date-converter/DateConverterTool"));
+const DateConverterTool = dynamic(() => import("@/features/tools/utility/date-converter/DateConverterTool"));
 import { useDateConverterPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function DateConverterClient() {
   const theme = useThemeColors();

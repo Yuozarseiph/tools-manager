@@ -2,14 +2,14 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileStack } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const ImageToPdfConverter = dynamic(() => import("@/components/tools/image/image-to-pdf/ImageToPdfConverter"));
+const ImageToPdfConverter = dynamic(() => import("@/features/tools/image/image-to-pdf/ImageToPdfConverter"));
 import { useImageToPdfPageContent } from "./content";
-import { HeaderContent } from "@/data/layout/header.content";
-import { useLanguage } from "@/context/LanguageContext";
+import { HeaderContent } from "@/content/layout/header.content";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function ImageToPdfClient() {
   const theme = useThemeColors();

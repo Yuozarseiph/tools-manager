@@ -1,6 +1,6 @@
 // app/tools/(security)/security-tools/content.ts
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export type SeoContent = {
   title: string;

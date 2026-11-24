@@ -2,11 +2,11 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Code } from "lucide-react";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useLanguage } from "@/context/LanguageContext";
-const CodeEditorTool = dynamic(() => import("@/components/tools/developer/code-editor/CodeEditorTool"));
+import { useLanguage } from "@/providers/LanguageContext";
+const CodeEditorTool = dynamic(() => import("@/features/tools/developer/code-editor/CodeEditorTool"));
 import { useCodeEditorPageContent } from "./content";
 
 export default function CodeEditorClient() {

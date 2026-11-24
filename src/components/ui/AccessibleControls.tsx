@@ -1,7 +1,7 @@
 "use client";
 import { useId, type ComponentProps, type ChangeEvent, type CSSProperties } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { convertPersianToEnglish } from "@/utils/persian-number-converter";
+import { useLanguage } from "@/providers/LanguageContext";
+import { convertPersianToEnglish } from "@/lib/i18n/persian-number-converter";
 import Image from "next/image";
 import PanelSelect from "./PanelSelect";
 import PanelSpecialInput from "./PanelSpecialInput";

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronLeft, ExternalLink, LayoutGrid, Sparkles } from "lucide-react";
 import { notFound } from "next/navigation";
-import { TOOLS } from "@/data/tools";
-import { toolsContent } from "@/data/tools.content";
-import { parseLocale } from "@/lib/localized-path";
-import { toolInfo } from "@/lib/tool-guide";
-import { pageMetadata, jsonLd, SITE_URL } from "@/lib/page-metadata";
+import { TOOLS } from "@/config/tools";
+import { toolsContent } from "@/content/tools.content";
+import { parseLocale } from "@/lib/i18n/localized-path";
+import { toolInfo } from "@/lib/seo/tool-guide";
+import { pageMetadata, jsonLd, SITE_URL } from "@/lib/seo/page-metadata";
 const categories = [...new Set(TOOLS.filter(tool => tool.status === "active").map(tool => tool.category))];
 export const dynamicParams = false;
 export function generateStaticParams() {

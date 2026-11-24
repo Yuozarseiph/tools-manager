@@ -1,11 +1,11 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, FileDown } from "lucide-react";
 
-const PdfToWordConverter = dynamic(() => import("@/components/tools/pdf/pdf-to-word/PdfToWordConverter"));
-import { useLanguage } from "@/context/LanguageContext";
+const PdfToWordConverter = dynamic(() => import("@/features/tools/pdf/pdf-to-word/PdfToWordConverter"));
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { usePdfToWordPageContent } from "./content";
 

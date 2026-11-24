@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { clearRuntimeCache, hasRuntimeCache, runtimeCacheEvent, type RuntimeGroup } from "@/lib/transfer";
+import { useLanguage } from "@/providers/LanguageContext";
+import { clearRuntimeCache, hasRuntimeCache, runtimeCacheEvent, type RuntimeGroup } from "@/lib/files/transfer";
 
 export default function RuntimeCacheControl({ group, busy, onClear }: {
   group: RuntimeGroup; busy: boolean; onClear?: () => void;

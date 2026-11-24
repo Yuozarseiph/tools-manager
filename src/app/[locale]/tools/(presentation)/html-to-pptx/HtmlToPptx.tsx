@@ -2,13 +2,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { ArrowRight, Presentation } from "lucide-react";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-const HtmlToPptxTool = dynamic(() => import("@/components/tools/presentation/html-to-pptx/HtmlToPptx"));
+const HtmlToPptxTool = dynamic(() => import("@/features/tools/presentation/html-to-pptx/HtmlToPptx"));
 import { useHtmlToPptxPageContent } from "./content";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 
 export default function HtmlToPptxClient() {
   const theme = useThemeColors();

@@ -8,8 +8,8 @@ function load(file, require = () => { throw new Error("Unexpected dependency"); 
  const exports = {};
  vm.runInNewContext(ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { exports, require, window, navigator: { language: "en-US", languages: ["en-US"] }, URL, URLSearchParams }); return exports;
 }
-const detection = load("src/lib/locale-detection.ts"), paths = load("src/lib/localized-path.ts");
-const navigation = load("src/lib/locale-preference.ts", name => { assert.equal(name, "./localized-path"); return paths; });
+const detection = load("src/lib/i18n/locale-detection.ts"), paths = load("src/lib/i18n/localized-path.ts");
+const navigation = load("src/lib/i18n/locale-preference.ts", name => { assert.equal(name, "./localized-path"); return paths; });
 assert.equal(detection.getSavedLocale(), null);
 storage.set("qodeforge_locale", "fa"); window.location.search = "?lang=en";
 assert.equal(detection.detectInitialLocale(), "fa");
@@ -18,7 +18,7 @@ assert.equal(detection.getSavedLocale(), "en");
 assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/en/tools/bank?tab=expenses&lang=en#results", "fa"), "https://qodeforge.ir/fa/tools/bank?tab=expenses#results");
 assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/fa/tools/bank", "en"), "https://qodeforge.ir/en/tools/bank");
 assert.equal(navigation.preferredLocaleTarget("https://qodeforge.ir/fa/tools/bank", "fa"), null);
-const fa = JSON.parse(readFileSync("src/data/changelog/falog.json", "utf8")), en = JSON.parse(readFileSync("src/data/changelog/enlog.json", "utf8"));
+const fa = JSON.parse(readFileSync("src/content/changelog/falog.json", "utf8")), en = JSON.parse(readFileSync("src/content/changelog/enlog.json", "utf8"));
 assert.equal(fa[0].version, "27.1.0"); assert.equal(en[0].version, "27.1.0");
 assert.equal(fa[0].status, undefined); assert.equal(en[0].status, undefined);
 assert.equal(fa[0].date, "۱۴ آذر ۱۴۰۵"); assert.equal(en[0].date, "December 5, 2026");
@@ -40,5 +40,5 @@ for (const dark of [false, true]) {
  for (const foreground of ["--app-text", "--app-text-muted", "--app-accent"]) for (const background of ["--app-bg", "--app-card", "--app-input-bg"]) assert(contrast(colors[foreground], colors[background]) >= 4.5, `${foreground}/${background} contrast in ${dark ? "dark" : "light"}`);
  for (const button of ["--app-primary-bg", "--app-primary-hover"]) assert(contrast("#ffffff", colors[button]) >= 4.5, `${button} text contrast`);
 }
-assert(!readFileSync("src/components/SiteLayout.tsx", "utf8").includes("LanguageSuggestion"));
+assert(!readFileSync("src/components/layout/SiteLayout.tsx", "utf8").includes("LanguageSuggestion"));
 console.log("Interface passed: saved language preference, redirects/query/hash/no loop, bilingual 27.1.0 release notes, compact panels/floating header and readable light/dark text/button contrast.");

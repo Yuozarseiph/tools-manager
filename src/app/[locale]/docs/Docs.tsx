@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import {
   ArrowLeft,
   ArrowRight,
@@ -18,12 +18,12 @@ import {
   X,
 } from "lucide-react";
 
-import DocSection from "@/components/docs/DocSection";
-import { useLanguage } from "@/context/LanguageContext";
+import DocSection from "@/features/docs/DocSection";
+import { useLanguage } from "@/providers/LanguageContext";
 import {
   type DocSectionItem,
   useDocsContent as useDocsData,
-} from "@/data/docs/docs.content";
+} from "@/content/docs/docs.content";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 import { type DocsCategory, useDocsPageContent } from "./content";

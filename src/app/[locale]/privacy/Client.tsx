@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,8 +15,8 @@ import {
   UserX,
 } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
-import { privacyContent } from "@/data/pages/privacy.content";
+import { useLanguage } from "@/providers/LanguageContext";
+import { privacyContent } from "@/content/pages/privacy.content";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function PrivacyPage() {

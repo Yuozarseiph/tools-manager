@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "@/components/LocalizedLink";
+import Link from "@/components/common/LocalizedLink";
 import { AnimatePresence, motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -20,9 +20,9 @@ import {
   Zap,
 } from "lucide-react";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/providers/LanguageContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { aboutContent } from "@/data/pages/about.content";
+import { aboutContent } from "@/content/pages/about.content";
 
 const FEATURES = [
   { id: "free", icon: Gift, number: "01" },

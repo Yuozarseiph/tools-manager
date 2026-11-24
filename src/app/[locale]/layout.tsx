@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import SiteLayout, { viewport } from "@/components/SiteLayout";
-import { pageMetadata } from "@/lib/page-metadata";
-import { parseLocale } from "@/lib/localized-path";
+import SiteLayout, { viewport } from "@/components/layout/SiteLayout";
+import { pageMetadata } from "@/lib/seo/page-metadata";
+import { parseLocale } from "@/lib/i18n/localized-path";
 export { viewport };
 export const dynamicParams = false;
 export function generateStaticParams() { return [{ locale: "fa" }, { locale: "en" }]; }
