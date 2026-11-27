@@ -27,7 +27,7 @@ export default function ToolGuide({ slug, locale }: { slug: string; locale: Loca
   const url = `${SITE_URL}/${locale}${tool.href}`;
   const schema = { "@context": "https://schema.org", "@graph": [
     { "@type": "WebApplication", "@id": `${url}#application`, name: guide.name,
-      description: guide.description, url, inLanguage: ["fa-IR", "en-US"],
+      description: guide.description, url, inLanguage: locale,
       applicationCategory: "UtilitiesApplication", operatingSystem: "Any", isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       browserRequirements: "Requires a modern browser with JavaScript enabled",

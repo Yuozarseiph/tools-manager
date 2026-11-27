@@ -23,7 +23,15 @@ writeFileSync(".htaccess", root);
 for (const locale of ["fa", "en"]) {
   const folder = `out/${locale}/tools`;
   mkdirSync(folder, { recursive: true });
-  const headers = slugs.map(slug => `<Files "${slug}.html">\n  Header set Link "<https://qodeforge.ir/${locale}/tools/${slug}.md>; rel=alternate; type=text/markdown"\n</Files>`).join("\n");
+  const headers = slugs.map(slug => {
+    const canonical = `https://qodeforge.ir/${locale}/tools/${slug}`;
+    return `<Files "${slug}.html">
+  Header set Link "<${canonical}.md>; rel=alternate; type=text/markdown"
+</Files>
+<Files "${slug}.md">
+  Header set Link "<${canonical}>; rel=canonical"
+</Files>`;
+  }).join("\n");
   // Do not enable mod_rewrite here: a child ruleset overrides root routing.
   const child = `# QodeForge /${locale}/tools/.htaccess\n# Routing and Markdown negotiation are handled by the root .htaccess.\n<IfModule mod_headers.c>\n<FilesMatch "\\.(html|md)$">\n  Header merge Vary Accept\n</FilesMatch>\n${headers}\n</IfModule>\n`;
   writeFileSync(`${folder}/.htaccess`, child);

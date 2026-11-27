@@ -6,9 +6,9 @@ Active legacy URLs have static fallback pages with links to both languages. The 
 
 Each tool has independent metadata, an OG image, breadcrumbs, documentation, limitations, FAQs, related links, and WebApplication/FAQPage/HowTo/BreadcrumbList structured data. FAQ and HowTo markup describe the actual visible guide; their presence does not guarantee a search rich result. Tools marked `coming-soon` are excluded from the sitemap and receive `noindex` metadata. External mini-game URLs stay external.
 
-`sitemap.xml`, `llms.txt`, and `llms-full.txt` derive their tool lists from `src/data/tools.ts`. Source/Git dates are collected by `scripts/page-dates.mjs`; build time is not substituted for a page's last modification. Input formats and file-selection limits are collected from the tool code by `scripts/tool-constraints.mjs`. The home page renders all tool links, and the documentation and changelog preserve their full text in the initial HTML.
+`sitemap.xml`, `llms.txt`, and `llms-full.txt` derive their tool lists from `src/config/tools.ts`. The sitemap and HTML use the same Persian, English, and Persian-default alternate URLs. Source/Git dates are collected by `scripts/page-dates.mjs`. The sitemap omits `lastmod` when a route has no entry in those dates. Input formats and file-selection limits are collected from the tool code by `scripts/tool-constraints.mjs`. The home page renders all tool links, and the documentation and changelog preserve their full text in the initial HTML.
 
-Each tool has a static Markdown counterpart at `/{locale}/tools/{slug}.md`. The export includes Apache `Link: rel=alternate` headers and content negotiation for `Accept: text/markdown`. On other static hosts, use the explicit Markdown URLs and configure equivalent redirects, MIME types and 404 behavior; Apache headers are not applied by Next.js itself.
+Each tool has a static Markdown counterpart at `/{locale}/tools/{slug}.md`. Apache advertises the Markdown alternate on HTML responses and returns a canonical `Link` header pointing back to the localized HTML on Markdown responses. These headers apply to explicit Markdown URLs and Markdown selected via `Accept: text/markdown`. Configure equivalent headers, redirects, MIME types and 404 handling on other static hosts.
 
 ## Apache deployment and refreshes
 

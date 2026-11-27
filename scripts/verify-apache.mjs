@@ -35,6 +35,7 @@ for (const locale of ["fa", "en"]) {
     for (const suffix of ["", "/", ".html", ".md"]) {
       const response = await checkFile(route + suffix, `out${route}.md`, "text/markdown", "text/markdown");
       assert(response.headers.get("vary")?.toLowerCase().includes("accept"), `${route}: Markdown Vary`);
+      assert.equal(response.headers.get("link"), `<https://qodeforge.ir${route}>; rel=canonical`, `${route}: Markdown canonical`);
     }
     await checkFile(`${route}/opengraph-image.png`, `out${route}/opengraph-image.png`, "image/png", "image/png");
     await checkFile(`${route}/__next._full.txt`, `out${route}/__next._full.txt`, "*/*", "text/plain");
